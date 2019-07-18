@@ -168,5 +168,4 @@ public class IngCostos extends Fragment {
     public void ObtenerPaciente(String id){
         idUsuario = id;
     }
-
 }
