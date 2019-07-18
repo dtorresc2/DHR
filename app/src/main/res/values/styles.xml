@@ -1,0 +1,41 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/Blanco</item>
+    </style>
+    
+    <style name="TextLabel" parent="TextAppearance.AppCompat">
+        <item name="android:textColorHint">@color/Blanco</item>
+        <item name="android:textSize">20sp</item>
+        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
+        <item name="colorAccent">@color/Blanco</item>
+        <item name="colorControlNormal">@color/Blanco</item>
+        <item name="colorControlActivated">@color/Blanco</item>
+    </style>
+
+    <style name="SizeHint" parent="TextAppearance.Design.Hint">
+        <item name="android:textSize">25sp</item>
+    </style>
+
+    <style name="fondoetiqueta">
+        <item name ="android:background">@drawable/etiqueta_menu</item>
+        <item name ="android:textColor">#ffff</item>
+    </style>
+
+    <style name="progressDialogg">
+        <item name="colorAccent">@color/AzulOscuro</item>
+        <item name="android:textColorPrimary">@color/Blanco</item>
+        <item name="android:background">@color/FondoTerciario</item>
+    </style>
+
+    <style name="AppTheme.Slide">
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_down</item>
+    </style>
+
+
+</resources>

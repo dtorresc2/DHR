@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">DHR</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="parrafo1">
+        NOTA: Este tratamiento es una Ortodoncia Miofuncional. La aparatologia es usada para cambiar la forma de los maxilares y para ayudar a
+        corregir la funcion muscular.
+    </string>
+
+    <string name="parrafo2">
+        Esto permite la alineacion dental sin tener la necesidad de extracciones. Esto tecnicamente no es un tratamiento de Ortodoncia, ya que solo
+        trata alineacion dental dentro de tamaños y formas maxiliares especificos.
+    </string>
+
+    <string name="parrafo3">
+        La perdida o roptura de los aparatos tendra un costo extra de Q.800.00 por aparato.
+    </string>
+
+    <string name="parrafo4">
+        Si no se cumple con las citas o si no se usan los aparatos, el timepo de tratamiento aumentara.
+    </string>
+
+    <string name="parrafo5">
+        Durante cada cita el paciente debera llegar al consultorio acompañado siempre de su aparato Myobrace.
+    </string>
+
+    <string name="parrafo6">
+        El aparato Myobrace debera ser limpiado diariamente con agua, el cepillo dental y con tabletas limpiadoras idealmente cada
+        semana.
+    </string>
+
+    <string name="parrafo7">
+        Espero tener los mejores y grandiosos resultados
+    </string>
+
+</resources>

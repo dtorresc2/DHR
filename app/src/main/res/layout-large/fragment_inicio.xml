@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".OpcionInicio.Inicio"
+    android:background="@color/FondoPrincipal">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="320dp"
+                android:background="@color/FondoSecundario">
+
+                <ImageView
+                    android:id="@+id/imageView5"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="120dp"
+                    android:layout_marginTop="80dp"
+                    android:layout_marginRight="120dp"
+                    android:layout_marginBottom="80dp"
+                    android:background="@drawable/circle"
+                    android:src="@drawable/ic_correo" />
+
+                <TextView
+                    android:id="@+id/usuarioPerfil"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="260dp"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:text="Clinica San Jose"
+                    android:textColor="@color/Blanco"
+                    android:textSize="24sp" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>
