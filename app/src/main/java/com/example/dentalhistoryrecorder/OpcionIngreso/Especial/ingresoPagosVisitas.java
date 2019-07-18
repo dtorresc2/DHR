@@ -1,9 +1,6 @@
 package com.example.dentalhistoryrecorder.OpcionIngreso.Especial;
 
 import android.app.DatePickerDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -22,7 +19,6 @@ import android.widget.ImageButton;
 import android.widget.NumberPicker;
 import android.widget.TableLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -31,22 +27,18 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.dentalhistoryrecorder.OpcionConsulta.Items;
 import com.example.dentalhistoryrecorder.OpcionIngreso.Agregar;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Tabla.TablaDinamica;
 import com.tapadoo.alerter.Alerter;
-
-import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-public class IngresoVisitas extends Fragment {
-    EditText descripcion, fecha;
+public class ingresoPagosVisitas extends Fragment {
+    EditText descripcion, fecha, pagos;
     Toolbar toolbar;
     ImageButton selectorFecha;
     Button agregar, quitar;
@@ -54,26 +46,21 @@ public class IngresoVisitas extends Fragment {
     TextView titulo;
 
     TableLayout tableLayout;
-    private String[] header = {"Fecha", "Descripsion", "Costo"};
+    private String[] header = {"Fecha", "Descripsion", "Pago"};
     private TablaDinamica tablaDinamica;
     private ArrayList<String[]> rows = new ArrayList<>();
-
-
-    private int contador = 0;
     private RequestQueue requestQueue;
-    private SharedPreferences preferencias;
-    private static final String TAG = "MyActivity";
+    private int contador = 0;
 
-    public IngresoVisitas() {
+    public ingresoPagosVisitas() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.fragment_ingreso_visitas, container, false);
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_ingreso_pagos_visitas, container, false);
         final Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         requestQueue = Volley.newRequestQueue(getContext());
         toolbar = view.findViewById(R.id.toolbar);
@@ -89,31 +76,32 @@ public class IngresoVisitas extends Fragment {
             }
         });
 
-        preferencias = getActivity().getSharedPreferences("Terapia", Context.MODE_PRIVATE);
-
         final Calendar calendar = Calendar.getInstance();
         int yy = calendar.get(Calendar.YEAR);
         int mm = calendar.get(Calendar.MONTH);
         int dd = calendar.get(Calendar.DAY_OF_MONTH);
 
-        descripcion = view.findViewById(R.id.descEspecial);
+        descripcion = view.findViewById(R.id.descPagos);
         descripcion.setTypeface(face);
 
-        fecha = view.findViewById(R.id.terapia);
+        fecha = view.findViewById(R.id.fecha);
         fecha.setText(dd + "/" + mm + "/" + yy);
         fecha.setTypeface(face);
 
-        titulo = view.findViewById(R.id.tituloVisitas);
+        pagos = view.findViewById(R.id.costoPagos);
+        pagos.setTypeface(face);
+
+        titulo = view.findViewById(R.id.tituloPagos);
         titulo.setTypeface(face);
 
         selectorFecha = view.findViewById(R.id.obtenerFecha);
-        agregar = view.findViewById(R.id.agregarVisita);
+        agregar = view.findViewById(R.id.agregarPago);
         agregar.setTypeface(face);
-        quitar = view.findViewById(R.id.quitarVisita);
+        quitar = view.findViewById(R.id.quitarPago);
         quitar.setTypeface(face);
         siguiente = view.findViewById(R.id.siguiente);
 
-        tableLayout = view.findViewById(R.id.tablaVisitas);
+        tableLayout = view.findViewById(R.id.tablaPagos);
         tablaDinamica = new TablaDinamica(tableLayout, getContext());
         tablaDinamica.addHeader(header);
         tablaDinamica.addData(getClients());
@@ -143,11 +131,11 @@ public class IngresoVisitas extends Fragment {
         agregar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!descripcion.getText().toString().isEmpty() && !fecha.getText().toString().isEmpty()) {
+                if (!descripcion.getText().toString().isEmpty() && !fecha.getText().toString().isEmpty() && !pagos.getText().toString().isEmpty()) {
                     String[] item = new String[]{
                             fecha.getText().toString(),
                             descripcion.getText().toString(),
-                            preferencias.getString("costoVisita", "0.00")
+                            pagos.getText().toString()
                     };
                     tablaDinamica.addItem(item);
                     descripcion.setText(null);
@@ -228,16 +216,16 @@ public class IngresoVisitas extends Fragment {
             public void onClick(View v) {
                 if (tablaDinamica.getCount() > 0) {
                     for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
-                        agregarVisitas("https://diegosistemas.xyz/DHR/Especial/ingresoE.php?estado=3", tablaDinamica.getCellData(i, 0), tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2));
+                        agregarPagos("https://diegosistemas.xyz/DHR/Especial/ingresoE.php?estado=18", tablaDinamica.getCellData(i, 0), tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2));
                     }
 
-                    ingresoPagosVisitas ingresoPagosVisitas1 = new ingresoPagosVisitas();
+                    ContratoVisita contratoVisita = new ContratoVisita();
                     FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                    transaction.replace(R.id.contenedor, ingresoPagosVisitas1);
+                    transaction.replace(R.id.contenedor, contratoVisita);
                     transaction.commit();
                 } else {
                     Alerter.create(getActivity())
-                            .setTitle("No Ingreso Visitas")
+                            .setTitle("No Ingreso Pagos")
                             .setIcon(R.drawable.logonuevo)
                             .setTextTypeface(face)
                             .enableSwipeToDismiss()
@@ -250,12 +238,13 @@ public class IngresoVisitas extends Fragment {
         return view;
     }
 
+
     private ArrayList<String[]> getClients() {
         return rows;
     }
 
     //Insertar Datos Personales y Obtener ID Paciente ----------------------------------------------
-    public void agregarVisitas(String URL, final String fecha, final String desc, final String costo) {
+    public void agregarPagos(String URL, final String fecha, final String desc, final String costo) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -264,7 +253,7 @@ public class IngresoVisitas extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i(TAG, "" + error.toString());
+                Log.i("Volley Error:", "" + error.toString());
             }
         }) {
             @Override
@@ -279,5 +268,4 @@ public class IngresoVisitas extends Fragment {
         };
         requestQueue.add(stringRequest);
     }
-
 }

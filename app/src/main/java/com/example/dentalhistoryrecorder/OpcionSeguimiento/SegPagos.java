@@ -153,11 +153,20 @@ public class SegPagos extends Fragment {
                 if (tablaDinamica.getCount() > 0) {
                     for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
                         //insertarTratamiento("http://192.168.56.1:80/DHR/IngresoN/ficha.php?db=u578331993_clinc&user=root&estado=10", tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2), tablaDinamica.getCellData(i, 0));
-                        insertarTratamiento("https://diegosistemas.xyz/DHR/Normal/seguimiento.php?estado=2",tablaDinamica.getCellData(i,0), tablaDinamica.getCellData(i,1));
+
+                        switch (mOpcion){
+                            case 1:
+                                insertarTratamiento("https://diegosistemas.xyz/DHR/Normal/ficha.php?estado=12", tablaDinamica.getCellData(i, 0), tablaDinamica.getCellData(i, 1));
+                                break;
+
+                            case 2:
+                                insertarTratamiento("https://diegosistemas.xyz/DHR/Normal/seguimiento.php?estado=2", tablaDinamica.getCellData(i, 0), tablaDinamica.getCellData(i, 1));
+                                break;
+                        }
                     }
                 }
 
-                switch (mOpcion){
+                switch (mOpcion) {
                     case 1:
                         Ing_HFoto ingHFoto = new Ing_HFoto();
                         ingHFoto.ObtenerOpcion(1);

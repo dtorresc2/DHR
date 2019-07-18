@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/FondoTerciario"
-    tools:context=".OpcionIngreso.Especial.IngresoVisitas">
+    tools:context=".OpcionIngreso.Especial.ingresoPagosVisitas"
+    android:background="@color/FondoTerciario">
 
     <include
         android:id="@+id/toolbar"
@@ -43,7 +43,7 @@
                 android:layout_height="match_parent">
 
                 <android.support.design.widget.TextInputEditText
-                    android:id="@+id/descEspecial"
+                    android:id="@+id/descPagos"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Descripcion" />
@@ -76,14 +76,29 @@
                     android:layout_weight="2">
 
                     <android.support.design.widget.TextInputEditText
-                        android:id="@+id/terapia"
+                        android:id="@+id/fecha"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:editable="false"
-                        android:hint="Terapia Completa"
+                        android:hint="Fecha"
                         tools:ignore="Deprecated" />
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/costoPagos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Pago" />
+            </android.support.design.widget.TextInputLayout>
 
             <Space
                 android:layout_width="match_parent"
@@ -95,7 +110,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/agregarVisita"
+                    android:id="@+id/agregarPago"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -108,7 +123,7 @@
                     android:layout_height="wrap_content" />
 
                 <Button
-                    android:id="@+id/quitarVisita"
+                    android:id="@+id/quitarPago"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -123,12 +138,12 @@
                 android:layout_height="10dp" />
 
             <TextView
-                android:id="@+id/tituloVisitas"
+                android:id="@+id/tituloPagos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/AzulOscuro"
                 android:gravity="center_horizontal|center_vertical"
-                android:text="Visitas:"
+                android:text="Pagos:"
                 android:textColor="@color/Blanco"
                 android:textSize="24sp" />
 
@@ -146,7 +161,7 @@
                     android:fillViewport="true">
 
                     <TableLayout
-                        android:id="@+id/tablaVisitas"
+                        android:id="@+id/tablaPagos"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_gravity="center">
@@ -154,6 +169,9 @@
                     </TableLayout>
                 </HorizontalScrollView>
             </ScrollView>
+
         </LinearLayout>
     </ScrollView>
+
+
 </FrameLayout>

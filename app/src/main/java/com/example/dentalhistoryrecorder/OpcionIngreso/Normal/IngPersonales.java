@@ -40,6 +40,7 @@ import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.consultarFichas;
 import com.example.dentalhistoryrecorder.OpcionIngreso.Agregar;
 import com.example.dentalhistoryrecorder.R;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.tapadoo.alerter.Alerter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -168,25 +169,49 @@ public class IngPersonales extends Fragment {
         agregador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*Toast.makeText(getActivity(), "Ingresado Correctamente", Toast.LENGTH_SHORT).show();
-                escritor.putString("pnombre", primerNombre.getText().toString());
-                escritor.putString("snombre", segundoNombre.getText().toString());
-                escritor.putString("papellido", primerApellido.getText().toString());
-                escritor.putString("sapellido", segundoApellido.getText().toString());
-                escritor.putString("telefono", telefono.getText().toString());
-                escritor.putString("ocupacion", ocupacion.getText().toString());
-                escritor.putInt("edad", Integer.parseInt(edad.getText().toString()));
-                escritor.putBoolean("sexo", sexo.isChecked());
-                escritor.commit();*/
-                //insertarPaciente("http://192.168.56.1:80/DHR/IngresoN/ficha.php?db=u578331993_clinc&user=root&estado=1");
-                insertarPaciente("https://diegosistemas.xyz/DHR/Normal/ficha.php?estado=1");
-                //obtenerNumPacientes("https://diegosistemas.xyz/DHR/Normal/ficha.php?estado=3");
-                IngDetalle ingDetalle = new IngDetalle();
-                ingDetalle.obtenerPaciente(0);
-                FragmentTransaction transaction = getFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                transaction.replace(R.id.contenedor, ingDetalle);
-                transaction.commit();
+                if (!existente.isChecked()) {
+                    //Toast.makeText(getActivity(), "Ingresado Correctamente", Toast.LENGTH_SHORT).show();
+                    /*escritor.putString("pnombre", primerNombre.getText().toString());
+                    escritor.putString("snombre", segundoNombre.getText().toString());
+                    escritor.putString("papellido", primerApellido.getText().toString());
+                    escritor.putString("sapellido", segundoApellido.getText().toString());
+                    escritor.putString("telefono", telefono.getText().toString());
+                    escritor.putString("ocupacion", ocupacion.getText().toString());
+                    escritor.putInt("edad", Integer.parseInt(edad.getText().toString()));
+                    escritor.putBoolean("sexo", sexo.isChecked());
+                    escritor.commit();*/
+                    boolean validado = false;
+                    if (!primerNombre.getText().toString().isEmpty()){
+                        validado = true;
+                        if (!segundoNombre.getText().toString().isEmpty()){
+                            validado = true;
+                            if (!primerApellido.getText().toString().isEmpty()){
+                                validado = true;
+                                if(!segundoApellido.getText().toString().isEmpty()){
+                                    validado = true;
+                                    insertarPaciente("https://diegosistemas.xyz/DHR/Normal/ficha.php?estado=1");
+                                    IngDetalle ingDetalle = new IngDetalle();
+                                    ingDetalle.obtenerPaciente(0);
+                                    FragmentTransaction transaction = getFragmentManager().beginTransaction()
+                                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                                    transaction.replace(R.id.contenedor, ingDetalle);
+                                    transaction.commit();
+                                }
+                            }
+                        }
+                    }
+
+                    if (validado == false){
+                        Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                        Alerter.create(getActivity())
+                                .setTitle("Faltan Campos")
+                                .setIcon(R.drawable.logonuevo)
+                                .setTextTypeface(face2)
+                                .enableSwipeToDismiss()
+                                .setBackgroundColorRes(R.color.AzulOscuro)
+                                .show();
+                    }
+                }
             }
         });
 
@@ -219,31 +244,11 @@ public class IngPersonales extends Fragment {
         buscador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!primerNombre.getText().toString().isEmpty() && !primerApellido.getText().toString().isEmpty()) {
-                    final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-                    View viewCuadro = getLayoutInflater().inflate(R.layout.dialogo_pac_exis, null);
-                    listaPac = viewCuadro.findViewById(R.id.lista_pacientesExis);
-                    Toolbar toolbar = viewCuadro.findViewById(R.id.toolbar2);
-                    toolbar.setTitle("Pacientes");
-                    toolbar.setNavigationIcon(R.drawable.ic_cerrar);
-
-                    builder.setView(viewCuadro);
-                    final AlertDialog dialog = builder.create();
-
-                    toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            dialog.dismiss();
-                        }
-                    });
-
-                    consultarPaciente("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=1", dialog);
-                    dialog.show();
+                if (!primerNombre.getText().toString().isEmpty() && !primerApellido.getText().toString().isEmpty() && existente.isChecked()) {
+                    obtenerPacientes("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=8");
                 }
             }
         });
-
 
 
         return view;
@@ -292,7 +297,66 @@ public class IngPersonales extends Fragment {
                 parametros.put("tel", telefono.getText().toString());
                 parametros.put("fecha", fechap.getText().toString());
                 SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
-                parametros.put("user",preferencias2.getString("idUsuario","1"));
+                parametros.put("user", preferencias2.getString("idUsuario", "1"));
+                return parametros;
+            }
+
+        };
+        //RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        requestQueue.add(stringRequest);
+        //idPacientee = id[0];
+    }
+
+    public void obtenerPacientes(String URL) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if (Integer.parseInt(response) > 0) {
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    //Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                    View viewCuadro = getLayoutInflater().inflate(R.layout.dialogo_pac_exis, null);
+                    listaPac = viewCuadro.findViewById(R.id.lista_pacientesExis);
+                    Toolbar toolbar = viewCuadro.findViewById(R.id.toolbar2);
+                    toolbar.setTitle("Pacientes");
+                    toolbar.setNavigationIcon(R.drawable.ic_cerrar);
+
+                    builder.setView(viewCuadro);
+                    final AlertDialog dialog = builder.create();
+
+                    toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    consultarPaciente("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=1", dialog);
+                    dialog.show();
+
+                } else {
+                    Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                    Alerter.create(getActivity())
+                            .setTitle("NO se encontraron coincidencias")
+                            .setIcon(R.drawable.logonuevo)
+                            .setTextTypeface(face2)
+                            .enableSwipeToDismiss()
+                            .setBackgroundColorRes(R.color.AzulOscuro)
+                            .show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, "" + error.toString());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parametros = new HashMap<String, String>();
+                parametros.put("pnombre", primerNombre.getText().toString());
+                parametros.put("papellido", primerApellido.getText().toString());
+                SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+                parametros.put("id", preferencias2.getString("idUsuario", "1"));
                 return parametros;
             }
 
@@ -334,7 +398,7 @@ public class IngPersonales extends Fragment {
                         adapter.setOnItemClickListener(new AdaptadorConsulta.OnItemClickListener() {
                             @Override
                             public void onItemClick(final int position) {
-                                if (Integer.parseInt(lista.get(position).getMcontadorN()) > 0){
+                                if (Integer.parseInt(lista.get(position).getMcontadorN()) > 0) {
                                     IngDetalle ingDetalle = new IngDetalle();
                                     ingDetalle.obtenerPaciente(Integer.parseInt(lista.get(position).getMid()));
 
@@ -364,7 +428,7 @@ public class IngPersonales extends Fragment {
                 parametros.put("pnombre", primerNombre.getText().toString());
                 parametros.put("papellido", primerApellido.getText().toString());
                 SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
-                parametros.put("id",preferencias2.getString("idUsuario","1"));
+                parametros.put("id", preferencias2.getString("idUsuario", "1"));
                 return parametros;
             }
         };
