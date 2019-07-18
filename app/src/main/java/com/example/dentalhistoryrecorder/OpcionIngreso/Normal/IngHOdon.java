@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -31,6 +33,7 @@ import com.example.dentalhistoryrecorder.OpcionIngreso.Agregar;
 import com.example.dentalhistoryrecorder.OpcionSeguimiento.Seguimiento;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Tabla.TablaDinamica;
+import com.tapadoo.alerter.Alerter;
 
 import android.support.design.widget.FloatingActionButton;
 
@@ -58,6 +61,7 @@ public class IngHOdon extends Fragment {
     private static final String TAG = "MyActivity";
     private int mOpcion = 0;
     private SharedPreferences preferencias;
+    private int contador = 0;
 
     public IngHOdon() {
         // Required empty public constructor
@@ -179,7 +183,61 @@ public class IngHOdon extends Fragment {
         eliminador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "" + tablaDinamica.getCount(), Toast.LENGTH_LONG).show();
+                final Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                if (tablaDinamica.getCount() > 0) {
+                    contador = tablaDinamica.getCount();
+                    final AlertDialog.Builder d = new AlertDialog.Builder(getContext());
+                    LayoutInflater inflater = getActivity().getLayoutInflater();
+                    View dialogView = inflater.inflate(R.layout.number_picker_dialog, null);
+                    d.setCancelable(false);
+                    d.setView(dialogView);
+                    final AlertDialog alertDialog = d.create();
+
+                    TextView textView = dialogView.findViewById(R.id.titulo_dialogo);
+                    textView.setTypeface(face2);
+
+                    Button aceptar = dialogView.findViewById(R.id.aceptar);
+                    aceptar.setTypeface(face2);
+
+                    Button cancelar = dialogView.findViewById(R.id.cancelar);
+                    cancelar.setTypeface(face2);
+
+                    final NumberPicker numberPicker = dialogView.findViewById(R.id.dialog_number_picker);
+                    numberPicker.setMinValue(1);
+                    numberPicker.setMaxValue(contador);
+
+                    aceptar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            tablaDinamica.removeRow(numberPicker.getValue());
+                            alertDialog.dismiss();
+                            Alerter.create(getActivity())
+                                    .setTitle("Se Elimino Una Fila")
+                                    .setIcon(R.drawable.logonuevo)
+                                    .setTextTypeface(face2)
+                                    .enableSwipeToDismiss()
+                                    .setBackgroundColorRes(R.color.AzulOscuro)
+                                    .show();
+                        }
+                    });
+
+                    cancelar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialog.dismiss();
+                        }
+                    });
+
+                    alertDialog.show();
+                } else {
+                    Alerter.create(getActivity())
+                            .setTitle("No Hay Filas En La Tabla")
+                            .setIcon(R.drawable.logonuevo)
+                            .setTextTypeface(face2)
+                            .enableSwipeToDismiss()
+                            .setBackgroundColorRes(R.color.AzulOscuro)
+                            .show();
+                }
             }
         });
 
@@ -235,8 +293,6 @@ public class IngHOdon extends Fragment {
                         break;
 
                 }
-
-
             }
         });
 
@@ -283,7 +339,7 @@ public class IngHOdon extends Fragment {
         requestQueue.add(stringRequest);
     }
 
-    public void ObtenerOpcion(int opcion){
+    public void ObtenerOpcion(int opcion) {
         mOpcion = opcion;
     }
 
