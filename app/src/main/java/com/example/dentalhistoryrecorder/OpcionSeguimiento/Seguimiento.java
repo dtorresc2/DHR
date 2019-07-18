@@ -81,6 +81,7 @@ public class Seguimiento extends Fragment {
 
                         case 2:
                             SegPagos segPagos = new SegPagos();
+                            segPagos.ObtenerOpcion(2);
                             FragmentTransaction transaction2 = getFragmentManager().beginTransaction()
                                     .setCustomAnimations(R.anim.left_in, R.anim.left_out);
                             transaction2.replace(R.id.contenedor, segPagos);

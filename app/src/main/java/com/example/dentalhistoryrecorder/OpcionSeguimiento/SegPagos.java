@@ -26,6 +26,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.dentalhistoryrecorder.OpcionIngreso.Agregar;
+import com.example.dentalhistoryrecorder.OpcionIngreso.Normal.Ing_HFoto;
 import com.example.dentalhistoryrecorder.OpcionSeguimiento.Seguimiento;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Tabla.TablaDinamica;
@@ -43,7 +45,7 @@ public class SegPagos extends Fragment {
     private EditText descripsion, pagos, otros, desc_dolor;
     private TextView titulo_detalle, titulo_diag, titulo_pres, titulo_piez, total_costo, titulo_costo, celdap, celdat, celdac;
     private TablaDinamica tablaDinamica;
-    private int lim;
+    private int lim, mOpcion = 0;
     private double total;
     private FloatingActionButton agregador;
     private static final String TAG = "MyActivity";
@@ -97,10 +99,21 @@ public class SegPagos extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Seguimiento seguimiento = new Seguimiento();
-                FragmentTransaction transaction2 = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                transaction2.replace(R.id.contenedor, seguimiento);
-                transaction2.commit();
+                switch (mOpcion) {
+                    case 1:
+                        Agregar agregar = new Agregar();
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                        transaction.replace(R.id.contenedor, agregar);
+                        transaction.commit();
+                        break;
+
+                    case 2:
+                        Seguimiento seguimiento = new Seguimiento();
+                        FragmentTransaction transaction2 = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                        transaction2.replace(R.id.contenedor, seguimiento);
+                        transaction2.commit();
+                        break;
+                }
             }
         });
 
@@ -144,11 +157,25 @@ public class SegPagos extends Fragment {
                     }
                 }
 
-                Seguimiento seguimiento = new Seguimiento();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                transaction.replace(R.id.contenedor, seguimiento);
-                transaction.commit();
+                switch (mOpcion){
+                    case 1:
+                        Ing_HFoto ingHFoto = new Ing_HFoto();
+                        ingHFoto.ObtenerOpcion(1);
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction()
+                                .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                        transaction.replace(R.id.contenedor, ingHFoto);
+                        transaction.commit();
+                        break;
+
+                    case 2:
+                        Seguimiento seguimiento = new Seguimiento();
+                        FragmentTransaction transaction2 = getFragmentManager().beginTransaction()
+                                .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                        transaction2.replace(R.id.contenedor, seguimiento);
+                        transaction2.commit();
+                        break;
+                }
+
             }
         });
 
@@ -184,5 +211,9 @@ public class SegPagos extends Fragment {
 
         };
         requestQueue.add(stringRequest);
+    }
+
+    public void ObtenerOpcion(int opcion) {
+        mOpcion = opcion;
     }
 }

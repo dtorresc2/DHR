@@ -30,6 +30,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.dentalhistoryrecorder.OpcionIngreso.Agregar;
+import com.example.dentalhistoryrecorder.OpcionSeguimiento.SegPagos;
 import com.example.dentalhistoryrecorder.OpcionSeguimiento.Seguimiento;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Tabla.TablaDinamica;
@@ -278,12 +279,20 @@ public class IngHOdon extends Fragment {
 
                 switch (mOpcion) {
                     case 1:
-                        Ing_HFoto ingHFoto = new Ing_HFoto();
+                        /*Ing_HFoto ingHFoto = new Ing_HFoto();
                         ingHFoto.ObtenerOpcion(1);
                         FragmentTransaction transaction = getFragmentManager().beginTransaction()
                                 .setCustomAnimations(R.anim.left_in, R.anim.left_out);
                         transaction.replace(R.id.contenedor, ingHFoto);
+                        transaction.commit();*/
+
+                        SegPagos segPagos = new SegPagos();
+                        segPagos.ObtenerOpcion(1);
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction()
+                                .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                        transaction.replace(R.id.contenedor, segPagos);
                         transaction.commit();
+
                         break;
                     case 2:
                         Seguimiento seguimiento = new Seguimiento();
