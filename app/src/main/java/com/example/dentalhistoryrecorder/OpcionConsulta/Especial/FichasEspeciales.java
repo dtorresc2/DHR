@@ -1,6 +1,7 @@
 package com.example.dentalhistoryrecorder.OpcionConsulta.Especial;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -10,6 +11,7 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -122,6 +124,7 @@ public class FichasEspeciales extends Fragment {
         View view = inflater.inflate(R.layout.fragment_fichas_especiales, container, false);
         Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         requestQueue = Volley.newRequestQueue(getContext());
+
         preferencias = getActivity().getSharedPreferences("Consultar", Context.MODE_PRIVATE);
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle("Ficha Especial");
@@ -149,14 +152,24 @@ public class FichasEspeciales extends Fragment {
                         }
                         return true;
 
-                    case R.id.action_actualizar:
-                        return true;
-
                     default:
                         return false;
                 }
             }
         });
+
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.progressDialog);
+        progressDialog.setMessage("Cargando...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                progressDialog.dismiss();
+            }
+        }, 3000);
 
         //Detalle de Ficha
 
@@ -367,6 +380,7 @@ public class FichasEspeciales extends Fragment {
 
         consultarDetalle("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=2");
         consultarVisitas("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=3");
+        consultarPagos("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=17");
         consultarFirma("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=4");
         consultarEvaluacion("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=5");
 
@@ -390,9 +404,10 @@ public class FichasEspeciales extends Fragment {
                     jsonArray = new JSONArray(response);
                     if (jsonArray.length() > 0) {
                         for (int i = 0; i < jsonArray.length(); i++) {
-                            enganche.setText(jsonArray.getJSONObject(i).getString("enganche"));
-                            costo.setText(jsonArray.getJSONObject(i).getString("costovisita"));
-                            terapia.setText(jsonArray.getJSONObject(i).getString("terapia"));
+                            //String.format("%.2f", totV)
+                            enganche.setText(String.format("%.2f",jsonArray.getJSONObject(i).getDouble("enganche")));
+                            costo.setText(String.format("%.2f",jsonArray.getJSONObject(i).getDouble("costovisita")));
+                            terapia.setText(String.format("%.2f",jsonArray.getJSONObject(i).getDouble("terapia")));
                         }
                     }
 
@@ -466,6 +481,47 @@ public class FichasEspeciales extends Fragment {
         requestQueue.add(stringRequest);
     }
 
+    public void consultarPagos(String URL) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JSONArray jsonArray = null;
+                try {
+                    jsonArray = new JSONArray(response);
+                    if (jsonArray.length() > 0) {
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            String[] item = new String[]{
+                                    jsonArray.getJSONObject(i).getString("fecha"),
+                                    jsonArray.getJSONObject(i).getString("descripsion"),
+                                    String.format("%.2f", jsonArray.getJSONObject(i).getDouble("cantidad"))
+                            };
+                            tablaDinamica2.addItem(item);
+                        }
+                    }
+
+                } catch (JSONException e) {
+                    Log.i(TAG, "" + e);
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, "" + error.toString());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parametros = new HashMap<String, String>();
+                parametros.put("id", preferencias.getString("idficha", ""));
+                return parametros;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
+
     public void consultarFirma(String URL) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
@@ -531,7 +587,6 @@ public class FichasEspeciales extends Fragment {
                             consultarTMJ("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=16", evaluacion);
                         }
                     }
-
                 } catch (JSONException e) {
                     Log.i(TAG, "" + e);
                     e.printStackTrace();
@@ -1844,9 +1899,9 @@ public class FichasEspeciales extends Fragment {
             documento3.close();
 
             //Estampando en las plantillas
-            //Plantillas Contrato Compromiso
+            //Plantillas Evaluacion
 
-            //Contrato Compromiso ----------------------------------------------------------------------
+            //Evaluacion ----------------------------------------------------------------------
             carpetaPlantillas = new File(Environment.getExternalStorageDirectory().toString(), "Plantillas");
 
             if (!carpetaPlantillas.exists()) {
@@ -1962,29 +2017,66 @@ public class FichasEspeciales extends Fragment {
                 }
             }
 
+            if (tablaDinamica2.getCount() > 0){
+
+                esp = new Paragraph("Tabla de Pagos", fuentetitulo);
+                esp.setAlignment(Element.ALIGN_CENTER);
+                documento4.add(esp);
+
+                PdfPTable TablaP = new PdfPTable(3);
+                PdfPCell columnasP, filasP;
+                String registros[] = {"Fecha", "Descripsion", "Monto"};
+
+                //Columnas
+                for (int i = 0; i < 3; i++) {
+                    columnasP = new PdfPCell(new Phrase(registros[i], fuentecolumna));
+                    columnasP.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    columnasP.setVerticalAlignment(Element.ALIGN_CENTER);
+                    columnasP.setBackgroundColor(fondo);
+                    TablaP.addCell(columnasP);
+                }
+                TablaP.setHeaderRows(tablaDinamica2.getCount());
+
+                //Relleno de las filas
+                for (int row = 1; row < tablaDinamica2.getCount() + 1; row++) {
+                    for (int column = 0; column < 3; column++) {
+                        filasP = new PdfPCell(new Phrase(tablaDinamica2.getCellData(row, column), fuentedatos));
+                        filasP.setHorizontalAlignment(Element.ALIGN_CENTER);
+                        TablaP.addCell(filasP);
+                    }
+                }
+                TablaP.setSpacingBefore(15);
+                documento4.add(TablaP);
+
+                for (int i = 1; i < tablaDinamica2.getCount() + 1; i++){
+                    totP += Double.parseDouble(tablaDinamica2.getCellData(i, 2));
+                }
+            }
+
+
             dif =  totV - totP;
 
             //Edad del paciente
             PdfContentByte cb20 = escritorpdf3.getDirectContent();
 
             cb20.beginText();
-            posy = documento4.getPageSize().getHeight() - 159;
+            posy3 = documento4.getPageSize().getHeight() - 159;
             cb20.setFontAndSize(baseFont, 14);
-            cb20.setTextMatrix(140, posy);
+            cb20.setTextMatrix(140, posy3);
             cb20.showText(String.format("%.2f", totV));
             cb20.endText();
 
             cb20.beginText();
-            posy = documento4.getPageSize().getHeight() - 159;
+            posy3 = documento4.getPageSize().getHeight() - 159;
             cb20.setFontAndSize(baseFont, 14);
-            cb20.setTextMatrix(258, posy);
+            cb20.setTextMatrix(258, posy3);
             cb20.showText(String.format("%.2f", totP));
             cb20.endText();
 
             cb20.beginText();
-            posy = documento4.getPageSize().getHeight() - 159;
+            posy3 = documento4.getPageSize().getHeight() - 159;
             cb20.setFontAndSize(baseFont, 14);
-            cb20.setTextMatrix(380, posy);
+            cb20.setTextMatrix(380, posy3);
             cb20.showText(String.format("%.2f", dif));
             cb20.endText();
 

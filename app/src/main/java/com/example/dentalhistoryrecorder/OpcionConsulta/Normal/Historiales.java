@@ -140,12 +140,6 @@ public class Historiales extends Fragment {
                         }
                         return true;
 
-                    case R.id.action_actualizar:
-                        consultarHM("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=3");
-                        consultarHO("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=5");
-                        consultarHF("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=7");
-                        return true;
-
                     default:
                         return false;
                 }
@@ -265,6 +259,7 @@ public class Historiales extends Fragment {
         tablaDinamica2.addHeader(header2);
         tablaDinamica2.addData(getClients2());
         tablaDinamica2.fondoHeader(R.color.AzulOscuro);
+
 
         //Declarando Historial Fotografico
         titulofotos = view.findViewById(R.id.titulo_historialfotografico);
@@ -490,9 +485,7 @@ public class Historiales extends Fragment {
                             }
                             costo_total.setText(String.format("%.2f", total));
                         }
-
                     }
-
                 } catch (JSONException e) {
                     Log.i(TAG, "" + e);
                     e.printStackTrace();
@@ -517,9 +510,8 @@ public class Historiales extends Fragment {
 
     //Consultar Historial Fotografico
     public void consultarHF(String URL) {
-        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setTitle("Consulta de Fichas");
-        progressDialog.setProgressStyle(R.style.progressDialogg);
+
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.progressDialog);
         progressDialog.setMessage("Cargando...");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCancelable(false);
@@ -599,7 +591,6 @@ public class Historiales extends Fragment {
                             }
                             pagos_total.setText(String.format("%.2f", totalPagos));
                         }
-
                     }
 
                 } catch (JSONException e) {

@@ -55,6 +55,7 @@ public class Consultar extends Fragment {
     private static final String TAG = "MyActivity";
     SharedPreferences preferencias;
     private int mOpcion = 0;
+    private TextView etiquetaN, etiquetaE;
 
     public Consultar() {
         // Required empty public constructor
@@ -97,12 +98,30 @@ public class Consultar extends Fragment {
 
         lista_pacientes = view.findViewById(R.id.lista_pacientes);
 
+
+        etiquetaN = view.findViewById(R.id.etiquetaN);
+        etiquetaN.setTypeface(face);
+        etiquetaE = view.findViewById(R.id.etiquetaE);
+        etiquetaE.setTypeface(face);
+
         buscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //consultarPaciente("http://192.168.56.1/DHR/IngresoN/consultaficha.php?db=u578331993_clinc&user=root");
                 //consultarPaciente("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=1");
-                obtenerPacientes("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=8");
+                if (!pnombre.getText().toString().isEmpty() && !papellido.getText().toString().isEmpty()) {
+                    obtenerPacientes("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=8");
+
+                }
+                else {
+                    Alerter.create(getActivity())
+                            .setTitle("Hay Campos Vacios")
+                            .setIcon(R.drawable.logonuevo)
+                            .setTextTypeface(face)
+                            .enableSwipeToDismiss()
+                            .setBackgroundColorRes(R.color.AzulOscuro)
+                            .show();
+                }
             }
         });
 
@@ -138,6 +157,8 @@ public class Consultar extends Fragment {
                         adapter = new AdaptadorConsulta(lista);
                         lista_pacientes.setLayoutManager(layoutManager);
                         lista_pacientes.setAdapter(adapter);
+                        pnombre.setText(null);
+                        papellido.setText(null);
                         adapter.setOnItemClickListener(new AdaptadorConsulta.OnItemClickListener() {
                             @Override
                             public void onItemClick(final int position) {
@@ -255,6 +276,8 @@ public class Consultar extends Fragment {
                             .enableSwipeToDismiss()
                             .setBackgroundColorRes(R.color.AzulOscuro)
                             .show();
+                    pnombre.setText(null);
+                    papellido.setText(null);
                 }
             }
         }, new Response.ErrorListener() {

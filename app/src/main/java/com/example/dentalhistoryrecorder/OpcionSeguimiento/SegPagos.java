@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +33,7 @@ import com.example.dentalhistoryrecorder.OpcionIngreso.Normal.Ing_HFoto;
 import com.example.dentalhistoryrecorder.OpcionSeguimiento.Seguimiento;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Tabla.TablaDinamica;
+import com.tapadoo.alerter.Alerter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,6 +54,7 @@ public class SegPagos extends Fragment {
     private static final String TAG = "MyActivity";
     private Toolbar toolbar;
     private SharedPreferences preferencias;
+    private int contador = 0;
 
     public SegPagos() {
         // Required empty public constructor
@@ -62,7 +66,7 @@ public class SegPagos extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_seg_pagos, container, false);
-        Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+        final Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         requestQueue = Volley.newRequestQueue(getContext());
         toolbar = view.findViewById(R.id.toolbar);
         listador = view.findViewById(R.id.guardador_hm);
@@ -93,9 +97,9 @@ public class SegPagos extends Fragment {
         tablaDinamica.addHeader(header);
         tablaDinamica.addData(getClients());
         tablaDinamica.fondoHeader(R.color.AzulOscuro);
-
-        toolbar.setTitle("Historial Odontodologico");
+        toolbar.setTitle("Pagos");
         toolbar.setNavigationIcon(R.drawable.ic_cerrar);
+
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,7 +146,61 @@ public class SegPagos extends Fragment {
         eliminador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "" + tablaDinamica.getCount(), Toast.LENGTH_LONG).show();
+                final Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                if (tablaDinamica.getCount() > 0) {
+                    contador = tablaDinamica.getCount();
+                    final AlertDialog.Builder d = new AlertDialog.Builder(getContext());
+                    LayoutInflater inflater = getActivity().getLayoutInflater();
+                    View dialogView = inflater.inflate(R.layout.number_picker_dialog, null);
+                    d.setCancelable(false);
+                    d.setView(dialogView);
+                    final AlertDialog alertDialog = d.create();
+
+                    TextView textView = dialogView.findViewById(R.id.titulo_dialogo);
+                    textView.setTypeface(face2);
+
+                    Button aceptar = dialogView.findViewById(R.id.aceptar);
+                    aceptar.setTypeface(face2);
+
+                    Button cancelar = dialogView.findViewById(R.id.cancelar);
+                    cancelar.setTypeface(face2);
+
+                    final NumberPicker numberPicker = dialogView.findViewById(R.id.dialog_number_picker);
+                    numberPicker.setMinValue(1);
+                    numberPicker.setMaxValue(contador);
+
+                    aceptar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            tablaDinamica.removeRow(numberPicker.getValue());
+                            alertDialog.dismiss();
+                            Alerter.create(getActivity())
+                                    .setTitle("Se Elimino Una Fila")
+                                    .setIcon(R.drawable.logonuevo)
+                                    .setTextTypeface(face2)
+                                    .enableSwipeToDismiss()
+                                    .setBackgroundColorRes(R.color.AzulOscuro)
+                                    .show();
+                        }
+                    });
+
+                    cancelar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialog.dismiss();
+                        }
+                    });
+
+                    alertDialog.show();
+                } else {
+                    Alerter.create(getActivity())
+                            .setTitle("No Hay Filas En La Tabla")
+                            .setIcon(R.drawable.logonuevo)
+                            .setTextTypeface(face2)
+                            .enableSwipeToDismiss()
+                            .setBackgroundColorRes(R.color.AzulOscuro)
+                            .show();
+                }
             }
         });
 
@@ -164,25 +222,34 @@ public class SegPagos extends Fragment {
                                 break;
                         }
                     }
+
+                    switch (mOpcion) {
+                        case 1:
+                            Ing_HFoto ingHFoto = new Ing_HFoto();
+                            ingHFoto.ObtenerOpcion(1);
+                            FragmentTransaction transaction = getFragmentManager().beginTransaction()
+                                    .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                            transaction.replace(R.id.contenedor, ingHFoto);
+                            transaction.commit();
+                            break;
+
+                        case 2:
+                            Seguimiento seguimiento = new Seguimiento();
+                            FragmentTransaction transaction2 = getFragmentManager().beginTransaction()
+                                    .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                            transaction2.replace(R.id.contenedor, seguimiento);
+                            transaction2.commit();
+                            break;
+                    }
                 }
-
-                switch (mOpcion) {
-                    case 1:
-                        Ing_HFoto ingHFoto = new Ing_HFoto();
-                        ingHFoto.ObtenerOpcion(1);
-                        FragmentTransaction transaction = getFragmentManager().beginTransaction()
-                                .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                        transaction.replace(R.id.contenedor, ingHFoto);
-                        transaction.commit();
-                        break;
-
-                    case 2:
-                        Seguimiento seguimiento = new Seguimiento();
-                        FragmentTransaction transaction2 = getFragmentManager().beginTransaction()
-                                .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                        transaction2.replace(R.id.contenedor, seguimiento);
-                        transaction2.commit();
-                        break;
+                else {
+                    Alerter.create(getActivity())
+                            .setTitle("No Hay Filas En La Tabla")
+                            .setIcon(R.drawable.logonuevo)
+                            .setTextTypeface(face)
+                            .enableSwipeToDismiss()
+                            .setBackgroundColorRes(R.color.AzulOscuro)
+                            .show();
                 }
 
             }

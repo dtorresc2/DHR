@@ -2,12 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/action_actualizar"
-        android:icon="@drawable/ic_actualizar"
-        android:orderInCategory="100"
-        app:showAsAction="ifRoom"
-        android:title="actualizar" />
-
     <item android:id="@+id/action_exportar"
         android:icon="@drawable/pdf_box"
         android:orderInCategory="100"

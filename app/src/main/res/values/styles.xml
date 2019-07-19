@@ -26,11 +26,18 @@
         <item name ="android:textColor">#ffff</item>
     </style>
 
-    <style name="progressDialogg">
-        <item name="colorAccent">@color/AzulOscuro</item>
+    <style name="progressDialog" parent="Theme.AppCompat.Dialog">
+        <item name="colorAccent">@color/FondoTerciario</item>
         <item name="android:textColorPrimary">@color/Blanco</item>
-        <item name="android:background">@color/FondoTerciario</item>
+        <item name="android:background">@color/AzulOscuro</item>
+        <item name="android:textSize">18sp</item>
     </style>
+
+    <!-- <style name="AppTheme.Dark.Dialog" parent="Theme.AppCompat.Dialog">
+        <item name="colorAccent">@color/white</item>
+        <item name="android:textColorPrimary">@color/iron</item>
+        <item name="android:background">@color/red</item>
+    </style> -->
 
     <style name="AppTheme.Slide">
         <item name="android:windowEnterAnimation">@anim/slide_up</item>

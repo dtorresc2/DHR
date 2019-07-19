@@ -147,4 +147,12 @@ public class TablaDinamica {
         data.remove(rowIndex - 1);
         //repintarTabla();
     }
+
+    public void removeAll(){
+        if (data.size() > 0){
+            for (int i = 1; i < data.size() + 1; i++){
+                tableLayout.removeViewAt(i);
+            }
+        }
+    }
 }

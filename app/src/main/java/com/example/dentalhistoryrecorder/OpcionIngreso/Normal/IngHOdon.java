@@ -73,7 +73,7 @@ public class IngHOdon extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_ing_hodon, container, false);
-        Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+        final Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         requestQueue = Volley.newRequestQueue(getContext());
 
         preferencias = getActivity().getSharedPreferences("Consultar", Context.MODE_PRIVATE);
@@ -275,10 +275,9 @@ public class IngHOdon extends Fragment {
                                 break;
                         }
                     }
-                }
 
-                switch (mOpcion) {
-                    case 1:
+                    switch (mOpcion) {
+                        case 1:
                         /*Ing_HFoto ingHFoto = new Ing_HFoto();
                         ingHFoto.ObtenerOpcion(1);
                         FragmentTransaction transaction = getFragmentManager().beginTransaction()
@@ -286,22 +285,34 @@ public class IngHOdon extends Fragment {
                         transaction.replace(R.id.contenedor, ingHFoto);
                         transaction.commit();*/
 
-                        SegPagos segPagos = new SegPagos();
-                        segPagos.ObtenerOpcion(1);
-                        FragmentTransaction transaction = getFragmentManager().beginTransaction()
-                                .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                        transaction.replace(R.id.contenedor, segPagos);
-                        transaction.commit();
+                            SegPagos segPagos = new SegPagos();
+                            segPagos.ObtenerOpcion(1);
+                            FragmentTransaction transaction = getFragmentManager().beginTransaction()
+                                    .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                            transaction.replace(R.id.contenedor, segPagos);
+                            transaction.commit();
 
-                        break;
-                    case 2:
-                        Seguimiento seguimiento = new Seguimiento();
-                        FragmentTransaction transaction2 = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                        transaction2.replace(R.id.contenedor, seguimiento);
-                        transaction2.commit();
-                        break;
+                            break;
+                        case 2:
+                            Seguimiento seguimiento = new Seguimiento();
+                            FragmentTransaction transaction2 = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                            transaction2.replace(R.id.contenedor, seguimiento);
+                            transaction2.commit();
+                            break;
 
+                    }
                 }
+                else {
+                    Alerter.create(getActivity())
+                            .setTitle("No Hay Filas En La Tabla")
+                            .setIcon(R.drawable.logonuevo)
+                            .setTextTypeface(face)
+                            .enableSwipeToDismiss()
+                            .setBackgroundColorRes(R.color.AzulOscuro)
+                            .show();
+                }
+
+
             }
         });
 

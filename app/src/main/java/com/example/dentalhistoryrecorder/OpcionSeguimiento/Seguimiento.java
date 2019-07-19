@@ -34,7 +34,7 @@ public class Seguimiento extends Fragment {
         final Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle("Seguimiento de Fichas");
-        toolbar.setNavigationIcon(R.drawable.ic_atras);
+        toolbar.setNavigationIcon(R.drawable.ic_cerrar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
