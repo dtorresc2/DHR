@@ -213,14 +213,27 @@ public class Consultar extends Fragment {
                                         @Override
                                         public void onClick(View v) {
                                             if (Integer.parseInt(lista.get(position).getMcontadorE()) > 0) {
-                                                consultarFichas consultarFichas1 = new consultarFichas(lista.get(position).getMid(), 4);
-                                                SharedPreferences.Editor escritor2 = preferencias.edit();
-                                                escritor2.putString("nombre", lista.get(position).getMnombre());
-                                                escritor2.commit();
-                                                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                                                transaction.replace(R.id.contenedor, consultarFichas1);
-                                                transaction.commit();
-                                                dialog.dismiss();
+
+                                                if (mOpcion != 2){
+                                                    consultarFichas consultarFichas1 = new consultarFichas(lista.get(position).getMid(), 4);
+                                                    SharedPreferences.Editor escritor2 = preferencias.edit();
+                                                    escritor2.putString("nombre", lista.get(position).getMnombre());
+                                                    escritor2.commit();
+                                                    FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                                                    transaction.replace(R.id.contenedor, consultarFichas1);
+                                                    transaction.commit();
+                                                    dialog.dismiss();
+                                                }
+                                                else {
+                                                    consultarFichas consultarFichas1 = new consultarFichas(lista.get(position).getMid(), 5);
+                                                    SharedPreferences.Editor escritor2 = preferencias.edit();
+                                                    escritor2.putString("nombre", lista.get(position).getMnombre());
+                                                    escritor2.commit();
+                                                    FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                                                    transaction.replace(R.id.contenedor, consultarFichas1);
+                                                    transaction.commit();
+                                                    dialog.dismiss();
+                                                }
                                             }
                                         }
                                     });

@@ -94,7 +94,7 @@ public class consultarFichas extends Fragment {
         }, 1000);
 
 
-        if (mOpcion != 4){
+        if (mOpcion < 4){
             consultarFichas("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=2");
         }
         else {
@@ -209,10 +209,16 @@ public class consultarFichas extends Fragment {
 
                                 switch (mOpcion) {
                                     case 4:
-                                        FragmentTransaction transaction3 = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                                        FragmentTransaction transaction3 = getFragmentManager()
+                                                .beginTransaction()
+                                                .setCustomAnimations(R.anim.right_in, R.anim.right_out);
                                         FichasEspeciales fichasEspeciales = new FichasEspeciales();
                                         transaction3.replace(R.id.contenedor, fichasEspeciales);
                                         transaction3.commit();
+                                        break;
+
+                                    case 5:
+                                        Toast.makeText(getActivity(),"Seguimiento Especial", Toast.LENGTH_LONG).show();
                                         break;
 
                                     default:
