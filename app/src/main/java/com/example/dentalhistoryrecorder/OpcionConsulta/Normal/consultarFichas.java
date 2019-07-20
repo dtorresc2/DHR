@@ -2,10 +2,12 @@ package com.example.dentalhistoryrecorder.OpcionConsulta.Normal;
 
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -77,6 +79,20 @@ public class consultarFichas extends Fragment {
         nombre.setEnabled(false);
         nombre.setText(preferencias.getString("nombre", ""));
         listafichas = view.findViewById(R.id.lista_fichas);
+
+        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+        progressDialog.setMessage("Cargando...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                progressDialog.dismiss();
+            }
+        }, 1000);
+
 
         if (mOpcion != 4){
             consultarFichas("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=2");

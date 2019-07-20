@@ -1,9 +1,11 @@
 package com.example.dentalhistoryrecorder.OpcionIngreso.Normal;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
@@ -260,6 +262,19 @@ public class IngHOdon extends Fragment {
                     }
                 }
                 escritor.commit();*/
+
+                final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+                progressDialog.setMessage("Cargando...");
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        progressDialog.dismiss();
+                    }
+                }, 1000);
 
                 if (tablaDinamica.getCount() > 0) {
                     for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {

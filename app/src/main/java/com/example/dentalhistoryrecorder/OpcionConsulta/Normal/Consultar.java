@@ -1,9 +1,11 @@
 package com.example.dentalhistoryrecorder.OpcionConsulta.Normal;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -110,8 +112,19 @@ public class Consultar extends Fragment {
                 //consultarPaciente("http://192.168.56.1/DHR/IngresoN/consultaficha.php?db=u578331993_clinc&user=root");
                 //consultarPaciente("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=1");
                 if (!pnombre.getText().toString().isEmpty() && !papellido.getText().toString().isEmpty()) {
-                    obtenerPacientes("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=8");
+                    final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+                    progressDialog.setMessage("Cargando...");
+                    progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                    progressDialog.setCancelable(false);
+                    progressDialog.show();
 
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        public void run() {
+                            progressDialog.dismiss();
+                        }
+                    }, 1000);
+                    obtenerPacientes("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=8");
                 }
                 else {
                     Alerter.create(getActivity())

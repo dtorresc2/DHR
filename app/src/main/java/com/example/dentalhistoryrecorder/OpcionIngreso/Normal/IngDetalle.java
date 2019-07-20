@@ -2,10 +2,12 @@ package com.example.dentalhistoryrecorder.OpcionIngreso.Normal;
 
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
@@ -131,13 +133,24 @@ public class IngDetalle extends Fragment {
         guardador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+                progressDialog.setMessage("Cargando...");
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        progressDialog.dismiss();
+                    }
+                }, 1000);
+
                 if (idPacienteExis == 0){
                     insertarFicha("https://diegosistemas.xyz/DHR/Normal/ficha.php?estado=2");
-                    Toast.makeText(getActivity(),"Entre",Toast.LENGTH_LONG).show();
                 }
                 else {
                     insertarFichaExistente("https://diegosistemas.xyz/DHR/Normal/ficha.php?estado=3");
-                    Toast.makeText(getActivity(),"No Entre",Toast.LENGTH_LONG).show();
                 }
                 IngHMedico ingHMedico = new IngHMedico();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction()

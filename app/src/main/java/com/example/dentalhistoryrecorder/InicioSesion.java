@@ -1,11 +1,13 @@
 package com.example.dentalhistoryrecorder;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Typeface;
+import android.os.Handler;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -76,8 +78,7 @@ public class InicioSesion extends AppCompatActivity {
 
                 if (!correo.getText().toString().isEmpty() && !pass.getText().toString().isEmpty()) {
                     iniciarSesion("https://diegosistemas.xyz/DHR/sesiones.php");
-                }
-                else{
+                } else {
                     //Toast.makeText(getApplicationContext(), "Faltan Campos", Toast.LENGTH_SHORT).show();
                     Alerter.create(InicioSesion.this)
                             .setTitle("Error")
@@ -102,6 +103,20 @@ public class InicioSesion extends AppCompatActivity {
                     if (jsonArray.length() > 0) {
                         for (int i = 0; i < jsonArray.length(); i++) {
                             int idUsuarios = jsonArray.getJSONObject(i).getInt("idUsuarios");
+
+                            final ProgressDialog progressDialog = new ProgressDialog(InicioSesion.this, R.style.progressDialog);
+                            progressDialog.setMessage("Autenticando...");
+                            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                            progressDialog.setCancelable(false);
+                            progressDialog.show();
+
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                public void run() {
+                                    progressDialog.dismiss();
+                                }
+                            }, 1000);
+
                             if (idUsuarios > 0) {
                                 int mobil = jsonArray.getJSONObject(i).getInt("mobil");
                                 switch (mobil) {
@@ -138,8 +153,7 @@ public class InicioSesion extends AppCompatActivity {
                                         finish();
                                         break;
                                 }
-                            }
-                            else {
+                            } else {
                                 //Toast.makeText(getApplicationContext(), "El Usuario NO existe",Toast.LENGTH_LONG).show();
                                 Typeface face2 = Typeface.createFromAsset(getAssets(), "fonts/bahnschrift.ttf");
                                 Alerter.create(InicioSesion.this)

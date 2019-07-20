@@ -1,9 +1,11 @@
 package com.example.dentalhistoryrecorder.OpcionIngreso.Normal;
 
 
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -177,7 +179,20 @@ public class IngHMedico extends Fragment {
                 escritor.commit();
                 obtenerID("http://192.168.56.1:80/DHR/IngresoN/ficha.php?db=u578331993_clinc&user=root&estado=3");
                 obtenerID2("http://192.168.56.1:80/DHR/IngresoN/ficha.php?db=u578331993_clinc&user=root&estado=6");*/
-                //insertarHMedico("http://192.168.56.1:80/DHR/IngresoN/ficha.php?db=u578331993_clinc&user=root&estado=4");
+
+                final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+                progressDialog.setMessage("Cargando...");
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        progressDialog.dismiss();
+                    }
+                }, 1000);
+
                 insertarHMedico("https://diegosistemas.xyz/DHR/Normal/ficha.php?estado=4");
                 HMedico2 hMedico2 = new HMedico2();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction()

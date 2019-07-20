@@ -3,6 +3,7 @@ package com.example.dentalhistoryrecorder.OpcionIngreso.Normal;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,6 +18,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.ParcelFileDescriptor;
 import android.os.StrictMode;
 import android.provider.MediaStore;
@@ -268,6 +270,20 @@ public class Ing_HFoto extends Fragment {
             public void onClick(View v) {
                 //SharedPreferences.Editor escritor = preferencias.edit();
                 //escritor.putInt("fotos", lista_fotos.size());
+
+                final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+                progressDialog.setMessage("Cargando...");
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        progressDialog.dismiss();
+                    }
+                }, 2000);
+
                 if (lista_fotos.size() > 0) {
                     for (int i = 0; i < lista_fotos.size(); i++) {
                         Bitmap bitmap_aux = lista_fotos.get(i);
@@ -310,9 +326,6 @@ public class Ing_HFoto extends Fragment {
                         transaction2.commit();
                         break;
                 }
-
-
-
             }
         });
 

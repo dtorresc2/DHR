@@ -1,10 +1,12 @@
 package com.example.dentalhistoryrecorder.OpcionSeguimiento;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -208,6 +210,20 @@ public class SegPagos extends Fragment {
         agregador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+                progressDialog.setMessage("Cargando...");
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        progressDialog.dismiss();
+                    }
+                }, 1000);
+
                 if (tablaDinamica.getCount() > 0) {
                     for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
                         //insertarTratamiento("http://192.168.56.1:80/DHR/IngresoN/ficha.php?db=u578331993_clinc&user=root&estado=10", tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2), tablaDinamica.getCellData(i, 0));
