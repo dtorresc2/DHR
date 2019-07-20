@@ -286,7 +286,6 @@ public class IngHOdon extends Fragment {
                                 break;
                             case 2:
                                 agregarTratamiento("https://diegosistemas.xyz/DHR/Normal/seguimiento.php?estado=1", tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2), tablaDinamica.getCellData(i, 0));
-                                Toast.makeText(getActivity(), preferencias.getString("idficha", ""), Toast.LENGTH_LONG).show();
                                 break;
                         }
                     }
