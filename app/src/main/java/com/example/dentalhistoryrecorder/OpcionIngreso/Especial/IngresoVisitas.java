@@ -3,7 +3,6 @@ package com.example.dentalhistoryrecorder.OpcionIngreso.Especial;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -33,14 +32,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.dentalhistoryrecorder.OpcionConsulta.Items;
 import com.example.dentalhistoryrecorder.OpcionIngreso.Agregar;
+import com.example.dentalhistoryrecorder.OpcionSeguimiento.SeguimientoEspecial;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Tabla.TablaDinamica;
 import com.tapadoo.alerter.Alerter;
-
-import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -66,6 +62,8 @@ public class IngresoVisitas extends Fragment {
     private SharedPreferences preferencias;
     private static final String TAG = "MyActivity";
 
+    private int mOpcion = 0;
+
     public IngresoVisitas() {
         // Required empty public constructor
     }
@@ -84,10 +82,25 @@ public class IngresoVisitas extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Agregar agregar = new Agregar();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                transaction.replace(R.id.contenedor, agregar);
-                transaction.commit();
+                switch (mOpcion) {
+                    case 1:
+                        Agregar agregar = new Agregar();
+                        FragmentTransaction transaction = getFragmentManager()
+                                .beginTransaction()
+                                .setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                        transaction.replace(R.id.contenedor, agregar);
+                        transaction.commit();
+                        break;
+
+                    case 2:
+                        SeguimientoEspecial seguimientoEspecial = new SeguimientoEspecial();
+                        FragmentTransaction transaction2 = getFragmentManager()
+                                .beginTransaction()
+                                .setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                        transaction2.replace(R.id.contenedor, seguimientoEspecial);
+                        transaction2.commit();
+                        break;
+                }
             }
         });
 
@@ -243,13 +256,37 @@ public class IngresoVisitas extends Fragment {
 
                 if (tablaDinamica.getCount() > 0) {
                     for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
-                        agregarVisitas("https://diegosistemas.xyz/DHR/Especial/ingresoE.php?estado=3", tablaDinamica.getCellData(i, 0), tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2));
+
+                        switch (mOpcion){
+                            case 1:
+                                agregarVisitas("https://diegosistemas.xyz/DHR/Especial/ingresoE.php?estado=3", tablaDinamica.getCellData(i, 0), tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2));
+                                break;
+
+                            case 2:
+                                Toast.makeText(getContext(),"Agregando Seguimiento",Toast.LENGTH_LONG).show();
+                                break;
+                        }
                     }
 
-                    ingresoPagosVisitas ingresoPagosVisitas1 = new ingresoPagosVisitas();
-                    FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                    transaction.replace(R.id.contenedor, ingresoPagosVisitas1);
-                    transaction.commit();
+                    switch (mOpcion){
+                        case 1:
+                            IngresoPagosVisitas ingresoPagosVisitas1 = new IngresoPagosVisitas();
+                            ingresoPagosVisitas1.ObtenerOpcion(1);
+                            FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                            transaction.replace(R.id.contenedor, ingresoPagosVisitas1);
+                            transaction.commit();
+                            break;
+
+                        case 2:
+                            SeguimientoEspecial seguimientoEspecial = new SeguimientoEspecial();
+                            FragmentTransaction transaction2 = getFragmentManager()
+                                    .beginTransaction()
+                                    .setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                            transaction2.replace(R.id.contenedor, seguimientoEspecial);
+                            transaction2.commit();
+                            break;
+                    }
+
                 } else {
                     Alerter.create(getActivity())
                             .setTitle("No Ingreso Visitas")
@@ -293,6 +330,10 @@ public class IngresoVisitas extends Fragment {
 
         };
         requestQueue.add(stringRequest);
+    }
+
+    public void ObtenerOpcion(int opcion){
+        mOpcion = opcion;
     }
 
 }

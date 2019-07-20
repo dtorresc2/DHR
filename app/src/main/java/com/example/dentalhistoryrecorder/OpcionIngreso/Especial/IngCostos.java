@@ -109,6 +109,7 @@ public class IngCostos extends Fragment {
                     crearFicha("https://diegosistemas.xyz/DHR/Especial/ingresoE.php?estado=1");
 
                     IngresoVisitas ingresoVisitas = new IngresoVisitas();
+                    ingresoVisitas.ObtenerOpcion(1);
                     FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
                     transaction.replace(R.id.contenedor, ingresoVisitas);
                     transaction.commit();

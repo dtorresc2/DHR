@@ -32,6 +32,7 @@ import com.example.dentalhistoryrecorder.OpcionConsulta.Items;
 import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.Adaptadores.AdaptadorConsulta;
 import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.Adaptadores.AdaptadorConsultaFicha;
 import com.example.dentalhistoryrecorder.OpcionSeguimiento.Seguimiento;
+import com.example.dentalhistoryrecorder.OpcionSeguimiento.SeguimientoEspecial;
 import com.example.dentalhistoryrecorder.R;
 
 import org.json.JSONArray;
@@ -218,7 +219,12 @@ public class consultarFichas extends Fragment {
                                         break;
 
                                     case 5:
-                                        Toast.makeText(getActivity(),"Seguimiento Especial", Toast.LENGTH_LONG).show();
+                                        FragmentTransaction transaction4 = getFragmentManager()
+                                                .beginTransaction()
+                                                .setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                                        SeguimientoEspecial seguimientoEspecial = new SeguimientoEspecial();
+                                        transaction4.replace(R.id.contenedor, seguimientoEspecial);
+                                        transaction4.commit();
                                         break;
 
                                     default:
