@@ -2175,13 +2175,15 @@ public class FichasEspeciales extends Fragment {
             fichero4.delete();
 
             if (pdfFinal.exists()) {
-                LectorPDF lectorPDF = new LectorPDF(pdfFinal);
+                /*LectorPDF lectorPDF = new LectorPDF(pdfFinal);
                 FragmentTransaction transaction = getFragmentManager()
                         .beginTransaction()
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                         .setCustomAnimations(R.anim.slide_up,R.anim.slide_down);
                 transaction.add(R.id.contenedor, lectorPDF);
-                transaction.commit();
+                transaction.commit();*/
+                LectorPDF lectorPDF = new LectorPDF(pdfFinal);
+                lectorPDF.display(getFragmentManager());
             }
 
         } catch (DocumentException e) {

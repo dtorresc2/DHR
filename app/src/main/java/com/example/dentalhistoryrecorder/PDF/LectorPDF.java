@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,13 +15,42 @@ import java.io.File;
 
 @SuppressLint("ValidFragment")
 public class LectorPDF extends DialogFragment {
-    private File archivo;
+    private static File archivo;
     private PDFView pdfView;
     private Toolbar toolbar;
+    public static final String TAG = "example_dialog";
 
-    @SuppressLint("ValidFragment")
+    /*@SuppressLint("ValidFragment")
     public LectorPDF(File file) {
         archivo = file;
+    }*/
+
+    public LectorPDF(File file) {
+        archivo = file;
+    }
+
+    public static LectorPDF display(FragmentManager fragmentManager) {
+        LectorPDF exampleDialog = new LectorPDF(archivo);
+        exampleDialog.show(fragmentManager, TAG);
+        return exampleDialog;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.AppTheme_FullScreenDialog);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Dialog dialog = getDialog();
+        if (dialog != null) {
+            int width = ViewGroup.LayoutParams.MATCH_PARENT;
+            int height = ViewGroup.LayoutParams.MATCH_PARENT;
+            dialog.getWindow().setLayout(width, height);
+            dialog.getWindow().setWindowAnimations(R.style.AppTheme_Slide);
+        }
     }
 
     /*@Override
@@ -49,6 +79,7 @@ public class LectorPDF extends DialogFragment {
         View view = inflater.inflate(R.layout.dialogo_pdf, container, false);
         toolbar = view.findViewById(R.id.toolbar3);
         toolbar.setTitle("Ficha Electronica");
+        toolbar.setTitleTextColor(getResources().getColor(R.color.Blanco));
         toolbar.setNavigationIcon(R.drawable.ic_cerrar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
