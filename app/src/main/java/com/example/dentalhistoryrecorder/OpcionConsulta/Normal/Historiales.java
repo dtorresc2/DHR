@@ -12,6 +12,7 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -619,6 +620,19 @@ public class Historiales extends Fragment {
         //InputStream fraw = getResources().openRawResource(R.raw.Compromiso);
         //Nuestra app tiene permiso
 
+        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+        progressDialog.setMessage("Cargando...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                progressDialog.dismiss();
+            }
+        }, 2000);
+
         try {
             BaseFont baseFont = BaseFont.createFont("assets/fonts/bahnschrift.ttf", "UTF-8", BaseFont.EMBEDDED);
 
@@ -1076,7 +1090,9 @@ public class Historiales extends Fragment {
                     }
                 });
 
-                dialog2.show();*/
+                dialog2.show();
+
+                dialog2.getWindow().getAttributes().windowAnimations = R.style.AppTheme_Slide;*/
 
                 //FragmentManager fragmentManager = getSupportFragmentManager();
                 //FullScreenDialog newFragment = new FullScreenDialog();
@@ -1087,7 +1103,10 @@ public class Historiales extends Fragment {
                         .commit();*/
 
                 LectorPDF lectorPDF = new LectorPDF(pdfFinal);
-                FragmentTransaction transaction = getFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).setCustomAnimations(R.anim.slide_up,R.anim.slide_down);
+                FragmentTransaction transaction = getFragmentManager()
+                        .beginTransaction()
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                        .setCustomAnimations(R.anim.slide_up,R.anim.slide_down);
                 transaction.add(R.id.contenedor, lectorPDF);
                 transaction.commit();
             }

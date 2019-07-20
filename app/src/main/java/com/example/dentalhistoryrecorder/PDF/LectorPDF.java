@@ -23,7 +23,7 @@ public class LectorPDF extends DialogFragment {
         archivo = file;
     }
 
-    @Override
+    /*@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
@@ -40,7 +40,7 @@ public class LectorPDF extends DialogFragment {
             dialog.getWindow().setLayout(width, height);
             dialog.getWindow().setWindowAnimations(R.style.AppTheme_Slide);
         }
-    }
+    }*/
 
 
     @Override
