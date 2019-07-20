@@ -1,10 +1,12 @@
 package com.example.dentalhistoryrecorder.OpcionIngreso.Especial;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -27,6 +29,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.dentalhistoryrecorder.OpcionConsulta.Items;
 import com.example.dentalhistoryrecorder.OpcionIngreso.Agregar;
 import com.example.dentalhistoryrecorder.R;
+import com.tapadoo.alerter.Alerter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,7 +57,7 @@ public class IngCostos extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ing_costos, container, false);
-        Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+        final Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         requestQueue = Volley.newRequestQueue(getContext());
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle("Costos");
@@ -86,6 +89,19 @@ public class IngCostos extends Fragment {
         agregar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+                progressDialog.setMessage("Cargando...");
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        progressDialog.dismiss();
+                    }
+                }, 1000);
+
                 if (!terapia.getText().toString().isEmpty() && !enganche.getText().toString().isEmpty() && !costo.getText().toString().isEmpty()){
                     editor.putString("costoVisita",costo.getText().toString());
                     editor.commit();
@@ -96,6 +112,15 @@ public class IngCostos extends Fragment {
                     FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
                     transaction.replace(R.id.contenedor, ingresoVisitas);
                     transaction.commit();
+                }
+                else {
+                    Alerter.create(getActivity())
+                            .setTitle("Hay Campos Vacios")
+                            .setIcon(R.drawable.logonuevo)
+                            .setTextTypeface(face)
+                            .enableSwipeToDismiss()
+                            .setBackgroundColorRes(R.color.AzulOscuro)
+                            .show();
                 }
             }
         });
