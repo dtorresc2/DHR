@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.se.omapi.SEService;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -59,7 +60,7 @@ public class IngresoVisitas extends Fragment {
 
     private int contador = 0;
     private RequestQueue requestQueue;
-    private SharedPreferences preferencias;
+    private SharedPreferences preferencias,preferencias2;
     private static final String TAG = "MyActivity";
 
     private int mOpcion = 0;
@@ -105,6 +106,7 @@ public class IngresoVisitas extends Fragment {
         });
 
         preferencias = getActivity().getSharedPreferences("Terapia", Context.MODE_PRIVATE);
+        preferencias2 = getActivity().getSharedPreferences("Consultar", Context.MODE_PRIVATE);
 
         final Calendar calendar = Calendar.getInstance();
         int yy = calendar.get(Calendar.YEAR);
@@ -263,7 +265,7 @@ public class IngresoVisitas extends Fragment {
                                 break;
 
                             case 2:
-                                Toast.makeText(getContext(),"Agregando Seguimiento",Toast.LENGTH_LONG).show();
+                                segVisitas("https://diegosistemas.xyz/DHR/Especial/seguimientoE.php?estado=1", tablaDinamica.getCellData(i, 0), tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2));
                                 break;
                         }
                     }
@@ -325,6 +327,33 @@ public class IngresoVisitas extends Fragment {
                 parametros.put("fecha", fecha);
                 parametros.put("desc", desc);
                 parametros.put("costo", costo);
+                return parametros;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
+    //Insertar Datos Personales y Obtener ID Paciente ----------------------------------------------
+    public void segVisitas(String URL, final String fecha, final String desc, final String costo) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, "" + error.toString());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parametros = new HashMap<String, String>();
+                parametros.put("fecha", fecha);
+                parametros.put("desc", desc);
+                parametros.put("costo", costo);
+                parametros.put("id", preferencias2.getString("idficha", ""));
                 return parametros;
             }
 

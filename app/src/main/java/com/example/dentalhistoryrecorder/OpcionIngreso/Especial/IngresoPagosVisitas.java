@@ -2,6 +2,8 @@ package com.example.dentalhistoryrecorder.OpcionIngreso.Especial;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -57,6 +59,7 @@ public class IngresoPagosVisitas extends Fragment {
     private int contador = 0;
 
     private int mOpcion = 0;
+    private SharedPreferences preferencias;
 
     public IngresoPagosVisitas() {
         // Required empty public constructor
@@ -98,6 +101,8 @@ public class IngresoPagosVisitas extends Fragment {
 
             }
         });
+
+        preferencias = getActivity().getSharedPreferences("Consultar", Context.MODE_PRIVATE);
 
         final Calendar calendar = Calendar.getInstance();
         int yy = calendar.get(Calendar.YEAR);
@@ -259,7 +264,7 @@ public class IngresoPagosVisitas extends Fragment {
                                 break;
 
                             case 2:
-                                Toast.makeText(getContext(),"Agregando Seguimiento",Toast.LENGTH_LONG).show();
+                                segPagos("https://diegosistemas.xyz/DHR/Especial/seguimientoE.php?estado=2", tablaDinamica.getCellData(i, 0), tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2));
                                 break;
                         }
                     }
@@ -321,6 +326,32 @@ public class IngresoPagosVisitas extends Fragment {
                 parametros.put("fecha", fecha);
                 parametros.put("desc", desc);
                 parametros.put("costo", costo);
+                return parametros;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
+    public void segPagos(String URL, final String fecha, final String desc, final String costo) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Volley Error:", "" + error.toString());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parametros = new HashMap<String, String>();
+                parametros.put("fecha", fecha);
+                parametros.put("desc", desc);
+                parametros.put("costo", costo);
+                parametros.put("id", preferencias.getString("idficha", ""));
                 return parametros;
             }
 
