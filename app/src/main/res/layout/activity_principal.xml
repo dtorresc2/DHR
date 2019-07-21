@@ -24,9 +24,8 @@
         android:id="@+id/menuinferior"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/FondoSecundario"
+        android:background="@color/AzulOscuro"
         android:elevation="20dp"
-
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
