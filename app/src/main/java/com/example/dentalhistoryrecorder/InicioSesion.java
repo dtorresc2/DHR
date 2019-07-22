@@ -115,7 +115,7 @@ public class InicioSesion extends AppCompatActivity {
                                 public void run() {
                                     progressDialog.dismiss();
                                 }
-                            }, 1000);
+                            }, 500);
 
                             if (idUsuarios > 0) {
                                 int mobil = jsonArray.getJSONObject(i).getInt("mobil");

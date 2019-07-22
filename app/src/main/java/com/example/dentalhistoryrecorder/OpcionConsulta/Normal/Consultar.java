@@ -50,6 +50,7 @@ public class Consultar extends Fragment {
     private EditText pnombre, papellido;
     private FloatingActionButton buscar;
     private Toolbar toolbar;
+
     private RecyclerView lista_pacientes;
     private AdaptadorConsulta adapter;
     private RecyclerView.LayoutManager layoutManager;

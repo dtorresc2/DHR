@@ -3,6 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:elevation="20dp"
-    android:background="@color/FondoSecundario"
+    android:background="@color/AzulOscuro"
     android:textAlignment="center">
 </android.support.v7.widget.Toolbar>

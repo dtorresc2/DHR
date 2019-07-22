@@ -112,7 +112,9 @@ public class IngDetalle extends Fragment {
                 int mm = calendario.get(Calendar.MONTH);
                 int dd = calendario.get(Calendar.DAY_OF_MONTH);
 
-                DatePickerDialog datePicker = new DatePickerDialog(getActivity(),android.R.style.Theme_Holo_Dialog_MinWidth ,new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog datePicker = new DatePickerDialog(getActivity(),
+                        android.R.style.Theme_Holo_Dialog_MinWidth
+                        , new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         String dat = dayOfMonth + "/" + monthOfYear + "/" + year;
@@ -146,10 +148,9 @@ public class IngDetalle extends Fragment {
                     }
                 }, 1000);
 
-                if (idPacienteExis == 0){
+                if (idPacienteExis == 0) {
                     insertarFicha("https://diegosistemas.xyz/DHR/Normal/ficha.php?estado=2");
-                }
-                else {
+                } else {
                     insertarFichaExistente("https://diegosistemas.xyz/DHR/Normal/ficha.php?estado=3");
                 }
                 IngHMedico ingHMedico = new IngHMedico();
@@ -185,7 +186,7 @@ public class IngDetalle extends Fragment {
                 parametros.put("motivo", motivo.getText().toString());
                 parametros.put("referente", referente.getText().toString());
                 SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
-                parametros.put("user",preferencias2.getString("idUsuario","1"));
+                parametros.put("user", preferencias2.getString("idUsuario", "1"));
                 return parametros;
             }
 
@@ -215,7 +216,7 @@ public class IngDetalle extends Fragment {
                 parametros.put("motivo", motivo.getText().toString());
                 parametros.put("referente", referente.getText().toString());
                 SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
-                parametros.put("user",preferencias2.getString("idUsuario","1"));
+                parametros.put("user", preferencias2.getString("idUsuario", "1"));
                 return parametros;
             }
 
@@ -223,7 +224,7 @@ public class IngDetalle extends Fragment {
         requestQueue.add(stringRequest);
     }
 
-    public void obtenerPaciente(int id){
+    public void obtenerPaciente(int id) {
         idPacienteExis = id;
     }
 }

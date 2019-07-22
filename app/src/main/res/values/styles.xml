@@ -4,7 +4,7 @@
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/AzulOscuro</item>
         <item name="colorAccent">@color/Blanco</item>
     </style>
     
@@ -40,12 +40,16 @@
     </style> -->
 
     <style name="AppTheme.FullScreenDialog" parent="Theme.MaterialComponents.Light.Dialog">
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/AzulOscuro</item>
+        <item name="colorAccent">@color/Blanco</item>
+        <item name="colorPrimary">@color/AzulOscuro</item>
         <item name="android:windowIsFloating">false</item>
-        <item name="android:windowBackground">@android:color/white</item>
-        <item name="actionMenuTextColor">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/Blanco</item>
+        <item name="actionMenuTextColor">@color/Blanco</item>
+
+        <item name="colorControlNormal">@color/Blanco</item>
+        <item name="colorControlActivated">@color/Blanco</item>
+        <item name="android:textColorHint">@color/Blanco</item>
     </style>
 
     <style name="AppTheme.Slide">
