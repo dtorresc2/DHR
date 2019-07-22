@@ -70,6 +70,9 @@ public class Citas extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     RequestQueue requestQueue;
 
+    private boolean boolRealizado = true;
+    private boolean boolPendiente = true;
+
     public Citas() {
         // Required empty public constructor
     }
@@ -163,6 +166,47 @@ public class Citas extends Fragment {
             @Override
             public void onClick(View v) {
                 obtenerHora();
+            }
+        });
+
+        fecha.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                obtenerFecha();
+            }
+        });
+        hora.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                obtenerHora();
+            }
+        });
+
+        realizado.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (boolRealizado == true){
+                    realizado.setBackgroundColor(getResources().getColor(R.color.AzulOscuro));
+                    boolRealizado = false;
+                }
+                else {
+                    realizado.setBackgroundColor(getResources().getColor(R.color.FondoTerciario));
+                    boolRealizado = true;
+                }
+            }
+        });
+
+        pendiente.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (boolPendiente == true){
+                    pendiente.setBackgroundColor(getResources().getColor(R.color.AzulOscuro));
+                    boolPendiente = false;
+                }
+                else {
+                    pendiente.setBackgroundColor(getResources().getColor(R.color.FondoTerciario));
+                    boolPendiente = true;
+                }
             }
         });
 
