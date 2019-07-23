@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TableLayout;
@@ -55,7 +56,7 @@ public class IngHOdon extends Fragment {
     RequestQueue requestQueue;
     private String[] header = {"Pieza", "Descripsion", "Costo"};
     private ArrayList<String[]> rows = new ArrayList<>();
-    private EditText tratamiento, costo, otros, desc_dolor;
+    private EditText tratamiento, costo, otros, desc_dolor, pieza;
     private TextView titulo_detalle, titulo_diag, titulo_pres, titulo_piez, total_costo, titulo_costo, celdap, celdat, celdac;
     private TablaDinamica tablaDinamica;
     private int lim;
@@ -65,6 +66,7 @@ public class IngHOdon extends Fragment {
     private int mOpcion = 0;
     private SharedPreferences preferencias;
     private int contador = 0;
+    private ImageButton selectorPieza;
 
     public IngHOdon() {
         // Required empty public constructor
@@ -81,11 +83,57 @@ public class IngHOdon extends Fragment {
         preferencias = getActivity().getSharedPreferences("Consultar", Context.MODE_PRIVATE);
 
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        spinner = view.findViewById(R.id.ing_piezas);
+        //spinner = view.findViewById(R.id.ing_piezas);
+        pieza = view.findViewById(R.id.ing_pieza);
+        pieza.setTypeface(face);
         listador = view.findViewById(R.id.guardador_hm);
         listador.setTypeface(face);
         eliminador = view.findViewById(R.id.eliminador);
         eliminador.setTypeface(face);
+
+        selectorPieza = view.findViewById(R.id.selectorPieza);
+        selectorPieza.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                final AlertDialog.Builder d = new AlertDialog.Builder(getContext());
+                LayoutInflater inflater = getActivity().getLayoutInflater();
+                View dialogView = inflater.inflate(R.layout.number_picker_dialog, null);
+                d.setCancelable(false);
+                d.setView(dialogView);
+                final AlertDialog alertDialog = d.create();
+
+                TextView textView = dialogView.findViewById(R.id.titulo_dialogo);
+                textView.setTypeface(face2);
+
+                Button aceptar = dialogView.findViewById(R.id.aceptar);
+                aceptar.setTypeface(face2);
+
+                Button cancelar = dialogView.findViewById(R.id.cancelar);
+                cancelar.setTypeface(face2);
+
+                final NumberPicker numberPicker = dialogView.findViewById(R.id.dialog_number_picker);
+                numberPicker.setMinValue(1);
+                numberPicker.setMaxValue(32);
+
+                aceptar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pieza.setText(String.valueOf(numberPicker.getValue()));
+                        alertDialog.dismiss();
+                    }
+                });
+
+                cancelar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertDialog.dismiss();
+                    }
+                });
+
+                alertDialog.show();
+            }
+        });
 
         tableLayout = view.findViewById(R.id.table);
 
@@ -98,8 +146,8 @@ public class IngHOdon extends Fragment {
         titulo_diag.setTypeface(face);
         titulo_pres = view.findViewById(R.id.titulo_presupuesto);
         titulo_pres.setTypeface(face);
-        titulo_piez = view.findViewById(R.id.titulo_pieza);
-        titulo_piez.setTypeface(face);
+        //titulo_piez = view.findViewById(R.id.titulo_pieza);
+        //titulo_piez.setTypeface(face);
         total_costo = view.findViewById(R.id.tota_costo);
         total_costo.setTypeface(face);
         titulo_costo = view.findViewById(R.id.titulo_costo);
@@ -107,7 +155,7 @@ public class IngHOdon extends Fragment {
         agregador = view.findViewById(R.id.guardador_hd2);
 
         //Instancias
-        llenarPiezas();
+        //llenarPiezas();
         tablaDinamica = new TablaDinamica(tableLayout, getContext());
         tablaDinamica.addHeader(header);
         tablaDinamica.addData(getClients());
@@ -165,7 +213,8 @@ public class IngHOdon extends Fragment {
             public void onClick(View v) {
                 total = 0;
                 String[] item = new String[]{
-                        spinner.getSelectedItem().toString(),
+                        //spinner.getSelectedItem().toString(),
+                        pieza.getText().toString(),
                         tratamiento.getText().toString(),
                         costo.getText().toString()
                 };
