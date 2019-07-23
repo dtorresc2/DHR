@@ -201,6 +201,7 @@ public class Consultar extends Fragment {
                                                 consultarFichas consultarFichas1 = new consultarFichas(lista.get(position).getMid(), mOpcion);
                                                 SharedPreferences.Editor escritor2 = preferencias.edit();
                                                 escritor2.putString("nombre", lista.get(position).getMnombre());
+                                                escritor2.putString("edad", lista.get(position).getMedad());
                                                 escritor2.commit();
                                                 FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
                                                 transaction.replace(R.id.contenedor, consultarFichas1);
@@ -219,6 +220,7 @@ public class Consultar extends Fragment {
                                                     consultarFichas consultarFichas1 = new consultarFichas(lista.get(position).getMid(), 4);
                                                     SharedPreferences.Editor escritor2 = preferencias.edit();
                                                     escritor2.putString("nombre", lista.get(position).getMnombre());
+                                                    escritor2.putString("edad", lista.get(position).getMedad());
                                                     escritor2.commit();
                                                     FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
                                                     transaction.replace(R.id.contenedor, consultarFichas1);
@@ -229,6 +231,7 @@ public class Consultar extends Fragment {
                                                     consultarFichas consultarFichas1 = new consultarFichas(lista.get(position).getMid(), 5);
                                                     SharedPreferences.Editor escritor2 = preferencias.edit();
                                                     escritor2.putString("nombre", lista.get(position).getMnombre());
+                                                    escritor2.putString("edad", lista.get(position).getMedad());
                                                     escritor2.commit();
                                                     FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
                                                     transaction.replace(R.id.contenedor, consultarFichas1);

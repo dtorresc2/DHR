@@ -665,11 +665,15 @@ public class Historiales extends Fragment {
             documento.add(titulo);
 
             //Tabla Datos Personales -------------------------------------------
-            PdfPTable tabla_datospersonales = new PdfPTable(2);
+            PdfPTable tabla_datospersonales = new PdfPTable(3);
             PdfPCell columnasdatos, filasdatos;
-            String registros[] = {"Correlativo", "Nombre"};
-            String columnasreg[] = {preferencias.getString("idficha", ""), preferencias.getString("nombre", "")};
-            tabla_datospersonales.setWidths(new float[]{2, 4});
+            String registros[] = {"Correlativo", "Nombre","Edad"};
+            String columnasreg[] = {
+                    preferencias.getString("idficha", ""),
+                    preferencias.getString("nombre", ""),
+                    preferencias.getString("edad", "")
+            };
+            tabla_datospersonales.setWidths(new float[]{2, 4,2});
 
             //Columnas
             for (int i = 0; i < registros.length; i++) {
@@ -683,7 +687,7 @@ public class Historiales extends Fragment {
 
             //Relleno de las filas
             for (int row = 0; row < 1; row++) {
-                for (int column = 0; column < 2; column++) {
+                for (int column = 0; column < 3; column++) {
                     filasdatos = new PdfPCell(new Phrase(columnasreg[column], fuentedatos));
                     filasdatos.setHorizontalAlignment(Element.ALIGN_CENTER);
                     tabla_datospersonales.addCell(filasdatos);

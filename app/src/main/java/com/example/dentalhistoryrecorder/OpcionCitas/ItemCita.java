@@ -1,18 +1,20 @@
 package com.example.dentalhistoryrecorder.OpcionCitas;
 
 public class ItemCita {
+    private String midCitas;
     private String mhora;
     private String mfecha;
     private String mnombre;
     private String mdescripcion;
     private String mrealizado;
 
-    public ItemCita(String hora, String fecha, String nombre, String descripcion, String realizado){
+    public ItemCita(String idCitas, String hora, String fecha, String nombre, String descripcion, String realizado) {
         setMhora(hora);
         setMfecha(fecha);
         setMnombre(nombre);
         setMdescripcion(descripcion);
         setMrealizado(realizado);
+        setMidCitas(idCitas);
     }
 
     public String getMhora() {
@@ -53,5 +55,13 @@ public class ItemCita {
 
     public void setMrealizado(String mrealizado) {
         this.mrealizado = mrealizado;
+    }
+
+    public String getMidCitas() {
+        return midCitas;
+    }
+
+    public void setMidCitas(String midCitas) {
+        this.midCitas = midCitas;
     }
 }

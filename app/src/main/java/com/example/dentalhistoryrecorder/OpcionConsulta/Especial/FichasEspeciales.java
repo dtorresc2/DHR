@@ -1094,13 +1094,13 @@ public class FichasEspeciales extends Fragment {
             cb2.endText();
 
             //Edad del paciente
-            /*PdfContentByte cb3 = escritorpdf.getDirectContent();
+            PdfContentByte cb3 = escritorpdf.getDirectContent();
             cb3.beginText();
             posy = documento.getPageSize().getHeight() - 101;
             cb3.setFontAndSize(baseFont, 12);
             cb3.setTextMatrix(518, posy);
-            cb3.showText(edad);
-            cb3.endText();*/
+            cb3.showText(preferencias.getString("edad", ""));
+            cb3.endText();
 
             //Enganche
             PdfContentByte cb4 = escritorpdf.getDirectContent();
@@ -1165,7 +1165,7 @@ public class FichasEspeciales extends Fragment {
             info.close();
             reader.close();
 
-            File archivo = new File("Prueba_Es.pdf");
+            File archivo = new File(folder,"Prueba_Es.pdf");
             archivo.delete();
 
             //Programa Costos ----------------------------------------------------------------------
@@ -1194,13 +1194,13 @@ public class FichasEspeciales extends Fragment {
             cbb2.endText();
 
             //Edad del paciente
-            /*PdfContentByte cbb3 = escritorpdf.getDirectContent();
+            PdfContentByte cbb3 = escritorpdf1.getDirectContent();
             cbb3.beginText();
-            posy = documento.getPageSize().getHeight() - 101;
+            posy1 = documento.getPageSize().getHeight() - 101;
             cbb3.setFontAndSize(baseFont, 12);
-            cbb3.setTextMatrix(518, posy);
-            cbb3.showText(preferencias.getString("nombre", ""));
-            cbb3.endText();*/
+            cbb3.setTextMatrix(518, posy1);
+            cbb3.showText(preferencias.getString("edad", ""));
+            cbb3.endText();
 
             //Firma del Paciente
             Image imagen = Image.getInstance(fotoFirma);
@@ -1244,7 +1244,7 @@ public class FichasEspeciales extends Fragment {
             info.close();
             reader.close();
 
-            archivo = new File("PruebaCom.pdf");
+            archivo = new File(folder,"PruebaCom.pdf");
             archivo.delete();
 
             //Evaluacion ---------------------------------------------------------------------------
@@ -1273,13 +1273,13 @@ public class FichasEspeciales extends Fragment {
             cbbb2.endText();
 
             //Edad del paciente
-            /*PdfContentByte cb3 = escritorpdf.getDirectContent();
-            cb3.beginText();
-            posy = documento3.getPageSize().getHeight() - 101;
-            cb3.setFontAndSize(baseFont, 12);
-            cb3.setTextMatrix(518, posy);
-            cb3.showText(edad);
-            cb3.endText();*/
+            PdfContentByte cbbb3 = escritorpdf2.getDirectContent();
+            cbbb3.beginText();
+            posy2 = documento3.getPageSize().getHeight() - 101;
+            cbbb3.setFontAndSize(baseFont, 12);
+            cbbb3.setTextMatrix(518, posy2);
+            cbbb3.showText(preferencias.getString("edad", ""));
+            cbbb3.endText();
 
             //Datos
             //Primera Linea
@@ -1945,7 +1945,7 @@ public class FichasEspeciales extends Fragment {
             info.close();
             reader.close();
 
-            archivo = new File("PruebaEva.pdf");
+            archivo = new File(folder,"PruebaEva.pdf");
             archivo.delete();
 
             //Control de Visitas -------------------------------------------------------------------
@@ -1975,13 +1975,13 @@ public class FichasEspeciales extends Fragment {
             cb18.endText();
 
             //Edad del paciente
-            /*PdfContentByte cb19 = escritorpdf3.getDirectContent();
+            PdfContentByte cb19 = escritorpdf3.getDirectContent();
             cb19.beginText();
             posy3 = documento4.getPageSize().getHeight() - 101;
             cb19.setFontAndSize(baseFont, 12);
             cb19.setTextMatrix(518, posy3);
-            cb19.showText(edad);
-            cb19.endText();*/
+            cb19.showText(preferencias.getString("edad", ""));
+            cb19.endText();
 
             esp = new Paragraph(" ", fuentecolumna);
             documento4.add(esp);
@@ -2129,7 +2129,7 @@ public class FichasEspeciales extends Fragment {
             info.close();
             reader.close();
 
-            archivo = new File("PruebaVis.pdf");
+            archivo = new File(folder,"PruebaVis.pdf");
             archivo.delete();
 
 
@@ -2143,7 +2143,8 @@ public class FichasEspeciales extends Fragment {
             PdfReader doc3 = new PdfReader(fichero3.getAbsolutePath());
             PdfReader doc4 = new PdfReader(fichero4.getAbsolutePath());
 
-            File pdfFinal = new File(folder,"EvaluacionEsp.pdf");
+            Long consecutivo = System.currentTimeMillis() / 1000;
+            File pdfFinal = new File(folder,consecutivo.toString() + ".pdf");
             estampador = new PdfStamper(doc1, new FileOutputStream(pdfFinal));
 
             PdfImportedPage page = estampador.getImportedPage(doc2, 1);
@@ -2175,13 +2176,6 @@ public class FichasEspeciales extends Fragment {
             fichero4.delete();
 
             if (pdfFinal.exists()) {
-                /*LectorPDF lectorPDF = new LectorPDF(pdfFinal);
-                FragmentTransaction transaction = getFragmentManager()
-                        .beginTransaction()
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                        .setCustomAnimations(R.anim.slide_up,R.anim.slide_down);
-                transaction.add(R.id.contenedor, lectorPDF);
-                transaction.commit();*/
                 LectorPDF lectorPDF = new LectorPDF(pdfFinal);
                 lectorPDF.display(getFragmentManager());
             }

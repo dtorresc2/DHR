@@ -2,16 +2,23 @@ package com.example.dentalhistoryrecorder.PDF;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import com.example.dentalhistoryrecorder.R;
 import com.github.barteksc.pdfviewer.PDFView;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URI;
 
 @SuppressLint("ValidFragment")
 public class LectorPDF extends DialogFragment {
@@ -53,26 +60,6 @@ public class LectorPDF extends DialogFragment {
         }
     }
 
-    /*@Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.AppTheme_Slide);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Dialog dialog = getDialog();
-        if (dialog != null) {
-            int width = ViewGroup.LayoutParams.MATCH_PARENT;
-            int height = ViewGroup.LayoutParams.MATCH_PARENT;
-            dialog.getWindow().setLayout(width, height);
-            dialog.getWindow().setWindowAnimations(R.style.AppTheme_Slide);
-        }
-    }*/
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -85,6 +72,25 @@ public class LectorPDF extends DialogFragment {
             @Override
             public void onClick(View v) {
                 dismiss();
+            }
+        });
+        toolbar.inflateMenu(R.menu.opciones_pdf);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.action_compartir:
+                        Uri uri = Uri.fromFile(archivo);
+                        Intent shareIntent = new Intent();
+                        shareIntent.setAction(Intent.ACTION_SEND);
+                        shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+                        shareIntent.setType("*/*");
+                        startActivity(Intent.createChooser(shareIntent, "Compartir Ficha"));
+                        return true;
+
+                    default:
+                        return false;
+                }
             }
         });
 

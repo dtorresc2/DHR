@@ -6,9 +6,11 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.icu.text.UnicodeSetSpanner;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +19,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -51,6 +55,7 @@ public class Citas extends Fragment {
     ImageView BtnFecha, BtnHora;
     private FloatingActionButton agregar, buscar;
     public static final String TAG = "example_dialog";
+    private CheckBox ckbRealizado, ckbPendiente, ckbHora;
 
     //Calendario para obtener fecha & hora
     public final Calendar c = Calendar.getInstance();
@@ -96,6 +101,10 @@ public class Citas extends Fragment {
         pendiente = view.findViewById(R.id.etiquetaP);
         pendiente.setTypeface(face);
 
+        ckbHora = view.findViewById(R.id.chb_hora);
+        ckbRealizado = view.findViewById(R.id.chb_realizado);
+        ckbPendiente = view.findViewById(R.id.chb_pendiente);
+
         if (meridiano == 0) {
             ampm = " AM";
         } else {
@@ -123,20 +132,6 @@ public class Citas extends Fragment {
         buscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*String tiempo = "12:00 AM";
-                String[] parts = tiempo.split(":");
-                String part1 = parts[0]; // 123
-                String part2 = parts[1]; // 654321
-
-                String[] partes = part2.split(" ");
-
-                String tiempo2 = "12:00 AM";
-                String[] parts2 = tiempo.split(":");
-                String part3 = parts2[0]; // 123
-                String part4 = parts2[1]; // 654321
-
-                String[] partes2 = part2.split(" ");
-                Toast.makeText(getActivity(), part1 + " " + partes[0], Toast.LENGTH_LONG).show();*/
                 final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
                 progressDialog.setMessage("Cargando...");
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -149,7 +144,30 @@ public class Citas extends Fragment {
                         progressDialog.dismiss();
                     }
                 }, 1000);
-                obtenerCitas("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=1");
+
+                if ((ckbRealizado.isChecked() && ckbPendiente.isChecked()) || (!ckbRealizado.isChecked() && (!ckbPendiente.isChecked()))) {
+                    if (ckbHora.isChecked()) {
+                        obtenerCitas2("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=3");
+                    } else {
+                        obtenerCitas("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=1");
+                    }
+                }
+
+                if (ckbRealizado.isChecked() && !ckbPendiente.isChecked()) {
+                    if (ckbHora.isChecked()) {
+                        obtenerCitas3("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=5");
+                    } else {
+                        obtenerCitas4("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=7");
+                    }
+                }
+
+                if (!ckbRealizado.isChecked() && ckbPendiente.isChecked()) {
+                    if (ckbHora.isChecked()) {
+                        obtenerCitas3("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=5");
+                    } else {
+                        obtenerCitas4("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=7");
+                    }
+                }
             }
         });
 
@@ -182,30 +200,35 @@ public class Citas extends Fragment {
             }
         });
 
-        realizado.setOnClickListener(new View.OnClickListener() {
+        ckbHora.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (boolRealizado == true){
-                    realizado.setBackgroundColor(getResources().getColor(R.color.AzulOscuro));
-                    boolRealizado = false;
-                }
-                else {
-                    realizado.setBackgroundColor(getResources().getColor(R.color.FondoTerciario));
-                    boolRealizado = true;
+                if (ckbHora.isChecked()) {
+                    hora.setBackgroundColor(getResources().getColor(R.color.AzulOscuro));
+                } else {
+                    hora.setBackgroundColor(getResources().getColor(R.color.FondoTerciario));
                 }
             }
         });
 
-        pendiente.setOnClickListener(new View.OnClickListener() {
+        ckbRealizado.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (boolPendiente == true){
-                    pendiente.setBackgroundColor(getResources().getColor(R.color.AzulOscuro));
-                    boolPendiente = false;
+                if (ckbRealizado.isChecked()) {
+                    realizado.setBackgroundColor(getResources().getColor(R.color.AzulOscuro));
+                } else {
+                    realizado.setBackgroundColor(getResources().getColor(R.color.FondoTerciario));
                 }
-                else {
+            }
+        });
+
+        ckbPendiente.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ckbPendiente.isChecked()) {
+                    pendiente.setBackgroundColor(getResources().getColor(R.color.AzulOscuro));
+                } else {
                     pendiente.setBackgroundColor(getResources().getColor(R.color.FondoTerciario));
-                    boolPendiente = true;
                 }
             }
         });
@@ -222,6 +245,7 @@ public class Citas extends Fragment {
                 progressDialog.dismiss();
             }
         }, 1000);
+
         obtenerCitas("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=1");
 
         return view;
@@ -282,6 +306,23 @@ public class Citas extends Fragment {
         recogerFecha.show();
     }
 
+    public void obtenerTiempo() {
+        /*String tiempo = "12:00 AM";
+                String[] parts = tiempo.split(":");
+                String part1 = parts[0]; // 123
+                String part2 = parts[1]; // 654321
+
+                String[] partes = part2.split(" ");
+
+                String tiempo2 = "12:00 AM";
+                String[] parts2 = tiempo.split(":");
+                String part3 = parts2[0]; // 123
+                String part4 = parts2[1]; // 654321
+
+                String[] partes2 = part2.split(" ");
+                Toast.makeText(getActivity(), part1 + " " + partes[0], Toast.LENGTH_LONG).show();*/
+    }
+
     //Insertar Datos Personales y Obtener ID Paciente ----------------------------------------------
     public void consultarCitas(String URL) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
@@ -293,12 +334,13 @@ public class Citas extends Fragment {
                     final ArrayList<ItemCita> lista = new ArrayList<>();
                     if (jsonArray.length() > 0) {
                         for (int i = 0; i < jsonArray.length(); i++) {
+                            String id = jsonArray.getJSONObject(i).getString("idCitas");
                             String fecha = jsonArray.getJSONObject(i).getString("fecha");
                             String hora = jsonArray.getJSONObject(i).getString("hora");
                             String nombre = jsonArray.getJSONObject(i).getString("nombre");
                             String descripsion = jsonArray.getJSONObject(i).getString("descripsion");
                             String realizado = jsonArray.getJSONObject(i).getString("realizado");
-                            lista.add(new ItemCita(hora, fecha, nombre, descripsion, realizado));
+                            lista.add(new ItemCita(id, hora, fecha, nombre, descripsion, realizado));
                         }
                         lista_pacientes.setHasFixedSize(true);
                         layoutManager = new LinearLayoutManager(getContext());
@@ -308,7 +350,73 @@ public class Citas extends Fragment {
                         adapter.setOnItemClickListener(new AdaptadorCita.OnItemClickListener() {
                             @Override
                             public void onItemClick(final int position) {
-                                Toast.makeText(getContext(), "" + position, Toast.LENGTH_LONG).show();
+                                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                final Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                                View viewCuadro = getLayoutInflater().inflate(R.layout.dialogo_citasupdate, null);
+                                Button cancelar = viewCuadro.findViewById(R.id.cancelarUpdate);
+                                cancelar.setTypeface(face2);
+                                TextView tituloN = viewCuadro.findViewById(R.id.textView2);
+                                tituloN.setTypeface(face2);
+                                TextView tituloE = viewCuadro.findViewById(R.id.textView3);
+                                tituloE.setTypeface(face2);
+
+                                ImageView btnRealizado = viewCuadro.findViewById(R.id.entrarRealizado);
+                                ImageView btnPendiente = viewCuadro.findViewById(R.id.entrarPendiente);
+
+                                builder.setView(viewCuadro);
+                                final AlertDialog dialog = builder.create();
+
+                                btnRealizado.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        if (lista.get(position).getMrealizado().equals("0")) {
+                                            actualizarCita("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=9",
+                                                    lista.get(position).getMidCitas(),
+                                                    "1", 1);
+                                            dialog.dismiss();
+                                        } else {
+                                            Alerter.create(getActivity())
+                                                    .setTitle("Accion Invalida")
+                                                    .setText("La cita se encuentra en el estado seleccionado")
+                                                    .setIcon(R.drawable.logonuevo)
+                                                    .setTextTypeface(face2)
+                                                    .enableSwipeToDismiss()
+                                                    .setBackgroundColorRes(R.color.AzulOscuro)
+                                                    .show();
+                                        }
+                                    }
+                                });
+
+                                btnPendiente.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        if (!lista.get(position).getMrealizado().equals("0")) {
+                                            //Toast.makeText(getActivity(),"Entre",Toast.LENGTH_LONG).show();
+                                            actualizarCita("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=9",
+                                                    lista.get(position).getMidCitas(),
+                                                    "0", 1);
+                                            dialog.dismiss();
+                                        } else {
+                                            Alerter.create(getActivity())
+                                                    .setTitle("Accion Invalida")
+                                                    .setText("La cita se encuentra en el estado seleccionado")
+                                                    .setIcon(R.drawable.logonuevo)
+                                                    .setTextTypeface(face2)
+                                                    .enableSwipeToDismiss()
+                                                    .setBackgroundColorRes(R.color.AzulOscuro)
+                                                    .show();
+                                        }
+                                    }
+                                });
+
+                                cancelar.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialog.dismiss();
+                                    }
+                                });
+
+                                dialog.show();
                             }
                         });
                     }
@@ -372,4 +480,560 @@ public class Citas extends Fragment {
         requestQueue.add(stringRequest);
     }
 
+    //Insertar Datos Personales y Obtener ID Paciente ----------------------------------------------
+    public void consultarCitas2(String URL) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JSONArray jsonArray = null;
+                try {
+                    jsonArray = new JSONArray(response);
+                    final ArrayList<ItemCita> lista = new ArrayList<>();
+                    if (jsonArray.length() > 0) {
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            String id = jsonArray.getJSONObject(i).getString("idCitas");
+                            String fecha = jsonArray.getJSONObject(i).getString("fecha");
+                            String hora = jsonArray.getJSONObject(i).getString("hora");
+                            String nombre = jsonArray.getJSONObject(i).getString("nombre");
+                            String descripsion = jsonArray.getJSONObject(i).getString("descripsion");
+                            String realizado = jsonArray.getJSONObject(i).getString("realizado");
+                            lista.add(new ItemCita(id, hora, fecha, nombre, descripsion, realizado));
+                        }
+                        lista_pacientes.setHasFixedSize(true);
+                        layoutManager = new LinearLayoutManager(getContext());
+                        adapter = new AdaptadorCita(lista);
+                        lista_pacientes.setLayoutManager(layoutManager);
+                        lista_pacientes.setAdapter(adapter);
+                        adapter.setOnItemClickListener(new AdaptadorCita.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(final int position) {
+                                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                final Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                                View viewCuadro = getLayoutInflater().inflate(R.layout.dialogo_citasupdate, null);
+                                Button cancelar = viewCuadro.findViewById(R.id.cancelarUpdate);
+                                cancelar.setTypeface(face2);
+                                TextView tituloN = viewCuadro.findViewById(R.id.textView2);
+                                tituloN.setTypeface(face2);
+                                TextView tituloE = viewCuadro.findViewById(R.id.textView3);
+                                tituloE.setTypeface(face2);
+
+                                ImageView btnRealizado = viewCuadro.findViewById(R.id.entrarRealizado);
+                                ImageView btnPendiente = viewCuadro.findViewById(R.id.entrarPendiente);
+
+                                builder.setView(viewCuadro);
+                                final AlertDialog dialog = builder.create();
+
+                                btnRealizado.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        if (lista.get(position).getMrealizado().equals("0")) {
+                                            actualizarCita("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=9",
+                                                    lista.get(position).getMidCitas(),
+                                                    "1", 2);
+                                            dialog.dismiss();
+                                        } else {
+                                            Alerter.create(getActivity())
+                                                    .setTitle("Accion Invalida")
+                                                    .setText("La cita se encuentra en el estado seleccionado")
+                                                    .setIcon(R.drawable.logonuevo)
+                                                    .setTextTypeface(face2)
+                                                    .enableSwipeToDismiss()
+                                                    .setBackgroundColorRes(R.color.AzulOscuro)
+                                                    .show();
+                                        }
+                                    }
+                                });
+
+                                btnPendiente.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        if (!lista.get(position).getMrealizado().equals("0")) {
+                                            //Toast.makeText(getActivity(),"Entre",Toast.LENGTH_LONG).show();
+                                            actualizarCita("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=9",
+                                                    lista.get(position).getMidCitas(),
+                                                    "0", 2);
+                                            dialog.dismiss();
+                                        } else {
+                                            Alerter.create(getActivity())
+                                                    .setTitle("Accion Invalida")
+                                                    .setText("La cita se encuentra en el estado seleccionado")
+                                                    .setIcon(R.drawable.logonuevo)
+                                                    .setTextTypeface(face2)
+                                                    .enableSwipeToDismiss()
+                                                    .setBackgroundColorRes(R.color.AzulOscuro)
+                                                    .show();
+                                        }
+                                    }
+                                });
+
+                                cancelar.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialog.dismiss();
+                                    }
+                                });
+
+                                dialog.show();
+                            }
+                        });
+                    }
+
+                } catch (JSONException e) {
+                    Log.i(TAG, "" + e);
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, "" + error.toString());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parametros = new HashMap<String, String>();
+                parametros.put("fecha", fecha.getText().toString());
+                parametros.put("hora", hora.getText().toString());
+                SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+                parametros.put("user", preferencias2.getString("idUsuario", "1"));
+                return parametros;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
+    public void obtenerCitas2(String URL) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if (Integer.parseInt(response) > 0) {
+                    consultarCitas2("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=4");
+                } else {
+                    Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                    Alerter.create(getActivity())
+                            .setTitle("No hay citas programadas")
+                            .setIcon(R.drawable.logonuevo)
+                            .setTextTypeface(face2)
+                            .enableSwipeToDismiss()
+                            .setBackgroundColorRes(R.color.AzulOscuro)
+                            .show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, "" + error.toString());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parametros = new HashMap<String, String>();
+                parametros.put("hora", hora.getText().toString());
+                parametros.put("fecha", fecha.getText().toString());
+                SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+                parametros.put("user", preferencias2.getString("idUsuario", "1"));
+                return parametros;
+            }
+        };
+        requestQueue.add(stringRequest);
+    }
+
+    //Insertar Datos Personales y Obtener ID Paciente ----------------------------------------------
+    public void consultarCitas3(String URL) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JSONArray jsonArray = null;
+                try {
+                    jsonArray = new JSONArray(response);
+                    final ArrayList<ItemCita> lista = new ArrayList<>();
+                    if (jsonArray.length() > 0) {
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            String id = jsonArray.getJSONObject(i).getString("idCitas");
+                            String fecha = jsonArray.getJSONObject(i).getString("fecha");
+                            String hora = jsonArray.getJSONObject(i).getString("hora");
+                            String nombre = jsonArray.getJSONObject(i).getString("nombre");
+                            String descripsion = jsonArray.getJSONObject(i).getString("descripsion");
+                            String realizado = jsonArray.getJSONObject(i).getString("realizado");
+                            lista.add(new ItemCita(id, hora, fecha, nombre, descripsion, realizado));
+                        }
+                        lista_pacientes.setHasFixedSize(true);
+                        layoutManager = new LinearLayoutManager(getContext());
+                        adapter = new AdaptadorCita(lista);
+                        lista_pacientes.setLayoutManager(layoutManager);
+                        lista_pacientes.setAdapter(adapter);
+                        adapter.setOnItemClickListener(new AdaptadorCita.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(final int position) {
+                                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                final Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                                View viewCuadro = getLayoutInflater().inflate(R.layout.dialogo_citasupdate, null);
+                                Button cancelar = viewCuadro.findViewById(R.id.cancelarUpdate);
+                                cancelar.setTypeface(face2);
+                                TextView tituloN = viewCuadro.findViewById(R.id.textView2);
+                                tituloN.setTypeface(face2);
+                                TextView tituloE = viewCuadro.findViewById(R.id.textView3);
+                                tituloE.setTypeface(face2);
+
+                                ImageView btnRealizado = viewCuadro.findViewById(R.id.entrarRealizado);
+                                ImageView btnPendiente = viewCuadro.findViewById(R.id.entrarPendiente);
+
+                                builder.setView(viewCuadro);
+                                final AlertDialog dialog = builder.create();
+
+                                btnRealizado.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        if (lista.get(position).getMrealizado().equals("0")) {
+                                            actualizarCita("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=9",
+                                                    lista.get(position).getMidCitas(),
+                                                    "1", 3);
+                                            dialog.dismiss();
+                                        } else {
+                                            Alerter.create(getActivity())
+                                                    .setTitle("Accion Invalida")
+                                                    .setText("La cita se encuentra en el estado seleccionado")
+                                                    .setIcon(R.drawable.logonuevo)
+                                                    .setTextTypeface(face2)
+                                                    .enableSwipeToDismiss()
+                                                    .setBackgroundColorRes(R.color.AzulOscuro)
+                                                    .show();
+                                        }
+                                    }
+                                });
+
+                                btnPendiente.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        if (!lista.get(position).getMrealizado().equals("0")) {
+                                            //Toast.makeText(getActivity(),"Entre",Toast.LENGTH_LONG).show();
+                                            actualizarCita("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=9",
+                                                    lista.get(position).getMidCitas(),
+                                                    "0", 3);
+                                            dialog.dismiss();
+                                        } else {
+                                            Alerter.create(getActivity())
+                                                    .setTitle("Accion Invalida")
+                                                    .setText("La cita se encuentra en el estado seleccionado")
+                                                    .setIcon(R.drawable.logonuevo)
+                                                    .setTextTypeface(face2)
+                                                    .enableSwipeToDismiss()
+                                                    .setBackgroundColorRes(R.color.AzulOscuro)
+                                                    .show();
+                                        }
+                                    }
+                                });
+
+                                cancelar.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialog.dismiss();
+                                    }
+                                });
+
+                                dialog.show();
+                            }
+                        });
+                    }
+
+                } catch (JSONException e) {
+                    Log.i(TAG, "" + e);
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, "" + error.toString());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parametros = new HashMap<String, String>();
+                parametros.put("fecha", fecha.getText().toString());
+                parametros.put("hora", hora.getText().toString());
+                parametros.put("estado", String.valueOf((ckbRealizado.isChecked()) ? 1 : 0));
+                SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+                parametros.put("user", preferencias2.getString("idUsuario", "1"));
+                return parametros;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
+    public void obtenerCitas3(String URL) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if (Integer.parseInt(response) > 0) {
+                    consultarCitas3("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=6");
+                } else {
+                    Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                    Alerter.create(getActivity())
+                            .setTitle("No hay citas programadas")
+                            .setIcon(R.drawable.logonuevo)
+                            .setTextTypeface(face2)
+                            .enableSwipeToDismiss()
+                            .setBackgroundColorRes(R.color.AzulOscuro)
+                            .show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, "" + error.toString());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parametros = new HashMap<String, String>();
+                parametros.put("hora", hora.getText().toString());
+                parametros.put("fecha", fecha.getText().toString());
+                parametros.put("estado", String.valueOf((ckbRealizado.isChecked()) ? 1 : 0));
+                SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+                parametros.put("user", preferencias2.getString("idUsuario", "1"));
+                return parametros;
+            }
+        };
+        requestQueue.add(stringRequest);
+    }
+
+    //Insertar Datos Personales y Obtener ID Paciente ----------------------------------------------
+    public void consultarCitas4(String URL) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JSONArray jsonArray = null;
+                try {
+                    jsonArray = new JSONArray(response);
+                    final ArrayList<ItemCita> lista = new ArrayList<>();
+                    if (jsonArray.length() > 0) {
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            String id = jsonArray.getJSONObject(i).getString("idCitas");
+                            String fecha = jsonArray.getJSONObject(i).getString("fecha");
+                            String hora = jsonArray.getJSONObject(i).getString("hora");
+                            String nombre = jsonArray.getJSONObject(i).getString("nombre");
+                            String descripsion = jsonArray.getJSONObject(i).getString("descripsion");
+                            String realizado = jsonArray.getJSONObject(i).getString("realizado");
+                            lista.add(new ItemCita(id, hora, fecha, nombre, descripsion, realizado));
+                        }
+                        lista_pacientes.setHasFixedSize(true);
+                        layoutManager = new LinearLayoutManager(getContext());
+                        adapter = new AdaptadorCita(lista);
+                        lista_pacientes.setLayoutManager(layoutManager);
+                        lista_pacientes.setAdapter(adapter);
+                        adapter.setOnItemClickListener(new AdaptadorCita.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(final int position) {
+                                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                final Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                                View viewCuadro = getLayoutInflater().inflate(R.layout.dialogo_citasupdate, null);
+                                Button cancelar = viewCuadro.findViewById(R.id.cancelarUpdate);
+                                cancelar.setTypeface(face2);
+                                TextView tituloN = viewCuadro.findViewById(R.id.textView2);
+                                tituloN.setTypeface(face2);
+                                TextView tituloE = viewCuadro.findViewById(R.id.textView3);
+                                tituloE.setTypeface(face2);
+
+                                ImageView btnRealizado = viewCuadro.findViewById(R.id.entrarRealizado);
+                                ImageView btnPendiente = viewCuadro.findViewById(R.id.entrarPendiente);
+
+                                builder.setView(viewCuadro);
+                                final AlertDialog dialog = builder.create();
+
+                                btnRealizado.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        if (lista.get(position).getMrealizado().equals("0")) {
+                                            actualizarCita("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=9",
+                                                    lista.get(position).getMidCitas(),
+                                                    "1", 4);
+                                            dialog.dismiss();
+                                        } else {
+                                            Alerter.create(getActivity())
+                                                    .setTitle("Accion Invalida")
+                                                    .setText("La cita se encuentra en el estado seleccionado")
+                                                    .setIcon(R.drawable.logonuevo)
+                                                    .setTextTypeface(face2)
+                                                    .enableSwipeToDismiss()
+                                                    .setBackgroundColorRes(R.color.AzulOscuro)
+                                                    .show();
+                                        }
+                                    }
+                                });
+
+                                btnPendiente.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        if (!lista.get(position).getMrealizado().equals("0")) {
+                                            //Toast.makeText(getActivity(),"Entre",Toast.LENGTH_LONG).show();
+                                            actualizarCita("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=9",
+                                                    lista.get(position).getMidCitas(),
+                                                    "0", 4);
+                                            dialog.dismiss();
+                                        } else {
+                                            Alerter.create(getActivity())
+                                                    .setTitle("Accion Invalida")
+                                                    .setText("La cita se encuentra en el estado seleccionado")
+                                                    .setIcon(R.drawable.logonuevo)
+                                                    .setTextTypeface(face2)
+                                                    .enableSwipeToDismiss()
+                                                    .setBackgroundColorRes(R.color.AzulOscuro)
+                                                    .show();
+                                        }
+                                    }
+                                });
+
+                                cancelar.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialog.dismiss();
+                                    }
+                                });
+
+                                dialog.show();
+                            }
+                        });
+                    }
+
+                } catch (JSONException e) {
+                    Log.i(TAG, "" + e);
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, "" + error.toString());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parametros = new HashMap<String, String>();
+                parametros.put("fecha", fecha.getText().toString());
+                parametros.put("estado", String.valueOf((ckbRealizado.isChecked()) ? 1 : 0));
+                SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+                parametros.put("user", preferencias2.getString("idUsuario", "1"));
+                return parametros;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
+    public void obtenerCitas4(String URL) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if (Integer.parseInt(response) > 0) {
+                    consultarCitas4("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=8");
+                } else {
+                    Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                    Alerter.create(getActivity())
+                            .setTitle("No hay citas programadas")
+                            .setIcon(R.drawable.logonuevo)
+                            .setTextTypeface(face2)
+                            .enableSwipeToDismiss()
+                            .setBackgroundColorRes(R.color.AzulOscuro)
+                            .show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, "" + error.toString());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parametros = new HashMap<String, String>();
+                parametros.put("fecha", fecha.getText().toString());
+                parametros.put("estado", String.valueOf((ckbRealizado.isChecked()) ? 1 : 0));
+                SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+                parametros.put("user", preferencias2.getString("idUsuario", "1"));
+                return parametros;
+            }
+        };
+        requestQueue.add(stringRequest);
+    }
+
+    //Insertar Datos Personales y Obtener ID Paciente ----------------------------------------------
+    public void actualizarCita(String URL, final String idd, final String realizado, final int estado) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+                progressDialog.setMessage("Cargando...");
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        progressDialog.dismiss();
+                    }
+                }, 1000);
+
+                /*switch (estado) {
+                    case 1:
+                        obtenerCitas("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=1");
+                        break;
+                    case 2:
+                        obtenerCitas2("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=3");
+                        break;
+                    case 3:
+                        obtenerCitas3("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=5");
+                        break;
+                    case 4:
+                        obtenerCitas4("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=7");
+                        break;
+                }*/
+
+                if ((ckbRealizado.isChecked() && ckbPendiente.isChecked()) || (!ckbRealizado.isChecked() && (!ckbPendiente.isChecked()))) {
+                    if (ckbHora.isChecked()) {
+                        obtenerCitas2("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=3");
+                    } else {
+                        obtenerCitas("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=1");
+                    }
+                }
+
+                if (ckbRealizado.isChecked() && !ckbPendiente.isChecked()) {
+                    if (ckbHora.isChecked()) {
+                        obtenerCitas3("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=5");
+                    } else {
+                        obtenerCitas4("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=7");
+                    }
+                }
+
+                if (!ckbRealizado.isChecked() && ckbPendiente.isChecked()) {
+                    if (ckbHora.isChecked()) {
+                        obtenerCitas3("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=5");
+                    } else {
+                        obtenerCitas4("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=7");
+                    }
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, "" + error.toString());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parametros = new HashMap<String, String>();
+                parametros.put("id", idd);
+                parametros.put("realizado", realizado);
+                SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+                parametros.put("user", preferencias2.getString("idUsuario", "1"));
+                return parametros;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
 }
