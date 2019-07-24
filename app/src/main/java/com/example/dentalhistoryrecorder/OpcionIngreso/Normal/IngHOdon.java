@@ -194,7 +194,7 @@ public class IngHOdon extends Fragment {
         otros.setText(preferencias.getString("otro", ""));
         lim = preferencias.getInt("lim", 0);
 
-        final SharedPreferences.Editor escritor = preferencias.edit();
+
 
         if (lim > 0) {
             for (int i = 0; i < lim; i++) {
@@ -206,27 +206,40 @@ public class IngHOdon extends Fragment {
                 tablaDinamica.addItem(item);
             }
         }*/
+        final SharedPreferences.Editor escritor = preferencias.edit();
 
         //Proceso para listar
         listador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                total = 0;
-                String[] item = new String[]{
-                        //spinner.getSelectedItem().toString(),
-                        pieza.getText().toString(),
-                        tratamiento.getText().toString(),
-                        costo.getText().toString()
-                };
-                tablaDinamica.addItem(item);
-                tratamiento.setText(null);
-                costo.setText(null);
+                if (!tratamiento.getText().toString().isEmpty() && !costo.getText().toString().isEmpty()) {
+                    total = 0;
+                    String[] item = new String[]{
+                            //spinner.getSelectedItem().toString(),
+                            pieza.getText().toString(),
+                            tratamiento.getText().toString(),
+                            costo.getText().toString()
+                    };
+                    tablaDinamica.addItem(item);
+                    tratamiento.setText(null);
+                    costo.setText(null);
 
-                if (tablaDinamica.getCount() > 0) {
-                    for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
-                        total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
+                    if (tablaDinamica.getCount() > 0) {
+                        for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
+                            total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
+                        }
+                        total_costo.setText(String.format("%.2f", total));
                     }
-                    total_costo.setText(String.format("%.2f", total));
+                }
+                else {
+                    Alerter.create(getActivity())
+                            .setTitle("Error")
+                            .setText("Hay campos vacios")
+                            .setIcon(R.drawable.logonuevo)
+                            .setTextTypeface(face)
+                            .enableSwipeToDismiss()
+                            .setBackgroundColorRes(R.color.AzulOscuro)
+                            .show();
                 }
             }
         });
@@ -297,21 +310,6 @@ public class IngHOdon extends Fragment {
         agregador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*escritor.putBoolean("dolor", dolor.isChecked());
-                escritor.putString("descdolor", desc_dolor.getText().toString());
-                escritor.putBoolean("gingi", gingivitis.isChecked());
-                escritor.putString("otros", otros.getText().toString());
-                escritor.putInt("lim", tablaDinamica.getCount());
-
-                if (tablaDinamica.getCount() > 0) {
-                    for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
-                        escritor.putString("pieza" + (i - 1), tablaDinamica.getCellData(i, 0));
-                        escritor.putString("trat" + (i - 1), tablaDinamica.getCellData(i, 1));
-                        escritor.putString("cost" + (i - 1), tablaDinamica.getCellData(i, 2));
-                    }
-                }
-                escritor.commit();*/
-
                 final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
                 progressDialog.setMessage("Cargando...");
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -326,6 +324,8 @@ public class IngHOdon extends Fragment {
                 }, 1000);
 
                 if (tablaDinamica.getCount() > 0) {
+                    escritor.putString("totalOdon",total_costo.getText().toString());
+                    escritor.commit();
                     for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
                         //insertarTratamiento("http://192.168.56.1:80/DHR/IngresoN/ficha.php?db=u578331993_clinc&user=root&estado=10", tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2), tablaDinamica.getCellData(i, 0));
 
@@ -380,6 +380,20 @@ public class IngHOdon extends Fragment {
         });
 
         return view;
+        /*escritor.putBoolean("dolor", dolor.isChecked());
+                escritor.putString("descdolor", desc_dolor.getText().toString());
+                escritor.putBoolean("gingi", gingivitis.isChecked());
+                escritor.putString("otros", otros.getText().toString());
+                escritor.putInt("lim", tablaDinamica.getCount());
+
+                if (tablaDinamica.getCount() > 0) {
+                    for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
+                        escritor.putString("pieza" + (i - 1), tablaDinamica.getCellData(i, 0));
+                        escritor.putString("trat" + (i - 1), tablaDinamica.getCellData(i, 1));
+                        escritor.putString("cost" + (i - 1), tablaDinamica.getCellData(i, 2));
+                    }
+                }
+        escritor.commit();*/
     }
 
     public void llenarPiezas() {

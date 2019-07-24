@@ -37,6 +37,9 @@ import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Tabla.TablaDinamica;
 import com.tapadoo.alerter.Alerter;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -57,6 +60,7 @@ public class SegPagos extends Fragment {
     private Toolbar toolbar;
     private SharedPreferences preferencias;
     private int contador = 0;
+    private TextView tituloGasto, totalGasto;
 
     public SegPagos() {
         // Required empty public constructor
@@ -71,34 +75,6 @@ public class SegPagos extends Fragment {
         final Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         requestQueue = Volley.newRequestQueue(getContext());
         toolbar = view.findViewById(R.id.toolbar);
-        listador = view.findViewById(R.id.guardador_hm);
-        listador.setTypeface(face);
-        eliminador = view.findViewById(R.id.eliminador);
-        eliminador.setTypeface(face);
-
-        preferencias = getActivity().getSharedPreferences("Consultar", Context.MODE_PRIVATE);
-
-        tableLayout = view.findViewById(R.id.tablaPagos);
-
-        descripsion = view.findViewById(R.id.descPagos);
-        descripsion.setTypeface(face);
-        pagos = view.findViewById(R.id.costoPagos);
-        pagos.setTypeface(face);
-
-        titulo_diag = view.findViewById(R.id.titulo_diagnostico);
-        titulo_diag.setTypeface(face);
-        titulo_pres = view.findViewById(R.id.titulo_presupuesto);
-        titulo_pres.setTypeface(face);
-        total_costo = view.findViewById(R.id.tota_costo);
-        total_costo.setTypeface(face);
-        titulo_costo = view.findViewById(R.id.titulo_costo);
-        titulo_costo.setTypeface(face);
-        agregador = view.findViewById(R.id.guardador_hd2);
-
-        tablaDinamica = new TablaDinamica(tableLayout, getContext());
-        tablaDinamica.addHeader(header);
-        tablaDinamica.addData(getClients());
-        tablaDinamica.fondoHeader(R.color.AzulOscuro);
         toolbar.setTitle("Pagos");
         toolbar.setNavigationIcon(R.drawable.ic_cerrar);
 
@@ -123,23 +99,102 @@ public class SegPagos extends Fragment {
             }
         });
 
+
+        listador = view.findViewById(R.id.guardador_hm);
+        listador.setTypeface(face);
+        eliminador = view.findViewById(R.id.eliminador);
+        eliminador.setTypeface(face);
+
+        preferencias = getActivity().getSharedPreferences("Consultar", Context.MODE_PRIVATE);
+
+        tableLayout = view.findViewById(R.id.tablaPagos);
+
+        descripsion = view.findViewById(R.id.descPagos);
+        descripsion.setTypeface(face);
+        pagos = view.findViewById(R.id.costoPagos);
+        pagos.setTypeface(face);
+
+        titulo_diag = view.findViewById(R.id.titulo_diagnostico);
+        titulo_diag.setTypeface(face);
+        titulo_pres = view.findViewById(R.id.titulo_presupuesto);
+        titulo_pres.setTypeface(face);
+        total_costo = view.findViewById(R.id.tota_costo);
+        total_costo.setTypeface(face);
+        titulo_costo = view.findViewById(R.id.titulo_costo);
+        titulo_costo.setTypeface(face);
+
+        tituloGasto = view.findViewById(R.id.tituloGasto);
+        tituloGasto.setTypeface(face);
+        totalGasto = view.findViewById(R.id.totalGasto);
+        totalGasto.setTypeface(face);
+
+        switch (mOpcion) {
+            case 1:
+                totalGasto.setText(String.format("%.2f", Double.parseDouble(preferencias.getString("totalOdon", "0.00"))));
+                break;
+            case 2:
+                consultarTratamiento("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=10", preferencias.getString("idficha", ""));
+                break;
+        }
+
+        agregador = view.findViewById(R.id.guardador_hd2);
+
+        tablaDinamica = new TablaDinamica(tableLayout, getContext());
+        tablaDinamica.addHeader(header);
+        tablaDinamica.addData(getClients());
+        tablaDinamica.fondoHeader(R.color.AzulOscuro);
+
         listador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                total = 0;
-                String[] item = new String[]{
-                        descripsion.getText().toString(),
-                        pagos.getText().toString()
-                };
-                tablaDinamica.addItem(item);
-                descripsion.setText(null);
-                pagos.setText(null);
+                if (!descripsion.getText().toString().isEmpty() && !pagos.getText().toString().isEmpty()) {
+                    total = 0;
+                    String[] item = new String[]{
+                            descripsion.getText().toString(),
+                            pagos.getText().toString()
+                    };
 
-                if (tablaDinamica.getCount() > 0) {
-                    for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
-                        total += Double.parseDouble(tablaDinamica.getCellData(i, 1));
+                    double aux = Double.parseDouble(totalGasto.getText().toString());
+
+                    if (tablaDinamica.getCount() > 0) {
+                        for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
+                            total += Double.parseDouble(tablaDinamica.getCellData(i, 1));
+                        }
                     }
-                    total_costo.setText(String.format("%.2f", total));
+
+                    total += Double.parseDouble(pagos.getText().toString());
+
+                    if (total <= aux) {
+                        tablaDinamica.addItem(item);
+                        descripsion.setText(null);
+                        pagos.setText(null);
+                    } else {
+                        Alerter.create(getActivity())
+                                .setTitle("Error")
+                                .setText("El pago es mayor a la deuda")
+                                .setIcon(R.drawable.logonuevo)
+                                .setTextTypeface(face)
+                                .enableSwipeToDismiss()
+                                .setBackgroundColorRes(R.color.AzulOscuro)
+                                .show();
+                    }
+                    total = 0;
+
+                    if (tablaDinamica.getCount() > 0) {
+                        for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
+                            total += Double.parseDouble(tablaDinamica.getCellData(i, 1));
+                        }
+                        total_costo.setText(String.format("%.2f", total));
+                    }
+                } else {
+                    Alerter.create(getActivity())
+                            .setTitle("Error")
+                            .setText("Hay campos vacios")
+                            .setIcon(R.drawable.logonuevo)
+                            .setTextTypeface(face)
+                            .enableSwipeToDismiss()
+                            .setBackgroundColorRes(R.color.AzulOscuro)
+                            .show();
                 }
             }
         });
@@ -210,7 +265,6 @@ public class SegPagos extends Fragment {
         agregador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
                 progressDialog.setMessage("Cargando...");
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -228,7 +282,7 @@ public class SegPagos extends Fragment {
                     for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
                         //insertarTratamiento("http://192.168.56.1:80/DHR/IngresoN/ficha.php?db=u578331993_clinc&user=root&estado=10", tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2), tablaDinamica.getCellData(i, 0));
 
-                        switch (mOpcion){
+                        switch (mOpcion) {
                             case 1:
                                 insertarTratamiento("https://diegosistemas.xyz/DHR/Normal/ficha.php?estado=12", tablaDinamica.getCellData(i, 0), tablaDinamica.getCellData(i, 1));
                                 break;
@@ -257,8 +311,7 @@ public class SegPagos extends Fragment {
                             transaction2.commit();
                             break;
                     }
-                }
-                else {
+                } else {
                     Alerter.create(getActivity())
                             .setTitle("No Hay Filas En La Tabla")
                             .setIcon(R.drawable.logonuevo)
@@ -308,4 +361,29 @@ public class SegPagos extends Fragment {
     public void ObtenerOpcion(int opcion) {
         mOpcion = opcion;
     }
+
+    //Consultar Historial Odontodologico - Tratamiento
+    public void consultarTratamiento(String URL, final String id) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                totalGasto.setText(String.format("%.2f", Double.parseDouble(response)));
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, "" + error.toString());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parametros = new HashMap<String, String>();
+                parametros.put("id", id);
+                return parametros;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
 }
