@@ -111,6 +111,7 @@ public class IngPersonales extends Fragment {
         agregador = view.findViewById(R.id.agregar_dp);
         fecha = view.findViewById(R.id.fecha_dp);
         fechap = view.findViewById(R.id.fecha_persona);
+        fechap.setTypeface(face);
         buscador = view.findViewById(R.id.buscar_dp);
 
         Calendar calendar = Calendar.getInstance();
@@ -292,20 +293,7 @@ public class IngPersonales extends Fragment {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                JSONArray jsonArray = null;
-                JSONObject objeto = null;
-                /*try {
-                    jsonArray = new JSONArray(response);
-                    id[0] = jsonArray.getJSONObject(0).getString("idPaciente");
 
-                    SharedPreferences.Editor escritor = almacen.edit();
-                    escritor.putString("idPaciente", id[0] + 1);
-                    escritor.commit();
-                    Log.i(TAG, "ID2: " + id[0]);
-                } catch (JSONException e) {
-                    Log.i(TAG, "" + e);
-                    e.printStackTrace();
-                }*/
             }
         }, new Response.ErrorListener() {
             @Override

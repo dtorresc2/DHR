@@ -168,6 +168,14 @@ public class SegPagos extends Fragment {
                         tablaDinamica.addItem(item);
                         descripsion.setText(null);
                         pagos.setText(null);
+                        total = 0;
+
+                        if (tablaDinamica.getCount() > 0) {
+                            for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
+                                total += Double.parseDouble(tablaDinamica.getCellData(i, 1));
+                            }
+                            total_costo.setText(String.format("%.2f", total));
+                        }
                     } else {
                         Alerter.create(getActivity())
                                 .setTitle("Error")
@@ -177,14 +185,6 @@ public class SegPagos extends Fragment {
                                 .enableSwipeToDismiss()
                                 .setBackgroundColorRes(R.color.AzulOscuro)
                                 .show();
-                    }
-                    total = 0;
-
-                    if (tablaDinamica.getCount() > 0) {
-                        for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
-                            total += Double.parseDouble(tablaDinamica.getCellData(i, 1));
-                        }
-                        total_costo.setText(String.format("%.2f", total));
                     }
                 } else {
                     Alerter.create(getActivity())

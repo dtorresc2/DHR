@@ -49,7 +49,7 @@ public class IngresoPagosVisitas extends Fragment {
     ImageButton selectorFecha;
     Button agregar, quitar;
     FloatingActionButton siguiente;
-    TextView titulo;
+    TextView titulo, tituloGasto, totalGasto, tituloAbono, totalAbono;
 
     TableLayout tableLayout;
     private String[] header = {"Fecha", "Descripsion", "Pago"};
@@ -60,6 +60,8 @@ public class IngresoPagosVisitas extends Fragment {
 
     private int mOpcion = 0;
     private SharedPreferences preferencias;
+    private double total;
+    private static final String TAG = "MyActivity";
 
     public IngresoPagosVisitas() {
         // Required empty public constructor
@@ -135,6 +137,27 @@ public class IngresoPagosVisitas extends Fragment {
         tablaDinamica.addData(getClients());
         tablaDinamica.fondoHeader(R.color.AzulOscuro);
 
+        tituloGasto = view.findViewById(R.id.tituloGasto);
+        tituloGasto.setTypeface(face);
+
+        totalGasto = view.findViewById(R.id.totalGasto);
+        totalGasto.setTypeface(face);
+
+        tituloAbono = view.findViewById(R.id.tituloAbono);
+        tituloAbono.setTypeface(face);
+
+        totalAbono = view.findViewById(R.id.totalAbono);
+        totalAbono.setTypeface(face);
+
+        switch (mOpcion) {
+            case 1:
+                totalGasto.setText(String.format("%.2f", Double.parseDouble(preferencias.getString("totalVisitas", "0.00"))));
+                break;
+            case 2:
+                consultarTratamiento("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=18", preferencias.getString("idficha", ""));
+                break;
+        }
+
         selectorFecha.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -160,13 +183,44 @@ public class IngresoPagosVisitas extends Fragment {
             @Override
             public void onClick(View v) {
                 if (!descripcion.getText().toString().isEmpty() && !fecha.getText().toString().isEmpty() && !pagos.getText().toString().isEmpty()) {
+                    total = 0;
                     String[] item = new String[]{
                             fecha.getText().toString(),
                             descripcion.getText().toString(),
                             pagos.getText().toString()
                     };
-                    tablaDinamica.addItem(item);
-                    descripcion.setText(null);
+
+                    double aux = Double.parseDouble(totalGasto.getText().toString());
+
+                    if (tablaDinamica.getCount() > 0) {
+                        for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
+                            total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
+                        }
+                    }
+
+                    total += Double.parseDouble(pagos.getText().toString());
+
+                    if (total <= aux) {
+                        tablaDinamica.addItem(item);
+                        descripcion.setText(null);
+                        pagos.setText(null);
+                        total = 0;
+                        if (tablaDinamica.getCount() > 0) {
+                            for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
+                                total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
+                            }
+                            totalAbono.setText(String.format("%.2f", total));
+                        }
+                    } else {
+                        Alerter.create(getActivity())
+                                .setTitle("Error")
+                                .setText("El pago es mayor a la deuda")
+                                .setIcon(R.drawable.logonuevo)
+                                .setTextTypeface(face)
+                                .enableSwipeToDismiss()
+                                .setBackgroundColorRes(R.color.AzulOscuro)
+                                .show();
+                    }
                 } else {
                     Alerter.create(getActivity())
                             .setTitle("Hay Campos Vacios")
@@ -361,6 +415,32 @@ public class IngresoPagosVisitas extends Fragment {
 
     public void ObtenerOpcion(int opcion){
         mOpcion = opcion;
+    }
+
+    //Consultar Historial Odontodologico - Tratamiento
+    public void consultarTratamiento(String URL, final String id) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                totalGasto.setText(String.format("%.2f", Double.parseDouble(response)));
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, "" + error.toString());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parametros = new HashMap<String, String>();
+                SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+                parametros.put("user", preferencias2.getString("idUsuario", "1"));
+                parametros.put("id", preferencias2.getString("idficha", "1"));
+                return parametros;
+            }
+
+        };
+        requestQueue.add(stringRequest);
     }
 
 }

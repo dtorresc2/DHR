@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.se.omapi.SEService;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -24,7 +23,6 @@ import android.widget.ImageButton;
 import android.widget.NumberPicker;
 import android.widget.TableLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -50,7 +48,7 @@ public class IngresoVisitas extends Fragment {
     ImageButton selectorFecha;
     Button agregar, quitar;
     FloatingActionButton siguiente;
-    TextView titulo;
+    TextView titulo, tituloGasto, totalGasto;
 
     TableLayout tableLayout;
     private String[] header = {"Fecha", "Descripsion", "Costo"};
@@ -64,6 +62,7 @@ public class IngresoVisitas extends Fragment {
     private static final String TAG = "MyActivity";
 
     private int mOpcion = 0;
+    private double total;
 
     public IngresoVisitas() {
         // Required empty public constructor
@@ -107,6 +106,7 @@ public class IngresoVisitas extends Fragment {
 
         preferencias = getActivity().getSharedPreferences("Terapia", Context.MODE_PRIVATE);
         preferencias2 = getActivity().getSharedPreferences("Consultar", Context.MODE_PRIVATE);
+        final SharedPreferences.Editor escritor = preferencias2.edit();
 
         final Calendar calendar = Calendar.getInstance();
         int yy = calendar.get(Calendar.YEAR);
@@ -136,6 +136,12 @@ public class IngresoVisitas extends Fragment {
         tablaDinamica.addData(getClients());
         tablaDinamica.fondoHeader(R.color.AzulOscuro);
 
+        tituloGasto = view.findViewById(R.id.tituloGasto);
+        tituloGasto.setTypeface(face);
+
+        totalGasto = view.findViewById(R.id.totalGasto);
+        totalGasto.setTypeface(face);
+
         selectorFecha.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -161,6 +167,7 @@ public class IngresoVisitas extends Fragment {
             @Override
             public void onClick(View v) {
                 if (!descripcion.getText().toString().isEmpty() && !fecha.getText().toString().isEmpty()) {
+                    total = 0;
                     String[] item = new String[]{
                             fecha.getText().toString(),
                             descripcion.getText().toString(),
@@ -168,6 +175,14 @@ public class IngresoVisitas extends Fragment {
                     };
                     tablaDinamica.addItem(item);
                     descripcion.setText(null);
+
+                    if (tablaDinamica.getCount() > 0) {
+                        for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
+                            total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
+                        }
+                        totalGasto.setText(String.format("%.2f", total));
+                    }
+
                 } else {
                     Alerter.create(getActivity())
                             .setTitle("Hay Campos Vacios")
@@ -257,6 +272,8 @@ public class IngresoVisitas extends Fragment {
                 }, 1000);
 
                 if (tablaDinamica.getCount() > 0) {
+                    escritor.putString("totalVisitas", totalGasto.getText().toString());
+                    escritor.commit();
                     for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
 
                         switch (mOpcion){
