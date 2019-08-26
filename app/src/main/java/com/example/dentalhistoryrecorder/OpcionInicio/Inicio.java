@@ -47,6 +47,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.dentalhistoryrecorder.MainActivity;
+import com.example.dentalhistoryrecorder.Principal;
 import com.example.dentalhistoryrecorder.R;
 import com.tapadoo.alerter.Alerter;
 
@@ -60,6 +61,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -116,24 +118,37 @@ public class Inicio extends Fragment {
             public void onClick(View v) {
                 SharedPreferences preferencias = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
                 Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-                Alerter.create(getActivity())
+                /*Alerter.create(getActivity())
                         .setTitle(preferencias.getString("idUsuario", ""))
                         .setText(preferencias.getString("correo", ""))
                         .setIcon(R.drawable.logonuevo)
                         .setTextTypeface(face)
                         .enableSwipeToDismiss()
                         .setBackgroundColorRes(R.color.AzulOscuro)
-                        .show();
+                        .show();*/
+
+                final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.progressDialog);
+                progressDialog.setMessage("Cerrando Sesion");
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        progressDialog.dismiss();
+                        Intent intent = new Intent(getActivity(), MainActivity.class);
+                        getActivity().startActivity(intent);
+                        getActivity().overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                        getActivity().finish();
+                    }
+                }, 500);
 
 
                 SharedPreferences.Editor editor = preferencias.edit();
                 editor.clear();
                 editor.commit();
 
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                getActivity().startActivity(intent);
-                getActivity().overridePendingTransition(R.anim.left_in, R.anim.left_out);
-                getActivity().finish();
             }
         });
 
@@ -157,7 +172,8 @@ public class Inicio extends Fragment {
                         return true;
 
                     case R.id.action_configurar:
-
+                        Configuracion configuracion = new Configuracion();
+                        configuracion.display(getFragmentManager());
                         return true;
 
                     default:
@@ -239,6 +255,7 @@ public class Inicio extends Fragment {
                 getActivity().startActivity(intent);
                 getActivity().overridePendingTransition(R.anim.left_in, R.anim.left_out);
                 getActivity().finish();*/
+                ObtenerTiempo();
             }
         });
 
@@ -742,4 +759,28 @@ public class Inicio extends Fragment {
         requestQueue.add(stringRequest);
     }
 
+    public void ObtenerTiempo() {
+        //TextView countDown;
+        //CountDownTimer countDownTimer;
+        Date eventDate, presentDate;
+        Calendar calendar, calendar1;
+        //long initialTime;
+
+        calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 20);
+        calendar.set(Calendar.MINUTE, 50);
+        calendar.set(Calendar.SECOND, 0);
+
+        eventDate = calendar.getTime();
+        presentDate = new Date();
+
+        long diff = eventDate.getTime() - presentDate.getTime();
+
+        long seconds = (diff / 1000) % 60;
+        long minutes = (diff / (1000 * 60)) % 60;
+        long hours = (diff / (1000 * 60 * 60)) % 24;
+        //long days = (diff / (1000 * 60 * 60 * 24)) % 365;
+        Toast.makeText(getContext(), "Horas: " + hours + " Minutos: " + minutes + " Segundos: " + seconds, Toast.LENGTH_LONG).show();
+
+    }
 }

@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Handler;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.FragmentTransaction;
@@ -77,7 +79,22 @@ public class InicioSesion extends AppCompatActivity {
                 //ejecutarSesion("http://diegosistemas.xyz/DHR/sesiones.php?correo="+correo.getText()+"&clave="+pass.getText()+"");
 
                 if (!correo.getText().toString().isEmpty() && !pass.getText().toString().isEmpty()) {
-                    iniciarSesion("https://diegosistemas.xyz/DHR/sesiones.php");
+                    ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+                    if (networkInfo != null && networkInfo.isConnected()) {
+                        iniciarSesion("https://diegosistemas.xyz/DHR/sesiones.php");
+                    } else {
+                        Alerter.create(InicioSesion.this)
+                                .setTitle("Error")
+                                .setText("Fallo en Conexion a Internet")
+                                .setIcon(R.drawable.logonuevo)
+                                .setTextTypeface(face2)
+                                .enableSwipeToDismiss()
+                                .setBackgroundColorRes(R.color.AzulOscuro)
+                                .show();
+                    }
+
                 } else {
                     //Toast.makeText(getApplicationContext(), "Faltan Campos", Toast.LENGTH_SHORT).show();
                     Alerter.create(InicioSesion.this)
@@ -122,7 +139,6 @@ public class InicioSesion extends AppCompatActivity {
                                 switch (mobil) {
                                     case 0:
                                         //El usuario NO tiene permiso;
-                                        //Toast.makeText(getApplicationContext(), "No tiene permiso para esta APP", Toast.LENGTH_LONG).show();
                                         Typeface face2 = Typeface.createFromAsset(getAssets(), "fonts/bahnschrift.ttf");
                                         Alerter.create(InicioSesion.this)
                                                 .setTitle("Error")
@@ -145,6 +161,12 @@ public class InicioSesion extends AppCompatActivity {
                                             editor.putString("correo", correo.getText().toString());
                                             editor.putString("pass", pass.getText().toString());
                                         }
+                                        else {
+                                            editor.putBoolean("recordar", false);
+                                            editor.putString("correo", correo.getText().toString());
+                                            editor.putString("pass", pass.getText().toString());
+                                        }
+
                                         editor.commit();
 
                                         Intent intent = new Intent(InicioSesion.this, Principal.class);
@@ -154,7 +176,6 @@ public class InicioSesion extends AppCompatActivity {
                                         break;
                                 }
                             } else {
-                                //Toast.makeText(getApplicationContext(), "El Usuario NO existe",Toast.LENGTH_LONG).show();
                                 Typeface face2 = Typeface.createFromAsset(getAssets(), "fonts/bahnschrift.ttf");
                                 Alerter.create(InicioSesion.this)
                                         .setTitle("Error")
