@@ -7,6 +7,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TextInputEditText;
@@ -36,6 +38,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.dentalhistoryrecorder.InicioSesion;
 import com.example.dentalhistoryrecorder.OpcionConsulta.Items;
 import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.Adaptadores.AdaptadorConsulta;
 import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.consultarFichas;
@@ -198,27 +201,45 @@ public class IngPersonales extends Fragment {
                     }, 1000);
 
                     boolean validado = false;
-                    if (!primerNombre.getText().toString().isEmpty()){
+                    if (!primerNombre.getText().toString().isEmpty()) {
                         validado = true;
-                        if (!segundoNombre.getText().toString().isEmpty()){
+                        if (!segundoNombre.getText().toString().isEmpty()) {
                             validado = true;
-                            if (!primerApellido.getText().toString().isEmpty()){
+                            if (!primerApellido.getText().toString().isEmpty()) {
                                 validado = true;
-                                if(!segundoApellido.getText().toString().isEmpty()){
+                                if (!segundoApellido.getText().toString().isEmpty()) {
                                     validado = true;
-                                    insertarPaciente("https://diegosistemas.xyz/DHR/Normal/ficha.php?estado=1");
-                                    IngDetalle ingDetalle = new IngDetalle();
-                                    ingDetalle.obtenerPaciente(0);
-                                    FragmentTransaction transaction = getFragmentManager().beginTransaction()
-                                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                                    transaction.replace(R.id.contenedor, ingDetalle);
-                                    transaction.commit();
+
+                                    ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+                                    if (networkInfo != null && networkInfo.isConnected()) {
+                                        insertarPaciente("https://diegosistemas.xyz/DHR/Normal/ficha.php?estado=1");
+
+                                        IngDetalle ingDetalle = new IngDetalle();
+                                        ingDetalle.obtenerPaciente(0);
+                                        FragmentTransaction transaction = getFragmentManager().beginTransaction()
+                                                .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                                        transaction.replace(R.id.contenedor, ingDetalle);
+                                        transaction.commit();
+
+                                    } else {
+                                        Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                                        Alerter.create(getActivity())
+                                                .setTitle("Error")
+                                                .setText("Fallo en Conexion a Internet")
+                                                .setIcon(R.drawable.logonuevo)
+                                                .setTextTypeface(face2)
+                                                .enableSwipeToDismiss()
+                                                .setBackgroundColorRes(R.color.AzulOscuro)
+                                                .show();
+                                    }
                                 }
                             }
                         }
                     }
 
-                    if (validado == false){
+                    if (validado == false) {
                         Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
                         Alerter.create(getActivity())
                                 .setTitle("Faltan Campos")
@@ -261,7 +282,6 @@ public class IngPersonales extends Fragment {
         buscador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (!primerNombre.getText().toString().isEmpty() && !primerApellido.getText().toString().isEmpty() && existente.isChecked()) {
                     final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
                     progressDialog.setMessage("Cargando...");
@@ -276,12 +296,26 @@ public class IngPersonales extends Fragment {
                         }
                     }, 3000);
 
-                    obtenerPacientes("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=8");
+                    ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+                    if (networkInfo != null && networkInfo.isConnected()) {
+                        obtenerPacientes("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=8");
+                    } else {
+                        Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                        Alerter.create(getActivity())
+                                .setTitle("Error")
+                                .setText("Fallo en Conexion a Internet")
+                                .setIcon(R.drawable.logonuevo)
+                                .setTextTypeface(face2)
+                                .enableSwipeToDismiss()
+                                .setBackgroundColorRes(R.color.AzulOscuro)
+                                .show();
+                    }
+
                 }
             }
         });
-
-
         return view;
     }
 
@@ -331,7 +365,7 @@ public class IngPersonales extends Fragment {
             public void onResponse(String response) {
                 if (Integer.parseInt(response) > 0) {
                     final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    //Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                    Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
                     View viewCuadro = getLayoutInflater().inflate(R.layout.dialogo_pac_exis, null);
                     listaPac = viewCuadro.findViewById(R.id.lista_pacientesExis);
                     Toolbar toolbar = viewCuadro.findViewById(R.id.toolbar2);
@@ -348,7 +382,22 @@ public class IngPersonales extends Fragment {
                         }
                     });
 
-                    consultarPaciente("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=1", dialog);
+                    ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+                    if (networkInfo != null && networkInfo.isConnected()) {
+                        consultarPaciente("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=1", dialog);
+                    } else {
+                        Alerter.create(getActivity())
+                                .setTitle("Error")
+                                .setText("Fallo en Conexion a Internet")
+                                .setIcon(R.drawable.logonuevo)
+                                .setTextTypeface(face2)
+                                .enableSwipeToDismiss()
+                                .setBackgroundColorRes(R.color.AzulOscuro)
+                                .show();
+                    }
+
                     dialog.show();
 
                 } else {

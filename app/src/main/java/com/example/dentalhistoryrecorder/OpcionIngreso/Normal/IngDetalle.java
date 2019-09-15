@@ -6,6 +6,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -32,6 +34,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.dentalhistoryrecorder.OpcionIngreso.Agregar;
 import com.example.dentalhistoryrecorder.R;
+import com.tapadoo.alerter.Alerter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -67,18 +70,18 @@ public class IngDetalle extends Fragment {
         requestQueue = Volley.newRequestQueue(getContext());
 
         //Barra de Titulo
-        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle("Detalle de la Ficha");
         toolbar.setNavigationIcon(R.drawable.ic_cerrar);
 
         //Detalle de la ficha
-        fecha = (TextView) view.findViewById(R.id.fecha);
+        fecha = view.findViewById(R.id.fecha);
         fecha.setTypeface(face);
-        motivo = (TextInputEditText) view.findViewById(R.id.motivo);
+        motivo = view.findViewById(R.id.motivo);
         motivo.setTypeface(face);
-        medico = (TextInputEditText) view.findViewById(R.id.medico);
+        medico = view.findViewById(R.id.medico);
         medico.setTypeface(face);
-        referente = (TextInputEditText) view.findViewById(R.id.referente);
+        referente = view.findViewById(R.id.referente);
         referente.setTypeface(face);
         calendario = view.findViewById(R.id.obFecha);
         guardador = view.findViewById(R.id.guardador_dt);
@@ -89,9 +92,8 @@ public class IngDetalle extends Fragment {
         int dia = calendar.get(Calendar.DAY_OF_MONTH);
         int mes = calendar.get(Calendar.MONTH);
         int a = calendar.get(Calendar.YEAR);
-        String fe = String.valueOf(dia) + "/" + String.valueOf(mes) + "/" + String.valueOf(a);
+        String fe = dia + "/" + mes + "/" + a;
         fecha.setText(fe);
-
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,16 +150,31 @@ public class IngDetalle extends Fragment {
                     }
                 }, 1000);
 
-                if (idPacienteExis == 0) {
-                    insertarFicha("https://diegosistemas.xyz/DHR/Normal/ficha.php?estado=2");
+                ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+                if (networkInfo != null && networkInfo.isConnected()) {
+                    if (idPacienteExis == 0) {
+                        insertarFicha("https://diegosistemas.xyz/DHR/Normal/ficha.php?estado=2");
+                    } else {
+                        insertarFichaExistente("https://diegosistemas.xyz/DHR/Normal/ficha.php?estado=3");
+                    }
+                    IngHMedico ingHMedico = new IngHMedico();
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                    transaction.replace(R.id.contenedor, ingHMedico);
+                    transaction.commit();
                 } else {
-                    insertarFichaExistente("https://diegosistemas.xyz/DHR/Normal/ficha.php?estado=3");
+                    Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                    Alerter.create(getActivity())
+                            .setTitle("Error")
+                            .setText("Fallo en Conexion a Internet")
+                            .setIcon(R.drawable.logonuevo)
+                            .setTextTypeface(face2)
+                            .enableSwipeToDismiss()
+                            .setBackgroundColorRes(R.color.AzulOscuro)
+                            .show();
                 }
-                IngHMedico ingHMedico = new IngHMedico();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                transaction.replace(R.id.contenedor, ingHMedico);
-                transaction.commit();
             }
         });
 

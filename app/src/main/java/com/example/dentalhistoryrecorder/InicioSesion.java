@@ -89,6 +89,7 @@ public class InicioSesion extends AppCompatActivity {
                                 .setTitle("Error")
                                 .setText("Fallo en Conexion a Internet")
                                 .setIcon(R.drawable.logonuevo)
+
                                 .setTextTypeface(face2)
                                 .enableSwipeToDismiss()
                                 .setBackgroundColorRes(R.color.AzulOscuro)

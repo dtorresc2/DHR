@@ -6,6 +6,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -34,6 +36,7 @@ import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.Adaptadores.Adapt
 import com.example.dentalhistoryrecorder.OpcionSeguimiento.Seguimiento;
 import com.example.dentalhistoryrecorder.OpcionSeguimiento.SeguimientoEspecial;
 import com.example.dentalhistoryrecorder.R;
+import com.tapadoo.alerter.Alerter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -74,7 +77,6 @@ public class consultarFichas extends Fragment {
         toolbar.setTitle("Fichas");
         preferencias = getActivity().getSharedPreferences("Consultar", Context.MODE_PRIVATE);
 
-
         nombre = view.findViewById(R.id.nombre_con);
         nombre.setTypeface(face);
         nombre.setEnabled(false);
@@ -94,14 +96,28 @@ public class consultarFichas extends Fragment {
             }
         }, 1000);
 
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
-        if (mOpcion < 4){
-            consultarFichas("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=2");
-        }
-        else {
-            consultarFichasEspeciales("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=1");
-        }
+        if (networkInfo != null && networkInfo.isConnected()) {
+            if (mOpcion < 4){
+                consultarFichas("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=2");
+            }
+            else {
+                consultarFichasEspeciales("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=1");
+            }
 
+        } else {
+            Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+            Alerter.create(getActivity())
+                    .setTitle("Error")
+                    .setText("Fallo en Conexion a Internet")
+                    .setIcon(R.drawable.logonuevo)
+                    .setTextTypeface(face2)
+                    .enableSwipeToDismiss()
+                    .setBackgroundColorRes(R.color.AzulOscuro)
+                    .show();
+        }
 
         return view;
     }
@@ -136,20 +152,35 @@ public class consultarFichas extends Fragment {
                                 escritor2.putString("idficha", lista.get(position).getId());
                                 escritor2.commit();
 
-                                switch (mOpcion) {
-                                    case 1:
-                                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                                        Historiales historiales = new Historiales();
-                                        transaction.replace(R.id.contenedor, historiales);
-                                        transaction.commit();
-                                        break;
+                                ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
-                                    case 2:
-                                        FragmentTransaction transaction2 = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                                        Seguimiento seguimiento = new Seguimiento();
-                                        transaction2.replace(R.id.contenedor, seguimiento);
-                                        transaction2.commit();
-                                        break;
+                                if (networkInfo != null && networkInfo.isConnected()) {
+                                    switch (mOpcion) {
+                                        case 1:
+                                            FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                                            Historiales historiales = new Historiales();
+                                            transaction.replace(R.id.contenedor, historiales);
+                                            transaction.commit();
+                                            break;
+
+                                        case 2:
+                                            FragmentTransaction transaction2 = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                                            Seguimiento seguimiento = new Seguimiento();
+                                            transaction2.replace(R.id.contenedor, seguimiento);
+                                            transaction2.commit();
+                                            break;
+                                    }
+                                } else {
+                                    Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                                    Alerter.create(getActivity())
+                                            .setTitle("Error")
+                                            .setText("Fallo en Conexion a Internet")
+                                            .setIcon(R.drawable.logonuevo)
+                                            .setTextTypeface(face2)
+                                            .enableSwipeToDismiss()
+                                            .setBackgroundColorRes(R.color.AzulOscuro)
+                                            .show();
                                 }
                             }
                         });
@@ -208,27 +239,42 @@ public class consultarFichas extends Fragment {
                                 escritor2.putString("idficha", lista.get(position).getId());
                                 escritor2.commit();
 
-                                switch (mOpcion) {
-                                    case 4:
-                                        FragmentTransaction transaction3 = getFragmentManager()
-                                                .beginTransaction()
-                                                .setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                                        FichasEspeciales fichasEspeciales = new FichasEspeciales();
-                                        transaction3.replace(R.id.contenedor, fichasEspeciales);
-                                        transaction3.commit();
-                                        break;
+                                ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
-                                    case 5:
-                                        FragmentTransaction transaction4 = getFragmentManager()
-                                                .beginTransaction()
-                                                .setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                                        SeguimientoEspecial seguimientoEspecial = new SeguimientoEspecial();
-                                        transaction4.replace(R.id.contenedor, seguimientoEspecial);
-                                        transaction4.commit();
-                                        break;
+                                if (networkInfo != null && networkInfo.isConnected()) {
+                                    switch (mOpcion) {
+                                        case 4:
+                                            FragmentTransaction transaction3 = getFragmentManager()
+                                                    .beginTransaction()
+                                                    .setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                                            FichasEspeciales fichasEspeciales = new FichasEspeciales();
+                                            transaction3.replace(R.id.contenedor, fichasEspeciales);
+                                            transaction3.commit();
+                                            break;
 
-                                    default:
-                                        break;
+                                        case 5:
+                                            FragmentTransaction transaction4 = getFragmentManager()
+                                                    .beginTransaction()
+                                                    .setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                                            SeguimientoEspecial seguimientoEspecial = new SeguimientoEspecial();
+                                            transaction4.replace(R.id.contenedor, seguimientoEspecial);
+                                            transaction4.commit();
+                                            break;
+
+                                        default:
+                                            break;
+                                    }
+                                } else {
+                                    Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                                    Alerter.create(getActivity())
+                                            .setTitle("Error")
+                                            .setText("Fallo en Conexion a Internet")
+                                            .setIcon(R.drawable.logonuevo)
+                                            .setTextTypeface(face2)
+                                            .enableSwipeToDismiss()
+                                            .setBackgroundColorRes(R.color.AzulOscuro)
+                                            .show();
                                 }
                             }
                         });

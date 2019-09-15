@@ -1,7 +1,10 @@
 package com.example.dentalhistoryrecorder.OpcionIngreso.Especial;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -25,6 +28,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.dentalhistoryrecorder.OpcionIngreso.Agregar;
 import com.example.dentalhistoryrecorder.R;
+import com.tapadoo.alerter.Alerter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -229,12 +233,27 @@ public class IngEvaluacion extends Fragment {
                     }
                 }, 1000);
 
-                crearEvaluacion("https://diegosistemas.xyz/DHR/Especial/ingresoE.php?estado=6");
+                ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
-                Agregar agregar = new Agregar();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                transaction.replace(R.id.contenedor, agregar);
-                transaction.commit();
+                if (networkInfo != null && networkInfo.isConnected()) {
+                    crearEvaluacion("https://diegosistemas.xyz/DHR/Especial/ingresoE.php?estado=6");
+                    Agregar agregar = new Agregar();
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                    transaction.replace(R.id.contenedor, agregar);
+                    transaction.commit();
+
+                } else {
+                    Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                    Alerter.create(getActivity())
+                            .setTitle("Error")
+                            .setText("Fallo en Conexion a Internet")
+                            .setIcon(R.drawable.logonuevo)
+                            .setTextTypeface(face2)
+                            .enableSwipeToDismiss()
+                            .setBackgroundColorRes(R.color.AzulOscuro)
+                            .show();
+                }
             }
         });
 

@@ -9,6 +9,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -40,6 +42,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.Adaptadores.AdaptadorConsultaFicha;
@@ -62,6 +65,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.tapadoo.alerter.Alerter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -310,13 +314,28 @@ public class Historiales extends Fragment {
             }
         });
 
-        consultarHM("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=3");
-        consultarHO("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=5");
-        consultarHF("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=7");
-        consultarPagos("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=9");
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+        if (networkInfo != null && networkInfo.isConnected()) {
+            consultarHM("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=3");
+            consultarHO("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=5");
+            consultarHF("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=7");
+            consultarPagos("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=9");
+        } else {
+            Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+            Alerter.create(getActivity())
+                    .setTitle("Error")
+                    .setText("Fallo en Conexion a Internet")
+                    .setIcon(R.drawable.logonuevo)
+                    .setTextTypeface(face2)
+                    .enableSwipeToDismiss()
+                    .setBackgroundColorRes(R.color.AzulOscuro)
+                    .show();
+        }
+
         return view;
     }
-
 
     private ArrayList<String[]> getClients() {
         return rows;
@@ -527,17 +546,18 @@ public class Historiales extends Fragment {
                     if (jsonArray.length() > 0) {
                         for (int i = 0; i < jsonArray.length(); i++) {
                             String codigo_foto = jsonArray.getJSONObject(i).getString("foto");
+                            obtenerFotos(codigo_foto);
 
-                            if (!codigo_foto.equalsIgnoreCase("")) {
+                            /*if (!codigo_foto.equalsIgnoreCase("")) {
                                 byte[] b = Base64.decode(codigo_foto, Base64.DEFAULT);
                                 Bitmap imagen_codificada = BitmapFactory.decodeByteArray(b, 0, b.length);
                                 lista_fotos.add(imagen_codificada);
-                            }
+                            }*/
                         }
-                        galeria.setImageBitmap(lista_fotos.get(0));
+                        /*galeria.setImageBitmap(lista_fotos.get(0));
                         seleccionado = 0;
                         actual.setText(String.valueOf(seleccionado + 1));
-                        total_fotos.setText(String.valueOf(lista_fotos.size()));
+                        total_fotos.setText(String.valueOf(lista_fotos.size()));*/
                     }
 
                 } catch (JSONException e) {
@@ -568,7 +588,34 @@ public class Historiales extends Fragment {
         ));
 
         requestQueue.add(stringRequest);
+
     }
+
+    public void obtenerFotos(String path){
+        String URL = "https://www.diegosistemas.xyz/DHR/Normal/" + path ;
+
+        ImageRequest imageRequest = new ImageRequest(URL,
+                new Response.Listener<Bitmap>() {
+                    @Override
+                    public void onResponse(Bitmap response) {
+                        if (response != null){
+                            lista_fotos.add(response);
+
+                            galeria.setImageBitmap(lista_fotos.get(0));
+                            seleccionado = 0;
+                            actual.setText(String.valueOf(seleccionado + 1));
+                            total_fotos.setText(String.valueOf(lista_fotos.size()));
+                        }
+                    }
+                }, 0, 0, ImageView.ScaleType.CENTER, null, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getActivity(),"Error",Toast.LENGTH_LONG).show();
+            }
+        });
+        requestQueue.add(imageRequest);
+    }
+
 
     public void consultarPagos(String URL){
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {

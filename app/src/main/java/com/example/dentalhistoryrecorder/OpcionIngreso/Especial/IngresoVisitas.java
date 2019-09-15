@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -274,38 +276,52 @@ public class IngresoVisitas extends Fragment {
                 if (tablaDinamica.getCount() > 0) {
                     escritor.putString("totalVisitas", totalGasto.getText().toString());
                     escritor.commit();
-                    for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
+
+                    ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+                    if (networkInfo != null && networkInfo.isConnected()) {
+                        for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
+                            switch (mOpcion){
+                                case 1:
+                                    agregarVisitas("https://diegosistemas.xyz/DHR/Especial/ingresoE.php?estado=3", tablaDinamica.getCellData(i, 0), tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2));
+                                    break;
+
+                                case 2:
+                                    segVisitas("https://diegosistemas.xyz/DHR/Especial/seguimientoE.php?estado=1", tablaDinamica.getCellData(i, 0), tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2));
+                                    break;
+                            }
+                        }
 
                         switch (mOpcion){
                             case 1:
-                                agregarVisitas("https://diegosistemas.xyz/DHR/Especial/ingresoE.php?estado=3", tablaDinamica.getCellData(i, 0), tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2));
+                                IngresoPagosVisitas ingresoPagosVisitas1 = new IngresoPagosVisitas();
+                                ingresoPagosVisitas1.ObtenerOpcion(1);
+                                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                                transaction.replace(R.id.contenedor, ingresoPagosVisitas1);
+                                transaction.commit();
                                 break;
 
                             case 2:
-                                segVisitas("https://diegosistemas.xyz/DHR/Especial/seguimientoE.php?estado=1", tablaDinamica.getCellData(i, 0), tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2));
+                                SeguimientoEspecial seguimientoEspecial = new SeguimientoEspecial();
+                                FragmentTransaction transaction2 = getFragmentManager()
+                                        .beginTransaction()
+                                        .setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                                transaction2.replace(R.id.contenedor, seguimientoEspecial);
+                                transaction2.commit();
                                 break;
                         }
+                    } else {
+                        Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                        Alerter.create(getActivity())
+                                .setTitle("Error")
+                                .setText("Fallo en Conexion a Internet")
+                                .setIcon(R.drawable.logonuevo)
+                                .setTextTypeface(face2)
+                                .enableSwipeToDismiss()
+                                .setBackgroundColorRes(R.color.AzulOscuro)
+                                .show();
                     }
-
-                    switch (mOpcion){
-                        case 1:
-                            IngresoPagosVisitas ingresoPagosVisitas1 = new IngresoPagosVisitas();
-                            ingresoPagosVisitas1.ObtenerOpcion(1);
-                            FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                            transaction.replace(R.id.contenedor, ingresoPagosVisitas1);
-                            transaction.commit();
-                            break;
-
-                        case 2:
-                            SeguimientoEspecial seguimientoEspecial = new SeguimientoEspecial();
-                            FragmentTransaction transaction2 = getFragmentManager()
-                                    .beginTransaction()
-                                    .setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                            transaction2.replace(R.id.contenedor, seguimientoEspecial);
-                            transaction2.commit();
-                            break;
-                    }
-
                 } else {
                     Alerter.create(getActivity())
                             .setTitle("No Ingreso Visitas")

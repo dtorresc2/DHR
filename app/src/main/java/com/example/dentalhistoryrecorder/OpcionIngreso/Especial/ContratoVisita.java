@@ -4,10 +4,13 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.arch.lifecycle.ViewModelProvider;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.media.Image;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -38,6 +41,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.dentalhistoryrecorder.OpcionIngreso.Agregar;
 import com.example.dentalhistoryrecorder.Pizarron.Lienzo;
 import com.example.dentalhistoryrecorder.R;
+import com.tapadoo.alerter.Alerter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -204,12 +208,27 @@ public class ContratoVisita extends Fragment {
 
                 String codigoFoto = Base64.encodeToString(b, Base64.DEFAULT);
 
-                agregarFirma("https://diegosistemas.xyz/DHR/Especial/ingresoE.php?estado=5", codigoFoto);
+                ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
-                IngEvaluacion ingEvaluacion = new IngEvaluacion();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                transaction.replace(R.id.contenedor, ingEvaluacion);
-                transaction.commit();
+                if (networkInfo != null && networkInfo.isConnected()) {
+                    agregarFirma("https://diegosistemas.xyz/DHR/Especial/ingresoE.php?estado=5", codigoFoto);
+                    IngEvaluacion ingEvaluacion = new IngEvaluacion();
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                    transaction.replace(R.id.contenedor, ingEvaluacion);
+                    transaction.commit();
+
+                } else {
+                    Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                    Alerter.create(getActivity())
+                            .setTitle("Error")
+                            .setText("Fallo en Conexion a Internet")
+                            .setIcon(R.drawable.logonuevo)
+                            .setTextTypeface(face2)
+                            .enableSwipeToDismiss()
+                            .setBackgroundColorRes(R.color.AzulOscuro)
+                            .show();
+                }
             }
         });
 

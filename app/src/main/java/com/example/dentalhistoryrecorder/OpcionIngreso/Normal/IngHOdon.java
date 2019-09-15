@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -329,40 +331,62 @@ public class IngHOdon extends Fragment {
                     for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
                         //insertarTratamiento("http://192.168.56.1:80/DHR/IngresoN/ficha.php?db=u578331993_clinc&user=root&estado=10", tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2), tablaDinamica.getCellData(i, 0));
 
-                        switch (mOpcion) {
-                            case 1:
-                                insertarTratamiento("https://diegosistemas.xyz/DHR/Normal/ficha.php?estado=10", tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2), tablaDinamica.getCellData(i, 0));
-                                break;
-                            case 2:
-                                agregarTratamiento("https://diegosistemas.xyz/DHR/Normal/seguimiento.php?estado=1", tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2), tablaDinamica.getCellData(i, 0));
-                                break;
+                        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+                        if (networkInfo != null && networkInfo.isConnected()) {
+                            switch (mOpcion) {
+                                case 1:
+                                    insertarTratamiento("https://diegosistemas.xyz/DHR/Normal/ficha.php?estado=10", tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2), tablaDinamica.getCellData(i, 0));
+                                    break;
+                                case 2:
+                                    agregarTratamiento("https://diegosistemas.xyz/DHR/Normal/seguimiento.php?estado=1", tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2), tablaDinamica.getCellData(i, 0));
+                                    break;
+                            }
+                        } else {
+                            Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                            Alerter.create(getActivity())
+                                    .setTitle("Error")
+                                    .setText("Fallo en Conexion a Internet")
+                                    .setIcon(R.drawable.logonuevo)
+                                    .setTextTypeface(face2)
+                                    .enableSwipeToDismiss()
+                                    .setBackgroundColorRes(R.color.AzulOscuro)
+                                    .show();
                         }
                     }
 
-                    switch (mOpcion) {
-                        case 1:
-                        /*Ing_HFoto ingHFoto = new Ing_HFoto();
-                        ingHFoto.ObtenerOpcion(1);
-                        FragmentTransaction transaction = getFragmentManager().beginTransaction()
-                                .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                        transaction.replace(R.id.contenedor, ingHFoto);
-                        transaction.commit();*/
+                    ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
-                            SegPagos segPagos = new SegPagos();
-                            segPagos.ObtenerOpcion(1);
-                            FragmentTransaction transaction = getFragmentManager().beginTransaction()
-                                    .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                            transaction.replace(R.id.contenedor, segPagos);
-                            transaction.commit();
+                    if (networkInfo != null && networkInfo.isConnected()) {
+                        switch (mOpcion) {
+                            case 1:
+                                SegPagos segPagos = new SegPagos();
+                                segPagos.ObtenerOpcion(1);
+                                FragmentTransaction transaction = getFragmentManager().beginTransaction()
+                                        .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                                transaction.replace(R.id.contenedor, segPagos);
+                                transaction.commit();
+                                break;
+                            case 2:
+                                Seguimiento seguimiento = new Seguimiento();
+                                FragmentTransaction transaction2 = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                                transaction2.replace(R.id.contenedor, seguimiento);
+                                transaction2.commit();
+                                break;
 
-                            break;
-                        case 2:
-                            Seguimiento seguimiento = new Seguimiento();
-                            FragmentTransaction transaction2 = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                            transaction2.replace(R.id.contenedor, seguimiento);
-                            transaction2.commit();
-                            break;
-
+                        }
+                    } else {
+                        Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                        Alerter.create(getActivity())
+                                .setTitle("Error")
+                                .setText("Fallo en Conexion a Internet")
+                                .setIcon(R.drawable.logonuevo)
+                                .setTextTypeface(face2)
+                                .enableSwipeToDismiss()
+                                .setBackgroundColorRes(R.color.AzulOscuro)
+                                .show();
                     }
                 }
                 else {
@@ -374,8 +398,6 @@ public class IngHOdon extends Fragment {
                             .setBackgroundColorRes(R.color.AzulOscuro)
                             .show();
                 }
-
-
             }
         });
 

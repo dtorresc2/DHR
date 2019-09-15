@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -106,13 +108,28 @@ public class IngCostos extends Fragment {
                     editor.putString("costoVisita",costo.getText().toString());
                     editor.commit();
 
-                    crearFicha("https://diegosistemas.xyz/DHR/Especial/ingresoE.php?estado=1");
+                    ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
-                    IngresoVisitas ingresoVisitas = new IngresoVisitas();
-                    ingresoVisitas.ObtenerOpcion(1);
-                    FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                    transaction.replace(R.id.contenedor, ingresoVisitas);
-                    transaction.commit();
+                    if (networkInfo != null && networkInfo.isConnected()) {
+                        crearFicha("https://diegosistemas.xyz/DHR/Especial/ingresoE.php?estado=1");
+                        IngresoVisitas ingresoVisitas = new IngresoVisitas();
+                        ingresoVisitas.ObtenerOpcion(1);
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                        transaction.replace(R.id.contenedor, ingresoVisitas);
+                        transaction.commit();
+
+                    } else {
+                        Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                        Alerter.create(getActivity())
+                                .setTitle("Error")
+                                .setText("Fallo en Conexion a Internet")
+                                .setIcon(R.drawable.logonuevo)
+                                .setTextTypeface(face2)
+                                .enableSwipeToDismiss()
+                                .setBackgroundColorRes(R.color.AzulOscuro)
+                                .show();
+                    }
                 }
                 else {
                     Alerter.create(getActivity())

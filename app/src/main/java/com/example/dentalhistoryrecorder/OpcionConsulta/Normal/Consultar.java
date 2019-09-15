@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -125,7 +127,23 @@ public class Consultar extends Fragment {
                             progressDialog.dismiss();
                         }
                     }, 1000);
-                    obtenerPacientes("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=8");
+
+                    ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+                    if (networkInfo != null && networkInfo.isConnected()) {
+                        obtenerPacientes("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=8");
+                    } else {
+                        Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                        Alerter.create(getActivity())
+                                .setTitle("Error")
+                                .setText("Fallo en Conexion a Internet")
+                                .setIcon(R.drawable.logonuevo)
+                                .setTextTypeface(face2)
+                                .enableSwipeToDismiss()
+                                .setBackgroundColorRes(R.color.AzulOscuro)
+                                .show();
+                    }
                 }
                 else {
                     Alerter.create(getActivity())
@@ -198,15 +216,31 @@ public class Consultar extends Fragment {
                                         @Override
                                         public void onClick(View v) {
                                             if (Integer.parseInt(lista.get(position).getMcontadorN()) > 0) {
-                                                consultarFichas consultarFichas1 = new consultarFichas(lista.get(position).getMid(), mOpcion);
-                                                SharedPreferences.Editor escritor2 = preferencias.edit();
-                                                escritor2.putString("nombre", lista.get(position).getMnombre());
-                                                escritor2.putString("edad", lista.get(position).getMedad());
-                                                escritor2.commit();
-                                                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                                                transaction.replace(R.id.contenedor, consultarFichas1);
-                                                transaction.commit();
-                                                dialog.dismiss();
+
+                                                ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                                                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+                                                if (networkInfo != null && networkInfo.isConnected()) {
+                                                    consultarFichas consultarFichas1 = new consultarFichas(lista.get(position).getMid(), mOpcion);
+                                                    SharedPreferences.Editor escritor2 = preferencias.edit();
+                                                    escritor2.putString("nombre", lista.get(position).getMnombre());
+                                                    escritor2.putString("edad", lista.get(position).getMedad());
+                                                    escritor2.commit();
+                                                    FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                                                    transaction.replace(R.id.contenedor, consultarFichas1);
+                                                    transaction.commit();
+                                                    dialog.dismiss();
+                                                } else {
+                                                    Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                                                    Alerter.create(getActivity())
+                                                            .setTitle("Error")
+                                                            .setText("Fallo en Conexion a Internet")
+                                                            .setIcon(R.drawable.logonuevo)
+                                                            .setTextTypeface(face2)
+                                                            .enableSwipeToDismiss()
+                                                            .setBackgroundColorRes(R.color.AzulOscuro)
+                                                            .show();
+                                                }
                                             }
                                         }
                                     });
@@ -216,27 +250,42 @@ public class Consultar extends Fragment {
                                         public void onClick(View v) {
                                             if (Integer.parseInt(lista.get(position).getMcontadorE()) > 0) {
 
-                                                if (mOpcion != 2){
-                                                    consultarFichas consultarFichas1 = new consultarFichas(lista.get(position).getMid(), 4);
-                                                    SharedPreferences.Editor escritor2 = preferencias.edit();
-                                                    escritor2.putString("nombre", lista.get(position).getMnombre());
-                                                    escritor2.putString("edad", lista.get(position).getMedad());
-                                                    escritor2.commit();
-                                                    FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                                                    transaction.replace(R.id.contenedor, consultarFichas1);
-                                                    transaction.commit();
-                                                    dialog.dismiss();
-                                                }
-                                                else {
-                                                    consultarFichas consultarFichas1 = new consultarFichas(lista.get(position).getMid(), 5);
-                                                    SharedPreferences.Editor escritor2 = preferencias.edit();
-                                                    escritor2.putString("nombre", lista.get(position).getMnombre());
-                                                    escritor2.putString("edad", lista.get(position).getMedad());
-                                                    escritor2.commit();
-                                                    FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                                                    transaction.replace(R.id.contenedor, consultarFichas1);
-                                                    transaction.commit();
-                                                    dialog.dismiss();
+                                                ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                                                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+                                                if (networkInfo != null && networkInfo.isConnected()) {
+                                                    if (mOpcion != 2){
+                                                        consultarFichas consultarFichas1 = new consultarFichas(lista.get(position).getMid(), 4);
+                                                        SharedPreferences.Editor escritor2 = preferencias.edit();
+                                                        escritor2.putString("nombre", lista.get(position).getMnombre());
+                                                        escritor2.putString("edad", lista.get(position).getMedad());
+                                                        escritor2.commit();
+                                                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                                                        transaction.replace(R.id.contenedor, consultarFichas1);
+                                                        transaction.commit();
+                                                        dialog.dismiss();
+                                                    }
+                                                    else {
+                                                        consultarFichas consultarFichas1 = new consultarFichas(lista.get(position).getMid(), 5);
+                                                        SharedPreferences.Editor escritor2 = preferencias.edit();
+                                                        escritor2.putString("nombre", lista.get(position).getMnombre());
+                                                        escritor2.putString("edad", lista.get(position).getMedad());
+                                                        escritor2.commit();
+                                                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                                                        transaction.replace(R.id.contenedor, consultarFichas1);
+                                                        transaction.commit();
+                                                        dialog.dismiss();
+                                                    }
+                                                } else {
+                                                    Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                                                    Alerter.create(getActivity())
+                                                            .setTitle("Error")
+                                                            .setText("Fallo en Conexion a Internet")
+                                                            .setIcon(R.drawable.logonuevo)
+                                                            .setTextTypeface(face2)
+                                                            .enableSwipeToDismiss()
+                                                            .setBackgroundColorRes(R.color.AzulOscuro)
+                                                            .show();
                                                 }
                                             }
                                         }
@@ -296,7 +345,24 @@ public class Consultar extends Fragment {
             @Override
             public void onResponse(String response) {
                 if (Integer.parseInt(response) > 0) {
-                    consultarPaciente("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=1");
+
+                    ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+                    if (networkInfo != null && networkInfo.isConnected()) {
+                        consultarPaciente("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=1");
+                    } else {
+                        Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                        Alerter.create(getActivity())
+                                .setTitle("Error")
+                                .setText("Fallo en Conexion a Internet")
+                                .setIcon(R.drawable.logonuevo)
+                                .setTextTypeface(face2)
+                                .enableSwipeToDismiss()
+                                .setBackgroundColorRes(R.color.AzulOscuro)
+                                .show();
+                    }
+
                 } else {
                     Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
                     Alerter.create(getActivity())

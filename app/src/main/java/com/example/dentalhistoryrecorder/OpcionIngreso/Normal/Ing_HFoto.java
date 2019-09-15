@@ -14,6 +14,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.media.MediaScannerConnection;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -36,6 +38,8 @@ import com.example.dentalhistoryrecorder.OpcionIngreso.Agregar;
 import com.example.dentalhistoryrecorder.OpcionSeguimiento.Seguimiento;
 import com.example.dentalhistoryrecorder.R;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.tapadoo.alerter.Alerter;
+
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
@@ -293,14 +297,29 @@ public class Ing_HFoto extends Fragment {
 
                         String codigoFoto = Base64.encodeToString(b, Base64.DEFAULT);
 
-                        switch (mOpcion) {
-                            case 1:
-                                insertarHFoto("https://diegosistemas.xyz/DHR/Normal/ficha.php?estado=11", codigoFoto);
-                                break;
+                        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
-                            case 2:
-                                agregarFoto("https://diegosistemas.xyz/DHR/Normal/seguimiento.php?estado=3", codigoFoto);
-                                break;
+                        if (networkInfo != null && networkInfo.isConnected()) {
+                            switch (mOpcion) {
+                                case 1:
+                                    insertarHFoto("https://diegosistemas.xyz/DHR/Normal/ficha.php?estado=13", codigoFoto);
+                                    break;
+
+                                case 2:
+                                    agregarFoto("https://diegosistemas.xyz/DHR/Normal/seguimiento.php?estado=4", codigoFoto);
+                                    break;
+                            }
+                        } else {
+                            Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                            Alerter.create(getActivity())
+                                    .setTitle("Error")
+                                    .setText("Fallo en Conexion a Internet")
+                                    .setIcon(R.drawable.logonuevo)
+                                    .setTextTypeface(face2)
+                                    .enableSwipeToDismiss()
+                                    .setBackgroundColorRes(R.color.AzulOscuro)
+                                    .show();
                         }
                     }
                 }
@@ -534,6 +553,8 @@ public class Ing_HFoto extends Fragment {
                 Map<String, String> parametros = new HashMap<String, String>();
                 parametros.put("foto", fotoo);
                 parametros.put("desc", "HistorialF");
+                Long consecutivo = System.currentTimeMillis() / 1000;
+                parametros.put("nom", "DHR_" + consecutivo.toString());
                 return parametros;
             }
 
@@ -564,6 +585,8 @@ public class Ing_HFoto extends Fragment {
                 Map<String, String> parametros = new HashMap<String, String>();
                 parametros.put("foto", fotoo);
                 parametros.put("desc", "HistorialF");
+                Long consecutivo = System.currentTimeMillis() / 1000;
+                parametros.put("nom", "DHR_" + consecutivo.toString());
                 parametros.put("id", preferencias.getString("idficha", ""));
                 return parametros;
             }
