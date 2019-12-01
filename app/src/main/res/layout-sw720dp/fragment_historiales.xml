@@ -1,0 +1,541 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/FondoTerciario"
+    tools:context=".OpcionConsulta.Normal.Historiales">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="70dp" />
+
+            <TextView
+                android:id="@+id/titulo_hm_cons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/AzulOscuro"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="Historial Medico"
+                android:textColor="@color/Blanco"
+                android:textSize="36sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/hospitalizado_cons"
+                    android:layout_width="120dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:enabled="false"
+                    android:textSize="28sp"
+                    android:text="Hospitalizado" />
+
+                <EditText
+                    android:id="@+id/desc_hospi_cons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:enabled="false"
+                    android:hint="¿Porque?"
+                    android:textSize="28sp"
+                    android:textColor="@color/Blanco"
+                    android:inputType="textPersonName" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/alergia_cons"
+                    android:layout_width="120dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:duplicateParentState="false"
+                    android:enabled="false"
+                    android:textSize="28sp"
+                    android:text="Alergia" />
+
+                <EditText
+                    android:id="@+id/desc_alergia_cons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:enabled="false"
+                    android:hint="¿Cual?"
+                    android:textSize="28sp"
+                    android:textColor="@color/Blanco"
+                    android:inputType="textPersonName" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/medicamento_cons"
+                    android:layout_width="120dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textSize="28sp"
+                    android:enabled="false"
+                    android:text="Medicamento" />
+
+                <EditText
+                    android:id="@+id/desc_medi_cons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:textColor="@color/Blanco"
+                    android:enabled="false"
+                    android:textSize="28sp"
+                    android:hint="¿Cual?"
+                    android:inputType="textPersonName" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/tratamiento_cons"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:enabled="false"
+                    android:textSize="28sp"
+                    android:text="Tratamiento" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal" >
+
+                <CheckBox
+                    android:id="@+id/hemorragia_cons"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:enabled="false"
+                    android:textSize="28sp"
+                    android:text="Hemorragia" />
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+            <TextView
+                android:id="@+id/pad_cons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/AzulOscuro"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="Padecimientos"
+                android:textColor="@color/Blanco"
+                android:textSize="28sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+            <CheckBox
+                android:id="@+id/corazon_cons"
+                android:enabled="false"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="28sp"
+                android:text="Corazon" />
+
+            <CheckBox
+                android:id="@+id/artritris_cons"
+                android:enabled="false"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="28sp"
+                android:text="Artritris" />
+
+            <CheckBox
+                android:id="@+id/tuberculosis_cons"
+                android:enabled="false"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="28sp"
+                android:text="Tuberculosis" />
+
+            <CheckBox
+                android:id="@+id/fiebre_cons"
+                android:enabled="false"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="28sp"
+                android:text="Fiebre Reumatoide" />
+
+            <CheckBox
+                android:id="@+id/presion_alta_cons"
+                android:enabled="false"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="28sp"
+                android:text="Presion Alta" />
+
+            <CheckBox
+                android:id="@+id/presion_baja_cons"
+                android:enabled="false"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="28sp"
+                android:text="Presion Baja" />
+
+            <CheckBox
+                android:id="@+id/diabetes_cons"
+                android:enabled="false"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="28sp"
+                android:text="Diabetes" />
+
+            <CheckBox
+                android:id="@+id/anemia_cons"
+                android:enabled="false"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="28sp"
+                android:text="Anemia" />
+
+            <CheckBox
+                android:id="@+id/epilepsia_cons"
+                android:enabled="false"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="28sp"
+                android:text="Epilepsia" />
+
+            <EditText
+                android:id="@+id/otro_hm_cons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:enabled="false"
+                android:hint="Otro"
+                android:inputType="textPersonName" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+            <TextView
+                android:id="@+id/titulo_ho_cons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/AzulOscuro"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="Historial Odontodologico"
+                android:textColor="@color/Blanco"
+                android:textSize="28sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/dolor_cons"
+                    android:enabled="false"
+                    android:layout_width="120dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textSize="28sp"
+                    android:text="Dolor" />
+
+                <EditText
+                    android:id="@+id/desc_dolor_cons"
+                    android:enabled="false"
+                    android:textColor="@color/Blanco"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="28sp"
+                    android:ems="10"
+                    android:hint="¿Porque?"
+                    android:inputType="textPersonName" />
+            </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/gingivitis_cons"
+                android:layout_width="match_parent"
+                android:enabled="false"
+                android:layout_height="wrap_content"
+                android:textSize="28sp"
+                android:text="Gingivitis" />
+
+            <EditText
+                android:id="@+id/otro_ho_cons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:enabled="false"
+                android:hint="Otros:"
+                android:textSize="28sp"
+                android:inputType="textPersonName" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+            <TextView
+                android:id="@+id/titulo_tratamiento_cons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/AzulOscuro"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="Tratamiento"
+                android:textColor="@color/Blanco"
+                android:textSize="28sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fillViewport="true">
+
+                    <TableLayout
+                        android:id="@+id/tabla_consulta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center">
+
+                    </TableLayout>
+                </HorizontalScrollView>
+            </ScrollView>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/titulo_costo_cons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/AzulOscuro"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:text="Costo:"
+                    android:textSize="28sp" />
+
+                <TextView
+                    android:id="@+id/total_costo_cons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="00.00"
+                    android:textSize="28sp" />
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+            <TextView
+                android:id="@+id/titulo_pagosCons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/AzulOscuro"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="Pagos"
+                android:textColor="@color/Blanco"
+                android:textSize="28sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fillViewport="true">
+
+                    <TableLayout
+                        android:id="@+id/tabla_pagosConsulta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center">
+
+                    </TableLayout>
+                </HorizontalScrollView>
+            </ScrollView>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/titulo_totalPago"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/AzulOscuro"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:text="Costo:"
+                    android:textSize="28sp" />
+
+                <TextView
+                    android:id="@+id/total_pagoConsulta"
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="00.00"
+                    android:textSize="28sp" />
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+            <TextView
+                android:id="@+id/titulo_historialfotografico"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/AzulOscuro"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="Historial Fotografico"
+                android:textColor="@color/Blanco"
+                android:textSize="28sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/actual_hf_cons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.7"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textSize="32sp" />
+
+                <TextView
+                    android:id="@+id/separador_cons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.1"
+                    android:gravity="center"
+                    android:text="|"
+                    android:textSize="32sp" />
+
+                <TextView
+                    android:id="@+id/total_hf_cons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.7"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textSize="32sp" />
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/atras_hf_cons"
+                    android:layout_width="4dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/FondoSecundario"
+                    android:src="@drawable/ic_atras" />
+
+                <ImageView
+                    android:id="@+id/galeria_cons"
+                    android:layout_width="300dp"
+                    android:layout_height="300dp"
+                    android:src="@drawable/error"/>
+
+                <ImageButton
+                    android:id="@+id/adelante_hf_cons"
+                    android:layout_width="4dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/FondoSecundario"
+                    android:src="@drawable/ic_adelante" />
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="70dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</FrameLayout>

@@ -8,6 +8,8 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.print.PageRange;
@@ -148,7 +150,23 @@ public class AgregarCita extends DialogFragment {
                                 }
                             }, 1000);
 
-                            insertarCitas("https://diegosistemas.xyz/DHR/Citas/agregarCita.php?estado=1");
+                            ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+                            if (networkInfo != null && networkInfo.isConnected()) {
+                                insertarCitas("https://diegosistemas.xyz/DHR/Citas/agregarCita.php?estado=1");
+                            }
+                            else{
+                                final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                                Alerter.create(getActivity())
+                                        .setTitle("Error")
+                                        .setText("Fallo en Conexion a Internet")
+                                        .setIcon(R.drawable.logonuevo)
+                                        .setTextTypeface(face3)
+                                        .enableSwipeToDismiss()
+                                        .setBackgroundColorRes(R.color.AzulOscuro)
+                                        .show();
+                            }
                         }
                         else {
                             Alerter.create(getActivity())
@@ -219,7 +237,23 @@ public class AgregarCita extends DialogFragment {
                         }
                     }, 1000);
 
-                    obtenerPacientes("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=8");
+                    ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+                    if (networkInfo != null && networkInfo.isConnected()) {
+                        obtenerPacientes("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=8");
+                    }
+                    else{
+                        final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                        Alerter.create(getActivity())
+                                .setTitle("Error")
+                                .setText("Fallo en Conexion a Internet")
+                                .setIcon(R.drawable.logonuevo)
+                                .setTextTypeface(face3)
+                                .enableSwipeToDismiss()
+                                .setBackgroundColorRes(R.color.AzulOscuro)
+                                .show();
+                    }
                 }
                 else {
                     Alerter.create(getActivity())
@@ -375,7 +409,25 @@ public class AgregarCita extends DialogFragment {
             @Override
             public void onResponse(String response) {
                 if (Integer.parseInt(response) > 0) {
-                    consultarPaciente("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=1");
+
+                    ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+                    if (networkInfo != null && networkInfo.isConnected()) {
+                        consultarPaciente("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=1");
+                    }
+                    else{
+                        final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                        Alerter.create(getActivity())
+                                .setTitle("Error")
+                                .setText("Fallo en Conexion a Internet")
+                                .setIcon(R.drawable.logonuevo)
+                                .setTextTypeface(face3)
+                                .enableSwipeToDismiss()
+                                .setBackgroundColorRes(R.color.AzulOscuro)
+                                .show();
+                    }
+
                 } else {
                     Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
                     Alerter.create(getActivity())

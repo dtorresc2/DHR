@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".OpcionIngreso.Normal.Ing_HFoto"
+    android:background="@color/FondoTerciario">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.getbase.floatingactionbutton.FloatingActionsMenu
+            android:id="@+id/menuDP"
+            android:layout_width="136dp"
+            android:layout_height="200dp"
+            android:layout_gravity="bottom|end"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="52dp"
+            android:clickable="true"
+            android:elevation="10dp"
+            app:fab_addButtonColorNormal="@color/AzulOscuro"
+            app:fab_addButtonColorPressed="@color/FondoSecundario"
+            app:fab_labelStyle="@style/fondoetiqueta"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/tomar_hf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:fabSize="normal"
+                app:fab_colorNormal="@color/FondoSecundario"
+                app:fab_colorPressed="@color/AzulOscuro"
+                app:fab_icon="@drawable/ic_cam"
+                app:fab_title="Camara" />
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/seleccionar_hf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:fabSize="normal"
+                app:fab_colorNormal="@color/FondoSecundario"
+                app:fab_colorPressed="@color/AzulOscuro"
+                app:fab_icon="@drawable/ic_galeria"
+                app:fab_title="Galeria" />
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/borrar_hf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:fabSize="normal"
+                app:fab_colorNormal="@color/FondoSecundario"
+                app:fab_colorPressed="@color/AzulOscuro"
+                app:fab_icon="@drawable/ic_borar"
+                app:fab_title="Borrar" />
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/registrar_hf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:fabSize="normal"
+                app:fab_colorNormal="@color/FondoSecundario"
+                app:fab_colorPressed="@color/AzulOscuro"
+                app:fab_icon="@drawable/ic_check"
+                app:fab_title="Registrar" />
+
+        </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+        <ImageView
+            android:id="@+id/visor"
+            android:layout_width="500dp"
+            android:layout_height="500dp"
+            android:src="@drawable/error"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.504"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.48000002" />
+
+        <LinearLayout
+            android:layout_width="500dp"
+            android:layout_height="70dp"
+            android:layout_marginBottom="16dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/visor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.495"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+            <ImageButton
+                android:id="@+id/atras"
+                android:layout_width="4dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/FondoSecundario"
+                android:src="@drawable/ic_atras" />
+
+            <TextView
+                android:id="@+id/actual"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.7"
+                android:gravity="center"
+                android:text="0"
+                android:textSize="36sp" />
+
+            <TextView
+                android:id="@+id/separador"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.1"
+                android:gravity="center"
+                android:text="|"
+                android:textSize="36sp" />
+
+            <TextView
+                android:id="@+id/total"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.7"
+                android:gravity="center"
+                android:text="0"
+                android:textSize="36sp" />
+
+            <ImageButton
+                android:id="@+id/adelante"
+                android:layout_width="4dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/FondoSecundario"
+                android:src="@drawable/ic_adelante" />
+
+        </LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
+</FrameLayout>

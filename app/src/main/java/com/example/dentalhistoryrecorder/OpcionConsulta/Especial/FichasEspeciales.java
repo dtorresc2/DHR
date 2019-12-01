@@ -8,6 +8,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -58,6 +60,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.tapadoo.alerter.Alerter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -378,11 +381,26 @@ public class FichasEspeciales extends Fragment {
         descripcion = view.findViewById(R.id.otrosEvaluacion);
         descripcion.setTypeface(face);
 
-        consultarDetalle("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=2");
-        consultarVisitas("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=3");
-        consultarPagos("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=17");
-        consultarFirma("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=4");
-        consultarEvaluacion("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=5");
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+        if (networkInfo != null && networkInfo.isConnected()) {
+            consultarDetalle("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=2");
+            consultarVisitas("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=3");
+            consultarPagos("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=17");
+            consultarFirma("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=4");
+            consultarEvaluacion("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=5");
+        }
+        else{
+            Alerter.create(getActivity())
+                    .setTitle("Error")
+                    .setText("Fallo en Conexion a Internet")
+                    .setIcon(R.drawable.logonuevo)
+                    .setTextTypeface(face)
+                    .enableSwipeToDismiss()
+                    .setBackgroundColorRes(R.color.AzulOscuro)
+                    .show();
+        }
 
         return view;
     }
@@ -574,17 +592,34 @@ public class FichasEspeciales extends Fragment {
                         for (int i = 0; i < jsonArray.length(); i++) {
                             String evaluacion = jsonArray.getJSONObject(i).getString("idEvaluacion");
                             descripcion.setText(jsonArray.getJSONObject(i).getString("descripsion"));
-                            consultarAD("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=6", evaluacion);
-                            consultarFAS("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=7", evaluacion);
-                            consultarFAI("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=8", evaluacion);
-                            consultarOclusion("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=9", evaluacion);
-                            consultarDesarrollo("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=10", evaluacion);
-                            consultarRespiracion("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=11", evaluacion);
-                            consultarLengua("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=12", evaluacion);
-                            consultarDeglucion("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=13", evaluacion);
-                            consultarLabios("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=14", evaluacion);
-                            consultarHabitos("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=15", evaluacion);
-                            consultarTMJ("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=16", evaluacion);
+
+                            ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+                            if (networkInfo != null && networkInfo.isConnected()) {
+                                consultarAD("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=6", evaluacion);
+                                consultarFAS("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=7", evaluacion);
+                                consultarFAI("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=8", evaluacion);
+                                consultarOclusion("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=9", evaluacion);
+                                consultarDesarrollo("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=10", evaluacion);
+                                consultarRespiracion("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=11", evaluacion);
+                                consultarLengua("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=12", evaluacion);
+                                consultarDeglucion("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=13", evaluacion);
+                                consultarLabios("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=14", evaluacion);
+                                consultarHabitos("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=15", evaluacion);
+                                consultarTMJ("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=16", evaluacion);
+                            }
+                            else{
+                                Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                                Alerter.create(getActivity())
+                                        .setTitle("Error")
+                                        .setText("Fallo en Conexion a Internet")
+                                        .setIcon(R.drawable.logonuevo)
+                                        .setTextTypeface(face2)
+                                        .enableSwipeToDismiss()
+                                        .setBackgroundColorRes(R.color.AzulOscuro)
+                                        .show();
+                            }
                         }
                     }
                 } catch (JSONException e) {

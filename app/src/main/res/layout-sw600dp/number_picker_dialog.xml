@@ -10,11 +10,11 @@
     <TextView
         android:id="@+id/titulo_dialogo"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="40dp"
         android:gravity="center_vertical"
         android:background="@color/AzulOscuro"
         android:text=" Seleccione un numero"
-        android:textSize="18sp"
+        android:textSize="24sp"
         android:textColor="@color/Blanco"/>
 
     <NumberPicker
@@ -34,6 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:background="@color/AzulOscuro"
+            android:textSize="24sp"
             android:textColor="@color/Blanco"
             android:text="Cancelar"/>
 
@@ -46,6 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
+            android:textSize="24sp"
             android:background="@color/AzulOscuro"
             android:textColor="@color/Blanco"
             android:text="Aceptar"/>

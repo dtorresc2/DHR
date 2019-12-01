@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".OpcionCitas.Citas"
+    android:background="@color/FondoTerciario">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/menuDP"
+        android:layout_width="136dp"
+        android:layout_height="200dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="52dp"
+        android:clickable="true"
+        android:elevation="10dp"
+        app:fab_addButtonColorNormal="@color/AzulOscuro"
+        app:fab_addButtonColorPressed="@color/FondoSecundario"
+        app:fab_labelStyle="@style/fondoetiqueta"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/crearCita"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:fabSize="normal"
+            app:fab_colorNormal="@color/FondoSecundario"
+            app:fab_colorPressed="@color/AzulOscuro"
+            app:fab_icon="@drawable/icono_citas"
+            app:fab_title="Agregar" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/consultarCita"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:fabSize="normal"
+            app:fab_colorNormal="@color/FondoSecundario"
+            app:fab_colorPressed="@color/AzulOscuro"
+            app:fab_icon="@drawable/icono_buscar"
+            app:fab_title="Consultar" />
+
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="70dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/iconoR"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2"
+                    android:background="@color/AzulOscuro"
+                    android:src="@drawable/ic_aceptado" />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_weight="0.3"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/etiquetaR"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textSize="36sp"
+                    android:textColor="@color/Blanco"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:background="@color/AzulOscuro"
+                    android:text="Cita Realizada" />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_weight="0.3"
+                    android:layout_height="match_parent" />
+
+                <CheckBox
+                    android:id="@+id/chb_realizado"
+                    android:checked="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.1"/>
+
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/iconoP"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2"
+                    android:background="@color/AzulOscuro"
+                    android:src="@drawable/ic_estadocita" />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_weight="0.3"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/etiquetaP"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textSize="36sp"
+                    android:textColor="@color/Blanco"
+                    android:background="@color/AzulOscuro"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:text="Cita Pendiente" />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_weight="0.3"
+                    android:layout_height="match_parent" />
+
+                <CheckBox
+                    android:id="@+id/chb_pendiente"
+                    android:checked="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.1"/>
+
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/iconoFecha"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2"
+                    android:background="@color/AzulOscuro"
+                    android:src="@drawable/icono_citas" />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_weight="0.3"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/etiquetaFecha"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:text="21/07/2019"
+                    android:background="@color/AzulOscuro"
+                    android:textColor="@color/Blanco"
+                    android:textSize="36sp" />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_weight="0.3"
+                    android:layout_height="match_parent" />
+
+                <CheckBox
+                    android:enabled="false"
+                    android:checked="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.1"/>
+
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/iconoHora"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2"
+                    android:background="@color/AzulOscuro"
+                    android:src="@drawable/ic_reloj" />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_weight="0.3"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/etiquetaHora"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:text="3:12 AM"
+                    android:textColor="@color/Blanco"
+                    android:textSize="36sp" />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_weight="0.3"
+                    android:layout_height="match_parent" />
+
+                <CheckBox
+                    android:id="@+id/chb_hora"
+                    android:checked="false"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.1"/>
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/listaCitas"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="70dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+
+
+</FrameLayout>

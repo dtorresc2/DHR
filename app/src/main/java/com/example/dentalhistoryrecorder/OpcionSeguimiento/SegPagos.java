@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -133,7 +135,24 @@ public class SegPagos extends Fragment {
                 totalGasto.setText(String.format("%.2f", Double.parseDouble(preferencias.getString("totalOdon", "0.00"))));
                 break;
             case 2:
-                consultarTratamiento("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=10", preferencias.getString("idficha", ""));
+                ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+                if (networkInfo != null && networkInfo.isConnected()) {
+                    consultarTratamiento("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=10", preferencias.getString("idficha", ""));
+
+                }
+                else{
+                    final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                    Alerter.create(getActivity())
+                            .setTitle("Error")
+                            .setText("Fallo en Conexion a Internet")
+                            .setIcon(R.drawable.logonuevo)
+                            .setTextTypeface(face3)
+                            .enableSwipeToDismiss()
+                            .setBackgroundColorRes(R.color.AzulOscuro)
+                            .show();
+                }
                 break;
         }
 
@@ -281,36 +300,53 @@ public class SegPagos extends Fragment {
                 if (tablaDinamica.getCount() > 0) {
                     for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
                         //insertarTratamiento("http://192.168.56.1:80/DHR/IngresoN/ficha.php?db=u578331993_clinc&user=root&estado=10", tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2), tablaDinamica.getCellData(i, 0));
+                        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
-                        switch (mOpcion) {
-                            case 1:
-                                insertarTratamiento("https://diegosistemas.xyz/DHR/Normal/ficha.php?estado=12", tablaDinamica.getCellData(i, 0), tablaDinamica.getCellData(i, 1));
-                                break;
+                        if (networkInfo != null && networkInfo.isConnected()) {
+                            switch (mOpcion) {
+                                case 1:
+                                    insertarTratamiento("https://diegosistemas.xyz/DHR/Normal/ficha.php?estado=12", tablaDinamica.getCellData(i, 0), tablaDinamica.getCellData(i, 1));
+                                    break;
 
-                            case 2:
-                                insertarTratamiento("https://diegosistemas.xyz/DHR/Normal/seguimiento.php?estado=2", tablaDinamica.getCellData(i, 0), tablaDinamica.getCellData(i, 1));
-                                break;
+                                case 2:
+                                    insertarTratamiento("https://diegosistemas.xyz/DHR/Normal/seguimiento.php?estado=2", tablaDinamica.getCellData(i, 0), tablaDinamica.getCellData(i, 1));
+                                    break;
+                            }
+
+                            switch (mOpcion) {
+                                case 1:
+                                    Ing_HFoto ingHFoto = new Ing_HFoto();
+                                    ingHFoto.ObtenerOpcion(1);
+                                    FragmentTransaction transaction = getFragmentManager().beginTransaction()
+                                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                                    transaction.replace(R.id.contenedor, ingHFoto);
+                                    transaction.commit();
+                                    break;
+
+                                case 2:
+                                    Seguimiento seguimiento = new Seguimiento();
+                                    FragmentTransaction transaction2 = getFragmentManager().beginTransaction()
+                                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                                    transaction2.replace(R.id.contenedor, seguimiento);
+                                    transaction2.commit();
+                                    break;
+                            }
+                        }
+                        else{
+                            final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                            Alerter.create(getActivity())
+                                    .setTitle("Error")
+                                    .setText("Fallo en Conexion a Internet")
+                                    .setIcon(R.drawable.logonuevo)
+                                    .setTextTypeface(face3)
+                                    .enableSwipeToDismiss()
+                                    .setBackgroundColorRes(R.color.AzulOscuro)
+                                    .show();
                         }
                     }
 
-                    switch (mOpcion) {
-                        case 1:
-                            Ing_HFoto ingHFoto = new Ing_HFoto();
-                            ingHFoto.ObtenerOpcion(1);
-                            FragmentTransaction transaction = getFragmentManager().beginTransaction()
-                                    .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                            transaction.replace(R.id.contenedor, ingHFoto);
-                            transaction.commit();
-                            break;
 
-                        case 2:
-                            Seguimiento seguimiento = new Seguimiento();
-                            FragmentTransaction transaction2 = getFragmentManager().beginTransaction()
-                                    .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                            transaction2.replace(R.id.contenedor, seguimiento);
-                            transaction2.commit();
-                            break;
-                    }
                 } else {
                     Alerter.create(getActivity())
                             .setTitle("No Hay Filas En La Tabla")

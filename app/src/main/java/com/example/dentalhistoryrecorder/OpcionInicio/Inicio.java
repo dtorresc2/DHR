@@ -14,6 +14,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.media.MediaScannerConnection;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -44,6 +46,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.dentalhistoryrecorder.MainActivity;
@@ -72,6 +75,7 @@ public class Inicio extends Fragment {
     private SharedPreferences preferencias;
     private RequestQueue requestQueue;
     private ImageView fotoPerfil;
+    private boolean conFoto;
 
     private static final int COD_SELECCIONA = 10;
     private static final int COD_FOTO = 20;
@@ -259,8 +263,23 @@ public class Inicio extends Fragment {
             }
         });
 
-        consultarPerfil("https://diegosistemas.xyz/DHR/Inicio/perfil.php?estado=1");
-        obtenerCitas("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=1");
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+        if (networkInfo != null && networkInfo.isConnected()) {
+            consultarPerfil("https://diegosistemas.xyz/DHR/Perfil/perfil.php?estado=1");
+            obtenerCitas("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=1");
+        }
+        else{
+            Alerter.create(getActivity())
+                    .setTitle("Error")
+                    .setText("Fallo en Conexion a Internet")
+                    .setIcon(R.drawable.logonuevo)
+                    .setTextTypeface(face2)
+                    .enableSwipeToDismiss()
+                    .setBackgroundColorRes(R.color.AzulOscuro)
+                    .show();
+        }
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
@@ -270,7 +289,6 @@ public class Inicio extends Fragment {
 
     //Consultar Historial Odontodologico - Tratamiento
     public void consultarPerfil(String URL) {
-
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -285,17 +303,35 @@ public class Inicio extends Fragment {
                             contadorFN.setText(jsonArray.getJSONObject(i).getString("Fichas"));
                             contadorFE.setText(jsonArray.getJSONObject(i).getString("FichasE"));
                             String codigo_foto = jsonArray.getJSONObject(i).getString("logo");
+                            Toast.makeText(getContext(),codigo_foto,Toast.LENGTH_LONG).show();
+                            if (!codigo_foto.isEmpty()) {
+                                //byte[] b = Base64.decode(codigo_foto, Base64.DEFAULT);
+                                //Bitmap imagen_codificada = BitmapFactory.decodeByteArray(b, 0, b.length);
+                                //fotoPerfil.setImageBitmap(imagen_codificada);
+                                conFoto = true;
 
-                            if (!codigo_foto.equalsIgnoreCase("")) {
-                                byte[] b = Base64.decode(codigo_foto, Base64.DEFAULT);
-                                Bitmap imagen_codificada = BitmapFactory.decodeByteArray(b, 0, b.length);
-                                fotoPerfil.setImageBitmap(imagen_codificada);
+                                ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+                                if (networkInfo != null && networkInfo.isConnected()) {
+                                    ObtenerFoto(codigo_foto);
+                                }
+                                else{
+                                    final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                                    Alerter.create(getActivity())
+                                            .setTitle("Error")
+                                            .setText("Fallo en Conexion a Internet")
+                                            .setIcon(R.drawable.logonuevo)
+                                            .setTextTypeface(face3)
+                                            .enableSwipeToDismiss()
+                                            .setBackgroundColorRes(R.color.AzulOscuro)
+                                            .show();
+                                }
                             }
                             else {
+                                conFoto = false;
                                 fotoPerfil.setImageResource(R.drawable.error);
                             }
-
-                            //String.format("%.2f", jsonArray.getJSONObject(i).getDouble("costo"));
                         }
                     }
                 } catch (JSONException e) {
@@ -385,8 +421,6 @@ public class Inicio extends Fragment {
         galeria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "Galeria", Toast.LENGTH_LONG).show();
-
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 intent.setType("image/");
                 startActivityForResult(intent.createChooser(intent, "Seleccione"), COD_SELECCIONA);
@@ -396,8 +430,6 @@ public class Inicio extends Fragment {
         camara.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "Camara", Toast.LENGTH_LONG).show();
-
                 if (checkearPermiso()) {
                     abrirCamara();
                 } else {
@@ -409,31 +441,55 @@ public class Inicio extends Fragment {
         botonAceptar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //dialog.dismiss();
                 if (checkFoto.isChecked() && !checkNombre.isChecked()) {
-                    //Toast.makeText(getActivity(), "Foto", Toast.LENGTH_LONG).show();
-
                     if (bitmap != null) {
                         Bitmap bitmap_aux = bitmap;
                         ByteArrayOutputStream salida = new ByteArrayOutputStream();
                         bitmap_aux.compress(Bitmap.CompressFormat.PNG, 100, salida);
                         byte[] b = salida.toByteArray();
                         String codigoFoto = Base64.encodeToString(b, Base64.DEFAULT);
-                        agregarFoto("https://diegosistemas.xyz/DHR/Inicio/perfil.php?estado=2", codigoFoto);
 
-                        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-                        progressDialog.setMessage("Cargando...");
-                        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                        progressDialog.setCancelable(false);
-                        progressDialog.show();
 
-                        Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            public void run() {
-                                progressDialog.dismiss();
-                                dialog.dismiss();
-                            }
-                        }, 1000);
+                        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+                        if (networkInfo != null && networkInfo.isConnected()) {
+                            agregarFoto1("https://diegosistemas.xyz/DHR/Perfil/perfil.php?estado=5", codigoFoto);
+                            final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+                            progressDialog.setMessage("Cargando...");
+                            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                            progressDialog.setCancelable(false);
+                            progressDialog.show();
+
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                public void run() {
+                                    progressDialog.dismiss();
+                                    dialog.dismiss();
+                                }
+                            }, 1000);
+                        }
+                        else{
+                            final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                            Alerter.create(getActivity())
+                                    .setTitle("Error")
+                                    .setText("Fallo en Conexion a Internet")
+                                    .setIcon(R.drawable.logonuevo)
+                                    .setTextTypeface(face3)
+                                    .enableSwipeToDismiss()
+                                    .setBackgroundColorRes(R.color.AzulOscuro)
+                                    .show();
+                        }
+
+                        /*if (conFoto == true){
+                            agregarFoto("https://diegosistemas.xyz/DHR/Perfil/perfil.php?estado=2", codigoFoto);
+                            Toast.makeText(getActivity(),"Entre1",Toast.LENGTH_LONG).show();
+
+                        }
+                        else{
+                            agregarFoto1("https://diegosistemas.xyz/DHR/Perfil/perfil.php?estado=5", codigoFoto);
+                            Toast.makeText(getActivity(),"Entre2",Toast.LENGTH_LONG).show();
+                        }*/
 
                     } else {
                         Toast.makeText(getActivity(), "Error", Toast.LENGTH_LONG).show();
@@ -443,21 +499,39 @@ public class Inicio extends Fragment {
                 if (!checkFoto.isChecked() && checkNombre.isChecked()) {
                     //Toast.makeText(getActivity(), "Nombre", Toast.LENGTH_LONG).show();
                     if (!nombrePerfilAux.getText().toString().isEmpty()) {
-                        agregarNombre("https://diegosistemas.xyz/DHR/Inicio/perfil.php?estado=3", nombrePerfilAux.getText().toString());
 
-                        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-                        progressDialog.setMessage("Cargando...");
-                        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                        progressDialog.setCancelable(false);
-                        progressDialog.show();
+                        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
-                        Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            public void run() {
-                                progressDialog.dismiss();
-                                dialog.dismiss();
-                            }
-                        }, 1000);
+                        if (networkInfo != null && networkInfo.isConnected()) {
+                            agregarNombre("https://diegosistemas.xyz/DHR/Perfil/perfil.php?estado=3", nombrePerfilAux.getText().toString());
+
+                            final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+                            progressDialog.setMessage("Cargando...");
+                            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                            progressDialog.setCancelable(false);
+                            progressDialog.show();
+
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                public void run() {
+                                    progressDialog.dismiss();
+                                    dialog.dismiss();
+                                }
+                            }, 1000);
+                        }
+                        else{
+                            final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                            Alerter.create(getActivity())
+                                    .setTitle("Error")
+                                    .setText("Fallo en Conexion a Internet")
+                                    .setIcon(R.drawable.logonuevo)
+                                    .setTextTypeface(face3)
+                                    .enableSwipeToDismiss()
+                                    .setBackgroundColorRes(R.color.AzulOscuro)
+                                    .show();
+                        }
+
                     }
                 }
 
@@ -470,21 +544,49 @@ public class Inicio extends Fragment {
                         bitmap_aux.compress(Bitmap.CompressFormat.PNG, 100, salida);
                         byte[] b = salida.toByteArray();
                         String codigoFoto = Base64.encodeToString(b, Base64.DEFAULT);
-                        agregarPerfil("https://diegosistemas.xyz/DHR/Inicio/perfil.php?estado=4", codigoFoto, nombrePerfilAux.getText().toString());
 
-                        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-                        progressDialog.setMessage("Cargando...");
-                        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                        progressDialog.setCancelable(false);
-                        progressDialog.show();
+                        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
-                        Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            public void run() {
-                                progressDialog.dismiss();
-                                dialog.dismiss();
-                            }
-                        }, 1000);
+                        if (networkInfo != null && networkInfo.isConnected()) {
+                            agregarPerfil1("https://diegosistemas.xyz/DHR/Perfil/perfil.php?estado=6", codigoFoto, nombrePerfilAux.getText().toString());
+                            Toast.makeText(getActivity(),"Foto2",Toast.LENGTH_LONG).show();
+
+                        /*if (conFoto == true){
+                            agregarPerfil("https://diegosistemas.xyz/DHR/Perfil/perfil.php?estado=4", codigoFoto, nombrePerfilAux.getText().toString());
+                            Toast.makeText(getActivity(),"Foto1",Toast.LENGTH_LONG).show();
+                        }
+                        else{
+                            agregarPerfil1("https://diegosistemas.xyz/DHR/Perfil/perfil.php?estado=6", codigoFoto, nombrePerfilAux.getText().toString());
+                            Toast.makeText(getActivity(),"Foto2",Toast.LENGTH_LONG).show();
+                        }*/
+
+
+                            final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+                            progressDialog.setMessage("Cargando...");
+                            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                            progressDialog.setCancelable(false);
+                            progressDialog.show();
+
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                public void run() {
+                                    progressDialog.dismiss();
+                                    dialog.dismiss();
+                                }
+                            }, 1000);
+                        }
+                        else{
+                            final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                            Alerter.create(getActivity())
+                                    .setTitle("Error")
+                                    .setText("Fallo en Conexion a Internet")
+                                    .setIcon(R.drawable.logonuevo)
+                                    .setTextTypeface(face3)
+                                    .enableSwipeToDismiss()
+                                    .setBackgroundColorRes(R.color.AzulOscuro)
+                                    .show();
+                        }
                     }
                 }
 
@@ -646,11 +748,10 @@ public class Inicio extends Fragment {
 
     //Insertar Ficha y Obtener ID Ficha ------------------------------------------------------------
     public void agregarFoto(String URL, final String fotoo) {
-        final String[] id = new String[1];
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                consultarPerfil("https://diegosistemas.xyz/DHR/Inicio/perfil.php?estado=1");
+                consultarPerfil("https://diegosistemas.xyz/DHR/Perfil/perfil.php?estado=1");
             }
         }, new Response.ErrorListener() {
             @Override
@@ -671,13 +772,40 @@ public class Inicio extends Fragment {
         requestQueue.add(stringRequest);
     }
 
+    public void agregarFoto1(String URL, final String fotoo) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                consultarPerfil("https://diegosistemas.xyz/DHR/Perfil/perfil.php?estado=1");
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("MyActivity", "" + error.toString());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parametros = new HashMap<String, String>();
+                parametros.put("foto", fotoo);
+                Long consecutivo = System.currentTimeMillis() / 1000;
+                parametros.put("nom", "DHR_" + consecutivo.toString());
+                SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+                parametros.put("user", preferencias2.getString("idUsuario", "1"));
+                return parametros;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
     //Insertar Ficha y Obtener ID Ficha ------------------------------------------------------------
     public void agregarNombre(String URL, final String nombre) {
         final String[] id = new String[1];
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                consultarPerfil("https://diegosistemas.xyz/DHR/Inicio/perfil.php?estado=1");
+                consultarPerfil("https://diegosistemas.xyz/DHR/Perfil/perfil.php?estado=1");
             }
         }, new Response.ErrorListener() {
             @Override
@@ -700,7 +828,35 @@ public class Inicio extends Fragment {
 
     //Insertar Ficha y Obtener ID Ficha ------------------------------------------------------------
     public void agregarPerfil(String URL, final String foto, final String nombre) {
-        final String[] id = new String[1];
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                consultarPerfil("https://diegosistemas.xyz/DHR/Perfil/perfil.php?estado=1");
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("MyActivity", "" + error.toString());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parametros = new HashMap<String, String>();
+                parametros.put("nombre", nombre);
+                parametros.put("foto", foto);
+                Long consecutivo = System.currentTimeMillis() / 1000;
+                parametros.put("nom", "DHR_" + consecutivo.toString());
+                SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+                parametros.put("user", preferencias2.getString("idUsuario", "1"));
+                return parametros;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
+    //Insertar Ficha y Obtener ID Ficha ------------------------------------------------------------
+    public void agregarPerfil1(String URL, final String foto, final String nombre) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -717,6 +873,8 @@ public class Inicio extends Fragment {
                 Map<String, String> parametros = new HashMap<String, String>();
                 parametros.put("nombre", nombre);
                 parametros.put("foto", foto);
+                Long consecutivo = System.currentTimeMillis() / 1000;
+                parametros.put("nom", "DHR_" + consecutivo.toString());
                 SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
                 parametros.put("user", preferencias2.getString("idUsuario", "1"));
                 return parametros;
@@ -758,6 +916,27 @@ public class Inicio extends Fragment {
         };
         requestQueue.add(stringRequest);
     }
+
+    public void ObtenerFoto(String ruta){
+        String URL = "https://www.diegosistemas.xyz/DHR/Perfil/" + ruta ;
+
+        ImageRequest imageRequest = new ImageRequest(URL,
+                new Response.Listener<Bitmap>() {
+                    @Override
+                    public void onResponse(Bitmap response) {
+                        if (response != null){
+                            fotoPerfil.setImageBitmap(response);
+                        }
+                    }
+                }, 0, 0, ImageView.ScaleType.CENTER, null, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getActivity(),"Error",Toast.LENGTH_LONG).show();
+            }
+        });
+        requestQueue.add(imageRequest);
+    }
+
 
     public void ObtenerTiempo() {
         //TextView countDown;

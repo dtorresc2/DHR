@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/FondoTerciario"
+    tools:context=".OpcionIngreso.Especial.ContratoVisita">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/siguiente"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="65dp"
+        android:clickable="true"
+        android:elevation="10dp"
+        android:src="@drawable/ic_check"
+        app:backgroundTint="@color/AzulOscuro" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="70dp" />
+
+            <TextView
+                android:id="@+id/tituloContrato"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/AzulOscuro"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="Compromiso de Tratamiento"
+                android:textColor="@color/Blanco"
+                android:textSize="40sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+            <TextView
+                android:id="@+id/parrafo1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="28sp"
+                android:textColor="@color/Blanco"
+                android:text="@string/parrafo1" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+            <TextView
+                android:id="@+id/parrafo2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="28sp"
+                android:textColor="@color/Blanco"
+                android:text="@string/parrafo2" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+            <TextView
+                android:id="@+id/parrafo3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="28sp"
+                android:textColor="@color/Blanco"
+                android:text="@string/parrafo3" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+            <TextView
+                android:id="@+id/parrafo4"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="28sp"
+                android:textColor="@color/Blanco"
+                android:text="@string/parrafo4" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+            <TextView
+                android:id="@+id/parrafo5"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="28sp"
+                android:textColor="@color/Blanco"
+                android:text="@string/parrafo5" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+            <TextView
+                android:id="@+id/parrafo6"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/Blanco"
+                android:textSize="28sp"
+                android:text="@string/parrafo6" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+            <TextView
+                android:id="@+id/parrafo7"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/Blanco"
+                android:textSize="28sp"
+                android:text="@string/parrafo7" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+            <TextView
+                android:id="@+id/parrafo8"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/AzulOscuro"
+                android:textSize="36sp"
+                android:gravity="center_vertical|center_horizontal"
+                android:textColor="@color/Blanco"
+                android:text="Firma" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+            <ImageView
+                android:id="@+id/firma"
+                android:layout_width="500dp"
+                android:layout_height="195dp"
+                android:src="@color/Blanco"
+                android:layout_gravity="center_horizontal|center_vertical"/>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="70dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</FrameLayout>
