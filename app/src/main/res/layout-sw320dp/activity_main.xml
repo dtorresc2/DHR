@@ -22,7 +22,7 @@
         app:srcCompat="@drawable/logonuevo" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/logoEmpesa"
         android:layout_width="191dp"
         android:layout_height="54dp"
         android:layout_marginBottom="38dp"
