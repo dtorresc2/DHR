@@ -284,11 +284,11 @@ public class IngresoVisitas extends Fragment {
                         for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
                             switch (mOpcion){
                                 case 1:
-                                    agregarVisitas("https://diegosistemas.xyz/DHR/Especial/ingresoE.php?estado=3", tablaDinamica.getCellData(i, 0), tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2));
+                                    agregarVisitas("http://dhr.sistemasdt.xyz/Especial/ingresoE.php?estado=3", tablaDinamica.getCellData(i, 0), tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2));
                                     break;
 
                                 case 2:
-                                    segVisitas("https://diegosistemas.xyz/DHR/Especial/seguimientoE.php?estado=1", tablaDinamica.getCellData(i, 0), tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2));
+                                    segVisitas("http://dhr.sistemasdt.xyz/Especial/seguimientoE.php?estado=1", tablaDinamica.getCellData(i, 0), tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2));
                                     break;
                             }
                         }

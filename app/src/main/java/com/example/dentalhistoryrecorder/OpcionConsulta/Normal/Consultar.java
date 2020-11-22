@@ -132,7 +132,7 @@ public class Consultar extends Fragment {
                     NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                     if (networkInfo != null && networkInfo.isConnected()) {
-                        obtenerPacientes("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=8");
+                        obtenerPacientes("http://dhr.sistemasdt.xyz/Normal/consultaficha.php?estado=8");
                     } else {
                         Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
                         Alerter.create(getActivity())
@@ -350,7 +350,7 @@ public class Consultar extends Fragment {
                     NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                     if (networkInfo != null && networkInfo.isConnected()) {
-                        consultarPaciente("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=1");
+                        consultarPaciente("http://dhr.sistemasdt.xyz/Normal/consultaficha.php?estado=1");
                     } else {
                         Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
                         Alerter.create(getActivity())

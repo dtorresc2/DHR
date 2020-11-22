@@ -385,11 +385,11 @@ public class FichasEspeciales extends Fragment {
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
         if (networkInfo != null && networkInfo.isConnected()) {
-            consultarDetalle("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=2");
-            consultarVisitas("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=3");
-            consultarPagos("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=17");
-            consultarFirma("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=4");
-            consultarEvaluacion("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=5");
+            consultarDetalle("http://dhr.sistemasdt.xyz/Especial/consultaE.php?estado=2");
+            consultarVisitas("http://dhr.sistemasdt.xyz/Especial/consultaE.php?estado=3");
+            consultarPagos("http://dhr.sistemasdt.xyz/Especial/consultaE.php?estado=17");
+            consultarFirma("http://dhr.sistemasdt.xyz/Especial/consultaE.php?estado=4");
+            consultarEvaluacion("http://dhr.sistemasdt.xyz/Especial/consultaE.php?estado=5");
         }
         else{
             Alerter.create(getActivity())
@@ -597,17 +597,17 @@ public class FichasEspeciales extends Fragment {
                             NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                             if (networkInfo != null && networkInfo.isConnected()) {
-                                consultarAD("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=6", evaluacion);
-                                consultarFAS("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=7", evaluacion);
-                                consultarFAI("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=8", evaluacion);
-                                consultarOclusion("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=9", evaluacion);
-                                consultarDesarrollo("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=10", evaluacion);
-                                consultarRespiracion("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=11", evaluacion);
-                                consultarLengua("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=12", evaluacion);
-                                consultarDeglucion("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=13", evaluacion);
-                                consultarLabios("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=14", evaluacion);
-                                consultarHabitos("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=15", evaluacion);
-                                consultarTMJ("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=16", evaluacion);
+                                consultarAD("http://dhr.sistemasdt.xyz/Especial/consultaE.php?estado=6", evaluacion);
+                                consultarFAS("http://dhr.sistemasdt.xyz/Especial/consultaE.php?estado=7", evaluacion);
+                                consultarFAI("http://dhr.sistemasdt.xyz/Especial/consultaE.php?estado=8", evaluacion);
+                                consultarOclusion("http://dhr.sistemasdt.xyz/Especial/consultaE.php?estado=9", evaluacion);
+                                consultarDesarrollo("http://dhr.sistemasdt.xyz/Especial/consultaE.php?estado=10", evaluacion);
+                                consultarRespiracion("http://dhr.sistemasdt.xyz/Especial/consultaE.php?estado=11", evaluacion);
+                                consultarLengua("http://dhr.sistemasdt.xyz/Especial/consultaE.php?estado=12", evaluacion);
+                                consultarDeglucion("http://dhr.sistemasdt.xyz/Especial/consultaE.php?estado=13", evaluacion);
+                                consultarLabios("http://dhr.sistemasdt.xyz/Especial/consultaE.php?estado=14", evaluacion);
+                                consultarHabitos("http://dhr.sistemasdt.xyz/Especial/consultaE.php?estado=15", evaluacion);
+                                consultarTMJ("http://dhr.sistemasdt.xyz/Especial/consultaE.php?estado=16", evaluacion);
                             }
                             else{
                                 Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");

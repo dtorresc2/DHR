@@ -155,9 +155,9 @@ public class IngDetalle extends Fragment {
 
                 if (networkInfo != null && networkInfo.isConnected()) {
                     if (idPacienteExis == 0) {
-                        insertarFicha("https://diegosistemas.xyz/DHR/Normal/ficha.php?estado=2");
+                        insertarFicha("http://dhr.sistemasdt.xyz/Normal/ficha.php?estado=2");
                     } else {
-                        insertarFichaExistente("https://diegosistemas.xyz/DHR/Normal/ficha.php?estado=3");
+                        insertarFichaExistente("http://dhr.sistemasdt.xyz/Normal/ficha.php?estado=3");
                     }
                     IngHMedico ingHMedico = new IngHMedico();
                     FragmentTransaction transaction = getFragmentManager().beginTransaction()

@@ -112,7 +112,7 @@ public class IngCostos extends Fragment {
                     NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                     if (networkInfo != null && networkInfo.isConnected()) {
-                        crearFicha("https://diegosistemas.xyz/DHR/Especial/ingresoE.php?estado=1");
+                        crearFicha("http://dhr.sistemasdt.xyz/Especial/ingresoE.php?estado=1");
                         IngresoVisitas ingresoVisitas = new IngresoVisitas();
                         ingresoVisitas.ObtenerOpcion(1);
                         FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
@@ -151,7 +151,7 @@ public class IngCostos extends Fragment {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                agregarCostos("https://diegosistemas.xyz/DHR/Especial/ingresoE.php?estado=2");
+                agregarCostos("http://dhr.sistemasdt.xyz/Especial/ingresoE.php?estado=2");
             }
         }, new Response.ErrorListener() {
             @Override

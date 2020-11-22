@@ -320,11 +320,11 @@ public class IngresoPagosVisitas extends Fragment {
                         for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
                             switch (mOpcion) {
                                 case 1:
-                                    agregarPagos("https://diegosistemas.xyz/DHR/Especial/ingresoE.php?estado=18", tablaDinamica.getCellData(i, 0), tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2));
+                                    agregarPagos("http://dhr.sistemasdt.xyz/Especial/ingresoE.php?estado=18", tablaDinamica.getCellData(i, 0), tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2));
                                     break;
 
                                 case 2:
-                                    segPagos("https://diegosistemas.xyz/DHR/Especial/seguimientoE.php?estado=2", tablaDinamica.getCellData(i, 0), tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2));
+                                    segPagos("http://dhr.sistemasdt.xyz/Especial/seguimientoE.php?estado=2", tablaDinamica.getCellData(i, 0), tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2));
                                     break;
                             }
                         }

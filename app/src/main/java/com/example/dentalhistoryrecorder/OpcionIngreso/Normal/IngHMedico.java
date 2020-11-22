@@ -201,7 +201,7 @@ public class IngHMedico extends Fragment {
                 NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                 if (networkInfo != null && networkInfo.isConnected()) {
-                    insertarHMedico("https://diegosistemas.xyz/DHR/Normal/ficha.php?estado=4");
+                    insertarHMedico("http://dhr.sistemasdt.xyz/Normal/ficha.php?estado=4");
                     HMedico2 hMedico2 = new HMedico2();
                     FragmentTransaction transaction = getFragmentManager().beginTransaction()
                             .setCustomAnimations(R.anim.left_in, R.anim.left_out);

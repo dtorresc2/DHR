@@ -147,45 +147,41 @@ public class Citas extends Fragment {
                     }
                 }, 1000);
 
-                if ((ckbRealizado.isChecked() && ckbPendiente.isChecked()) || (!ckbRealizado.isChecked() && (!ckbPendiente.isChecked()))) {
+                ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
-                    ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+                if (networkInfo != null && networkInfo.isConnected()) {
+                    if (ckbHora.isChecked()) {
+                        obtenerCitas2("http://dhr.sistemasdt.xyz/Citas/consultarCita.php?estado=3");
+                    } else {
+                        obtenerCitas("http://dhr.sistemasdt.xyz/Citas/consultarCita.php?estado=1");
+                    }
 
-                    if (networkInfo != null && networkInfo.isConnected()) {
+                    if (ckbRealizado.isChecked() && !ckbPendiente.isChecked()) {
                         if (ckbHora.isChecked()) {
-                            obtenerCitas2("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=3");
+                            obtenerCitas3("http://dhr.sistemasdt.xyz/Citas/consultarCita.php?estado=5");
                         } else {
-                            obtenerCitas("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=1");
-                        }
-
-                        if (ckbRealizado.isChecked() && !ckbPendiente.isChecked()) {
-                            if (ckbHora.isChecked()) {
-                                obtenerCitas3("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=5");
-                            } else {
-                                obtenerCitas4("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=7");
-                            }
-                        }
-
-                        if (!ckbRealizado.isChecked() && ckbPendiente.isChecked()) {
-                            if (ckbHora.isChecked()) {
-                                obtenerCitas3("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=5");
-                            } else {
-                                obtenerCitas4("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=7");
-                            }
+                            obtenerCitas4("http://dhr.sistemasdt.xyz/Citas/consultarCita.php?estado=7");
                         }
                     }
-                    else{
-                        final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-                        Alerter.create(getActivity())
-                                .setTitle("Error")
-                                .setText("Fallo en Conexion a Internet")
-                                .setIcon(R.drawable.logonuevo)
-                                .setTextTypeface(face3)
-                                .enableSwipeToDismiss()
-                                .setBackgroundColorRes(R.color.AzulOscuro)
-                                .show();
+
+                    if (!ckbRealizado.isChecked() && ckbPendiente.isChecked()) {
+                        if (ckbHora.isChecked()) {
+                            obtenerCitas3("http://dhr.sistemasdt.xyz/Citas/consultarCita.php?estado=5");
+                        } else {
+                            obtenerCitas4("http://dhr.sistemasdt.xyz/Citas/consultarCita.php?estado=7");
+                        }
                     }
+                } else {
+                    final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                    Alerter.create(getActivity())
+                            .setTitle("Error")
+                            .setText("Fallo en Conexion a Internet")
+                            .setIcon(R.drawable.logonuevo)
+                            .setTextTypeface(face3)
+                            .enableSwipeToDismiss()
+                            .setBackgroundColorRes(R.color.AzulOscuro)
+                            .show();
                 }
             }
         });
@@ -270,9 +266,8 @@ public class Citas extends Fragment {
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
         if (networkInfo != null && networkInfo.isConnected()) {
-            obtenerCitas("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=1");
-        }
-        else{
+            obtenerCitas("http://dhr.sistemasdt.xyz/Citas/consultarCita.php?estado=1");
+        } else {
             final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
             Alerter.create(getActivity())
                     .setTitle("Error")
@@ -410,7 +405,7 @@ public class Citas extends Fragment {
                                             NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                                             if (networkInfo != null && networkInfo.isConnected()) {
-                                                actualizarCita("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=9",
+                                                actualizarCita("http://dhr.sistemasdt.xyz/Citas/consultarCita.php?estado=9",
                                                         lista.get(position).getMidCitas(),
                                                         "1", 1);
                                                 dialog.dismiss();
@@ -449,7 +444,7 @@ public class Citas extends Fragment {
                                             NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                                             if (networkInfo != null && networkInfo.isConnected()) {
-                                                actualizarCita("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=9",
+                                                actualizarCita("http://dhr.sistemasdt.xyz/Citas/consultarCita.php?estado=9",
                                                         lista.get(position).getMidCitas(),
                                                         "0", 1);
                                                 dialog.dismiss();
@@ -524,7 +519,7 @@ public class Citas extends Fragment {
                     NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                     if (networkInfo != null && networkInfo.isConnected()) {
-                        consultarCitas("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=2");
+                        consultarCitas("http://dhr.sistemasdt.xyz/Citas/consultarCita.php?estado=2");
                     }
                     else{
                         final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
@@ -618,7 +613,7 @@ public class Citas extends Fragment {
                                             NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                                             if (networkInfo != null && networkInfo.isConnected()) {
-                                                actualizarCita("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=9",
+                                                actualizarCita("http://dhr.sistemasdt.xyz/Citas/consultarCita.php?estado=9",
                                                         lista.get(position).getMidCitas(),
                                                         "1", 2);
                                                 dialog.dismiss();                                            }
@@ -657,7 +652,7 @@ public class Citas extends Fragment {
                                             NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                                             if (networkInfo != null && networkInfo.isConnected()) {
-                                                actualizarCita("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=9",
+                                                actualizarCita("http://dhr.sistemasdt.xyz/Citas/consultarCita.php?estado=9",
                                                         lista.get(position).getMidCitas(),
                                                         "0", 2);
                                                 dialog.dismiss();                                        }
@@ -734,7 +729,7 @@ public class Citas extends Fragment {
                     NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                     if (networkInfo != null && networkInfo.isConnected()) {
-                        consultarCitas2("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=4");
+                        consultarCitas2("http://dhr.sistemasdt.xyz/Citas/consultarCita.php?estado=4");
                     }
                     else{
                         final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
@@ -830,7 +825,7 @@ public class Citas extends Fragment {
                                             NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                                             if (networkInfo != null && networkInfo.isConnected()) {
-                                                actualizarCita("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=9",
+                                                actualizarCita("http://dhr.sistemasdt.xyz/Citas/consultarCita.php?estado=9",
                                                         lista.get(position).getMidCitas(),
                                                         "1", 3);
                                                 dialog.dismiss();                                            }
@@ -869,7 +864,7 @@ public class Citas extends Fragment {
                                             NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                                             if (networkInfo != null && networkInfo.isConnected()) {
-                                                actualizarCita("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=9",
+                                                actualizarCita("http://dhr.sistemasdt.xyz/Citas/consultarCita.php?estado=9",
                                                         lista.get(position).getMidCitas(),
                                                         "0", 3);
                                                 dialog.dismiss();                                         }
@@ -946,7 +941,7 @@ public class Citas extends Fragment {
                     NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                     if (networkInfo != null && networkInfo.isConnected()) {
-                        consultarCitas3("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=6");
+                        consultarCitas3("http://dhr.sistemasdt.xyz/Citas/consultarCita.php?estado=6");
                     }
                     else{
                         final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
@@ -1043,7 +1038,7 @@ public class Citas extends Fragment {
                                             NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                                             if (networkInfo != null && networkInfo.isConnected()) {
-                                                actualizarCita("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=9",
+                                                actualizarCita("http://dhr.sistemasdt.xyz/Citas/consultarCita.php?estado=9",
                                                         lista.get(position).getMidCitas(),
                                                         "1", 4);
                                                 dialog.dismiss();                                            }
@@ -1082,10 +1077,11 @@ public class Citas extends Fragment {
                                             NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                                             if (networkInfo != null && networkInfo.isConnected()) {
-                                                actualizarCita("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=9",
+                                                actualizarCita("http://dhr.sistemasdt.xyz/Citas/consultarCita.php?estado=9",
                                                         lista.get(position).getMidCitas(),
                                                         "0", 4);
-                                                dialog.dismiss();                                     }
+                                                dialog.dismiss();
+                                            }
                                             else{
                                                 final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
                                                 Alerter.create(getActivity())
@@ -1158,7 +1154,7 @@ public class Citas extends Fragment {
                     NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                     if (networkInfo != null && networkInfo.isConnected()) {
-                        consultarCitas4("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=8");
+                        consultarCitas4("http://dhr.sistemasdt.xyz/Citas/consultarCita.php?estado=8");
                     }
                     else{
                         final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
@@ -1241,25 +1237,25 @@ public class Citas extends Fragment {
                 if (networkInfo != null && networkInfo.isConnected()) {
                     if ((ckbRealizado.isChecked() && ckbPendiente.isChecked()) || (!ckbRealizado.isChecked() && (!ckbPendiente.isChecked()))) {
                         if (ckbHora.isChecked()) {
-                            obtenerCitas2("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=3");
+                            obtenerCitas2("http://dhr.sistemasdt.xyz/Citas/consultarCita.php?estado=3");
                         } else {
-                            obtenerCitas("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=1");
+                            obtenerCitas("http://dhr.sistemasdt.xyz/Citas/consultarCita.php?estado=1");
                         }
                     }
 
                     if (ckbRealizado.isChecked() && !ckbPendiente.isChecked()) {
                         if (ckbHora.isChecked()) {
-                            obtenerCitas3("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=5");
+                            obtenerCitas3("http://dhr.sistemasdt.xyz/Citas/consultarCita.php?estado=5");
                         } else {
-                            obtenerCitas4("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=7");
+                            obtenerCitas4("http://dhr.sistemasdt.xyz/Citas/consultarCita.php?estado=7");
                         }
                     }
 
                     if (!ckbRealizado.isChecked() && ckbPendiente.isChecked()) {
                         if (ckbHora.isChecked()) {
-                            obtenerCitas3("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=5");
+                            obtenerCitas3("http://dhr.sistemasdt.xyz/Citas/consultarCita.php?estado=5");
                         } else {
-                            obtenerCitas4("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=7");
+                            obtenerCitas4("http://dhr.sistemasdt.xyz/Citas/consultarCita.php?estado=7");
                         }
                     }
                 }

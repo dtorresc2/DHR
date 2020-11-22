@@ -83,7 +83,7 @@ public class InicioSesion extends AppCompatActivity {
                     NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                     if (networkInfo != null && networkInfo.isConnected()) {
-                        iniciarSesion("https://diegosistemas.xyz/DHR/sesiones.php");
+                        iniciarSesion("http://dhr.sistemasdt.xyz/sesiones.php");
                     } else {
                         Alerter.create(InicioSesion.this)
                                 .setTitle("Error")
@@ -136,7 +136,7 @@ public class InicioSesion extends AppCompatActivity {
                             }, 500);
 
                             if (idUsuarios > 0) {
-                                int mobil = jsonArray.getJSONObject(i).getInt("mobil");
+                                int mobil = jsonArray.getJSONObject(i).getInt("movil");
                                 switch (mobil) {
                                     case 0:
                                         //El usuario NO tiene permiso;

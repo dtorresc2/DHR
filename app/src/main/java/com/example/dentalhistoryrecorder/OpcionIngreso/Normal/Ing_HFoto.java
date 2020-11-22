@@ -303,11 +303,11 @@ public class Ing_HFoto extends Fragment {
                         if (networkInfo != null && networkInfo.isConnected()) {
                             switch (mOpcion) {
                                 case 1:
-                                    insertarHFoto("https://diegosistemas.xyz/DHR/Normal/ficha.php?estado=13", codigoFoto);
+                                    insertarHFoto("http://dhr.sistemasdt.xyz/Normal/ficha.php?estado=13", codigoFoto);
                                     break;
 
                                 case 2:
-                                    agregarFoto("https://diegosistemas.xyz/DHR/Normal/seguimiento.php?estado=4", codigoFoto);
+                                    agregarFoto("http://dhr.sistemasdt.xyz/Normal/seguimiento.php?estado=4", codigoFoto);
                                     break;
                             }
                         } else {

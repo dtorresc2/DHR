@@ -101,10 +101,10 @@ public class consultarFichas extends Fragment {
 
         if (networkInfo != null && networkInfo.isConnected()) {
             if (mOpcion < 4){
-                consultarFichas("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=2");
+                consultarFichas("http://dhr.sistemasdt.xyz/Normal/consultaficha.php?estado=2");
             }
             else {
-                consultarFichasEspeciales("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=1");
+                consultarFichasEspeciales("http://dhr.sistemasdt.xyz/Especial/consultaE.php?estado=1");
             }
 
         } else {

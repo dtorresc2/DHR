@@ -267,8 +267,8 @@ public class Inicio extends Fragment {
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
         if (networkInfo != null && networkInfo.isConnected()) {
-            consultarPerfil("https://diegosistemas.xyz/DHR/Perfil/perfil.php?estado=1");
-            obtenerCitas("https://diegosistemas.xyz/DHR/Citas/consultarCita.php?estado=1");
+            consultarPerfil("http://dhr.sistemasdt.xyz/Perfil/perfil.php?estado=1");
+            obtenerCitas("http://dhr.sistemasdt.xyz/Citas/consultarCita.php?estado=1");
         }
         else{
             Alerter.create(getActivity())
@@ -303,7 +303,7 @@ public class Inicio extends Fragment {
                             contadorFN.setText(jsonArray.getJSONObject(i).getString("Fichas"));
                             contadorFE.setText(jsonArray.getJSONObject(i).getString("FichasE"));
                             String codigo_foto = jsonArray.getJSONObject(i).getString("logo");
-                            Toast.makeText(getContext(),codigo_foto,Toast.LENGTH_LONG).show();
+
                             if (!codigo_foto.isEmpty()) {
                                 //byte[] b = Base64.decode(codigo_foto, Base64.DEFAULT);
                                 //Bitmap imagen_codificada = BitmapFactory.decodeByteArray(b, 0, b.length);
@@ -454,7 +454,7 @@ public class Inicio extends Fragment {
                         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                         if (networkInfo != null && networkInfo.isConnected()) {
-                            agregarFoto1("https://diegosistemas.xyz/DHR/Perfil/perfil.php?estado=5", codigoFoto);
+                            agregarFoto1("http://dhr.sistemasdt.xyz/Perfil/perfil.php?estado=5", codigoFoto);
                             final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
                             progressDialog.setMessage("Cargando...");
                             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -504,7 +504,7 @@ public class Inicio extends Fragment {
                         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                         if (networkInfo != null && networkInfo.isConnected()) {
-                            agregarNombre("https://diegosistemas.xyz/DHR/Perfil/perfil.php?estado=3", nombrePerfilAux.getText().toString());
+                            agregarNombre("http://dhr.sistemasdt.xyz/Perfil/perfil.php?estado=3", nombrePerfilAux.getText().toString());
 
                             final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
                             progressDialog.setMessage("Cargando...");
@@ -549,7 +549,7 @@ public class Inicio extends Fragment {
                         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                         if (networkInfo != null && networkInfo.isConnected()) {
-                            agregarPerfil1("https://diegosistemas.xyz/DHR/Perfil/perfil.php?estado=6", codigoFoto, nombrePerfilAux.getText().toString());
+                            agregarPerfil1("http://dhr.sistemasdt.xyz/Perfil/perfil.php?estado=6", codigoFoto, nombrePerfilAux.getText().toString());
                             Toast.makeText(getActivity(),"Foto2",Toast.LENGTH_LONG).show();
 
                         /*if (conFoto == true){
@@ -751,7 +751,7 @@ public class Inicio extends Fragment {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                consultarPerfil("https://diegosistemas.xyz/DHR/Perfil/perfil.php?estado=1");
+                consultarPerfil("http://dhr.sistemasdt.xyz/Perfil/perfil.php?estado=1");
             }
         }, new Response.ErrorListener() {
             @Override
@@ -776,7 +776,7 @@ public class Inicio extends Fragment {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                consultarPerfil("https://diegosistemas.xyz/DHR/Perfil/perfil.php?estado=1");
+                consultarPerfil("http://dhr.sistemasdt.xyz/Perfil/perfil.php?estado=1");
             }
         }, new Response.ErrorListener() {
             @Override
@@ -805,7 +805,7 @@ public class Inicio extends Fragment {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                consultarPerfil("https://diegosistemas.xyz/DHR/Perfil/perfil.php?estado=1");
+                consultarPerfil("http://dhr.sistemasdt.xyz/Perfil/perfil.php?estado=1");
             }
         }, new Response.ErrorListener() {
             @Override
@@ -831,7 +831,7 @@ public class Inicio extends Fragment {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                consultarPerfil("https://diegosistemas.xyz/DHR/Perfil/perfil.php?estado=1");
+                consultarPerfil("http://dhr.sistemasdt.xyz/Perfil/perfil.php?estado=1");
             }
         }, new Response.ErrorListener() {
             @Override
@@ -860,7 +860,7 @@ public class Inicio extends Fragment {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                consultarPerfil("https://diegosistemas.xyz/DHR/Inicio/perfil.php?estado=1");
+                consultarPerfil("http://dhr.sistemasdt.xyz/Inicio/perfil.php?estado=1");
             }
         }, new Response.ErrorListener() {
             @Override
@@ -918,7 +918,7 @@ public class Inicio extends Fragment {
     }
 
     public void ObtenerFoto(String ruta){
-        String URL = "https://www.diegosistemas.xyz/DHR/Perfil/" + ruta ;
+        String URL = "http://dhr.sistemasdt.xyz/Perfil/" + ruta ;
 
         ImageRequest imageRequest = new ImageRequest(URL,
                 new Response.Listener<Bitmap>() {

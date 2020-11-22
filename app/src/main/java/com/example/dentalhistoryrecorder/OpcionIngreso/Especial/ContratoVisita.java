@@ -212,7 +212,7 @@ public class ContratoVisita extends Fragment {
                 NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                 if (networkInfo != null && networkInfo.isConnected()) {
-                    agregarFirma("https://diegosistemas.xyz/DHR/Especial/ingresoE.php?estado=5", codigoFoto);
+                    agregarFirma("http://dhr.sistemasdt.xyz/Especial/ingresoE.php?estado=5", codigoFoto);
                     IngEvaluacion ingEvaluacion = new IngEvaluacion();
                     FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
                     transaction.replace(R.id.contenedor, ingEvaluacion);

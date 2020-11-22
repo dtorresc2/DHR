@@ -318,10 +318,10 @@ public class Historiales extends Fragment {
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
         if (networkInfo != null && networkInfo.isConnected()) {
-            consultarHM("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=3");
-            consultarHO("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=5");
-            consultarHF("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=7");
-            consultarPagos("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=9");
+            consultarHM("http://dhr.sistemasdt.xyz/Normal/consultaficha.php?estado=3");
+            consultarHO("http://dhr.sistemasdt.xyz/Normal/consultaficha.php?estado=5");
+            consultarHF("http://dhr.sistemasdt.xyz/Normal/consultaficha.php?estado=7");
+            consultarPagos("http://dhr.sistemasdt.xyz/Normal/consultaficha.php?estado=9");
         } else {
             Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
             Alerter.create(getActivity())
@@ -366,7 +366,7 @@ public class Historiales extends Fragment {
                             desc_med.setText(jsonArray.getJSONObject(i).getString("desc_med"));
 
                             if (Integer.parseInt(id) > 0) {
-                                consultarPadecimientos("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=4", id);
+                                consultarPadecimientos("http://dhr.sistemasdt.xyz/Normal/consultaficha.php?estado=4", id);
                             }
                         }
                     }
@@ -454,7 +454,7 @@ public class Historiales extends Fragment {
                             desc_otroHO.setText(jsonArray.getJSONObject(i).getString("otros"));
 
                             if (Integer.parseInt(id) > 0) {
-                                consultarTratamiento("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=6", id);
+                                consultarTratamiento("http://dhr.sistemasdt.xyz/Normal/consultaficha.php?estado=6", id);
                             }
                         }
                     }
@@ -592,7 +592,7 @@ public class Historiales extends Fragment {
     }
 
     public void obtenerFotos(String path){
-        String URL = "https://www.diegosistemas.xyz/DHR/Normal/" + path ;
+        String URL = "http://dhr.sistemasdt.xyz/Normal/" + path ;
 
         ImageRequest imageRequest = new ImageRequest(URL,
                 new Response.Listener<Bitmap>() {

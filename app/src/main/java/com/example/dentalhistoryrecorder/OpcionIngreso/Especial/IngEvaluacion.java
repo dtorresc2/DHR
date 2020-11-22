@@ -237,7 +237,7 @@ public class IngEvaluacion extends Fragment {
                 NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                 if (networkInfo != null && networkInfo.isConnected()) {
-                    crearEvaluacion("https://diegosistemas.xyz/DHR/Especial/ingresoE.php?estado=6");
+                    crearEvaluacion("http://dhr.sistemasdt.xyz/Especial/ingresoE.php?estado=6");
                     Agregar agregar = new Agregar();
                     FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
                     transaction.replace(R.id.contenedor, agregar);
@@ -265,17 +265,17 @@ public class IngEvaluacion extends Fragment {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                agregarAlineacionD("https://diegosistemas.xyz/DHR/Especial/ingresoE.php?estado=7");
-                agregarArcoS("https://diegosistemas.xyz/DHR/Especial/ingresoE.php?estado=8");
-                agregarArcoI("https://diegosistemas.xyz/DHR/Especial/ingresoE.php?estado=9");
-                agregarOclucion("https://diegosistemas.xyz/DHR/Especial/ingresoE.php?estado=10");
-                agregarDesarrollo("https://diegosistemas.xyz/DHR/Especial/ingresoE.php?estado=11");
-                agregarRespiracionPos("https://diegosistemas.xyz/DHR/Especial/ingresoE.php?estado=12");
-                agregarLengua("https://diegosistemas.xyz/DHR/Especial/ingresoE.php?estado=13");
-                agregarDeglucion("https://diegosistemas.xyz/DHR/Especial/ingresoE.php?estado=14");
-                agregarLabios("https://diegosistemas.xyz/DHR/Especial/ingresoE.php?estado=15");
-                agregarHabitos("https://diegosistemas.xyz/DHR/Especial/ingresoE.php?estado=16");
-                agregarTMJ("https://diegosistemas.xyz/DHR/Especial/ingresoE.php?estado=17");
+                agregarAlineacionD("http://dhr.sistemasdt.xyz/Especial/ingresoE.php?estado=7");
+                agregarArcoS("http://dhr.sistemasdt.xyz/Especial/ingresoE.php?estado=8");
+                agregarArcoI("http://dhr.sistemasdt.xyz/Especial/ingresoE.php?estado=9");
+                agregarOclucion("http://dhr.sistemasdt.xyz/Especial/ingresoE.php?estado=10");
+                agregarDesarrollo("http://dhr.sistemasdt.xyz/Especial/ingresoE.php?estado=11");
+                agregarRespiracionPos("http://dhr.sistemasdt.xyz/Especial/ingresoE.php?estado=12");
+                agregarLengua("http://dhr.sistemasdt.xyz/Especial/ingresoE.php?estado=13");
+                agregarDeglucion("http://dhr.sistemasdt.xyz/Especial/ingresoE.php?estado=14");
+                agregarLabios("http://dhr.sistemasdt.xyz/Especial/ingresoE.php?estado=15");
+                agregarHabitos("http://dhr.sistemasdt.xyz/Especial/ingresoE.php?estado=16");
+                agregarTMJ("http://dhr.sistemasdt.xyz/Especial/ingresoE.php?estado=17");
             }
         }, new Response.ErrorListener() {
             @Override

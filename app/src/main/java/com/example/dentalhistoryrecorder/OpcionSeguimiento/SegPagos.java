@@ -139,7 +139,7 @@ public class SegPagos extends Fragment {
                 NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                 if (networkInfo != null && networkInfo.isConnected()) {
-                    consultarTratamiento("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=10", preferencias.getString("idficha", ""));
+                    consultarTratamiento("http://dhr.sistemasdt.xyz/Normal/consultaficha.php?estado=10", preferencias.getString("idficha", ""));
 
                 }
                 else{
@@ -306,11 +306,11 @@ public class SegPagos extends Fragment {
                         if (networkInfo != null && networkInfo.isConnected()) {
                             switch (mOpcion) {
                                 case 1:
-                                    insertarTratamiento("https://diegosistemas.xyz/DHR/Normal/ficha.php?estado=12", tablaDinamica.getCellData(i, 0), tablaDinamica.getCellData(i, 1));
+                                    insertarTratamiento("http://dhr.sistemasdt.xyz/Normal/ficha.php?estado=12", tablaDinamica.getCellData(i, 0), tablaDinamica.getCellData(i, 1));
                                     break;
 
                                 case 2:
-                                    insertarTratamiento("https://diegosistemas.xyz/DHR/Normal/seguimiento.php?estado=2", tablaDinamica.getCellData(i, 0), tablaDinamica.getCellData(i, 1));
+                                    insertarTratamiento("http://dhr.sistemasdt.xyz/Normal/seguimiento.php?estado=2", tablaDinamica.getCellData(i, 0), tablaDinamica.getCellData(i, 1));
                                     break;
                             }
 

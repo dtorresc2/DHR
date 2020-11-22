@@ -154,7 +154,7 @@ public class AgregarCita extends DialogFragment {
                             NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                             if (networkInfo != null && networkInfo.isConnected()) {
-                                insertarCitas("https://diegosistemas.xyz/DHR/Citas/agregarCita.php?estado=1");
+                                insertarCitas("http://dhr.sistemasdt.xyz/Citas/agregarCita.php?estado=1");
                             }
                             else{
                                 final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
@@ -241,7 +241,7 @@ public class AgregarCita extends DialogFragment {
                     NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                     if (networkInfo != null && networkInfo.isConnected()) {
-                        obtenerPacientes("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=8");
+                        obtenerPacientes("http://dhr.sistemasdt.xyz/Normal/consultaficha.php?estado=8");
                     }
                     else{
                         final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
@@ -414,7 +414,7 @@ public class AgregarCita extends DialogFragment {
                     NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                     if (networkInfo != null && networkInfo.isConnected()) {
-                        consultarPaciente("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=1");
+                        consultarPaciente("http://dhr.sistemasdt.xyz/Normal/consultaficha.php?estado=1");
                     }
                     else{
                         final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");

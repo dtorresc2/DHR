@@ -26,7 +26,7 @@
 
         <TextView
             android:id="@+id/fechaCita"
-            android:layout_width="243dp"
+            android:layout_width="200dp"
             android:layout_height="30dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
@@ -41,7 +41,7 @@
 
         <TextView
             android:id="@+id/nombrePaciente"
-            android:layout_width="400dp"
+            android:layout_width="360dp"
             android:layout_height="30dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
@@ -57,7 +57,7 @@
 
         <TextView
             android:id="@+id/descCita"
-            android:layout_width="400dp"
+            android:layout_width="360dp"
             android:layout_height="30dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
@@ -75,7 +75,7 @@
             android:layout_width="40dp"
             android:layout_height="93dp"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="410dp"
+            android:layout_marginLeft="370dp"
             android:layout_marginTop="0dp"
             app:srcCompat="@drawable/ic_aceptado"
             tools:ignore="VectorDrawableCompat" />

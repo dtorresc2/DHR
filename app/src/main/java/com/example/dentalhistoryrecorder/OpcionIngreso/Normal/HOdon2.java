@@ -104,7 +104,7 @@ public class HOdon2 extends Fragment {
                 NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                 if (networkInfo != null && networkInfo.isConnected()) {
-                    insertarHOdonto("https://diegosistemas.xyz/DHR/Normal/ficha.php?estado=8");
+                    insertarHOdonto("http://dhr.sistemasdt.xyz/Normal/ficha.php?estado=8");
                     IngHOdon ingHOdon = new IngHOdon();
                     ingHOdon.ObtenerOpcion(1);
                     FragmentTransaction transaction = getFragmentManager().beginTransaction()

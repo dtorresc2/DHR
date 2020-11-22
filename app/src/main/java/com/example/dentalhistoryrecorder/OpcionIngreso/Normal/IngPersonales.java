@@ -214,7 +214,7 @@ public class IngPersonales extends Fragment {
                                     NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                                     if (networkInfo != null && networkInfo.isConnected()) {
-                                        insertarPaciente("https://diegosistemas.xyz/DHR/Normal/ficha.php?estado=1");
+                                        insertarPaciente("http://dhr.sistemasdt.xyz/Normal/ficha.php?estado=1");
 
                                         IngDetalle ingDetalle = new IngDetalle();
                                         ingDetalle.obtenerPaciente(0);
@@ -300,7 +300,7 @@ public class IngPersonales extends Fragment {
                     NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                     if (networkInfo != null && networkInfo.isConnected()) {
-                        obtenerPacientes("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=8");
+                        obtenerPacientes("http://dhr.sistemasdt.xyz/Normal/consultaficha.php?estado=8");
                     } else {
                         Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
                         Alerter.create(getActivity())
@@ -386,7 +386,7 @@ public class IngPersonales extends Fragment {
                     NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                     if (networkInfo != null && networkInfo.isConnected()) {
-                        consultarPaciente("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=1", dialog);
+                        consultarPaciente("http://dhr.sistemasdt.xyz/Normal/consultaficha.php?estado=1", dialog);
                     } else {
                         Alerter.create(getActivity())
                                 .setTitle("Error")

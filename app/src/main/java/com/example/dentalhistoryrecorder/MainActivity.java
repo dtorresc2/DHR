@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
                 NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                 if ((preferencias.getBoolean("recordar", false) == true) || (networkInfo != null && networkInfo.isConnected())) {
-                    iniciarSesion("https://diegosistemas.xyz/DHR/sesiones.php");
+                    iniciarSesion("http://dhr.sistemasdt.xyz/sesiones.php");
 
                     /*editor.putString("correo", correo.getText().toString());
                     editor.putString("pass", pass.getText().toString());*/
@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                         for (int i = 0; i < jsonArray.length(); i++) {
                             int idUsuarios = jsonArray.getJSONObject(i).getInt("idUsuarios");
                             if (idUsuarios > 0) {
-                                int mobil = jsonArray.getJSONObject(i).getInt("mobil");
+                                int mobil = jsonArray.getJSONObject(i).getInt("movil");
                                 switch (mobil) {
                                     case 0:
                                         //El usuario NO tiene permiso;

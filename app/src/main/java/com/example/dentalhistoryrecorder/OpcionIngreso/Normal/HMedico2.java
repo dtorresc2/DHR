@@ -117,7 +117,7 @@ public class HMedico2 extends Fragment {
                 NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                 if (networkInfo != null && networkInfo.isConnected()) {
-                    insertarPadecimientos("https://diegosistemas.xyz/DHR/Normal/ficha.php?estado=7");
+                    insertarPadecimientos("http://dhr.sistemasdt.xyz/Normal/ficha.php?estado=7");
                     HOdon2 ihOdon2 = new HOdon2();
                     FragmentTransaction transaction = getFragmentManager().beginTransaction()
                             .setCustomAnimations(R.anim.left_in, R.anim.left_out);

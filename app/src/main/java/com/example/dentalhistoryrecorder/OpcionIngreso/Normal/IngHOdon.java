@@ -337,10 +337,10 @@ public class IngHOdon extends Fragment {
                         if (networkInfo != null && networkInfo.isConnected()) {
                             switch (mOpcion) {
                                 case 1:
-                                    insertarTratamiento("https://diegosistemas.xyz/DHR/Normal/ficha.php?estado=10", tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2), tablaDinamica.getCellData(i, 0));
+                                    insertarTratamiento("http://dhr.sistemasdt.xyz/Normal/ficha.php?estado=10", tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2), tablaDinamica.getCellData(i, 0));
                                     break;
                                 case 2:
-                                    agregarTratamiento("https://diegosistemas.xyz/DHR/Normal/seguimiento.php?estado=1", tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2), tablaDinamica.getCellData(i, 0));
+                                    agregarTratamiento("http://dhr.sistemasdt.xyz/Normal/seguimiento.php?estado=1", tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2), tablaDinamica.getCellData(i, 0));
                                     break;
                             }
                         } else {
