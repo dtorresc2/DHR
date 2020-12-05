@@ -33,12 +33,14 @@ import com.android.volley.toolbox.Volley;
 import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.Adaptadores.AdaptadorConsultaFicha;
 import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.Historiales;
 import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.ItemsFichas;
+import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysCuentas;
 import com.tapadoo.alerter.Alerter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,52 +51,73 @@ public class InicioSesion extends AppCompatActivity {
     private Button boton;
     private TextView titulo, version;
     private CheckBox recordatorio;
+    private Typeface typeface;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_inicio_sesion);
-        Typeface face = Typeface.createFromAsset(getAssets(), "fonts/bahnschrift.ttf");
+//        Typeface face = Typeface.createFromAsset(getAssets(), "fonts/bahnschrift.ttf");
+        typeface = Typeface.createFromAsset(getAssets(), "fonts/bahnschrift.ttf");
         correo = (TextInputEditText) findViewById(R.id.correo);
-        correo.setTypeface(face);
+        correo.setTypeface(typeface);
         pass = (TextInputEditText) findViewById(R.id.pass);
-        pass.setTypeface(face);
+        pass.setTypeface(typeface);
         boton = (Button) findViewById(R.id.aceptador);
-        boton.setTypeface(face);
+        boton.setTypeface(typeface);
         titulo = findViewById(R.id.titulo_inicio);
-        titulo.setTypeface(face);
+        titulo.setTypeface(typeface);
         version = findViewById(R.id.titulo_version);
-        version.setTypeface(face);
+        version.setTypeface(typeface);
         recordatorio = findViewById(R.id.recordar);
-        recordatorio.setTypeface(face);
+        recordatorio.setTypeface(typeface);
 
 
         boton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Typeface face2 = Typeface.createFromAsset(getAssets(), "fonts/bahnschrift.ttf");
-                //ejecutarServico("http://192.168.56.1:80/DHR/insertar.php");
-                //ejecutarSesion("http://192.168.56.1:80/DHR/sesiones.php?correo=" + correo.getText() + "&clave=" + pass.getText() + "");
-                //ejecutarSesion("http://diegosistemas.xyz/DHR/sesiones.php?correo="+correo.getText()+"&clave="+pass.getText()+"");
-
                 if (!correo.getText().toString().isEmpty() && !pass.getText().toString().isEmpty()) {
                     ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
                     NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
-                    if (networkInfo != null && networkInfo.isConnected()) {
-                        iniciarSesion("http://dhr.sistemasdt.xyz/sesiones.php");
-                    } else {
-                        Alerter.create(InicioSesion.this)
+//                    pruebaAPI(getResources().getString(R.string.API) + "cuentas/login");
+
+                    QuerysCuentas querysCuentas = new QuerysCuentas(getApplicationContext());
+                    querysCuentas.pruebaAPI(getResources().getString(R.string.API) + "cuentas/login", new QuerysCuentas.VolleyOnEventListener() {
+                        @Override
+                        public void onSuccess(Object object) {
+                            Toast.makeText(getApplicationContext(), object.toString(), Toast.LENGTH_LONG).show();
+                        }
+
+                        @Override
+                        public void onFailure(Exception e) {
+                            Alerter.create(InicioSesion.this)
                                 .setTitle("Error")
                                 .setText("Fallo en Conexion a Internet")
                                 .setIcon(R.drawable.logonuevo)
-
-                                .setTextTypeface(face2)
+                                .setTextTypeface(typeface)
                                 .enableSwipeToDismiss()
                                 .setBackgroundColorRes(R.color.AzulOscuro)
                                 .show();
-                    }
+                        }
+                    }, 1);
+
+
+
+//                    if (networkInfo != null && networkInfo.isConnected()) {
+//                        iniciarSesion("http://dhr.sistemasdt.xyz/sesiones.php");
+//                    } else {
+//                        Alerter.create(InicioSesion.this)
+//                                .setTitle("Error")
+//                                .setText("Fallo en Conexion a Internet")
+//                                .setIcon(R.drawable.logonuevo)
+//
+//                                .setTextTypeface(face2)
+//                                .enableSwipeToDismiss()
+//                                .setBackgroundColorRes(R.color.AzulOscuro)
+//                                .show();
+//                    }
 
                 } else {
                     //Toast.makeText(getApplicationContext(), "Faltan Campos", Toast.LENGTH_SHORT).show();
@@ -210,6 +233,57 @@ public class InicioSesion extends AppCompatActivity {
             }
 
         };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }
+
+    private void pruebaAPI(String URL) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JSONArray jsonArray = null;
+                Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                JSONObject jsonBody = new JSONObject();
+
+                try {
+                    jsonBody.put("ID_USUARIO", "1");
+                    jsonBody.put("USUARIO", "diegot");
+                    jsonBody.put("PASSWORD", "321");
+                    final String mRequestBody = jsonBody.toString();
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+
+//                try {
+//
+//                } catch (UnsupportedEncodingExcept ion uee) {
+//                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+//                    return null;
+//                }
+            }
+
+        };
+
+
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
     }
