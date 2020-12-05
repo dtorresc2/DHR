@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -25,7 +26,9 @@ import com.tapadoo.alerter.Alerter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,23 +49,28 @@ public class MainActivity extends AppCompatActivity {
                 ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
-                if ((preferencias.getBoolean("recordar", false) == true) || (networkInfo != null && networkInfo.isConnected())) {
+                if ((preferencias.getBoolean("recordar", false) == true)) {
                     iniciarSesion("http://dhr.sistemasdt.xyz/sesiones.php");
 
                     /*editor.putString("correo", correo.getText().toString());
                     editor.putString("pass", pass.getText().toString());*/
                 } else {
                     //editor.putBoolean("recordar", false);
-                    if (networkInfo == null || !networkInfo.isConnected()){
-                        Alerter.create(MainActivity.this)
-                                .setTitle("Error")
-                                .setText("Fallo en Conexion a Internet")
-                                .setIcon(R.drawable.logonuevo)
-                                .setTextTypeface(face2)
-                                .enableSwipeToDismiss()
-                                .setBackgroundColorRes(R.color.AzulOscuro)
-                                .show();
-                    }
+//                    if (networkInfo == null || !networkInfo.isConnected()){
+//                        Alerter.create(MainActivity.this)
+//                                .setTitle("Error")
+//                                .setText("Fallo en Conexion a Internet")
+//                                .setIcon(R.drawable.logonuevo)
+//                                .setTextTypeface(face2)
+//                                .enableSwipeToDismiss()
+//                                .setBackgroundColorRes(R.color.AzulOscuro)
+//                                .show();
+//                    }
+
+//                    https://api-dhr.herokuapp.com/
+
+                    pruebaAPI("https://api-dhr.herokuapp.com/cuentas/login");
+//                    pruebaAPI("http://localhost:3000/cuentas/login");
 
                     Intent intent = new Intent(MainActivity.this, InicioSesion.class);
                     startActivity(intent);
@@ -144,9 +152,58 @@ public class MainActivity extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> parametros = new HashMap<String, String>();
                 SharedPreferences preferencias2 = MainActivity.this.getSharedPreferences("sesion", Context.MODE_PRIVATE);
-                parametros.put("user", preferencias2.getString("correo",""));
-                parametros.put("pass", preferencias2.getString("pass",""));
+                parametros.put("user", preferencias2.getString("correo", ""));
+                parametros.put("pass", preferencias2.getString("pass", ""));
                 return parametros;
+            }
+
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }
+
+    private void pruebaAPI(String URL) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JSONArray jsonArray = null;
+                Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                JSONObject jsonBody = new JSONObject();
+
+                try {
+                    jsonBody.put("ID_USUARIO", "1");
+                    jsonBody.put("USUARIO", "diegot");
+                    jsonBody.put("PASSWORD", "321");
+                    final String mRequestBody = jsonBody.toString();
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+
+//                try {
+//
+//                } catch (UnsupportedEncodingExcept ion uee) {
+//                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+//                    return null;
+//                }
             }
 
         };
