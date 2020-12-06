@@ -58,7 +58,7 @@ public class InicioSesion extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_inicio_sesion);
-//        Typeface face = Typeface.createFromAsset(getAssets(), "fonts/bahnschrift.ttf");
+
         typeface = Typeface.createFromAsset(getAssets(), "fonts/bahnschrift.ttf");
         correo = (TextInputEditText) findViewById(R.id.correo);
         correo.setTypeface(typeface);
@@ -73,59 +73,51 @@ public class InicioSesion extends AppCompatActivity {
         recordatorio = findViewById(R.id.recordar);
         recordatorio.setTypeface(typeface);
 
-
         boton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!correo.getText().toString().isEmpty() && !pass.getText().toString().isEmpty()) {
-                    ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-//                    pruebaAPI(getResources().getString(R.string.API) + "cuentas/login");
-
-                    QuerysCuentas querysCuentas = new QuerysCuentas(getApplicationContext());
-                    querysCuentas.pruebaAPI(getResources().getString(R.string.API) + "cuentas/login", new QuerysCuentas.VolleyOnEventListener() {
+                    final QuerysCuentas querysCuentas = new QuerysCuentas(getApplicationContext());
+                    querysCuentas.inicioSesion(new QuerysCuentas.VolleyOnEventListener() {
                         @Override
                         public void onSuccess(Object object) {
-                            Toast.makeText(getApplicationContext(), object.toString(), Toast.LENGTH_LONG).show();
+                            try {
+                                JSONObject jsonObject = new JSONObject(object.toString());
+//                                Toast.makeText(getApplicationContext(), jsonObject.getString("ID"), Toast.LENGTH_SHORT).show();
+                                querysCuentas.serviciosHabilitados(jsonObject.getInt("ID"), new QuerysCuentas.VolleyOnEventListener() {
+                                    @Override
+                                    public void onSuccess(Object object) {
+                                        Toast.makeText(getApplicationContext(), object.toString(), Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    @Override
+                                    public void onFailure(Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                });
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
 
                         @Override
                         public void onFailure(Exception e) {
                             Alerter.create(InicioSesion.this)
-                                .setTitle("Error")
-                                .setText("Fallo en Conexion a Internet")
-                                .setIcon(R.drawable.logonuevo)
-                                .setTextTypeface(typeface)
-                                .enableSwipeToDismiss()
-                                .setBackgroundColorRes(R.color.AzulOscuro)
-                                .show();
+                                    .setTitle("Error")
+                                    .setText("Fallo al obtener datos")
+                                    .setIcon(R.drawable.logonuevo)
+                                    .setTextTypeface(typeface)
+                                    .enableSwipeToDismiss()
+                                    .setBackgroundColorRes(R.color.AzulOscuro)
+                                    .show();
                         }
-                    }, 1);
-
-
-
-//                    if (networkInfo != null && networkInfo.isConnected()) {
-//                        iniciarSesion("http://dhr.sistemasdt.xyz/sesiones.php");
-//                    } else {
-//                        Alerter.create(InicioSesion.this)
-//                                .setTitle("Error")
-//                                .setText("Fallo en Conexion a Internet")
-//                                .setIcon(R.drawable.logonuevo)
-//
-//                                .setTextTypeface(face2)
-//                                .enableSwipeToDismiss()
-//                                .setBackgroundColorRes(R.color.AzulOscuro)
-//                                .show();
-//                    }
-
+                    });
                 } else {
-                    //Toast.makeText(getApplicationContext(), "Faltan Campos", Toast.LENGTH_SHORT).show();
                     Alerter.create(InicioSesion.this)
                             .setTitle("Error")
-                            .setText("Faltan Datos")
+                            .setText("Faltan datos")
                             .setIcon(R.drawable.logonuevo)
-                            .setTextTypeface(face2)
+                            .setTextTypeface(typeface)
                             .enableSwipeToDismiss()
                             .setBackgroundColorRes(R.color.AzulOscuro)
                             .show();
@@ -184,8 +176,7 @@ public class InicioSesion extends AppCompatActivity {
                                             editor.putBoolean("recordar", true);
                                             editor.putString("correo", correo.getText().toString());
                                             editor.putString("pass", pass.getText().toString());
-                                        }
-                                        else {
+                                        } else {
                                             editor.putBoolean("recordar", false);
                                             editor.putString("correo", correo.getText().toString());
                                             editor.putString("pass", pass.getText().toString());
@@ -233,57 +224,6 @@ public class InicioSesion extends AppCompatActivity {
             }
 
         };
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
-    }
-
-    private void pruebaAPI(String URL) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                JSONArray jsonArray = null;
-                Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
-            }
-        }) {
-            @Override
-            public String getBodyContentType() {
-                return "application/json; charset=utf-8";
-            }
-
-            @Override
-            public byte[] getBody() throws AuthFailureError {
-                JSONObject jsonBody = new JSONObject();
-
-                try {
-                    jsonBody.put("ID_USUARIO", "1");
-                    jsonBody.put("USUARIO", "diegot");
-                    jsonBody.put("PASSWORD", "321");
-                    final String mRequestBody = jsonBody.toString();
-                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-
-                return null;
-
-//                try {
-//
-//                } catch (UnsupportedEncodingExcept ion uee) {
-//                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
-//                    return null;
-//                }
-            }
-
-        };
-
-
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
     }

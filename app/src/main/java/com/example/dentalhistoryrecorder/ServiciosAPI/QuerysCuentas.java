@@ -10,12 +10,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.dentalhistoryrecorder.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class QuerysCuentas {
     Context mContext;
@@ -30,20 +33,18 @@ public class QuerysCuentas {
         void onFailure(Exception e);
     }
 
-    public void pruebaAPI(String URL, VolleyOnEventListener callback, final int numero) {
+    public void inicioSesion(VolleyOnEventListener callback) {
         mCallBack = callback;
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, mContext.getResources().getString(R.string.API) + "cuentas/login", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 JSONArray jsonArray = null;
-//                Toast.makeText(mContext, response, Toast.LENGTH_LONG).show();
-                mCallBack.onSuccess(response + " " + numero);
+                mCallBack.onSuccess(response);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-//                Toast.makeText(mContext, error.toString(), Toast.LENGTH_LONG).show();
                 mCallBack.onFailure(error);
             }
         }) {
@@ -80,6 +81,30 @@ public class QuerysCuentas {
 
         };
 
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        requestQueue.add(stringRequest);
+    }
+
+    public void serviciosHabilitados(final int id, VolleyOnEventListener callback) {
+        mCallBack = callback;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, mContext.getResources().getString(R.string.API) + "usuarios/" + id, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JSONArray jsonArray = null;
+                mCallBack.onSuccess(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mCallBack.onFailure(error);
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+        };
 
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
         requestQueue.add(stringRequest);
