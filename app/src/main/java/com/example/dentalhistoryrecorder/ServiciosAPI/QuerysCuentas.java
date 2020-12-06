@@ -88,7 +88,7 @@ public class QuerysCuentas {
     public void serviciosHabilitados(final int id, VolleyOnEventListener callback) {
         mCallBack = callback;
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, mContext.getResources().getString(R.string.API) + "usuarios/" + id, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, mContext.getResources().getString(R.string.API) + "usuarios/" + id , new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 JSONArray jsonArray = null;
