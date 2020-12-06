@@ -33,12 +33,14 @@ import com.android.volley.toolbox.Volley;
 import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.Adaptadores.AdaptadorConsultaFicha;
 import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.Historiales;
 import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.ItemsFichas;
+import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysCuentas;
 import com.tapadoo.alerter.Alerter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,60 +51,73 @@ public class InicioSesion extends AppCompatActivity {
     private Button boton;
     private TextView titulo, version;
     private CheckBox recordatorio;
+    private Typeface typeface;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_inicio_sesion);
-        Typeface face = Typeface.createFromAsset(getAssets(), "fonts/bahnschrift.ttf");
-        correo = (TextInputEditText) findViewById(R.id.correo);
-        correo.setTypeface(face);
-        pass = (TextInputEditText) findViewById(R.id.pass);
-        pass.setTypeface(face);
-        boton = (Button) findViewById(R.id.aceptador);
-        boton.setTypeface(face);
-        titulo = findViewById(R.id.titulo_inicio);
-        titulo.setTypeface(face);
-        version = findViewById(R.id.titulo_version);
-        version.setTypeface(face);
-        recordatorio = findViewById(R.id.recordar);
-        recordatorio.setTypeface(face);
 
+        typeface = Typeface.createFromAsset(getAssets(), "fonts/bahnschrift.ttf");
+        correo = (TextInputEditText) findViewById(R.id.correo);
+        correo.setTypeface(typeface);
+        pass = (TextInputEditText) findViewById(R.id.pass);
+        pass.setTypeface(typeface);
+        boton = (Button) findViewById(R.id.aceptador);
+        boton.setTypeface(typeface);
+        titulo = findViewById(R.id.titulo_inicio);
+        titulo.setTypeface(typeface);
+        version = findViewById(R.id.titulo_version);
+        version.setTypeface(typeface);
+        recordatorio = findViewById(R.id.recordar);
+        recordatorio.setTypeface(typeface);
 
         boton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Typeface face2 = Typeface.createFromAsset(getAssets(), "fonts/bahnschrift.ttf");
-                //ejecutarServico("http://192.168.56.1:80/DHR/insertar.php");
-                //ejecutarSesion("http://192.168.56.1:80/DHR/sesiones.php?correo=" + correo.getText() + "&clave=" + pass.getText() + "");
-                //ejecutarSesion("http://diegosistemas.xyz/DHR/sesiones.php?correo="+correo.getText()+"&clave="+pass.getText()+"");
-
                 if (!correo.getText().toString().isEmpty() && !pass.getText().toString().isEmpty()) {
-                    ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+                    final QuerysCuentas querysCuentas = new QuerysCuentas(getApplicationContext());
+                    querysCuentas.inicioSesion(new QuerysCuentas.VolleyOnEventListener() {
+                        @Override
+                        public void onSuccess(Object object) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(object.toString());
+//                                Toast.makeText(getApplicationContext(), jsonObject.getString("ID"), Toast.LENGTH_SHORT).show();
+                                querysCuentas.serviciosHabilitados(jsonObject.getInt("ID"), new QuerysCuentas.VolleyOnEventListener() {
+                                    @Override
+                                    public void onSuccess(Object object) {
+                                        Toast.makeText(getApplicationContext(), object.toString(), Toast.LENGTH_SHORT).show();
+                                    }
 
-                    if (networkInfo != null && networkInfo.isConnected()) {
-                        iniciarSesion("http://dhr.sistemasdt.xyz/sesiones.php");
-                    } else {
-                        Alerter.create(InicioSesion.this)
-                                .setTitle("Error")
-                                .setText("Fallo en Conexion a Internet")
-                                .setIcon(R.drawable.logonuevo)
+                                    @Override
+                                    public void onFailure(Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                });
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
 
-                                .setTextTypeface(face2)
-                                .enableSwipeToDismiss()
-                                .setBackgroundColorRes(R.color.AzulOscuro)
-                                .show();
-                    }
-
+                        @Override
+                        public void onFailure(Exception e) {
+                            Alerter.create(InicioSesion.this)
+                                    .setTitle("Error")
+                                    .setText("Fallo al obtener datos")
+                                    .setIcon(R.drawable.logonuevo)
+                                    .setTextTypeface(typeface)
+                                    .enableSwipeToDismiss()
+                                    .setBackgroundColorRes(R.color.AzulOscuro)
+                                    .show();
+                        }
+                    });
                 } else {
-                    //Toast.makeText(getApplicationContext(), "Faltan Campos", Toast.LENGTH_SHORT).show();
                     Alerter.create(InicioSesion.this)
                             .setTitle("Error")
-                            .setText("Faltan Datos")
+                            .setText("Faltan datos")
                             .setIcon(R.drawable.logonuevo)
-                            .setTextTypeface(face2)
+                            .setTextTypeface(typeface)
                             .enableSwipeToDismiss()
                             .setBackgroundColorRes(R.color.AzulOscuro)
                             .show();
@@ -161,8 +176,7 @@ public class InicioSesion extends AppCompatActivity {
                                             editor.putBoolean("recordar", true);
                                             editor.putString("correo", correo.getText().toString());
                                             editor.putString("pass", pass.getText().toString());
-                                        }
-                                        else {
+                                        } else {
                                             editor.putBoolean("recordar", false);
                                             editor.putString("correo", correo.getText().toString());
                                             editor.putString("pass", pass.getText().toString());

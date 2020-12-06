@@ -35,4 +35,6 @@
         Espero tener los mejores y grandiosos resultados
     </string>
 
+    <string name="API">https://api-dhr.herokuapp.com/</string>
+
 </resources>
