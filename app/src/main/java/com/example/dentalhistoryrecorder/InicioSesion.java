@@ -34,6 +34,7 @@ import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.Adaptadores.Adapt
 import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.Historiales;
 import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.ItemsFichas;
 import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysCuentas;
+import com.google.gson.JsonObject;
 import com.tapadoo.alerter.Alerter;
 
 import org.json.JSONArray;
@@ -77,8 +78,17 @@ public class InicioSesion extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!correo.getText().toString().isEmpty() && !pass.getText().toString().isEmpty()) {
+                    JSONObject jsonBody = new JSONObject();
+                    try {
+                        jsonBody.put("ID_USUARIO", "1");
+                        jsonBody.put("USUARIO", "diegot");
+                        jsonBody.put("PASSWORD", "321");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
                     final QuerysCuentas querysCuentas = new QuerysCuentas(getApplicationContext());
-                    querysCuentas.inicioSesion(new QuerysCuentas.VolleyOnEventListener() {
+                    querysCuentas.inicioSesion(jsonBody, new QuerysCuentas.VolleyOnEventListener() {
                         @Override
                         public void onSuccess(Object object) {
                             try {

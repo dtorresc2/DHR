@@ -11,6 +11,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.dentalhistoryrecorder.R;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,10 +31,11 @@ public class QuerysCuentas {
 
     public interface VolleyOnEventListener<T> {
         void onSuccess(T object);
+
         void onFailure(Exception e);
     }
 
-    public void inicioSesion(VolleyOnEventListener callback) {
+    public void inicioSesion(final JSONObject jsonBody, VolleyOnEventListener callback) {
         mCallBack = callback;
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, mContext.getResources().getString(R.string.API) + "cuentas/login", new Response.Listener<String>() {
@@ -55,16 +57,16 @@ public class QuerysCuentas {
 
             @Override
             public byte[] getBody() throws AuthFailureError {
-                JSONObject jsonBody = new JSONObject();
+//                JSONObject jsonBody = new JSONObject();
 
                 try {
-                    jsonBody.put("ID_USUARIO", "1");
-                    jsonBody.put("USUARIO", "diegot");
-                    jsonBody.put("PASSWORD", "321");
+//                    jsonBody.put("ID_USUARIO", "1");
+//                    jsonBody.put("USUARIO", "diegot");
+//                    jsonBody.put("PASSWORD", "321");
                     final String mRequestBody = jsonBody.toString();
                     return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
-                } catch (JSONException e) {
-                    e.printStackTrace();
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
@@ -88,7 +90,7 @@ public class QuerysCuentas {
     public void serviciosHabilitados(final int id, VolleyOnEventListener callback) {
         mCallBack = callback;
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, mContext.getResources().getString(R.string.API) + "usuarios/" + id , new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, mContext.getResources().getString(R.string.API) + "usuarios/" + id, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 JSONArray jsonArray = null;
