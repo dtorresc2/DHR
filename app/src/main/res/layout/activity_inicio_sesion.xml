@@ -10,7 +10,7 @@
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"
-        android:layout_height="23mm"
+        android:layout_height="148dp"
         android:layout_marginBottom="8dp"
         android:background="@color/AzulOscuro" />
 
@@ -25,14 +25,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25mm"
+        android:layout_marginTop="160dp"
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/titulo_inicio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="2mm"
-            android:layout_marginLeft="2mm"
+            android:layout_marginLeft="13dp"
             android:text="Inicio de Sesion"
             android:textColor="@color/Blanco"
             android:textSize="32sp"
@@ -41,9 +41,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="2mm"
-            android:layout_marginTop="3mm"
-            android:layout_marginRight="2mm"
+            android:layout_marginLeft="13dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="13dp"
             android:orientation="horizontal">
 
             <ImageView
@@ -62,7 +62,7 @@
                     android:id="@+id/codigoUsuario"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="Correo Electronico"
+                    android:hint="Codigo"
                     android:inputType="textEmailAddress" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
@@ -91,7 +91,7 @@
                     android:id="@+id/correo"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="Correo Electronico"
+                    android:hint="Usuario"
                     android:inputType="textEmailAddress" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
