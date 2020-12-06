@@ -33,39 +33,98 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="2mm"
             android:layout_marginLeft="2mm"
-            android:text="LOGIN"
+            android:text="Inicio de Sesion"
             android:textColor="@color/Blanco"
             android:textSize="32sp"
             android:textStyle="bold" />
 
-            <LinearLayout
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2mm"
+            android:layout_marginTop="3mm"
+            android:layout_marginRight="2mm"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="35mm"
+                android:layout_height="10mm"
+                android:layout_weight="5"
+                app:srcCompat="@drawable/ic_code_user"
+                tools:ignore="VectorDrawableCompat" />
+
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3mm"
-                android:layout_marginLeft="2mm"
-                android:layout_marginRight="2mm"
-                android:orientation="horizontal">
+                android:layout_weight="1">
 
-                <ImageView
-                    android:layout_width="35mm"
-                    android:layout_height="10mm"
-                    android:layout_weight="5"
-                    app:srcCompat="@drawable/ic_correo"
-                    tools:ignore="VectorDrawableCompat" />
-
-                <android.support.design.widget.TextInputLayout
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/codigoUsuario"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    android:layout_height="match_parent"
+                    android:hint="Correo Electronico"
+                    android:inputType="textEmailAddress" />
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
 
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/correo"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:hint="Correo Electronico"
-                        android:inputType="textEmailAddress" />
-                </android.support.design.widget.TextInputLayout>
-            </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2mm"
+            android:layout_marginTop="3mm"
+            android:layout_marginRight="2mm"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="35mm"
+                android:layout_height="10mm"
+                android:layout_weight="5"
+                app:srcCompat="@drawable/ic_correo"
+                tools:ignore="VectorDrawableCompat" />
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/correo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Correo Electronico"
+                    android:inputType="textEmailAddress" />
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2mm"
+            android:layout_marginTop="3mm"
+            android:layout_marginRight="2mm"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="35mm"
+                android:layout_height="10mm"
+                android:layout_weight="5"
+                app:srcCompat="@drawable/ic_lock"
+                tools:ignore="VectorDrawableCompat" />
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:passwordToggleEnabled="true">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/pass"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Contraseña"
+                    android:inputType="textPassword" />
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -77,48 +136,6 @@
     <!--        android:textColor="@color/Blanco"-->
     <!--        android:textSize="18sp" />-->
 
-
-
-
-    <!--    <LinearLayout-->
-    <!--        android:id="@+id/linearLayout3"-->
-    <!--        android:layout_width="0dp"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_marginStart="16dp"-->
-    <!--        android:layout_marginLeft="16dp"-->
-    <!--        android:layout_marginTop="16dp"-->
-    <!--        android:layout_marginEnd="16dp"-->
-    <!--        android:layout_marginRight="16dp"-->
-    <!--        android:layout_marginBottom="8dp"-->
-    <!--        android:orientation="horizontal"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@+id/view"-->
-    <!--        app:layout_constraintVertical_bias="0.38">-->
-
-    <!--        <ImageView-->
-    <!--            android:id="@+id/imageView6"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:layout_weight="1"-->
-    <!--            app:srcCompat="@drawable/ic_lock"-->
-    <!--            tools:ignore="VectorDrawableCompat" />-->
-
-    <!--        <android.support.design.widget.TextInputLayout-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_weight="1"-->
-    <!--            app:passwordToggleEnabled="true">-->
-
-    <!--            <android.support.design.widget.TextInputEditText-->
-    <!--                android:id="@+id/pass"-->
-    <!--                android:layout_width="match_parent"-->
-    <!--                android:layout_height="match_parent"-->
-    <!--                android:hint="Contraseña"-->
-    <!--                android:inputType="textPassword" />-->
-    <!--        </android.support.design.widget.TextInputLayout>-->
-    <!--    </LinearLayout>-->
 
     <!--    <Button-->
     <!--        android:id="@+id/aceptador"-->
