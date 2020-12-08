@@ -95,6 +95,19 @@ public class InicioSesion extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
+                final ProgressDialog progressDialog = new ProgressDialog(InicioSesion.this, R.style.progressDialog);
+                progressDialog.setMessage("Autenticando...");
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        progressDialog.dismiss();
+                    }
+                }, 500);
+
                 final QuerysCuentas querysCuentas = new QuerysCuentas(getApplicationContext());
                 querysCuentas.inicioSesion(jsonBody, new QuerysCuentas.VolleyOnEventListener() {
                     @Override
@@ -102,14 +115,14 @@ public class InicioSesion extends AppCompatActivity {
                         try {
                             JSONObject jsonObject = new JSONObject(object.toString());
 
-                            if (jsonObject.getInt("ID_USUARIO") < 1) {
+                            if (!jsonObject.has("ID_USUARIO") || jsonObject.getInt("ESTADO") == 0) {
                                 Alerter.create(InicioSesion.this)
                                         .setTitle("Error")
                                         .setText("Credenciales Incorrectas")
                                         .setIcon(R.drawable.logonuevo)
                                         .setTextTypeface(typeface)
                                         .enableSwipeToDismiss()
-                                        .setBackgroundColorRes(R.color.AzulOscuro)
+                                        .setBackgroundColorRes(R.color.FondoSecundario)
                                         .show();
                                 return;
                             }
@@ -119,14 +132,14 @@ public class InicioSesion extends AppCompatActivity {
                                 public void onSuccess(Object object) {
                                     try {
                                         JSONObject jsonObject = new JSONObject(object.toString());
-                                        if (jsonObject.getInt("ID_USUARIO") != 1) {
+                                        if (jsonObject.getInt("MOVIL") != 1) {
                                             Alerter.create(InicioSesion.this)
                                                     .setTitle("Error")
                                                     .setText("No tienene acceso")
                                                     .setIcon(R.drawable.logonuevo)
                                                     .setTextTypeface(typeface)
                                                     .enableSwipeToDismiss()
-                                                    .setBackgroundColorRes(R.color.AzulOscuro)
+                                                    .setBackgroundColorRes(R.color.FondoSecundario)
                                                     .show();
                                             return;
                                         }
