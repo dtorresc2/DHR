@@ -63,7 +63,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:hint="Codigo"
-                    android:inputType="textEmailAddress" />
+                    android:maxLines="1"
+                    android:lines="1"
+                    android:maxLength="4" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
@@ -92,7 +94,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:hint="Usuario"
-                    android:inputType="textEmailAddress" />
+                    android:maxLines="1"
+                    android:lines="1"
+                    android:maxLength="20"/>
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
@@ -122,6 +126,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:hint="Contraseña"
+                    android:maxLines="1"
+                    android:lines="1"
                     android:inputType="textPassword" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>

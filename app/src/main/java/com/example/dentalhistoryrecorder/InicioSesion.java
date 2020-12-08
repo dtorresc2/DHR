@@ -48,7 +48,7 @@ import java.util.Map;
 
 
 public class InicioSesion extends AppCompatActivity {
-    private TextInputEditText correo, pass;
+    private TextInputEditText correo, pass, usuario;
     private Button boton;
     private TextView titulo, version;
     private CheckBox recordatorio;
@@ -61,11 +61,13 @@ public class InicioSesion extends AppCompatActivity {
         setContentView(R.layout.activity_inicio_sesion);
 
         typeface = Typeface.createFromAsset(getAssets(), "fonts/bahnschrift.ttf");
-        correo = (TextInputEditText) findViewById(R.id.correo);
+        correo = findViewById(R.id.correo);
         correo.setTypeface(typeface);
-        pass = (TextInputEditText) findViewById(R.id.pass);
+        pass = findViewById(R.id.pass);
         pass.setTypeface(typeface);
-        boton = (Button) findViewById(R.id.aceptador);
+        usuario = findViewById(R.id.codigoUsuario);
+        usuario.setTypeface(typeface);
+        boton = findViewById(R.id.aceptador);
         boton.setTypeface(typeface);
         titulo = findViewById(R.id.titulo_inicio);
         titulo.setTypeface(typeface);
@@ -77,63 +79,99 @@ public class InicioSesion extends AppCompatActivity {
         boton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!correo.getText().toString().isEmpty() && !pass.getText().toString().isEmpty()) {
-                    JSONObject jsonBody = new JSONObject();
-                    try {
-                        jsonBody.put("ID_USUARIO", "1");
-                        jsonBody.put("USUARIO", "diegot");
-                        jsonBody.put("PASSWORD", "321");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                if (!validacionCodigo() || !validacionCorreo() || !validacionPass())
+                    return;
+
+                JSONObject jsonBody = new JSONObject();
+                try {
+                    jsonBody.put("ID_USUARIO", "1001");
+                    jsonBody.put("USUARIO", "diegot");
+                    jsonBody.put("PASSWORD", "321");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                final QuerysCuentas querysCuentas = new QuerysCuentas(getApplicationContext());
+                querysCuentas.inicioSesion(jsonBody, new QuerysCuentas.VolleyOnEventListener() {
+                    @Override
+                    public void onSuccess(Object object) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(object.toString());
+//                                Toast.makeText(getApplicationContext(), jsonObject.getString("ID"), Toast.LENGTH_SHORT).show();
+                            querysCuentas.serviciosHabilitados(jsonObject.getInt("ID"), new QuerysCuentas.VolleyOnEventListener() {
+                                @Override
+                                public void onSuccess(Object object) {
+                                    Toast.makeText(getApplicationContext(), object.toString(), Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void onFailure(Exception e) {
+                                    e.printStackTrace();
+                                }
+                            });
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
 
-                    final QuerysCuentas querysCuentas = new QuerysCuentas(getApplicationContext());
-                    querysCuentas.inicioSesion(jsonBody, new QuerysCuentas.VolleyOnEventListener() {
-                        @Override
-                        public void onSuccess(Object object) {
-                            try {
-                                JSONObject jsonObject = new JSONObject(object.toString());
-//                                Toast.makeText(getApplicationContext(), jsonObject.getString("ID"), Toast.LENGTH_SHORT).show();
-                                querysCuentas.serviciosHabilitados(jsonObject.getInt("ID"), new QuerysCuentas.VolleyOnEventListener() {
-                                    @Override
-                                    public void onSuccess(Object object) {
-                                        Toast.makeText(getApplicationContext(), object.toString(), Toast.LENGTH_SHORT).show();
-                                    }
+                    @Override
+                    public void onFailure(Exception e) {
+                        Alerter.create(InicioSesion.this)
+                                .setTitle("Error")
+                                .setText("Fallo al obtener datos")
+                                .setIcon(R.drawable.logonuevo)
+                                .setTextTypeface(typeface)
+                                .enableSwipeToDismiss()
+                                .setBackgroundColorRes(R.color.FondoSecundario)
+                                .show();
+                    }
+                });
 
-                                    @Override
-                                    public void onFailure(Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                });
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Exception e) {
-                            Alerter.create(InicioSesion.this)
-                                    .setTitle("Error")
-                                    .setText("Fallo al obtener datos")
-                                    .setIcon(R.drawable.logonuevo)
-                                    .setTextTypeface(typeface)
-                                    .enableSwipeToDismiss()
-                                    .setBackgroundColorRes(R.color.AzulOscuro)
-                                    .show();
-                        }
-                    });
-                } else {
-                    Alerter.create(InicioSesion.this)
-                            .setTitle("Error")
-                            .setText("Faltan datos")
-                            .setIcon(R.drawable.logonuevo)
-                            .setTextTypeface(typeface)
-                            .enableSwipeToDismiss()
-                            .setBackgroundColorRes(R.color.AzulOscuro)
-                            .show();
-                }
+//                else {
+//                    Alerter.create(InicioSesion.this)
+//                            .setTitle("Error")
+//                            .setText("Faltan datos")
+//                            .setIcon(R.drawable.logonuevo)
+//                            .setTextTypeface(typeface)
+//                            .enableSwipeToDismiss()
+//                            .setBackgroundColorRes(R.color.AzulOscuro)
+//                            .show();
+//                }
             }
         });
+    }
+
+    private boolean validacionCodigo() {
+        String textoCodigo = usuario.getText().toString().trim();
+        if (textoCodigo.isEmpty()) {
+            usuario.setError("Campo requerido");
+            return false;
+        } else {
+            usuario.setError(null);
+            return true;
+        }
+    }
+
+    private boolean validacionCorreo() {
+        String textCorreo = correo.getText().toString().trim();
+        if (textCorreo.isEmpty()) {
+            correo.setError("Campo requerido");
+            return false;
+        } else {
+            correo.setError(null);
+            return true;
+        }
+    }
+
+    private boolean validacionPass() {
+        String textPass = pass.getText().toString().trim();
+        if (textPass.isEmpty()) {
+            pass.setError("Campo requerido");
+            return false;
+        } else {
+            pass.setError(null);
+            return true;
+        }
     }
 
     private void iniciarSesion(String URL) {
