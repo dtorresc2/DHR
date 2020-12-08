@@ -84,9 +84,13 @@ public class InicioSesion extends AppCompatActivity {
 
                 JSONObject jsonBody = new JSONObject();
                 try {
-                    jsonBody.put("ID_USUARIO", "1001");
-                    jsonBody.put("USUARIO", "diegot");
-                    jsonBody.put("PASSWORD", "321");
+                    jsonBody.put("ID_USUARIO", usuario.getText().toString().trim());
+                    jsonBody.put("USUARIO", correo.getText().toString().trim());
+                    jsonBody.put("PASSWORD", pass.getText().toString().trim());
+//                    jsonBody.put("ID_USUARIO", "1001");
+//                    jsonBody.put("USUARIO", "diegot");
+//                    jsonBody.put("PASSWORD", "321");
+//
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -97,10 +101,38 @@ public class InicioSesion extends AppCompatActivity {
                     public void onSuccess(Object object) {
                         try {
                             JSONObject jsonObject = new JSONObject(object.toString());
-//                                Toast.makeText(getApplicationContext(), jsonObject.getString("ID"), Toast.LENGTH_SHORT).show();
-                            querysCuentas.serviciosHabilitados(jsonObject.getInt("ID"), new QuerysCuentas.VolleyOnEventListener() {
+
+                            if (jsonObject.getInt("ID_USUARIO") < 1) {
+                                Alerter.create(InicioSesion.this)
+                                        .setTitle("Error")
+                                        .setText("Credenciales Incorrectas")
+                                        .setIcon(R.drawable.logonuevo)
+                                        .setTextTypeface(typeface)
+                                        .enableSwipeToDismiss()
+                                        .setBackgroundColorRes(R.color.AzulOscuro)
+                                        .show();
+                                return;
+                            }
+
+                            querysCuentas.serviciosHabilitados(jsonObject.getInt("ID_USUARIO"), new QuerysCuentas.VolleyOnEventListener() {
                                 @Override
                                 public void onSuccess(Object object) {
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(object.toString());
+                                        if (jsonObject.getInt("ID_USUARIO") != 1) {
+                                            Alerter.create(InicioSesion.this)
+                                                    .setTitle("Error")
+                                                    .setText("No tienene acceso")
+                                                    .setIcon(R.drawable.logonuevo)
+                                                    .setTextTypeface(typeface)
+                                                    .enableSwipeToDismiss()
+                                                    .setBackgroundColorRes(R.color.AzulOscuro)
+                                                    .show();
+                                            return;
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
                                     Toast.makeText(getApplicationContext(), object.toString(), Toast.LENGTH_SHORT).show();
                                 }
 

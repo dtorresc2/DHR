@@ -57,16 +57,9 @@ public class QuerysCuentas {
 
             @Override
             public byte[] getBody() throws AuthFailureError {
-//                JSONObject jsonBody = new JSONObject();
-
                 try {
-//                    jsonBody.put("ID_USUARIO", "1");
-//                    jsonBody.put("USUARIO", "diegot");
-//                    jsonBody.put("PASSWORD", "321");
                     final String mRequestBody = jsonBody.toString();
                     return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
@@ -93,7 +86,30 @@ public class QuerysCuentas {
         StringRequest stringRequest = new StringRequest(Request.Method.GET, mContext.getResources().getString(R.string.API) + "usuarios/" + id, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                JSONArray jsonArray = null;
+                mCallBack.onSuccess(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mCallBack.onFailure(error);
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        requestQueue.add(stringRequest);
+    }
+
+    public void obtenerCuenta(final int id, int usuario, VolleyOnEventListener callback) {
+        mCallBack = callback;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, mContext.getResources().getString(R.string.API) + "cuentas/" + id + "/usuario/" + usuario, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
                 mCallBack.onSuccess(response);
             }
         }, new Response.ErrorListener() {
