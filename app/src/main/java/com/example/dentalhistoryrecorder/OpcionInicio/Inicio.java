@@ -70,8 +70,8 @@ import java.util.Map;
 
 public class Inicio extends Fragment {
     private Toolbar toolbar;
-    private TextView usuario, fichasEspeciales, fichasNormales, totalPacientes, contadorFE, contadorFN, contadorPac;
-    private TextView correo, citasPendientes, cerrarSesion;
+    private TextView usuario, configuracion, editar_perfil, totalPacientes, contadorFE, contadorFN, contadorPac;
+    private TextView correo, citasPendientes, cerrarSesion, empresa;
     private SharedPreferences preferencias;
     private RequestQueue requestQueue;
     private ImageView fotoPerfil;
@@ -99,11 +99,9 @@ public class Inicio extends Fragment {
     //Editar Perfil
     private ImageView imagenPerfilAux;
 
-
     public Inicio() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -113,60 +111,6 @@ public class Inicio extends Fragment {
         final Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         requestQueue = Volley.newRequestQueue(getContext());
         preferencias = getActivity().getSharedPreferences("Consultar", Context.MODE_PRIVATE);
-//        toolbar = view.findViewById(R.id.toolbar);
-//        toolbar.setLogo(R.drawable.logotool);
-//
-//        toolbar.setNavigationIcon(R.drawable.ic_atras);
-//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                SharedPreferences preferencias = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
-//
-//                final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.progressDialog);
-//                progressDialog.setMessage("Cerrando Sesion");
-//                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-//                progressDialog.setCancelable(false);
-//                progressDialog.show();
-//
-//                Handler handler = new Handler();
-//                handler.postDelayed(new Runnable() {
-//                    public void run() {
-//                        progressDialog.dismiss();
-//                        Intent intent = new Intent(getActivity(), MainActivity.class);
-//                        getActivity().startActivity(intent);
-//                        getActivity().overridePendingTransition(R.anim.left_in, R.anim.left_out);
-//                        getActivity().finish();
-//                    }
-//                }, 500);
-//
-//
-//                SharedPreferences.Editor editor = preferencias.edit();
-//                editor.clear();
-//                editor.commit();
-//
-//            }
-//        });
-
-//        toolbar.inflateMenu(R.menu.opciones_tool_inicio);
-//        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem menuItem) {
-//                switch (menuItem.getItemId()) {
-//                    case R.id.action_editar:
-//                        EditarPerfil();
-//                        return true;
-//
-//                    case R.id.action_configurar:
-//                        Configuracion configuracion = new Configuracion();
-//                        configuracion.display(getFragmentManager());
-//                        return true;
-//
-//                    default:
-//                        return false;
-//                }
-//            }
-//        });
-
 
         String mesFormateado = (mes < 10) ? "0" + mes : String.valueOf(mes);
 
@@ -187,59 +131,59 @@ public class Inicio extends Fragment {
 
         fotoPerfil = view.findViewById(R.id.imagenPerfil);
 
-        usuario = view.findViewById(R.id.usuarioPerfil);
+        usuario = view.findViewById(R.id.inicio_texto_usuario);
         usuario.setTypeface(face2);
 
-//        fichasEspeciales = view.findViewById(R.id.fichasEspeciales);
-//        fichasEspeciales.setTypeface(face2);
-//
-//        contadorFE = view.findViewById(R.id.contadorFE);
-//        contadorFE.setTypeface(face2);
-//
-//        fichasNormales = view.findViewById(R.id.fichasNormales);
-//        fichasNormales.setTypeface(face2);
-//
-//        contadorFN = view.findViewById(R.id.contadorFN);
-//        contadorFN.setTypeface(face2);
-//
-//        totalPacientes = view.findViewById(R.id.totalPacientes);
-//        totalPacientes.setTypeface(face2);
-//
-//        contadorPac = view.findViewById(R.id.contadorPac);
-//        contadorPac.setTypeface(face2);
+        configuracion = view.findViewById(R.id.inicio_opc_config_texto);
+        configuracion.setTypeface(face2);
 
-//        correo = view.findViewById(R.id.correo);
-//        correo.setTypeface(face2);
+        editar_perfil = view.findViewById(R.id.inicio_opc_editar_texto);
+        editar_perfil.setTypeface(face2);
 
-//        citasPendientes = view.findViewById(R.id.citasPendientes);
-//        citasPendientes.setTypeface(face2);
-//
+        empresa = view.findViewById(R.id.usuarioPerfil);
+        empresa.setTypeface(face2);
+
         cerrarSesion = view.findViewById(R.id.inicio_opc_salir_texto);
         cerrarSesion.setTypeface(face2);
+
+        configuracion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Configuracion configuracion = new Configuracion();
+                configuracion.display(getFragmentManager());
+            }
+        });
+
+        editar_perfil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditarPerfil();
+            }
+        });
 
         cerrarSesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*SharedPreferences preferencias = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
-                Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-                Alerter.create(getActivity())
-                        .setTitle(preferencias.getString("idUsuario", ""))
-                        .setText(preferencias.getString("correo", ""))
-                        .setIcon(R.drawable.logonuevo)
-                        .setTextTypeface(face)
-                        .enableSwipeToDismiss()
-                        .setBackgroundColorRes(R.color.AzulOscuro)
-                        .show();
-
-
-                SharedPreferences.Editor editor = preferencias.edit();
-                editor.clear();
-                editor.commit();
-
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                getActivity().startActivity(intent);
-                getActivity().overridePendingTransition(R.anim.left_in, R.anim.left_out);
-                getActivity().finish();*/
+//                SharedPreferences preferencias = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+//                Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+//                Alerter.create(getActivity())
+//                        .setTitle(preferencias.getString("idUsuario", ""))
+//                        .setText(preferencias.getString("correo", ""))
+//                        .setIcon(R.drawable.logonuevo)
+//                        .setTextTypeface(face)
+//                        .enableSwipeToDismiss()
+//                        .setBackgroundColorRes(R.color.AzulOscuro)
+//                        .show();
+//
+//
+//                SharedPreferences.Editor editor = preferencias.edit();
+//                editor.clear();
+//                editor.commit();
+//
+//                Intent intent = new Intent(getActivity(), MainActivity.class);
+//                getActivity().startActivity(intent);
+//                getActivity().overridePendingTransition(R.anim.left_in, R.anim.left_out);
+//                getActivity().finish();
 //                ObtenerTiempo();
 
                 SharedPreferences preferencias = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
@@ -267,26 +211,6 @@ public class Inicio extends Fragment {
                 editor.commit();
             }
         });
-
-        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-        if (networkInfo != null && networkInfo.isConnected()) {
-            consultarPerfil("http://dhr.sistemasdt.xyz/Perfil/perfil.php?estado=1");
-            obtenerCitas("http://dhr.sistemasdt.xyz/Citas/consultarCita.php?estado=1");
-        } else {
-            Alerter.create(getActivity())
-                    .setTitle("Error")
-                    .setText("Fallo en Conexion a Internet")
-                    .setIcon(R.drawable.logonuevo)
-                    .setTextTypeface(face2)
-                    .enableSwipeToDismiss()
-                    .setBackgroundColorRes(R.color.AzulOscuro)
-                    .show();
-        }
-
-        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-        StrictMode.setVmPolicy(builder.build());
 
         return view;
     }

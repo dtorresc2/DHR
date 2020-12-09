@@ -68,7 +68,6 @@
             android:background="@color/FondoSecundario2"/>
 
         <LinearLayout
-            android:id="@+id/inicio_opc_config"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -80,6 +79,7 @@
                 android:src="@drawable/ic_configurar"/>
 
             <TextView
+                android:id="@+id/inicio_opc_config_texto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="Configuracion"
@@ -95,7 +95,6 @@
             android:background="@color/FondoSecundario2"/>
 
         <LinearLayout
-            android:id="@+id/inicio_opc_editar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -107,6 +106,7 @@
                 android:src="@drawable/icono_seguimiento" />
 
             <TextView
+                android:id="@+id/inicio_opc_editar_texto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="Editar Perfil"
