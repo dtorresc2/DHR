@@ -101,12 +101,12 @@ public class InicioSesion extends AppCompatActivity {
                 progressDialog.setCancelable(false);
                 progressDialog.show();
 
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        progressDialog.dismiss();
-                    }
-                }, 500);
+//                Handler handler = new Handler();
+//                handler.postDelayed(new Runnable() {
+//                    public void run() {
+//                        progressDialog.dismiss();
+//                    }
+//                }, 500);
 
                 final QuerysCuentas querysCuentas = new QuerysCuentas(getApplicationContext());
                 querysCuentas.inicioSesion(jsonBody, new QuerysCuentas.VolleyOnEventListener() {
@@ -127,7 +127,10 @@ public class InicioSesion extends AppCompatActivity {
                                 return;
                             }
 
-                            querysCuentas.serviciosHabilitados(jsonObject.getInt("ID_USUARIO"), new QuerysCuentas.VolleyOnEventListener() {
+                            final int id_usuario = jsonObject.getInt("ID_USUARIO");
+                            final int id_cuenta = jsonObject.getInt("ID_CUENTA");
+
+                            querysCuentas.serviciosHabilitados(id_usuario, new QuerysCuentas.VolleyOnEventListener() {
                                 @Override
                                 public void onSuccess(Object object) {
                                     try {
@@ -146,7 +149,30 @@ public class InicioSesion extends AppCompatActivity {
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
-                                    Toast.makeText(getApplicationContext(), object.toString(), Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(getApplicationContext(), object.toString(), Toast.LENGTH_SHORT).show();
+                                    SharedPreferences preferencias = InicioSesion.this.getSharedPreferences("sesion", Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = preferencias.edit();
+                                    editor.putString("ID_USUARIO", String.valueOf(id_usuario));
+                                    editor.putString("ID_CUENTA", String.valueOf(id_cuenta));
+
+                                    if (recordatorio.isChecked()) {
+                                        editor.putBoolean("recordar", true);
+                                        editor.putString("correo", correo.getText().toString());
+                                        editor.putString("pass", pass.getText().toString());
+                                    } else {
+                                        editor.putBoolean("recordar", false);
+                                        editor.putString("correo", correo.getText().toString());
+                                        editor.putString("pass", pass.getText().toString());
+                                    }
+
+                                    editor.commit();
+
+                                    progressDialog.dismiss();
+
+                                    Intent intent = new Intent(InicioSesion.this, Principal.class);
+                                    startActivity(intent);
+                                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                                    finish();
                                 }
 
                                 @Override

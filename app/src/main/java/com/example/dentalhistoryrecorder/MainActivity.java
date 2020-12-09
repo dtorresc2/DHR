@@ -45,33 +45,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 SharedPreferences preferencias = MainActivity.this.getSharedPreferences("sesion", Context.MODE_PRIVATE);
-                Typeface face2 = Typeface.createFromAsset(getAssets(), "fonts/bahnschrift.ttf");
-                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
-                if ((preferencias.getBoolean("recordar", false) == true)) {
-                    iniciarSesion("http://dhr.sistemasdt.xyz/sesiones.php");
-
-                    /*editor.putString("correo", correo.getText().toString());
-                    editor.putString("pass", pass.getText().toString());*/
+                if (preferencias.getBoolean("recordar", false)) {
+                    if (preferencias.getInt("ID_USUARIO", 0) != 0 && preferencias.getInt("ID_CUENTA", 0) != 0) {
+                        Intent intent = new Intent(MainActivity.this, Principal.class);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                        finish();
+                    } else {
+                        Intent intent = new Intent(MainActivity.this, InicioSesion.class);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        finish();
+                    }
                 } else {
-                    //editor.putBoolean("recordar", false);
-//                    if (networkInfo == null || !networkInfo.isConnected()){
-//                        Alerter.create(MainActivity.this)
-//                                .setTitle("Error")
-//                                .setText("Fallo en Conexion a Internet")
-//                                .setIcon(R.drawable.logonuevo)
-//                                .setTextTypeface(face2)
-//                                .enableSwipeToDismiss()
-//                                .setBackgroundColorRes(R.color.AzulOscuro)
-//                                .show();
-//                    }
-
-//                    https://api-dhr.herokuapp.com/
-
-                    pruebaAPI("https://api-dhr.herokuapp.com/cuentas/login");
-//                    pruebaAPI("http://localhost:3000/cuentas/login");
-
                     Intent intent = new Intent(MainActivity.this, InicioSesion.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
