@@ -4,25 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/FondoPrincipal"
+    android:background="@color/FondoSecundario"
     tools:context=".OpcionInicio.Inicio">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar" />
+<!--    <include-->
+<!--        android:id="@+id/toolbar"-->
+<!--        layout="@layout/toolbar" />-->
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/FondoSecundario">
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/imagenPerfil"
             android:layout_width="125dp"
             android:layout_height="125dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="70dp"
+            android:layout_marginTop="25dp"
             android:src="@drawable/logonuevo" />
 
         <TextView
@@ -30,20 +29,233 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:layout_marginBottom="15dp"
             android:gravity="center_horizontal|center_vertical"
             android:text="Clinica San Jose"
             android:textColor="@color/Blanco"
             android:textSize="28dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:layout_marginTop="15dp"
+            android:background="@color/FondoSecundario2"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_correo"/>
+
+            <TextView
+                android:id="@+id/inicio_texto_usuario"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Usuario"
+                android:gravity="center_vertical"
+                android:paddingLeft="5dp"
+                android:textSize="20dp"
+                android:textColor="@color/Blanco"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:background="@color/FondoSecundario2"/>
+
+        <LinearLayout
+            android:id="@+id/inicio_opc_config"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_configurar"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Configuracion"
+                android:gravity="center_vertical"
+                android:paddingLeft="5dp"
+                android:textSize="20dp"
+                android:textColor="@color/Blanco"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:background="@color/FondoSecundario2"/>
+
+        <LinearLayout
+            android:id="@+id/inicio_opc_editar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:padding="10dp"
+                android:src="@drawable/icono_seguimiento" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Editar Perfil"
+                android:gravity="center_vertical"
+                android:paddingLeft="5dp"
+                android:textSize="20dp"
+                android:textColor="@color/Blanco"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:background="@color/FondoSecundario2"/>
+
+        <LinearLayout
+            android:id="@+id/inicio_opc_salir"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_borar" />
+
+            <TextView
+                android:id="@+id/inicio_opc_salir_texto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Cerrar Sesion"
+                android:gravity="center_vertical"
+                android:paddingLeft="5dp"
+                android:textSize="20dp"
+                android:textColor="@color/Blanco"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:background="@color/FondoSecundario2"/>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="270dp">
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="vertical"-->
+<!--        android:layout_marginTop="259dp">-->
+<!--        <View-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="8dp"-->
+<!--            android:background="@color/FondoSecundario2"/>-->
 
-    </LinearLayout>
+<!--        <LinearLayout-->
+<!--            android:id="@+id/inicio_opc_config"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:background="@color/FondoSecundario">-->
+
+<!--            <ImageView-->
+<!--                android:layout_width="50dp"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:padding="10dp"-->
+<!--                android:src="@drawable/ic_configurar"-->
+<!--                />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:text="Configuracion"-->
+<!--                android:gravity="center_vertical"-->
+<!--                android:paddingLeft="5dp"-->
+<!--                android:textSize="20dp"-->
+<!--                android:textColor="@color/Blanco"/>-->
+
+<!--        </LinearLayout>-->
+
+<!--        <View-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="8dp"-->
+<!--            android:background="@color/FondoSecundario2"/>-->
+
+<!--        <LinearLayout-->
+<!--            android:id="@+id/inicio_opc_editar"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:background="@color/FondoSecundario">-->
+
+<!--            <ImageView-->
+<!--                android:layout_width="50dp"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:padding="10dp"-->
+<!--                android:src="@drawable/icono_seguimiento"-->
+<!--                />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:text="Editar Perfil"-->
+<!--                android:gravity="center_vertical"-->
+<!--                android:paddingLeft="5dp"-->
+<!--                android:textSize="20dp"-->
+<!--                android:textColor="@color/Blanco"/>-->
+
+<!--        </LinearLayout>-->
+
+<!--        <View-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="8dp"-->
+<!--            android:background="@color/FondoSecundario2"/>-->
+
+<!--        <LinearLayout-->
+<!--            android:id="@+id/inicio_opc_salir"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:background="@color/FondoSecundario">-->
+
+<!--            <ImageView-->
+<!--                android:layout_width="50dp"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:padding="10dp"-->
+<!--                android:src="@drawable/ic_borar"-->
+<!--                />-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/inicio_opc_salir_texto"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:text="Cerrar Sesion"-->
+<!--                android:gravity="center_vertical"-->
+<!--                android:paddingLeft="5dp"-->
+<!--                android:textSize="20dp"-->
+<!--                android:textColor="@color/Blanco"/>-->
+
+<!--        </LinearLayout>-->
+
+<!--        <View-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="8dp"-->
+<!--            android:background="@color/FondoSecundario2"/>-->
+
+<!--    </LinearLayout>-->
+
+
 
     <!--    <RelativeLayout-->
     <!--        android:layout_width="match_parent"-->

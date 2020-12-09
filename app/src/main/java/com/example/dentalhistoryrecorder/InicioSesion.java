@@ -152,8 +152,8 @@ public class InicioSesion extends AppCompatActivity {
 //                                    Toast.makeText(getApplicationContext(), object.toString(), Toast.LENGTH_SHORT).show();
                                     SharedPreferences preferencias = InicioSesion.this.getSharedPreferences("sesion", Context.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = preferencias.edit();
-                                    editor.putString("ID_USUARIO", String.valueOf(id_usuario));
-                                    editor.putString("ID_CUENTA", String.valueOf(id_cuenta));
+                                    editor.putInt("ID_USUARIO", id_usuario);
+                                    editor.putInt("ID_CUENTA", id_cuenta);
 
                                     if (recordatorio.isChecked()) {
                                         editor.putBoolean("recordar", true);

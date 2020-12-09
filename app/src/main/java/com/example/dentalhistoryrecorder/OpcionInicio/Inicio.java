@@ -113,83 +113,64 @@ public class Inicio extends Fragment {
         final Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         requestQueue = Volley.newRequestQueue(getContext());
         preferencias = getActivity().getSharedPreferences("Consultar", Context.MODE_PRIVATE);
-        toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setLogo(R.drawable.logotool);
+//        toolbar = view.findViewById(R.id.toolbar);
+//        toolbar.setLogo(R.drawable.logotool);
+//
+//        toolbar.setNavigationIcon(R.drawable.ic_atras);
+//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                SharedPreferences preferencias = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+//
+//                final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.progressDialog);
+//                progressDialog.setMessage("Cerrando Sesion");
+//                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//                progressDialog.setCancelable(false);
+//                progressDialog.show();
+//
+//                Handler handler = new Handler();
+//                handler.postDelayed(new Runnable() {
+//                    public void run() {
+//                        progressDialog.dismiss();
+//                        Intent intent = new Intent(getActivity(), MainActivity.class);
+//                        getActivity().startActivity(intent);
+//                        getActivity().overridePendingTransition(R.anim.left_in, R.anim.left_out);
+//                        getActivity().finish();
+//                    }
+//                }, 500);
+//
+//
+//                SharedPreferences.Editor editor = preferencias.edit();
+//                editor.clear();
+//                editor.commit();
+//
+//            }
+//        });
 
-        toolbar.setNavigationIcon(R.drawable.ic_atras);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferences preferencias = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
-                Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-                /*Alerter.create(getActivity())
-                        .setTitle(preferencias.getString("idUsuario", ""))
-                        .setText(preferencias.getString("correo", ""))
-                        .setIcon(R.drawable.logonuevo)
-                        .setTextTypeface(face)
-                        .enableSwipeToDismiss()
-                        .setBackgroundColorRes(R.color.AzulOscuro)
-                        .show();*/
-
-                final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.progressDialog);
-                progressDialog.setMessage("Cerrando Sesion");
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                progressDialog.setCancelable(false);
-                progressDialog.show();
-
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        progressDialog.dismiss();
-                        Intent intent = new Intent(getActivity(), MainActivity.class);
-                        getActivity().startActivity(intent);
-                        getActivity().overridePendingTransition(R.anim.left_in, R.anim.left_out);
-                        getActivity().finish();
-                    }
-                }, 500);
-
-
-                SharedPreferences.Editor editor = preferencias.edit();
-                editor.clear();
-                editor.commit();
-
-            }
-        });
-
-        toolbar.inflateMenu(R.menu.opciones_tool_inicio);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.action_editar:
-                        /*SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
-                        Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-                        Alerter.create(getActivity())
-                                .setTitle(preferencias2.getString("idUsuario",""))
-                                .setText(preferencias2.getString("correo",""))
-                                .setIcon(R.drawable.logonuevo)
-                                .setTextTypeface(face3)
-                                .enableSwipeToDismiss()
-                                .setBackgroundColorRes(R.color.AzulOscuro)
-                                .show();*/
-                        EditarPerfil();
-                        return true;
-
-                    case R.id.action_configurar:
-                        Configuracion configuracion = new Configuracion();
-                        configuracion.display(getFragmentManager());
-                        return true;
-
-                    default:
-                        return false;
-                }
-            }
-        });
+//        toolbar.inflateMenu(R.menu.opciones_tool_inicio);
+//        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem menuItem) {
+//                switch (menuItem.getItemId()) {
+//                    case R.id.action_editar:
+//                        EditarPerfil();
+//                        return true;
+//
+//                    case R.id.action_configurar:
+//                        Configuracion configuracion = new Configuracion();
+//                        configuracion.display(getFragmentManager());
+//                        return true;
+//
+//                    default:
+//                        return false;
+//                }
+//            }
+//        });
 
 
         String mesFormateado = (mes < 10) ? "0" + mes : String.valueOf(mes);
 
-        fechaCita = dia +"/" + mesFormateado + "/" + anio;
+        fechaCita = dia + "/" + mesFormateado + "/" + anio;
 
         final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
         progressDialog.setMessage("Cargando...");
@@ -209,31 +190,31 @@ public class Inicio extends Fragment {
         usuario = view.findViewById(R.id.usuarioPerfil);
         usuario.setTypeface(face2);
 
-        fichasEspeciales = view.findViewById(R.id.fichasEspeciales);
-        fichasEspeciales.setTypeface(face2);
+//        fichasEspeciales = view.findViewById(R.id.fichasEspeciales);
+//        fichasEspeciales.setTypeface(face2);
+//
+//        contadorFE = view.findViewById(R.id.contadorFE);
+//        contadorFE.setTypeface(face2);
+//
+//        fichasNormales = view.findViewById(R.id.fichasNormales);
+//        fichasNormales.setTypeface(face2);
+//
+//        contadorFN = view.findViewById(R.id.contadorFN);
+//        contadorFN.setTypeface(face2);
+//
+//        totalPacientes = view.findViewById(R.id.totalPacientes);
+//        totalPacientes.setTypeface(face2);
+//
+//        contadorPac = view.findViewById(R.id.contadorPac);
+//        contadorPac.setTypeface(face2);
 
-        contadorFE = view.findViewById(R.id.contadorFE);
-        contadorFE.setTypeface(face2);
+//        correo = view.findViewById(R.id.correo);
+//        correo.setTypeface(face2);
 
-        fichasNormales = view.findViewById(R.id.fichasNormales);
-        fichasNormales.setTypeface(face2);
-
-        contadorFN = view.findViewById(R.id.contadorFN);
-        contadorFN.setTypeface(face2);
-
-        totalPacientes = view.findViewById(R.id.totalPacientes);
-        totalPacientes.setTypeface(face2);
-
-        contadorPac = view.findViewById(R.id.contadorPac);
-        contadorPac.setTypeface(face2);
-
-        correo = view.findViewById(R.id.correo);
-        correo.setTypeface(face2);
-
-        citasPendientes = view.findViewById(R.id.citasPendientes);
-        citasPendientes.setTypeface(face2);
-
-        cerrarSesion = view.findViewById(R.id.cerrar);
+//        citasPendientes = view.findViewById(R.id.citasPendientes);
+//        citasPendientes.setTypeface(face2);
+//
+        cerrarSesion = view.findViewById(R.id.inicio_opc_salir_texto);
         cerrarSesion.setTypeface(face2);
 
         cerrarSesion.setOnClickListener(new View.OnClickListener() {
@@ -259,7 +240,31 @@ public class Inicio extends Fragment {
                 getActivity().startActivity(intent);
                 getActivity().overridePendingTransition(R.anim.left_in, R.anim.left_out);
                 getActivity().finish();*/
-                ObtenerTiempo();
+//                ObtenerTiempo();
+
+                SharedPreferences preferencias = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+
+                final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.progressDialog);
+                progressDialog.setMessage("Cerrando Sesion");
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        progressDialog.dismiss();
+                        Intent intent = new Intent(getActivity(), MainActivity.class);
+                        getActivity().startActivity(intent);
+                        getActivity().overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                        getActivity().finish();
+                    }
+                }, 500);
+
+
+                SharedPreferences.Editor editor = preferencias.edit();
+                editor.clear();
+                editor.commit();
             }
         });
 
@@ -269,8 +274,7 @@ public class Inicio extends Fragment {
         if (networkInfo != null && networkInfo.isConnected()) {
             consultarPerfil("http://dhr.sistemasdt.xyz/Perfil/perfil.php?estado=1");
             obtenerCitas("http://dhr.sistemasdt.xyz/Citas/consultarCita.php?estado=1");
-        }
-        else{
+        } else {
             Alerter.create(getActivity())
                     .setTitle("Error")
                     .setText("Fallo en Conexion a Internet")
@@ -315,8 +319,7 @@ public class Inicio extends Fragment {
 
                                 if (networkInfo != null && networkInfo.isConnected()) {
                                     ObtenerFoto(codigo_foto);
-                                }
-                                else{
+                                } else {
                                     final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
                                     Alerter.create(getActivity())
                                             .setTitle("Error")
@@ -327,8 +330,7 @@ public class Inicio extends Fragment {
                                             .setBackgroundColorRes(R.color.AzulOscuro)
                                             .show();
                                 }
-                            }
-                            else {
+                            } else {
                                 conFoto = false;
                                 fotoPerfil.setImageResource(R.drawable.error);
                             }
@@ -468,8 +470,7 @@ public class Inicio extends Fragment {
                                     dialog.dismiss();
                                 }
                             }, 1000);
-                        }
-                        else{
+                        } else {
                             final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
                             Alerter.create(getActivity())
                                     .setTitle("Error")
@@ -519,8 +520,7 @@ public class Inicio extends Fragment {
                                     dialog.dismiss();
                                 }
                             }, 1000);
-                        }
-                        else{
+                        } else {
                             final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
                             Alerter.create(getActivity())
                                     .setTitle("Error")
@@ -550,7 +550,7 @@ public class Inicio extends Fragment {
 
                         if (networkInfo != null && networkInfo.isConnected()) {
                             agregarPerfil1("http://dhr.sistemasdt.xyz/Perfil/perfil.php?estado=6", codigoFoto, nombrePerfilAux.getText().toString());
-                            Toast.makeText(getActivity(),"Foto2",Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), "Foto2", Toast.LENGTH_LONG).show();
 
                         /*if (conFoto == true){
                             agregarPerfil("https://diegosistemas.xyz/DHR/Perfil/perfil.php?estado=4", codigoFoto, nombrePerfilAux.getText().toString());
@@ -575,8 +575,7 @@ public class Inicio extends Fragment {
                                     dialog.dismiss();
                                 }
                             }, 1000);
-                        }
-                        else{
+                        } else {
                             final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
                             Alerter.create(getActivity())
                                     .setTitle("Error")
@@ -889,11 +888,10 @@ public class Inicio extends Fragment {
             @Override
             public void onResponse(String response) {
                 if (Integer.parseInt(response) > 0) {
-                    if (Integer.parseInt(response) < 2){
-                        citasPendientes.setText( "Tiene " + response + " Cita Pendiete" );
-                    }
-                    else {
-                        citasPendientes.setText( "Tiene " + response + " Citas Pendietes" );
+                    if (Integer.parseInt(response) < 2) {
+                        citasPendientes.setText("Tiene " + response + " Cita Pendiete");
+                    } else {
+                        citasPendientes.setText("Tiene " + response + " Citas Pendietes");
                     }
                 } else {
                     citasPendientes.setText("No Hay Citas Hoy");
@@ -917,21 +915,21 @@ public class Inicio extends Fragment {
         requestQueue.add(stringRequest);
     }
 
-    public void ObtenerFoto(String ruta){
-        String URL = "http://dhr.sistemasdt.xyz/Perfil/" + ruta ;
+    public void ObtenerFoto(String ruta) {
+        String URL = "http://dhr.sistemasdt.xyz/Perfil/" + ruta;
 
         ImageRequest imageRequest = new ImageRequest(URL,
                 new Response.Listener<Bitmap>() {
                     @Override
                     public void onResponse(Bitmap response) {
-                        if (response != null){
+                        if (response != null) {
                             fotoPerfil.setImageBitmap(response);
                         }
                     }
                 }, 0, 0, ImageView.ScaleType.CENTER, null, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getActivity(),"Error",Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Error", Toast.LENGTH_LONG).show();
             }
         });
         requestQueue.add(imageRequest);
