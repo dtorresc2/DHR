@@ -76,7 +76,7 @@ import java.util.Map;
 public class Inicio extends Fragment {
     private Toolbar toolbar;
     private TextView usuario, configuracion, editar_perfil, totalPacientes, contadorFE, contadorFN, contadorPac;
-    private TextView correo, citasPendientes, cerrarSesion, empresa;
+    private TextView correo, citasPendientes, cerrarSesion, empresa, editar_nombre, bitacora;
     private SharedPreferences preferencias;
     private RequestQueue requestQueue;
     private ImageView fotoPerfil;
@@ -155,11 +155,17 @@ public class Inicio extends Fragment {
         configuracion = view.findViewById(R.id.inicio_opc_config_texto);
         configuracion.setTypeface(face2);
 
-        editar_perfil = view.findViewById(R.id.inicio_opc_editar_texto);
+        editar_perfil = view.findViewById(R.id.inicio_opc_imagen_texto);
         editar_perfil.setTypeface(face2);
 
         empresa = view.findViewById(R.id.usuarioPerfil);
         empresa.setTypeface(face2);
+
+        editar_nombre = view.findViewById(R.id.inicio_opc_editar_texto);
+        editar_nombre.setTypeface(face2);
+
+        bitacora = view.findViewById(R.id.inicio_opc_log_texto);
+        bitacora.setTypeface(face2);
 
         cerrarSesion = view.findViewById(R.id.inicio_opc_salir_texto);
         cerrarSesion.setTypeface(face2);

@@ -166,7 +166,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:padding="10dp"
-                android:src="@drawable/ic_clipcard" />
+                android:src="@drawable/ic_log" />
 
             <TextView
                 android:id="@+id/inicio_opc_log_texto"
