@@ -230,18 +230,18 @@ public class Inicio extends Fragment {
             }
         });
 
-        SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+        final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
 
         QuerysCuentas querysCuentas = new QuerysCuentas(getContext());
         querysCuentas.obtenerCuenta(
-                1,
-                1,
+                preferenciasUsuario.getInt("ID_CUENTA", 0),
+                preferenciasUsuario.getInt("ID_USUARIO", 0),
                 new QuerysCuentas.VolleyOnEventListener() {
                     @Override
                     public void onSuccess(Object object) {
                         try {
                             JSONObject jsonObject = new JSONObject(object.toString());
-                            usuario.setText(jsonObject.getString("USUARIO"));
+                            usuario.setText(preferenciasUsuario.getString("codigo", "1") + " - " + jsonObject.getString("USUARIO"));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

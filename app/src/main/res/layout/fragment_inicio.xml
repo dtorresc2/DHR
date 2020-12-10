@@ -110,13 +110,69 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:padding="10dp"
+                android:src="@drawable/ic_galeria" />
+
+            <TextView
+                android:id="@+id/inicio_opc_imagen_texto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Editar Imagen"
+                android:gravity="center_vertical"
+                android:paddingLeft="5dp"
+                android:textSize="20dp"
+                android:textColor="@color/Blanco"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:background="@color/FondoSecundario2"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:padding="10dp"
                 android:src="@drawable/icono_seguimiento" />
 
             <TextView
                 android:id="@+id/inicio_opc_editar_texto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Editar Perfil"
+                android:text="Editar Nombre"
+                android:gravity="center_vertical"
+                android:paddingLeft="5dp"
+                android:textSize="20dp"
+                android:textColor="@color/Blanco"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:background="@color/FondoSecundario2"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_clipcard" />
+
+            <TextView
+                android:id="@+id/inicio_opc_log_texto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Ver bitacora"
                 android:gravity="center_vertical"
                 android:paddingLeft="5dp"
                 android:textSize="20dp"
