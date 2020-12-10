@@ -157,10 +157,12 @@ public class InicioSesion extends AppCompatActivity {
 
                                     if (recordatorio.isChecked()) {
                                         editor.putBoolean("recordar", true);
+                                        editor.putString("codigo", usuario.getText().toString());
                                         editor.putString("correo", correo.getText().toString());
                                         editor.putString("pass", pass.getText().toString());
                                     } else {
                                         editor.putBoolean("recordar", false);
+                                        editor.putString("codigo", usuario.getText().toString());
                                         editor.putString("correo", correo.getText().toString());
                                         editor.putString("pass", pass.getText().toString());
                                     }
@@ -177,7 +179,15 @@ public class InicioSesion extends AppCompatActivity {
 
                                 @Override
                                 public void onFailure(Exception e) {
-                                    e.printStackTrace();
+                                    Alerter.create(InicioSesion.this)
+                                            .setTitle("Error")
+                                            .setText("Fallo al obtener datos")
+                                            .setIcon(R.drawable.logonuevo)
+                                            .setTextTypeface(typeface)
+                                            .enableSwipeToDismiss()
+                                            .setBackgroundColorRes(R.color.FondoSecundario)
+                                            .show();
+                                    progressDialog.dismiss();
                                 }
                             });
                         } catch (JSONException e) {
@@ -195,6 +205,7 @@ public class InicioSesion extends AppCompatActivity {
                                 .enableSwipeToDismiss()
                                 .setBackgroundColorRes(R.color.FondoSecundario)
                                 .show();
+                        progressDialog.dismiss();
                     }
                 });
 

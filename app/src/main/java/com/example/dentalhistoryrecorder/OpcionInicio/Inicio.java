@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
+import android.media.Image;
 import android.media.MediaScannerConnection;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -47,11 +48,13 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.dentalhistoryrecorder.MainActivity;
 import com.example.dentalhistoryrecorder.Principal;
 import com.example.dentalhistoryrecorder.R;
+import com.squareup.picasso.Picasso;
 import com.tapadoo.alerter.Alerter;
 
 import org.json.JSONArray;
@@ -98,6 +101,7 @@ public class Inicio extends Fragment {
 
     //Editar Perfil
     private ImageView imagenPerfilAux;
+    private NetworkImageView networkImageView;
 
     public Inicio() {
         // Required empty public constructor
@@ -130,6 +134,22 @@ public class Inicio extends Fragment {
         }, 1000);
 
         fotoPerfil = view.findViewById(R.id.imagenPerfil);
+        requestQueue = Volley.newRequestQueue(getContext());
+
+//        ImageRequest imageRequest = new ImageRequest("https://dhr-sanjose.s3.amazonaws.com/not.png",
+//                new BitmapListener(fotoPerfil), 0, 0, null, null,
+//                new MyErrorListener(fotoPerfil));
+//        requestQueue.add(imageRequest);
+
+        Picasso.with(getContext())
+                .load("https://dhr-sanjose.s3.amazonaws.com/not.png")
+                .into(fotoPerfil);
+
+//        https://dhr-sanjose.s3.amazonaws.com/not.png
+
+//        networkImageView = view.findViewById(R.id.imagenPerfil);
+//        networkImageView.setDefaultImageResId(R.drawable.logonuevo); // image for loading...
+//        networkImageView.setImageUrl("https://dhr-sanjose.s3.amazonaws.com/not.png", null);
 
         usuario = view.findViewById(R.id.inicio_texto_usuario);
         usuario.setTypeface(face2);
@@ -200,7 +220,7 @@ public class Inicio extends Fragment {
                         progressDialog.dismiss();
                         Intent intent = new Intent(getActivity(), MainActivity.class);
                         getActivity().startActivity(intent);
-                        getActivity().overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                        getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         getActivity().finish();
                     }
                 }, 500);
@@ -883,5 +903,28 @@ public class Inicio extends Fragment {
         //long days = (diff / (1000 * 60 * 60 * 24)) % 365;
         Toast.makeText(getContext(), "Horas: " + hours + " Minutos: " + minutes + " Segundos: " + seconds, Toast.LENGTH_LONG).show();
 
+    }
+}
+
+class BitmapListener implements Response.Listener<Bitmap> {
+    ImageView imageViewAux;
+    public BitmapListener(ImageView imageView) {
+        imageViewAux = imageView;
+    }
+    @Override
+    public void onResponse(Bitmap response) {
+        imageViewAux.setImageBitmap(response);
+
+    }
+}
+
+class MyErrorListener implements Response.ErrorListener {
+    ImageView imageViewAux;
+    public MyErrorListener(ImageView imageView){
+        imageViewAux = imageView;
+    }
+    @Override
+    public void onErrorResponse(VolleyError error) {
+        imageViewAux.setImageResource(R.drawable.logotool);
     }
 }

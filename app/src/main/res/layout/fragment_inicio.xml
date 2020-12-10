@@ -24,6 +24,13 @@
             android:layout_marginTop="25dp"
             android:src="@drawable/logonuevo" />
 
+<!--        <com.android.volley.toolbox.NetworkImageView-->
+<!--            android:id="@+id/imagenPerfil"-->
+<!--            android:layout_width="125dp"-->
+<!--            android:layout_height="125dp"-->
+<!--            android:layout_gravity="center_horizontal"-->
+<!--            android:layout_marginTop="25dp" />-->
+
         <TextView
             android:id="@+id/usuarioPerfil"
             android:layout_width="match_parent"

@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
                     if (preferencias.getInt("ID_USUARIO", 0) != 0 && preferencias.getInt("ID_CUENTA", 0) != 0) {
                         Intent intent = new Intent(MainActivity.this, Principal.class);
                         startActivity(intent);
-                        overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         finish();
                     } else {
                         Intent intent = new Intent(MainActivity.this, InicioSesion.class);
