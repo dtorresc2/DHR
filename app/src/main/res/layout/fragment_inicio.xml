@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:gravity="center_horizontal|center_vertical"
-            android:text="Clinica San Jose"
+            android:text="-"
             android:textColor="@color/Blanco"
             android:textSize="28dp" />
 

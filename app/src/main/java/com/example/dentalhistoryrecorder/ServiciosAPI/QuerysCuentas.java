@@ -1,6 +1,7 @@
 package com.example.dentalhistoryrecorder.ServiciosAPI;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -104,7 +105,7 @@ public class QuerysCuentas {
         requestQueue.add(stringRequest);
     }
 
-    public void obtenerCuenta(final int id, int usuario, VolleyOnEventListener callback) {
+    public void obtenerCuenta(int id, int usuario, VolleyOnEventListener callback) {
         mCallBack = callback;
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, mContext.getResources().getString(R.string.API) + "cuentas/" + id + "/usuario/" + usuario, new Response.Listener<String>() {
@@ -115,6 +116,7 @@ public class QuerysCuentas {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.println(1,"eRROR", error.toString());
                 mCallBack.onFailure(error);
             }
         }) {

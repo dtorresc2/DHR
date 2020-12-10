@@ -54,11 +54,13 @@ import com.android.volley.toolbox.Volley;
 import com.example.dentalhistoryrecorder.MainActivity;
 import com.example.dentalhistoryrecorder.Principal;
 import com.example.dentalhistoryrecorder.R;
+import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysCuentas;
 import com.squareup.picasso.Picasso;
 import com.tapadoo.alerter.Alerter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -147,10 +149,6 @@ public class Inicio extends Fragment {
 
 //        https://dhr-sanjose.s3.amazonaws.com/not.png
 
-//        networkImageView = view.findViewById(R.id.imagenPerfil);
-//        networkImageView.setDefaultImageResId(R.drawable.logonuevo); // image for loading...
-//        networkImageView.setImageUrl("https://dhr-sanjose.s3.amazonaws.com/not.png", null);
-
         usuario = view.findViewById(R.id.inicio_texto_usuario);
         usuario.setTypeface(face2);
 
@@ -229,6 +227,47 @@ public class Inicio extends Fragment {
                 SharedPreferences.Editor editor = preferencias.edit();
                 editor.clear();
                 editor.commit();
+            }
+        });
+
+        SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+
+        QuerysCuentas querysCuentas = new QuerysCuentas(getContext());
+        querysCuentas.obtenerCuenta(
+                1,
+                1,
+                new QuerysCuentas.VolleyOnEventListener() {
+                    @Override
+                    public void onSuccess(Object object) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(object.toString());
+                            usuario.setText(jsonObject.getString("USUARIO"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+
+        QuerysCuentas querysCuentas2 = new QuerysCuentas(getContext());
+        querysCuentas2.serviciosHabilitados(preferenciasUsuario.getInt("ID_USUARIO", 0), new QuerysCuentas.VolleyOnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                try {
+                    JSONObject jsonObject = new JSONObject(object.toString());
+                    empresa.setText(jsonObject.getString("NOMBRE"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                e.printStackTrace();
             }
         });
 
@@ -908,9 +947,11 @@ public class Inicio extends Fragment {
 
 class BitmapListener implements Response.Listener<Bitmap> {
     ImageView imageViewAux;
+
     public BitmapListener(ImageView imageView) {
         imageViewAux = imageView;
     }
+
     @Override
     public void onResponse(Bitmap response) {
         imageViewAux.setImageBitmap(response);
@@ -920,9 +961,11 @@ class BitmapListener implements Response.Listener<Bitmap> {
 
 class MyErrorListener implements Response.ErrorListener {
     ImageView imageViewAux;
-    public MyErrorListener(ImageView imageView){
+
+    public MyErrorListener(ImageView imageView) {
         imageViewAux = imageView;
     }
+
     @Override
     public void onErrorResponse(VolleyError error) {
         imageViewAux.setImageResource(R.drawable.logotool);
