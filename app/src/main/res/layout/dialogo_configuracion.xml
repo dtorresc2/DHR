@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/FondoSecundario">
 
     <include
@@ -204,7 +205,7 @@
                         android:gravity="left"
                         android:paddingLeft="10dp"
                         android:paddingTop="4dp"
-                        android:text="PDF - Fichas Normales"
+                        android:text="PDF - Fichas Especiales"
                         android:textColor="@color/Blanco"
                         android:textSize="18sp" />
 
@@ -335,11 +336,24 @@
                     android:id="@+id/abrirPDF"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Ver Manual de Usuario"
+                    android:text="Manual de Usuario"
                     android:gravity="center_vertical"
                     android:paddingLeft="8dp"
                     android:textSize="20dp"
                     android:textColor="@color/Blanco"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="140dp"
+                    android:layout_height="60dp"
+                    app:srcCompat="@drawable/firmacompleta" />
             </LinearLayout>
 
         </LinearLayout>

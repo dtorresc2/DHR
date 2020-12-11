@@ -39,15 +39,17 @@
                 android:textColor="@color/Blanco"
                 android:textSize="28dp" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="8dp"
-                android:layout_marginTop="15dp"
-                android:background="@color/FondoSecundario2"/>
+<!--            <View-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="8dp"-->
+<!--                android:layout_marginTop="15dp"-->
+<!--                android:background="@color/FondoSecundario2"/>-->
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@color/FondoSecundario2"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -70,11 +72,12 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="8dp"
-                android:background="@color/FondoSecundario2"/>
+                android:background="@color/FondoSecundario"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/FondoSecundario2"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -97,11 +100,12 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="8dp"
-                android:background="@color/FondoSecundario2"/>
+                android:background="@color/FondoSecundario"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/FondoSecundario2"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -125,11 +129,12 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="8dp"
-                android:background="@color/FondoSecundario2"/>
+                android:background="@color/FondoSecundario"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/FondoSecundario2"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -153,11 +158,12 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="8dp"
-                android:background="@color/FondoSecundario2"/>
+                android:background="@color/FondoSecundario"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/FondoSecundario2"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -181,12 +187,13 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="8dp"
-                android:background="@color/FondoSecundario2"/>
+                android:background="@color/FondoSecundario"/>
 
             <LinearLayout
                 android:id="@+id/inicio_opc_salir"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/FondoSecundario2"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -207,10 +214,10 @@
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="8dp"
-                android:background="@color/FondoSecundario2"/>
+<!--            <View-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="8dp"-->
+<!--                android:background="@color/FondoSecundario2"/>-->
         </LinearLayout>
     </ScrollView>
 </FrameLayout>
