@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/FondoTerciario">
+    android:background="@color/FondoSecundario">
 
     <include
         android:id="@+id/toolbar"
@@ -16,30 +16,50 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tituloGeneral"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="General"
-                android:background="@color/AzulOscuro"
-                android:gravity="center"
                 android:layout_marginTop="10dp"
+                android:paddingLeft="10dp"
+                android:text="General"
                 android:textColor="@color/Blanco"
-                android:textSize="24sp"/>
+                android:textSize="24sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/FondoSecundario2" />
+
+            <!--            <TextView-->
+            <!--                android:id="@+id/tituloGeneral"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:text="General"-->
+            <!--                android:background="@color/AzulOscuro"-->
+            <!--                android:gravity="center"-->
+            <!--                android:layout_marginTop="10dp"-->
+            <!--                android:textColor="@color/Blanco"-->
+            <!--                android:textSize="24sp"/>-->
 
             <Switch
                 android:id="@+id/recordarCuenta"
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
+                android:paddingLeft="12dp"
+                android:paddingRight="2dp"
                 android:text="Recordar Cuenta"
-                android:paddingLeft="10dp"
-                android:textColor="@color/Blanco"/>
+                android:background="@color/FondoSecundario2"
+                android:textColor="@color/Blanco"
+                android:textSize="18sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:background="@color/FondoSecundario2" />
 
             <!--
             <Switch
@@ -55,68 +75,116 @@
                 android:id="@+id/tituloEspacio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingLeft="10dp"
                 android:text="Almacenamiento"
-                android:background="@color/AzulOscuro"
-                android:gravity="center"
-                android:layout_marginTop="10dp"
                 android:textColor="@color/Blanco"
-                android:textSize="24sp"/>
+                android:textSize="24sp" />
 
+            <!--            <TextView-->
+            <!--                android:id="@+id/tituloAlmacen1"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:text="Fotografias en Galeria"-->
+            <!--                android:gravity="left"-->
+            <!--                android:background="@color/AzulOscuro"-->
+            <!--                android:layout_marginTop="10dp"-->
+            <!--                android:textColor="@color/Blanco"-->
+            <!--                android:paddingLeft="15dp"-->
+            <!--                android:textSize="18sp"/>-->
 
-            <TextView
-                android:id="@+id/tituloAlmacen1"
+            <!--            <LinearLayout-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:orientation="horizontal">-->
+
+            <!--                <ImageView-->
+            <!--                    android:layout_width="50dp"-->
+            <!--                    android:layout_height="50dp"-->
+            <!--                    android:padding="10dp"-->
+            <!--                    android:src="@drawable/ic_correo"/>-->
+
+            <!--                <TextView-->
+            <!--                    android:id="@+id/inicio_texto_usuario"-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="match_parent"-->
+            <!--                    android:text="Usuario"-->
+            <!--                    android:gravity="center_vertical"-->
+            <!--                    android:paddingLeft="5dp"-->
+            <!--                    android:textSize="20dp"-->
+            <!--                    android:textColor="@color/Blanco"/>-->
+            <!--            </LinearLayout>-->
+
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Fotografias en Galeria"
-                android:gravity="left"
-                android:background="@color/AzulOscuro"
-                android:layout_marginTop="10dp"
-                android:textColor="@color/Blanco"
-                android:paddingLeft="15dp"
-                android:textSize="18sp"/>
+                android:layout_height="4dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/FondoSecundario2" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
+                android:background="@color/FondoSecundario2"
                 android:weightSum="2">
 
-                <TextView
-                    android:id="@+id/tituloEspacio1"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="15.5 GB"
-                    android:gravity="left"
-                    android:layout_weight="1.5"
-                    android:layout_marginTop="10dp"
-                    android:paddingLeft="15dp"
-                    android:textColor="@color/Blanco"
-                    android:textSize="18sp"/>
+                    android:layout_weight="1.7"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tituloAlmacen1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="4dp"
+                        android:text="Fotografias en Galeria"
+                        android:textColor="@color/Blanco"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/tituloEspacio1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="3dp"
+                        android:text="15.5 GB"
+                        android:textColor="@color/Blanco"
+                        android:textSize="15sp" />
+                </LinearLayout>
 
                 <ImageButton
                     android:id="@+id/limpiar1"
+                    android:layout_height="50dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Limpiar"
-                    android:layout_weight="0.5"
+                    android:layout_weight="0.3"
+                    android:layout_marginRight="4dp"
+                    android:background="@color/FondoSecundario2"
                     android:src="@drawable/ic_borar"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/boton"
+                    android:text="Limpiar"
                     android:textColor="@color/Blanco" />
-
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:background="@color/FondoSecundario2" />
 
             <TextView
                 android:id="@+id/tituloAlmacen2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="PDF - Fichas Normales"
-                android:gravity="left"
                 android:layout_marginTop="10dp"
-                android:paddingLeft="15dp"
-                android:textColor="@color/Blanco"
                 android:background="@color/AzulOscuro"
-                android:textSize="18sp"/>
+                android:gravity="left"
+                android:paddingLeft="15dp"
+                android:text="PDF - Fichas Normales"
+                android:textColor="@color/Blanco"
+                android:textSize="18sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -128,23 +196,23 @@
                     android:id="@+id/tituloEspacio2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="15.5 GB"
-                    android:gravity="left"
-                    android:layout_weight="1.5"
                     android:layout_marginTop="10dp"
-                    android:textColor="@color/Blanco"
+                    android:layout_weight="1.5"
+                    android:gravity="left"
                     android:paddingLeft="15dp"
-                    android:textSize="18sp"/>
+                    android:text="15.5 GB"
+                    android:textColor="@color/Blanco"
+                    android:textSize="18sp" />
 
                 <ImageButton
                     android:id="@+id/limpiar2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Limpiar"
-                    android:layout_weight="0.5"
-                    android:src="@drawable/ic_borar"
                     android:layout_marginTop="10dp"
+                    android:layout_weight="0.5"
                     android:background="@drawable/boton"
+                    android:src="@drawable/ic_borar"
+                    android:text="Limpiar"
                     android:textColor="@color/Blanco" />
             </LinearLayout>
 
@@ -152,13 +220,13 @@
                 android:id="@+id/tituloAlmacen3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="PDF - Fichas Especiales"
-                android:gravity="left"
                 android:layout_marginTop="10dp"
-                android:paddingLeft="15dp"
-                android:textColor="@color/Blanco"
                 android:background="@color/AzulOscuro"
-                android:textSize="18sp"/>
+                android:gravity="left"
+                android:paddingLeft="15dp"
+                android:text="PDF - Fichas Especiales"
+                android:textColor="@color/Blanco"
+                android:textSize="18sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -170,23 +238,23 @@
                     android:id="@+id/tituloEspacio3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="15.5 GB"
-                    android:gravity="left"
-                    android:layout_weight="1.5"
                     android:layout_marginTop="10dp"
-                    android:textColor="@color/Blanco"
+                    android:layout_weight="1.5"
+                    android:gravity="left"
                     android:paddingLeft="15dp"
-                    android:textSize="18sp"/>
+                    android:text="15.5 GB"
+                    android:textColor="@color/Blanco"
+                    android:textSize="18sp" />
 
                 <ImageButton
                     android:id="@+id/limpiar3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Limpiar"
-                    android:layout_weight="0.5"
-                    android:src="@drawable/ic_borar"
                     android:layout_marginTop="10dp"
+                    android:layout_weight="0.5"
                     android:background="@drawable/boton"
+                    android:src="@drawable/ic_borar"
+                    android:text="Limpiar"
                     android:textColor="@color/Blanco" />
             </LinearLayout>
 
@@ -194,84 +262,84 @@
                 android:id="@+id/tituloAyuda"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Acerca de DHR"
+                android:layout_marginTop="10dp"
                 android:background="@color/AzulOscuro"
                 android:gravity="center"
-                android:layout_marginTop="10dp"
+                android:text="Acerca de DHR"
                 android:textColor="@color/Blanco"
-                android:textSize="24sp"/>
+                android:textSize="24sp" />
 
             <TextView
                 android:id="@+id/tituloAcerca1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Version de la Aplicacion"
-                android:gravity="left"
                 android:layout_marginTop="10dp"
-                android:paddingLeft="15dp"
-                android:textColor="@color/Blanco"
                 android:background="@color/AzulOscuro"
-                android:textSize="18sp"/>
+                android:gravity="left"
+                android:paddingLeft="15dp"
+                android:text="Version de la Aplicacion"
+                android:textColor="@color/Blanco"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/tituloAcerca2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="v1.0"
-                android:gravity="left"
                 android:layout_marginTop="10dp"
-                android:textColor="@color/Blanco"
+                android:gravity="left"
                 android:paddingLeft="15dp"
-                android:textSize="18sp"/>
+                android:text="v1.0"
+                android:textColor="@color/Blanco"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/tituloAcerca3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Compartir Aplicacion"
+                android:layout_marginTop="10dp"
+                android:background="@color/AzulOscuro"
                 android:gravity="left"
                 android:paddingLeft="15dp"
-                android:layout_marginTop="10dp"
+                android:text="Compartir Aplicacion"
                 android:textColor="@color/Blanco"
-                android:background="@color/AzulOscuro"
-                android:textSize="18sp"/>
+                android:textSize="18sp" />
 
             <Button
                 android:id="@+id/compartirLink"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Compartir"
-                android:textSize="18sp"
-                android:drawableLeft="@drawable/ic_compartir"
                 android:background="@drawable/boton"
+                android:drawableLeft="@drawable/ic_compartir"
+                android:paddingLeft="15dp"
+                android:text="Compartir"
                 android:textColor="@color/Blanco"
-                android:paddingLeft="15dp"/>
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/tituloAcerca4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Ver Manual de Usuario"
-                android:gravity="left"
                 android:layout_marginTop="10dp"
-                android:textColor="@color/Blanco"
                 android:background="@color/AzulOscuro"
+                android:gravity="left"
                 android:paddingLeft="15dp"
-                android:textSize="18sp"/>
+                android:text="Ver Manual de Usuario"
+                android:textColor="@color/Blanco"
+                android:textSize="18sp" />
 
             <Button
                 android:id="@+id/abrirPDF"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Manual de Usuario"
-                android:textSize="18sp"
-                android:drawableLeft="@drawable/pdf_box"
-                android:background="@drawable/boton"
-                android:textColor="@color/Blanco"
                 android:layout_marginBottom="30dp"
-                android:paddingLeft="15dp"/>
+                android:background="@drawable/boton"
+                android:drawableLeft="@drawable/pdf_box"
+                android:paddingLeft="15dp"
+                android:text="Manual de Usuario"
+                android:textColor="@color/Blanco"
+                android:textSize="18sp" />
 
         </LinearLayout>
 
