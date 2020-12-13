@@ -143,9 +143,9 @@ public class Inicio extends Fragment {
 //                new MyErrorListener(fotoPerfil));
 //        requestQueue.add(imageRequest);
 
-        Picasso.with(getContext())
-                .load("https://dhr-sanjose.s3.amazonaws.com/not.png")
-                .into(fotoPerfil);
+//        Picasso.with(getContext())
+//                .load(getContext().getResources().getString(R.string.S3) + "not.jpg")
+//                .into(fotoPerfil);
 
 //        https://dhr-sanjose.s3.amazonaws.com/not.png
 
@@ -266,6 +266,9 @@ public class Inicio extends Fragment {
                 try {
                     JSONObject jsonObject = new JSONObject(object.toString());
                     empresa.setText(jsonObject.getString("NOMBRE"));
+                    Picasso.with(getContext())
+                            .load(getContext().getResources().getString(R.string.S3) + jsonObject.getString("URL"))
+                            .into(fotoPerfil);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -276,7 +279,6 @@ public class Inicio extends Fragment {
                 e.printStackTrace();
             }
         });
-
         return view;
     }
 
@@ -431,6 +433,63 @@ public class Inicio extends Fragment {
 
         botonAceptar.setOnClickListener(new View.OnClickListener() {
             @Override
+            public void onClick(View view) {
+                if (!checkFoto.isChecked() || !checkNombre.isChecked()){
+                    if (!nombrePerfilAux.getText().toString().isEmpty() && bitmap != null){
+                        final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+
+                        Bitmap bitmap_aux = bitmap;
+                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                        bitmap_aux.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+                        byte[] b = byteArrayOutputStream.toByteArray();
+                        String codigoFoto = Base64.encodeToString(b, Base64.DEFAULT);
+
+                        JSONObject jsonBody = new JSONObject();
+                        try {
+                            jsonBody.put("NOMBRE", nombrePerfilAux.getText().toString());
+                            jsonBody.put("URL", "url");
+                            jsonBody.put("buffer", codigoFoto);
+//
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        QuerysCuentas querysCuentas = new QuerysCuentas(getContext());
+                        querysCuentas.actualizarPerfil(sharedPreferences.getInt("ID_USUARIO", 0), jsonBody, new QuerysCuentas.VolleyOnEventListener() {
+                            @Override
+                            public void onSuccess(Object object) {
+                                Toast.makeText(getContext(), object.toString(), Toast.LENGTH_LONG).show();
+
+                                final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+                                progressDialog.setMessage("Cargando...");
+                                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                                progressDialog.setCancelable(false);
+                                progressDialog.show();
+
+                                Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    public void run() {
+                                        progressDialog.dismiss();
+                                        dialog.dismiss();
+                                    }
+                                }, 1000);
+                            }
+
+                            @Override
+                            public void onFailure(Exception e) {
+                                Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
+
+                            }
+                        });
+                    }
+
+                }
+            }
+        });
+
+
+        botonAceptar.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
                 if (checkFoto.isChecked() && !checkNombre.isChecked()) {
                     if (bitmap != null) {
@@ -439,7 +498,6 @@ public class Inicio extends Fragment {
                         bitmap_aux.compress(Bitmap.CompressFormat.PNG, 100, salida);
                         byte[] b = salida.toByteArray();
                         String codigoFoto = Base64.encodeToString(b, Base64.DEFAULT);
-
 
                         ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
                         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
@@ -470,24 +528,12 @@ public class Inicio extends Fragment {
                                     .setBackgroundColorRes(R.color.AzulOscuro)
                                     .show();
                         }
-
-                        /*if (conFoto == true){
-                            agregarFoto("https://diegosistemas.xyz/DHR/Perfil/perfil.php?estado=2", codigoFoto);
-                            Toast.makeText(getActivity(),"Entre1",Toast.LENGTH_LONG).show();
-
-                        }
-                        else{
-                            agregarFoto1("https://diegosistemas.xyz/DHR/Perfil/perfil.php?estado=5", codigoFoto);
-                            Toast.makeText(getActivity(),"Entre2",Toast.LENGTH_LONG).show();
-                        }*/
-
                     } else {
                         Toast.makeText(getActivity(), "Error", Toast.LENGTH_LONG).show();
                     }
                 }
 
                 if (!checkFoto.isChecked() && checkNombre.isChecked()) {
-                    //Toast.makeText(getActivity(), "Nombre", Toast.LENGTH_LONG).show();
                     if (!nombrePerfilAux.getText().toString().isEmpty()) {
 
                         ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -525,7 +571,6 @@ public class Inicio extends Fragment {
                 }
 
                 if (checkFoto.isChecked() && checkNombre.isChecked()) {
-                    //Toast.makeText(getActivity(), "Ambos", Toast.LENGTH_LONG).show();
 
                     if (bitmap != null && !nombrePerfilAux.getText().toString().isEmpty()) {
                         Bitmap bitmap_aux = bitmap;
@@ -539,17 +584,6 @@ public class Inicio extends Fragment {
 
                         if (networkInfo != null && networkInfo.isConnected()) {
                             agregarPerfil1("http://dhr.sistemasdt.xyz/Perfil/perfil.php?estado=6", codigoFoto, nombrePerfilAux.getText().toString());
-                            Toast.makeText(getActivity(), "Foto2", Toast.LENGTH_LONG).show();
-
-                        /*if (conFoto == true){
-                            agregarPerfil("https://diegosistemas.xyz/DHR/Perfil/perfil.php?estado=4", codigoFoto, nombrePerfilAux.getText().toString());
-                            Toast.makeText(getActivity(),"Foto1",Toast.LENGTH_LONG).show();
-                        }
-                        else{
-                            agregarPerfil1("https://diegosistemas.xyz/DHR/Perfil/perfil.php?estado=6", codigoFoto, nombrePerfilAux.getText().toString());
-                            Toast.makeText(getActivity(),"Foto2",Toast.LENGTH_LONG).show();
-                        }*/
-
 
                             final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
                             progressDialog.setMessage("Cargando...");
@@ -924,7 +958,6 @@ public class Inicio extends Fragment {
         requestQueue.add(imageRequest);
     }
 
-
     public void ObtenerTiempo() {
         //TextView countDown;
         //CountDownTimer countDownTimer;
@@ -948,32 +981,5 @@ public class Inicio extends Fragment {
         //long days = (diff / (1000 * 60 * 60 * 24)) % 365;
         Toast.makeText(getContext(), "Horas: " + hours + " Minutos: " + minutes + " Segundos: " + seconds, Toast.LENGTH_LONG).show();
 
-    }
-}
-
-class BitmapListener implements Response.Listener<Bitmap> {
-    ImageView imageViewAux;
-
-    public BitmapListener(ImageView imageView) {
-        imageViewAux = imageView;
-    }
-
-    @Override
-    public void onResponse(Bitmap response) {
-        imageViewAux.setImageBitmap(response);
-
-    }
-}
-
-class MyErrorListener implements Response.ErrorListener {
-    ImageView imageViewAux;
-
-    public MyErrorListener(ImageView imageView) {
-        imageViewAux = imageView;
-    }
-
-    @Override
-    public void onErrorResponse(VolleyError error) {
-        imageViewAux.setImageResource(R.drawable.logotool);
     }
 }

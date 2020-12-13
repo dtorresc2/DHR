@@ -1,6 +1,7 @@
 package com.example.dentalhistoryrecorder.ServiciosAPI;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -32,7 +33,6 @@ public class QuerysCuentas {
 
     public interface VolleyOnEventListener<T> {
         void onSuccess(T object);
-
         void onFailure(Exception e);
     }
 
@@ -116,7 +116,7 @@ public class QuerysCuentas {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.println(1,"eRROR", error.toString());
+//                Log.println(1,"eRROR", error.toString());
                 mCallBack.onFailure(error);
             }
         }) {
@@ -130,8 +130,38 @@ public class QuerysCuentas {
         requestQueue.add(stringRequest);
     }
 
-    public void obtenerImagen(){
+    public void actualizarPerfil(int id, final JSONObject jsonBody, VolleyOnEventListener callback) {
+        mCallBack = callback;
 
+        StringRequest stringRequest = new StringRequest(Request.Method.PUT, mContext.getResources().getString(R.string.API) + "usuarios/" + id, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                mCallBack.onSuccess(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mCallBack.onFailure(error);
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() {
+                try {
+                    final String mRequestBody = jsonBody.toString();
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        requestQueue.add(stringRequest);
     }
 
 }
