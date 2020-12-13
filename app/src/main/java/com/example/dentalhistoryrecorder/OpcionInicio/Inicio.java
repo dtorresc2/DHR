@@ -124,16 +124,10 @@ public class Inicio extends Fragment {
         fotoPerfil = view.findViewById(R.id.imagenPerfil);
         requestQueue = Volley.newRequestQueue(getContext());
 
-//        ImageRequest imageRequest = new ImageRequest("https://dhr-sanjose.s3.amazonaws.com/not.png",
-//                new BitmapListener(fotoPerfil), 0, 0, null, null,
-//                new MyErrorListener(fotoPerfil));
-//        requestQueue.add(imageRequest);
-
 //        Picasso.with(getContext())
 //                .load(getContext().getResources().getString(R.string.S3) + "not.jpg")
 //                .into(fotoPerfil);
 
-//        https://dhr-sanjose.s3.amazonaws.com/not.png
 
         usuario = view.findViewById(R.id.inicio_texto_usuario);
         usuario.setTypeface(face2);
@@ -174,28 +168,6 @@ public class Inicio extends Fragment {
         cerrarSesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                SharedPreferences preferencias = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
-//                Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-//                Alerter.create(getActivity())
-//                        .setTitle(preferencias.getString("idUsuario", ""))
-//                        .setText(preferencias.getString("correo", ""))
-//                        .setIcon(R.drawable.logonuevo)
-//                        .setTextTypeface(face)
-//                        .enableSwipeToDismiss()
-//                        .setBackgroundColorRes(R.color.AzulOscuro)
-//                        .show();
-//
-//
-//                SharedPreferences.Editor editor = preferencias.edit();
-//                editor.clear();
-//                editor.commit();
-//
-//                Intent intent = new Intent(getActivity(), MainActivity.class);
-//                getActivity().startActivity(intent);
-//                getActivity().overridePendingTransition(R.anim.left_in, R.anim.left_out);
-//                getActivity().finish();
-//                ObtenerTiempo();
-
                 SharedPreferences preferencias = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
 
                 final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.progressDialog);
@@ -339,10 +311,6 @@ public class Inicio extends Fragment {
                 try {
                     JSONObject jsonObject = new JSONObject(object.toString());
                     empresa.setText(jsonObject.getString("NOMBRE"));
-//                    Picasso.with(getActivity())
-//                            .load(getContext().getResources().getString(R.string.S3) + jsonObject.getString("URL") + ".jpg")
-//                            .placeholder(R.drawable.logonuevo)
-//                            .into(fotoPerfil);
 
                     ImageRequest imageRequest = new ImageRequest(getContext().getResources().getString(R.string.S3) + jsonObject.getString("URL") + ".jpg",
                             new BitmapListener(fotoPerfil), 0, 0, null, null,
@@ -368,12 +336,6 @@ public class Inicio extends Fragment {
         TextView tituloPerfil = viewCuadro.findViewById(R.id.tituloDialogoPerfil);
         tituloPerfil.setTypeface(face2);
 
-        final CheckBox checkFoto = viewCuadro.findViewById(R.id.checkFoto);
-        checkFoto.setTypeface(face2);
-
-        final CheckBox checkNombre = viewCuadro.findViewById(R.id.checkNombre);
-        checkNombre.setTypeface(face2);
-
         final EditText nombrePerfilAux = viewCuadro.findViewById(R.id.nombrePerfilAux);
         nombrePerfilAux.setTypeface(face2);
 
@@ -381,11 +343,9 @@ public class Inicio extends Fragment {
 
         final Button galeria = viewCuadro.findViewById(R.id.botonGaleria);
         galeria.setTypeface(face2);
-        galeria.setClickable(false);
 
         final Button camara = viewCuadro.findViewById(R.id.botonCamara);
         camara.setTypeface(face2);
-        camara.setClickable(false);
 
         Button botonAceptar = viewCuadro.findViewById(R.id.botonAceptar);
         botonAceptar.setTypeface(face2);
@@ -396,30 +356,6 @@ public class Inicio extends Fragment {
         builder.setCancelable(false);
         builder.setView(viewCuadro);
         final AlertDialog dialog = builder.create();
-
-        checkFoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (checkFoto.isChecked()) {
-                    galeria.setClickable(true);
-                    camara.setClickable(true);
-                } else {
-                    galeria.setClickable(false);
-                    camara.setClickable(false);
-                }
-            }
-        });
-
-        checkNombre.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (checkNombre.isChecked()) {
-                    nombrePerfilAux.setEnabled(true);
-                } else {
-                    nombrePerfilAux.setEnabled(false);
-                }
-            }
-        });
 
         galeria.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -444,183 +380,61 @@ public class Inicio extends Fragment {
         botonAceptar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-                progressDialog.setMessage("Cargando...");
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                progressDialog.setCancelable(false);
-                progressDialog.show();
+                if (!nombrePerfilAux.getText().toString().isEmpty()) {
+                    final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+                    progressDialog.setMessage("Cargando...");
+                    progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                    progressDialog.setCancelable(false);
+                    progressDialog.show();
 
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        progressDialog.dismiss();
-                        dialog.dismiss();
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        public void run() {
+                            progressDialog.dismiss();
+                            dialog.dismiss();
+                            obtenerPerfi();
+                        }
+                    }, 1000);
 
-                        obtenerPerfi();
+                    final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+
+                    String codigoFoto = null;
+
+                    if (bitmap != null) {
+                        Bitmap bitmap_aux = bitmap;
+                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                        bitmap_aux.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+                        byte[] b = byteArrayOutputStream.toByteArray();
+                        codigoFoto = Base64.encodeToString(b, Base64.DEFAULT);
+                    } else {
+                        codigoFoto = "0";
                     }
-                }, 1000);
 
-                final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
-
-                Bitmap bitmap_aux = bitmap;
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                bitmap_aux.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-                byte[] b = byteArrayOutputStream.toByteArray();
-                String codigoFoto = Base64.encodeToString(b, Base64.DEFAULT);
-
-                JSONObject jsonBody = new JSONObject();
-                try {
-                    jsonBody.put("NOMBRE", nombrePerfilAux.getText().toString());
-                    jsonBody.put("URL", "url");
-                    jsonBody.put("buffer", codigoFoto);
+                    JSONObject jsonBody = new JSONObject();
+                    try {
+                        jsonBody.put("NOMBRE", nombrePerfilAux.getText().toString());
+                        jsonBody.put("URL", "url");
+                        jsonBody.put("buffer", codigoFoto);
 //
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                QuerysCuentas querysCuentas = new QuerysCuentas(getContext());
-                querysCuentas.actualizarPerfil(sharedPreferences.getInt("ID_USUARIO", 0), jsonBody, new QuerysCuentas.VolleyOnEventListener() {
-                    @Override
-                    public void onSuccess(Object object) { }
-
-                    @Override
-                    public void onFailure(Exception e) {
-                        Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                });
+
+                    QuerysCuentas querysCuentas = new QuerysCuentas(getContext());
+                    querysCuentas.actualizarPerfil(sharedPreferences.getInt("ID_USUARIO", 0), jsonBody, new QuerysCuentas.VolleyOnEventListener() {
+                        @Override
+                        public void onSuccess(Object object) {
+                        }
+
+                        @Override
+                        public void onFailure(Exception e) {
+                        }
+                    });
+                } else {
+                    Toast.makeText(getContext(), "Hay campos obligatorios", Toast.LENGTH_LONG).show();
+                }
             }
         });
-
-
-//        botonAceptar.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (checkFoto.isChecked() && !checkNombre.isChecked()) {
-//                    if (bitmap != null) {
-//                        Bitmap bitmap_aux = bitmap;
-//                        ByteArrayOutputStream salida = new ByteArrayOutputStream();
-//                        bitmap_aux.compress(Bitmap.CompressFormat.PNG, 100, salida);
-//                        byte[] b = salida.toByteArray();
-//                        String codigoFoto = Base64.encodeToString(b, Base64.DEFAULT);
-//
-//                        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-//                        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-//
-//                        if (networkInfo != null && networkInfo.isConnected()) {
-//                            agregarFoto1("http://dhr.sistemasdt.xyz/Perfil/perfil.php?estado=5", codigoFoto);
-//                            final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-//                            progressDialog.setMessage("Cargando...");
-//                            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-//                            progressDialog.setCancelable(false);
-//                            progressDialog.show();
-//
-//                            Handler handler = new Handler();
-//                            handler.postDelayed(new Runnable() {
-//                                public void run() {
-//                                    progressDialog.dismiss();
-//                                    dialog.dismiss();
-//                                }
-//                            }, 1000);
-//                        } else {
-//                            final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-//                            Alerter.create(getActivity())
-//                                    .setTitle("Error")
-//                                    .setText("Fallo en Conexion a Internet")
-//                                    .setIcon(R.drawable.logonuevo)
-//                                    .setTextTypeface(face3)
-//                                    .enableSwipeToDismiss()
-//                                    .setBackgroundColorRes(R.color.AzulOscuro)
-//                                    .show();
-//                        }
-//                    } else {
-//                        Toast.makeText(getActivity(), "Error", Toast.LENGTH_LONG).show();
-//                    }
-//                }
-//
-//                if (!checkFoto.isChecked() && checkNombre.isChecked()) {
-//                    if (!nombrePerfilAux.getText().toString().isEmpty()) {
-//
-//                        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-//                        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-//
-//                        if (networkInfo != null && networkInfo.isConnected()) {
-//                            agregarNombre("http://dhr.sistemasdt.xyz/Perfil/perfil.php?estado=3", nombrePerfilAux.getText().toString());
-//
-//                            final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-//                            progressDialog.setMessage("Cargando...");
-//                            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-//                            progressDialog.setCancelable(false);
-//                            progressDialog.show();
-//
-//                            Handler handler = new Handler();
-//                            handler.postDelayed(new Runnable() {
-//                                public void run() {
-//                                    progressDialog.dismiss();
-//                                    dialog.dismiss();
-//                                }
-//                            }, 1000);
-//                        } else {
-//                            final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-//                            Alerter.create(getActivity())
-//                                    .setTitle("Error")
-//                                    .setText("Fallo en Conexion a Internet")
-//                                    .setIcon(R.drawable.logonuevo)
-//                                    .setTextTypeface(face3)
-//                                    .enableSwipeToDismiss()
-//                                    .setBackgroundColorRes(R.color.AzulOscuro)
-//                                    .show();
-//                        }
-//
-//                    }
-//                }
-//
-//                if (checkFoto.isChecked() && checkNombre.isChecked()) {
-//
-//                    if (bitmap != null && !nombrePerfilAux.getText().toString().isEmpty()) {
-//                        Bitmap bitmap_aux = bitmap;
-//                        ByteArrayOutputStream salida = new ByteArrayOutputStream();
-//                        bitmap_aux.compress(Bitmap.CompressFormat.PNG, 100, salida);
-//                        byte[] b = salida.toByteArray();
-//                        String codigoFoto = Base64.encodeToString(b, Base64.DEFAULT);
-//
-//                        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-//                        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-//
-//                        if (networkInfo != null && networkInfo.isConnected()) {
-//                            agregarPerfil1("http://dhr.sistemasdt.xyz/Perfil/perfil.php?estado=6", codigoFoto, nombrePerfilAux.getText().toString());
-//
-//                            final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-//                            progressDialog.setMessage("Cargando...");
-//                            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-//                            progressDialog.setCancelable(false);
-//                            progressDialog.show();
-//
-//                            Handler handler = new Handler();
-//                            handler.postDelayed(new Runnable() {
-//                                public void run() {
-//                                    progressDialog.dismiss();
-//                                    dialog.dismiss();
-//                                }
-//                            }, 1000);
-//                        } else {
-//                            final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-//                            Alerter.create(getActivity())
-//                                    .setTitle("Error")
-//                                    .setText("Fallo en Conexion a Internet")
-//                                    .setIcon(R.drawable.logonuevo)
-//                                    .setTextTypeface(face3)
-//                                    .enableSwipeToDismiss()
-//                                    .setBackgroundColorRes(R.color.AzulOscuro)
-//                                    .show();
-//                        }
-//                    }
-//                }
-//
-//                if (!checkFoto.isChecked() && !checkNombre.isChecked()) {
-//                    Toast.makeText(getActivity(), "Error No ha seleccionado una opcion", Toast.LENGTH_LONG).show();
-//                }
-//            }
-//        });
 
         botonCancelar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -770,176 +584,6 @@ public class Inicio extends Fragment {
                 }
             }
         }
-    }
-
-    //Insertar Ficha y Obtener ID Ficha ------------------------------------------------------------
-    public void agregarFoto(String URL, final String fotoo) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                consultarPerfil("http://dhr.sistemasdt.xyz/Perfil/perfil.php?estado=1");
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("MyActivity", "" + error.toString());
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros = new HashMap<String, String>();
-                parametros.put("foto", fotoo);
-                SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
-                parametros.put("user", preferencias2.getString("idUsuario", "1"));
-                return parametros;
-            }
-
-        };
-        requestQueue.add(stringRequest);
-    }
-
-    public void agregarFoto1(String URL, final String fotoo) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                consultarPerfil("http://dhr.sistemasdt.xyz/Perfil/perfil.php?estado=1");
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("MyActivity", "" + error.toString());
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros = new HashMap<String, String>();
-                parametros.put("foto", fotoo);
-                Long consecutivo = System.currentTimeMillis() / 1000;
-                parametros.put("nom", "DHR_" + consecutivo.toString());
-                SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
-                parametros.put("user", preferencias2.getString("idUsuario", "1"));
-                return parametros;
-            }
-
-        };
-        requestQueue.add(stringRequest);
-    }
-
-    //Insertar Ficha y Obtener ID Ficha ------------------------------------------------------------
-    public void agregarNombre(String URL, final String nombre) {
-        final String[] id = new String[1];
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                consultarPerfil("http://dhr.sistemasdt.xyz/Perfil/perfil.php?estado=1");
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("MyActivity", "" + error.toString());
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros = new HashMap<String, String>();
-                parametros.put("nombre", nombre);
-                SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
-                parametros.put("user", preferencias2.getString("idUsuario", "1"));
-                return parametros;
-            }
-
-        };
-        requestQueue.add(stringRequest);
-    }
-
-    //Insertar Ficha y Obtener ID Ficha ------------------------------------------------------------
-    public void agregarPerfil(String URL, final String foto, final String nombre) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                consultarPerfil("http://dhr.sistemasdt.xyz/Perfil/perfil.php?estado=1");
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("MyActivity", "" + error.toString());
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros = new HashMap<String, String>();
-                parametros.put("nombre", nombre);
-                parametros.put("foto", foto);
-                Long consecutivo = System.currentTimeMillis() / 1000;
-                parametros.put("nom", "DHR_" + consecutivo.toString());
-                SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
-                parametros.put("user", preferencias2.getString("idUsuario", "1"));
-                return parametros;
-            }
-
-        };
-        requestQueue.add(stringRequest);
-    }
-
-    //Insertar Ficha y Obtener ID Ficha ------------------------------------------------------------
-    public void agregarPerfil1(String URL, final String foto, final String nombre) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                consultarPerfil("http://dhr.sistemasdt.xyz/Inicio/perfil.php?estado=1");
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("MyActivity", "" + error.toString());
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros = new HashMap<String, String>();
-                parametros.put("nombre", nombre);
-                parametros.put("foto", foto);
-                Long consecutivo = System.currentTimeMillis() / 1000;
-                parametros.put("nom", "DHR_" + consecutivo.toString());
-                SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
-                parametros.put("user", preferencias2.getString("idUsuario", "1"));
-                return parametros;
-            }
-
-        };
-        requestQueue.add(stringRequest);
-    }
-
-    public void obtenerCitas(String URL) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                if (Integer.parseInt(response) > 0) {
-                    if (Integer.parseInt(response) < 2) {
-                        citasPendientes.setText("Tiene " + response + " Cita Pendiete");
-                    } else {
-                        citasPendientes.setText("Tiene " + response + " Citas Pendietes");
-                    }
-                } else {
-                    citasPendientes.setText("No Hay Citas Hoy");
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("My Activity", "" + error.toString());
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros = new HashMap<String, String>();
-                parametros.put("fecha", fechaCita);
-                SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
-                parametros.put("user", preferencias2.getString("idUsuario", "1"));
-                return parametros;
-            }
-        };
-        requestQueue.add(stringRequest);
     }
 
     public void ObtenerFoto(String ruta) {
