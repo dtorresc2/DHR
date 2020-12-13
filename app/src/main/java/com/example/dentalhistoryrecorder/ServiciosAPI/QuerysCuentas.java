@@ -1,9 +1,12 @@
 package com.example.dentalhistoryrecorder.ServiciosAPI;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -11,6 +14,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.dentalhistoryrecorder.R;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,7 +37,7 @@ public class QuerysCuentas {
         void onFailure(Exception e);
     }
 
-    public void inicioSesion(VolleyOnEventListener callback) {
+    public void inicioSesion(final JSONObject jsonBody, VolleyOnEventListener callback) {
         mCallBack = callback;
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, mContext.getResources().getString(R.string.API) + "cuentas/login", new Response.Listener<String>() {
@@ -55,16 +59,9 @@ public class QuerysCuentas {
 
             @Override
             public byte[] getBody() throws AuthFailureError {
-                JSONObject jsonBody = new JSONObject();
-
                 try {
-                    jsonBody.put("ID_USUARIO", "1");
-                    jsonBody.put("USUARIO", "diegot");
-                    jsonBody.put("PASSWORD", "321");
                     final String mRequestBody = jsonBody.toString();
                     return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
@@ -88,10 +85,9 @@ public class QuerysCuentas {
     public void serviciosHabilitados(final int id, VolleyOnEventListener callback) {
         mCallBack = callback;
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, mContext.getResources().getString(R.string.API) + "usuarios/" + id , new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, mContext.getResources().getString(R.string.API) + "usuarios/" + id, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                JSONArray jsonArray = null;
                 mCallBack.onSuccess(response);
             }
         }, new Response.ErrorListener() {
@@ -109,5 +105,67 @@ public class QuerysCuentas {
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
         requestQueue.add(stringRequest);
     }
+
+    public void obtenerCuenta(int id, int usuario, VolleyOnEventListener callback) {
+        mCallBack = callback;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, mContext.getResources().getString(R.string.API) + "cuentas/" + id + "/usuario/" + usuario, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                mCallBack.onSuccess(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mCallBack.onFailure(error);
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        requestQueue.add(stringRequest);
+    }
+
+    public void actualizarPerfil(int id, final JSONObject jsonBody, VolleyOnEventListener callback) {
+        mCallBack = callback;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.PUT, mContext.getResources().getString(R.string.API) + "usuarios/" + id, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                mCallBack.onSuccess(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mCallBack.onFailure(error);
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() {
+                try {
+                    final String mRequestBody = jsonBody.toString();
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        };
+
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 48, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        requestQueue.add(stringRequest);
+    }
+
 }
 

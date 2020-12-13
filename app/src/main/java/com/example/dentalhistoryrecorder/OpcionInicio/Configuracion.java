@@ -38,7 +38,7 @@ public class Configuracion extends DialogFragment {
     private TextView etiquetaEspacioFoto, etiquetaEspacioFichas, etiquetaEspacioFichasE, etiquetaVersion;
     private Switch recordarCuenta;
     private ImageButton limpiar1, limpiar2, limpiar3;
-    private Button compartir, abrirManual;
+    private TextView compartir, abrirManual;
 
     //Ruta Carpeta de Fotos
     private static final String CARPETA_PRINCIPAL = "misImagenesApp/"; //Directorio Principal
@@ -144,8 +144,8 @@ public class Configuracion extends DialogFragment {
         subtitulo5 = view.findViewById(R.id.tituloAcerca3);
         subtitulo5.setTypeface(face);
 
-        compartir = view.findViewById(R.id.compartirLink);
-        compartir.setTypeface(face);
+//        compartir = view.findViewById(R.id.compartirLink);
+//        compartir.setTypeface(face);
 
         abrirManual = view.findViewById(R.id.abrirPDF);
         abrirManual.setTypeface(face);

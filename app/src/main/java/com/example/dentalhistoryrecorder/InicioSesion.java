@@ -34,6 +34,7 @@ import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.Adaptadores.Adapt
 import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.Historiales;
 import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.ItemsFichas;
 import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysCuentas;
+import com.google.gson.JsonObject;
 import com.tapadoo.alerter.Alerter;
 
 import org.json.JSONArray;
@@ -47,7 +48,7 @@ import java.util.Map;
 
 
 public class InicioSesion extends AppCompatActivity {
-    private TextInputEditText correo, pass;
+    private TextInputEditText correo, pass, usuario;
     private Button boton;
     private TextView titulo, version;
     private CheckBox recordatorio;
@@ -60,11 +61,13 @@ public class InicioSesion extends AppCompatActivity {
         setContentView(R.layout.activity_inicio_sesion);
 
         typeface = Typeface.createFromAsset(getAssets(), "fonts/bahnschrift.ttf");
-        correo = (TextInputEditText) findViewById(R.id.correo);
+        correo = findViewById(R.id.correo);
         correo.setTypeface(typeface);
-        pass = (TextInputEditText) findViewById(R.id.pass);
+        pass = findViewById(R.id.pass);
         pass.setTypeface(typeface);
-        boton = (Button) findViewById(R.id.aceptador);
+        usuario = findViewById(R.id.codigoUsuario);
+        usuario.setTypeface(typeface);
+        boton = findViewById(R.id.aceptador);
         boton.setTypeface(typeface);
         titulo = findViewById(R.id.titulo_inicio);
         titulo.setTypeface(typeface);
@@ -76,54 +79,181 @@ public class InicioSesion extends AppCompatActivity {
         boton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!correo.getText().toString().isEmpty() && !pass.getText().toString().isEmpty()) {
-                    final QuerysCuentas querysCuentas = new QuerysCuentas(getApplicationContext());
-                    querysCuentas.inicioSesion(new QuerysCuentas.VolleyOnEventListener() {
-                        @Override
-                        public void onSuccess(Object object) {
-                            try {
-                                JSONObject jsonObject = new JSONObject(object.toString());
-//                                Toast.makeText(getApplicationContext(), jsonObject.getString("ID"), Toast.LENGTH_SHORT).show();
-                                querysCuentas.serviciosHabilitados(jsonObject.getInt("ID"), new QuerysCuentas.VolleyOnEventListener() {
-                                    @Override
-                                    public void onSuccess(Object object) {
-                                        Toast.makeText(getApplicationContext(), object.toString(), Toast.LENGTH_SHORT).show();
-                                    }
+                if (!validacionCodigo() || !validacionCorreo() || !validacionPass())
+                    return;
 
-                                    @Override
-                                    public void onFailure(Exception e) {
+                JSONObject jsonBody = new JSONObject();
+                try {
+                    jsonBody.put("ID_USUARIO", usuario.getText().toString().trim());
+                    jsonBody.put("USUARIO", correo.getText().toString().trim());
+                    jsonBody.put("PASSWORD", pass.getText().toString().trim());
+//                    jsonBody.put("ID_USUARIO", "1001");
+//                    jsonBody.put("USUARIO", "diegot");
+//                    jsonBody.put("PASSWORD", "321");
+//
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                final ProgressDialog progressDialog = new ProgressDialog(InicioSesion.this, R.style.progressDialog);
+                progressDialog.setMessage("Autenticando...");
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+
+//                Handler handler = new Handler();
+//                handler.postDelayed(new Runnable() {
+//                    public void run() {
+//                        progressDialog.dismiss();
+//                    }
+//                }, 500);
+
+                final QuerysCuentas querysCuentas = new QuerysCuentas(getApplicationContext());
+                querysCuentas.inicioSesion(jsonBody, new QuerysCuentas.VolleyOnEventListener() {
+                    @Override
+                    public void onSuccess(Object object) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(object.toString());
+
+                            if (!jsonObject.has("ID_USUARIO") || jsonObject.getInt("ESTADO") == 0) {
+                                Alerter.create(InicioSesion.this)
+                                        .setTitle("Error")
+                                        .setText("Credenciales Incorrectas")
+                                        .setIcon(R.drawable.logonuevo)
+                                        .setTextTypeface(typeface)
+                                        .enableSwipeToDismiss()
+                                        .setBackgroundColorRes(R.color.FondoSecundario)
+                                        .show();
+                                return;
+                            }
+
+                            final int id_usuario = jsonObject.getInt("ID_USUARIO");
+                            final int id_cuenta = jsonObject.getInt("ID_CUENTA");
+
+                            querysCuentas.serviciosHabilitados(id_usuario, new QuerysCuentas.VolleyOnEventListener() {
+                                @Override
+                                public void onSuccess(Object object) {
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(object.toString());
+                                        if (jsonObject.getInt("MOVIL") != 1) {
+                                            Alerter.create(InicioSesion.this)
+                                                    .setTitle("Error")
+                                                    .setText("No tienene acceso")
+                                                    .setIcon(R.drawable.logonuevo)
+                                                    .setTextTypeface(typeface)
+                                                    .enableSwipeToDismiss()
+                                                    .setBackgroundColorRes(R.color.FondoSecundario)
+                                                    .show();
+                                            return;
+                                        }
+                                    } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
-                                });
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
+//                                    Toast.makeText(getApplicationContext(), object.toString(), Toast.LENGTH_SHORT).show();
+                                    SharedPreferences preferencias = InicioSesion.this.getSharedPreferences("sesion", Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = preferencias.edit();
+                                    editor.putInt("ID_USUARIO", id_usuario);
+                                    editor.putInt("ID_CUENTA", id_cuenta);
 
-                        @Override
-                        public void onFailure(Exception e) {
-                            Alerter.create(InicioSesion.this)
-                                    .setTitle("Error")
-                                    .setText("Fallo al obtener datos")
-                                    .setIcon(R.drawable.logonuevo)
-                                    .setTextTypeface(typeface)
-                                    .enableSwipeToDismiss()
-                                    .setBackgroundColorRes(R.color.AzulOscuro)
-                                    .show();
+                                    if (recordatorio.isChecked()) {
+                                        editor.putBoolean("recordar", true);
+                                        editor.putString("codigo", usuario.getText().toString());
+                                        editor.putString("correo", correo.getText().toString());
+                                        editor.putString("pass", pass.getText().toString());
+                                    } else {
+                                        editor.putBoolean("recordar", false);
+                                        editor.putString("codigo", usuario.getText().toString());
+                                        editor.putString("correo", correo.getText().toString());
+                                        editor.putString("pass", pass.getText().toString());
+                                    }
+
+                                    editor.commit();
+
+                                    progressDialog.dismiss();
+
+                                    Intent intent = new Intent(InicioSesion.this, Principal.class);
+                                    startActivity(intent);
+                                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                                    finish();
+                                }
+
+                                @Override
+                                public void onFailure(Exception e) {
+                                    Alerter.create(InicioSesion.this)
+                                            .setTitle("Error")
+                                            .setText("Fallo al obtener datos")
+                                            .setIcon(R.drawable.logonuevo)
+                                            .setTextTypeface(typeface)
+                                            .enableSwipeToDismiss()
+                                            .setBackgroundColorRes(R.color.FondoSecundario)
+                                            .show();
+                                    progressDialog.dismiss();
+                                }
+                            });
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    });
-                } else {
-                    Alerter.create(InicioSesion.this)
-                            .setTitle("Error")
-                            .setText("Faltan datos")
-                            .setIcon(R.drawable.logonuevo)
-                            .setTextTypeface(typeface)
-                            .enableSwipeToDismiss()
-                            .setBackgroundColorRes(R.color.AzulOscuro)
-                            .show();
-                }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Alerter.create(InicioSesion.this)
+                                .setTitle("Error")
+                                .setText("Fallo al obtener datos")
+                                .setIcon(R.drawable.logonuevo)
+                                .setTextTypeface(typeface)
+                                .enableSwipeToDismiss()
+                                .setBackgroundColorRes(R.color.FondoSecundario)
+                                .show();
+                        progressDialog.dismiss();
+                    }
+                });
+
+//                else {
+//                    Alerter.create(InicioSesion.this)
+//                            .setTitle("Error")
+//                            .setText("Faltan datos")
+//                            .setIcon(R.drawable.logonuevo)
+//                            .setTextTypeface(typeface)
+//                            .enableSwipeToDismiss()
+//                            .setBackgroundColorRes(R.color.AzulOscuro)
+//                            .show();
+//                }
             }
         });
+    }
+
+    private boolean validacionCodigo() {
+        String textoCodigo = usuario.getText().toString().trim();
+        if (textoCodigo.isEmpty()) {
+            usuario.setError("Campo requerido");
+            return false;
+        } else {
+            usuario.setError(null);
+            return true;
+        }
+    }
+
+    private boolean validacionCorreo() {
+        String textCorreo = correo.getText().toString().trim();
+        if (textCorreo.isEmpty()) {
+            correo.setError("Campo requerido");
+            return false;
+        } else {
+            correo.setError(null);
+            return true;
+        }
+    }
+
+    private boolean validacionPass() {
+        String textPass = pass.getText().toString().trim();
+        if (textPass.isEmpty()) {
+            pass.setError("Campo requerido");
+            return false;
+        } else {
+            pass.setError(null);
+            return true;
+        }
     }
 
     private void iniciarSesion(String URL) {
