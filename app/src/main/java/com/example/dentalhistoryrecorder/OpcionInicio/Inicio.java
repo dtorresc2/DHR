@@ -121,20 +121,6 @@ public class Inicio extends Fragment {
         String mesFormateado = (mes < 10) ? "0" + mes : String.valueOf(mes);
 
         fechaCita = dia + "/" + mesFormateado + "/" + anio;
-
-        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-        progressDialog.setMessage("Cargando...");
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setCancelable(false);
-        progressDialog.show();
-
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            public void run() {
-                progressDialog.dismiss();
-            }
-        }, 1000);
-
         fotoPerfil = view.findViewById(R.id.imagenPerfil);
         requestQueue = Volley.newRequestQueue(getContext());
 
@@ -236,49 +222,8 @@ public class Inicio extends Fragment {
             }
         });
 
-        final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+        obtenerPerfi();
 
-        QuerysCuentas querysCuentas = new QuerysCuentas(getContext());
-        querysCuentas.obtenerCuenta(
-                preferenciasUsuario.getInt("ID_CUENTA", 0),
-                preferenciasUsuario.getInt("ID_USUARIO", 0),
-                new QuerysCuentas.VolleyOnEventListener() {
-                    @Override
-                    public void onSuccess(Object object) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(object.toString());
-                            usuario.setText(preferenciasUsuario.getString("codigo", "1") + " - " + jsonObject.getString("USUARIO"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Exception e) {
-                        e.printStackTrace();
-                    }
-                });
-
-        QuerysCuentas querysCuentas2 = new QuerysCuentas(getContext());
-        querysCuentas2.serviciosHabilitados(preferenciasUsuario.getInt("ID_USUARIO", 0), new QuerysCuentas.VolleyOnEventListener() {
-            @Override
-            public void onSuccess(Object object) {
-                try {
-                    JSONObject jsonObject = new JSONObject(object.toString());
-                    empresa.setText(jsonObject.getString("NOMBRE"));
-                    Picasso.with(getContext())
-                            .load(getContext().getResources().getString(R.string.S3) + jsonObject.getString("URL"))
-                            .into(fotoPerfil);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                e.printStackTrace();
-            }
-        });
         return view;
     }
 
@@ -348,6 +293,71 @@ public class Inicio extends Fragment {
 
         };
         requestQueue.add(stringRequest);
+    }
+
+    public void obtenerPerfi() {
+        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+        progressDialog.setMessage("Cargando...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                progressDialog.dismiss();
+            }
+        }, 1000);
+
+        final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+
+        QuerysCuentas querysCuentas = new QuerysCuentas(getContext());
+        querysCuentas.obtenerCuenta(
+                preferenciasUsuario.getInt("ID_CUENTA", 0),
+                preferenciasUsuario.getInt("ID_USUARIO", 0),
+                new QuerysCuentas.VolleyOnEventListener() {
+                    @Override
+                    public void onSuccess(Object object) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(object.toString());
+                            usuario.setText(preferenciasUsuario.getString("codigo", "1") + " - " + jsonObject.getString("USUARIO"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+
+        QuerysCuentas querysCuentas2 = new QuerysCuentas(getContext());
+        querysCuentas2.serviciosHabilitados(preferenciasUsuario.getInt("ID_USUARIO", 0), new QuerysCuentas.VolleyOnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                try {
+                    JSONObject jsonObject = new JSONObject(object.toString());
+                    empresa.setText(jsonObject.getString("NOMBRE"));
+//                    Picasso.with(getActivity())
+//                            .load(getContext().getResources().getString(R.string.S3) + jsonObject.getString("URL") + ".jpg")
+//                            .placeholder(R.drawable.logonuevo)
+//                            .into(fotoPerfil);
+
+                    ImageRequest imageRequest = new ImageRequest(getContext().getResources().getString(R.string.S3) + jsonObject.getString("URL") + ".jpg",
+                            new BitmapListener(fotoPerfil), 0, 0, null, null,
+                            new MyErrorListener(fotoPerfil));
+                    requestQueue.add(imageRequest);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     public void EditarPerfil() {
@@ -434,189 +444,183 @@ public class Inicio extends Fragment {
         botonAceptar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!checkFoto.isChecked() || !checkNombre.isChecked()){
-                    if (!nombrePerfilAux.getText().toString().isEmpty() && bitmap != null){
-                        final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+                final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+                progressDialog.setMessage("Cargando...");
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setCancelable(false);
+                progressDialog.show();
 
-                        Bitmap bitmap_aux = bitmap;
-                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                        bitmap_aux.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-                        byte[] b = byteArrayOutputStream.toByteArray();
-                        String codigoFoto = Base64.encodeToString(b, Base64.DEFAULT);
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        progressDialog.dismiss();
+                        dialog.dismiss();
 
-                        JSONObject jsonBody = new JSONObject();
-                        try {
-                            jsonBody.put("NOMBRE", nombrePerfilAux.getText().toString());
-                            jsonBody.put("URL", "url");
-                            jsonBody.put("buffer", codigoFoto);
+                        obtenerPerfi();
+                    }
+                }, 1000);
+
+                final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+
+                Bitmap bitmap_aux = bitmap;
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                bitmap_aux.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+                byte[] b = byteArrayOutputStream.toByteArray();
+                String codigoFoto = Base64.encodeToString(b, Base64.DEFAULT);
+
+                JSONObject jsonBody = new JSONObject();
+                try {
+                    jsonBody.put("NOMBRE", nombrePerfilAux.getText().toString());
+                    jsonBody.put("URL", "url");
+                    jsonBody.put("buffer", codigoFoto);
 //
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                        QuerysCuentas querysCuentas = new QuerysCuentas(getContext());
-                        querysCuentas.actualizarPerfil(sharedPreferences.getInt("ID_USUARIO", 0), jsonBody, new QuerysCuentas.VolleyOnEventListener() {
-                            @Override
-                            public void onSuccess(Object object) {
-                                Toast.makeText(getContext(), object.toString(), Toast.LENGTH_LONG).show();
-
-                                final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-                                progressDialog.setMessage("Cargando...");
-                                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                                progressDialog.setCancelable(false);
-                                progressDialog.show();
-
-                                Handler handler = new Handler();
-                                handler.postDelayed(new Runnable() {
-                                    public void run() {
-                                        progressDialog.dismiss();
-                                        dialog.dismiss();
-                                    }
-                                }, 1000);
-                            }
-
-                            @Override
-                            public void onFailure(Exception e) {
-                                Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
-
-                            }
-                        });
-                    }
-
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+
+                QuerysCuentas querysCuentas = new QuerysCuentas(getContext());
+                querysCuentas.actualizarPerfil(sharedPreferences.getInt("ID_USUARIO", 0), jsonBody, new QuerysCuentas.VolleyOnEventListener() {
+                    @Override
+                    public void onSuccess(Object object) { }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         });
 
 
-        botonAceptar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (checkFoto.isChecked() && !checkNombre.isChecked()) {
-                    if (bitmap != null) {
-                        Bitmap bitmap_aux = bitmap;
-                        ByteArrayOutputStream salida = new ByteArrayOutputStream();
-                        bitmap_aux.compress(Bitmap.CompressFormat.PNG, 100, salida);
-                        byte[] b = salida.toByteArray();
-                        String codigoFoto = Base64.encodeToString(b, Base64.DEFAULT);
-
-                        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-                        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-                        if (networkInfo != null && networkInfo.isConnected()) {
-                            agregarFoto1("http://dhr.sistemasdt.xyz/Perfil/perfil.php?estado=5", codigoFoto);
-                            final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-                            progressDialog.setMessage("Cargando...");
-                            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                            progressDialog.setCancelable(false);
-                            progressDialog.show();
-
-                            Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                public void run() {
-                                    progressDialog.dismiss();
-                                    dialog.dismiss();
-                                }
-                            }, 1000);
-                        } else {
-                            final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-                            Alerter.create(getActivity())
-                                    .setTitle("Error")
-                                    .setText("Fallo en Conexion a Internet")
-                                    .setIcon(R.drawable.logonuevo)
-                                    .setTextTypeface(face3)
-                                    .enableSwipeToDismiss()
-                                    .setBackgroundColorRes(R.color.AzulOscuro)
-                                    .show();
-                        }
-                    } else {
-                        Toast.makeText(getActivity(), "Error", Toast.LENGTH_LONG).show();
-                    }
-                }
-
-                if (!checkFoto.isChecked() && checkNombre.isChecked()) {
-                    if (!nombrePerfilAux.getText().toString().isEmpty()) {
-
-                        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-                        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-                        if (networkInfo != null && networkInfo.isConnected()) {
-                            agregarNombre("http://dhr.sistemasdt.xyz/Perfil/perfil.php?estado=3", nombrePerfilAux.getText().toString());
-
-                            final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-                            progressDialog.setMessage("Cargando...");
-                            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                            progressDialog.setCancelable(false);
-                            progressDialog.show();
-
-                            Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                public void run() {
-                                    progressDialog.dismiss();
-                                    dialog.dismiss();
-                                }
-                            }, 1000);
-                        } else {
-                            final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-                            Alerter.create(getActivity())
-                                    .setTitle("Error")
-                                    .setText("Fallo en Conexion a Internet")
-                                    .setIcon(R.drawable.logonuevo)
-                                    .setTextTypeface(face3)
-                                    .enableSwipeToDismiss()
-                                    .setBackgroundColorRes(R.color.AzulOscuro)
-                                    .show();
-                        }
-
-                    }
-                }
-
-                if (checkFoto.isChecked() && checkNombre.isChecked()) {
-
-                    if (bitmap != null && !nombrePerfilAux.getText().toString().isEmpty()) {
-                        Bitmap bitmap_aux = bitmap;
-                        ByteArrayOutputStream salida = new ByteArrayOutputStream();
-                        bitmap_aux.compress(Bitmap.CompressFormat.PNG, 100, salida);
-                        byte[] b = salida.toByteArray();
-                        String codigoFoto = Base64.encodeToString(b, Base64.DEFAULT);
-
-                        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-                        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-                        if (networkInfo != null && networkInfo.isConnected()) {
-                            agregarPerfil1("http://dhr.sistemasdt.xyz/Perfil/perfil.php?estado=6", codigoFoto, nombrePerfilAux.getText().toString());
-
-                            final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-                            progressDialog.setMessage("Cargando...");
-                            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                            progressDialog.setCancelable(false);
-                            progressDialog.show();
-
-                            Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                public void run() {
-                                    progressDialog.dismiss();
-                                    dialog.dismiss();
-                                }
-                            }, 1000);
-                        } else {
-                            final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-                            Alerter.create(getActivity())
-                                    .setTitle("Error")
-                                    .setText("Fallo en Conexion a Internet")
-                                    .setIcon(R.drawable.logonuevo)
-                                    .setTextTypeface(face3)
-                                    .enableSwipeToDismiss()
-                                    .setBackgroundColorRes(R.color.AzulOscuro)
-                                    .show();
-                        }
-                    }
-                }
-
-                if (!checkFoto.isChecked() && !checkNombre.isChecked()) {
-                    Toast.makeText(getActivity(), "Error No ha seleccionado una opcion", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+//        botonAceptar.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (checkFoto.isChecked() && !checkNombre.isChecked()) {
+//                    if (bitmap != null) {
+//                        Bitmap bitmap_aux = bitmap;
+//                        ByteArrayOutputStream salida = new ByteArrayOutputStream();
+//                        bitmap_aux.compress(Bitmap.CompressFormat.PNG, 100, salida);
+//                        byte[] b = salida.toByteArray();
+//                        String codigoFoto = Base64.encodeToString(b, Base64.DEFAULT);
+//
+//                        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+//                        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+//
+//                        if (networkInfo != null && networkInfo.isConnected()) {
+//                            agregarFoto1("http://dhr.sistemasdt.xyz/Perfil/perfil.php?estado=5", codigoFoto);
+//                            final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+//                            progressDialog.setMessage("Cargando...");
+//                            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//                            progressDialog.setCancelable(false);
+//                            progressDialog.show();
+//
+//                            Handler handler = new Handler();
+//                            handler.postDelayed(new Runnable() {
+//                                public void run() {
+//                                    progressDialog.dismiss();
+//                                    dialog.dismiss();
+//                                }
+//                            }, 1000);
+//                        } else {
+//                            final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+//                            Alerter.create(getActivity())
+//                                    .setTitle("Error")
+//                                    .setText("Fallo en Conexion a Internet")
+//                                    .setIcon(R.drawable.logonuevo)
+//                                    .setTextTypeface(face3)
+//                                    .enableSwipeToDismiss()
+//                                    .setBackgroundColorRes(R.color.AzulOscuro)
+//                                    .show();
+//                        }
+//                    } else {
+//                        Toast.makeText(getActivity(), "Error", Toast.LENGTH_LONG).show();
+//                    }
+//                }
+//
+//                if (!checkFoto.isChecked() && checkNombre.isChecked()) {
+//                    if (!nombrePerfilAux.getText().toString().isEmpty()) {
+//
+//                        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+//                        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+//
+//                        if (networkInfo != null && networkInfo.isConnected()) {
+//                            agregarNombre("http://dhr.sistemasdt.xyz/Perfil/perfil.php?estado=3", nombrePerfilAux.getText().toString());
+//
+//                            final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+//                            progressDialog.setMessage("Cargando...");
+//                            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//                            progressDialog.setCancelable(false);
+//                            progressDialog.show();
+//
+//                            Handler handler = new Handler();
+//                            handler.postDelayed(new Runnable() {
+//                                public void run() {
+//                                    progressDialog.dismiss();
+//                                    dialog.dismiss();
+//                                }
+//                            }, 1000);
+//                        } else {
+//                            final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+//                            Alerter.create(getActivity())
+//                                    .setTitle("Error")
+//                                    .setText("Fallo en Conexion a Internet")
+//                                    .setIcon(R.drawable.logonuevo)
+//                                    .setTextTypeface(face3)
+//                                    .enableSwipeToDismiss()
+//                                    .setBackgroundColorRes(R.color.AzulOscuro)
+//                                    .show();
+//                        }
+//
+//                    }
+//                }
+//
+//                if (checkFoto.isChecked() && checkNombre.isChecked()) {
+//
+//                    if (bitmap != null && !nombrePerfilAux.getText().toString().isEmpty()) {
+//                        Bitmap bitmap_aux = bitmap;
+//                        ByteArrayOutputStream salida = new ByteArrayOutputStream();
+//                        bitmap_aux.compress(Bitmap.CompressFormat.PNG, 100, salida);
+//                        byte[] b = salida.toByteArray();
+//                        String codigoFoto = Base64.encodeToString(b, Base64.DEFAULT);
+//
+//                        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+//                        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+//
+//                        if (networkInfo != null && networkInfo.isConnected()) {
+//                            agregarPerfil1("http://dhr.sistemasdt.xyz/Perfil/perfil.php?estado=6", codigoFoto, nombrePerfilAux.getText().toString());
+//
+//                            final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+//                            progressDialog.setMessage("Cargando...");
+//                            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//                            progressDialog.setCancelable(false);
+//                            progressDialog.show();
+//
+//                            Handler handler = new Handler();
+//                            handler.postDelayed(new Runnable() {
+//                                public void run() {
+//                                    progressDialog.dismiss();
+//                                    dialog.dismiss();
+//                                }
+//                            }, 1000);
+//                        } else {
+//                            final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+//                            Alerter.create(getActivity())
+//                                    .setTitle("Error")
+//                                    .setText("Fallo en Conexion a Internet")
+//                                    .setIcon(R.drawable.logonuevo)
+//                                    .setTextTypeface(face3)
+//                                    .enableSwipeToDismiss()
+//                                    .setBackgroundColorRes(R.color.AzulOscuro)
+//                                    .show();
+//                        }
+//                    }
+//                }
+//
+//                if (!checkFoto.isChecked() && !checkNombre.isChecked()) {
+//                    Toast.makeText(getActivity(), "Error No ha seleccionado una opcion", Toast.LENGTH_LONG).show();
+//                }
+//            }
+//        });
 
         botonCancelar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -981,5 +985,32 @@ public class Inicio extends Fragment {
         //long days = (diff / (1000 * 60 * 60 * 24)) % 365;
         Toast.makeText(getContext(), "Horas: " + hours + " Minutos: " + minutes + " Segundos: " + seconds, Toast.LENGTH_LONG).show();
 
+    }
+}
+
+class BitmapListener implements Response.Listener<Bitmap> {
+    ImageView imageViewAux;
+
+    public BitmapListener(ImageView imageView) {
+        imageViewAux = imageView;
+    }
+
+    @Override
+    public void onResponse(Bitmap response) {
+        imageViewAux.setImageBitmap(response);
+
+    }
+}
+
+class MyErrorListener implements Response.ErrorListener {
+    ImageView imageViewAux;
+
+    public MyErrorListener(ImageView imageView) {
+        imageViewAux = imageView;
+    }
+
+    @Override
+    public void onErrorResponse(VolleyError error) {
+        imageViewAux.setImageResource(R.drawable.logotool);
     }
 }
