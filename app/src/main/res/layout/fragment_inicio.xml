@@ -102,34 +102,33 @@
                 android:layout_height="4dp"
                 android:background="@color/FondoSecundario"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/FondoSecundario2"
-                android:orientation="horizontal">
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:background="@color/FondoSecundario2"-->
+<!--                android:orientation="horizontal">-->
 
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:padding="10dp"
-                    android:src="@drawable/ic_galeria" />
+<!--                <ImageView-->
+<!--                    android:layout_width="50dp"-->
+<!--                    android:layout_height="50dp"-->
+<!--                    android:padding="10dp"-->
+<!--                    android:src="@drawable/ic_galeria" />-->
 
-                <TextView
-                    android:id="@+id/inicio_opc_imagen_texto"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="Editar Imagen"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="5dp"
-                    android:textSize="20dp"
-                    android:textColor="@color/Blanco"/>
+<!--                <TextView-->
+<!--                    android:id="@+id/inicio_opc_imagen_texto"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:text="Editar Imagen"-->
+<!--                    android:gravity="center_vertical"-->
+<!--                    android:paddingLeft="5dp"-->
+<!--                    android:textSize="20dp"-->
+<!--                    android:textColor="@color/Blanco"/>-->
+<!--            </LinearLayout>-->
 
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="4dp"
-                android:background="@color/FondoSecundario"/>
+<!--            <View-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="4dp"-->
+<!--                android:background="@color/FondoSecundario"/>-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -144,10 +143,10 @@
                     android:src="@drawable/icono_seguimiento" />
 
                 <TextView
-                    android:id="@+id/inicio_opc_editar_texto"
+                    android:id="@+id/inicio_opc_imagen_texto"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Editar Nombre"
+                    android:text="Editar Perfil"
                     android:gravity="center_vertical"
                     android:paddingLeft="5dp"
                     android:textSize="20dp"
@@ -176,7 +175,7 @@
                     android:id="@+id/inicio_opc_log_texto"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Ver Bitacora"
+                    android:text="Bitacora"
                     android:gravity="center_vertical"
                     android:paddingLeft="5dp"
                     android:textSize="20dp"

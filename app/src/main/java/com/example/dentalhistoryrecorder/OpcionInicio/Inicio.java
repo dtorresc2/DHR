@@ -5,7 +5,6 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -13,52 +12,38 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
-import android.media.Image;
 import android.media.MediaScannerConnection;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.ParcelFileDescriptor;
-import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v7.widget.Toolbar;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.NetworkImageView;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.dentalhistoryrecorder.MainActivity;
-import com.example.dentalhistoryrecorder.Principal;
+
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysCuentas;
-import com.squareup.picasso.Picasso;
-import com.tapadoo.alerter.Alerter;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -67,14 +52,11 @@ import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Inicio extends Fragment {
-    private Toolbar toolbar;
     private TextView usuario, configuracion, editar_perfil, totalPacientes, contadorFE, contadorFN, contadorPac;
     private TextView correo, citasPendientes, cerrarSesion, empresa, editar_nombre, bitacora;
     private SharedPreferences preferencias;
@@ -141,9 +123,6 @@ public class Inicio extends Fragment {
         empresa = view.findViewById(R.id.usuarioPerfil);
         empresa.setTypeface(face2);
 
-        editar_nombre = view.findViewById(R.id.inicio_opc_editar_texto);
-        editar_nombre.setTypeface(face2);
-
         bitacora = view.findViewById(R.id.inicio_opc_log_texto);
         bitacora.setTypeface(face2);
 
@@ -199,74 +178,6 @@ public class Inicio extends Fragment {
         return view;
     }
 
-    //Consultar Historial Odontodologico - Tratamiento
-    public void consultarPerfil(String URL) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                JSONArray jsonArray = null;
-                try {
-                    jsonArray = new JSONArray(response);
-                    if (jsonArray.length() > 0) {
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            correo.setText(jsonArray.getJSONObject(i).getString("correo"));
-                            usuario.setText(jsonArray.getJSONObject(i).getString("clinica"));
-                            contadorPac.setText(jsonArray.getJSONObject(i).getString("Pacientes"));
-                            contadorFN.setText(jsonArray.getJSONObject(i).getString("Fichas"));
-                            contadorFE.setText(jsonArray.getJSONObject(i).getString("FichasE"));
-                            String codigo_foto = jsonArray.getJSONObject(i).getString("logo");
-
-                            if (!codigo_foto.isEmpty()) {
-                                //byte[] b = Base64.decode(codigo_foto, Base64.DEFAULT);
-                                //Bitmap imagen_codificada = BitmapFactory.decodeByteArray(b, 0, b.length);
-                                //fotoPerfil.setImageBitmap(imagen_codificada);
-                                conFoto = true;
-
-                                ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-                                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-                                if (networkInfo != null && networkInfo.isConnected()) {
-                                    ObtenerFoto(codigo_foto);
-                                } else {
-                                    final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-                                    Alerter.create(getActivity())
-                                            .setTitle("Error")
-                                            .setText("Fallo en Conexion a Internet")
-                                            .setIcon(R.drawable.logonuevo)
-                                            .setTextTypeface(face3)
-                                            .enableSwipeToDismiss()
-                                            .setBackgroundColorRes(R.color.AzulOscuro)
-                                            .show();
-                                }
-                            } else {
-                                conFoto = false;
-                                fotoPerfil.setImageResource(R.drawable.error);
-                            }
-                        }
-                    }
-                } catch (JSONException e) {
-                    Log.i("MyActivity", "" + e);
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("MyActivity", "" + error.toString());
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros = new HashMap<String, String>();
-                SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
-                parametros.put("id", preferencias2.getString("idUsuario", "1"));
-                return parametros;
-            }
-
-        };
-        requestQueue.add(stringRequest);
-    }
-
     public void obtenerPerfi() {
         final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
         progressDialog.setMessage("Cargando...");
@@ -282,6 +193,7 @@ public class Inicio extends Fragment {
         }, 1000);
 
         final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+        final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("PERFIL", Context.MODE_PRIVATE);
 
         QuerysCuentas querysCuentas = new QuerysCuentas(getContext());
         querysCuentas.obtenerCuenta(
@@ -312,6 +224,11 @@ public class Inicio extends Fragment {
                     JSONObject jsonObject = new JSONObject(object.toString());
                     empresa.setText(jsonObject.getString("NOMBRE"));
 
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("EMPRESA", empresa.getText().toString());
+                    editor.putString("URL", getContext().getResources().getString(R.string.S3) + jsonObject.getString("URL") + ".jpg");
+                    editor.commit();
+
                     ImageRequest imageRequest = new ImageRequest(getContext().getResources().getString(R.string.S3) + jsonObject.getString("URL") + ".jpg",
                             new BitmapListener(fotoPerfil), 0, 0, null, null,
                             new MyErrorListener(fotoPerfil));
@@ -333,13 +250,20 @@ public class Inicio extends Fragment {
         View viewCuadro = getLayoutInflater().inflate(R.layout.dialogo_editarperfil, null);
         Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
 
+        final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("PERFIL", Context.MODE_PRIVATE);
+
         TextView tituloPerfil = viewCuadro.findViewById(R.id.tituloDialogoPerfil);
         tituloPerfil.setTypeface(face2);
 
         final EditText nombrePerfilAux = viewCuadro.findViewById(R.id.nombrePerfilAux);
         nombrePerfilAux.setTypeface(face2);
+        nombrePerfilAux.setText(sharedPreferences.getString("EMPRESA", "-"));
 
         imagenPerfilAux = viewCuadro.findViewById(R.id.imagenPerfilAux);
+        ImageRequest imageRequest = new ImageRequest(  sharedPreferences.getString("URL", getContext().getResources().getString(R.string.S3) + "not.jpg"),
+                new BitmapListener(imagenPerfilAux), 0, 0, null, null,
+                new MyErrorListener(imagenPerfilAux));
+        requestQueue.add(imageRequest);
 
         final Button galeria = viewCuadro.findViewById(R.id.botonGaleria);
         galeria.setTypeface(face2);
