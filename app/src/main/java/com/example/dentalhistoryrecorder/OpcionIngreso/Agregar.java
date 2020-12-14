@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.Consultar;
 import com.example.dentalhistoryrecorder.OpcionIngreso.Especial.IngCostos;
@@ -17,8 +19,8 @@ import com.example.dentalhistoryrecorder.R;
 
 
 public class Agregar extends Fragment {
-    private Toolbar toolbar;
-    private Button botonNuevo, botonNuevoEspecial;
+    private LinearLayout botonNuevo, botonNuevoEspecial;
+    private TextView titulo, texto_boton_nuevo, texto_boton_especial;
 
     public Agregar() {
         // Required empty public constructor
@@ -29,23 +31,24 @@ public class Agregar extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_agregar, container, false);
-        Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-        toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setTitle("Opciones de Ingreso");
-        botonNuevo = (Button) view.findViewById(R.id.fnueva);
-        botonNuevo.setTypeface(face);
-        botonNuevoEspecial = (Button) view.findViewById(R.id.fenueva);
-        botonNuevoEspecial.setTypeface(face);
+        Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+
+        botonNuevo = view.findViewById(R.id.fnueva);
+        botonNuevoEspecial = view.findViewById(R.id.fenueva);
+
+        titulo = view.findViewById(R.id.titulo_fichas);
+        titulo.setTypeface(typeface);
+        texto_boton_nuevo = view.findViewById(R.id.texto_fnueva);
+        texto_boton_nuevo.setTypeface(typeface);
+        texto_boton_especial = view.findViewById(R.id.texto_fenueva);
+        texto_boton_especial.setTypeface(typeface);
 
         //Opcion de Crear Nueva Ficha
         botonNuevo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(getActivity(),"Opcion 1",Toast.LENGTH_SHORT).show();
-                //IngresoNormal ingresoNormal = new IngresoNormal();
                 IngPersonales ingPersonales = new IngPersonales();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                //transaction.replace(R.id.contenedor, ingresoNormal);
                 transaction.replace(R.id.contenedor, ingPersonales);
                 transaction.commit();
             }
@@ -55,8 +58,6 @@ public class Agregar extends Fragment {
         botonNuevoEspecial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*IngCostos ingCostos = new IngCostos();*/
-
                 Consultar consultar = new Consultar();
                 consultar.ObtenerOpcion(3);
                 FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);

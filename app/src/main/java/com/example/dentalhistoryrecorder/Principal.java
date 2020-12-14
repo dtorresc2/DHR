@@ -51,7 +51,7 @@ public class Principal extends AppCompatActivity implements BottomNavigationView
         bottomNavigationView = findViewById(R.id.menuinferior);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
-        bottomNavigationView.setSelectedItemId(R.id.navigation_home);
+        bottomNavigationView.setSelectedItemId(R.id.navigation_fichas);
 
         /*TimerTask task = new TimerTask() {
             @Override
@@ -87,20 +87,20 @@ public class Principal extends AppCompatActivity implements BottomNavigationView
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
-            case R.id.navigation_agregar:
+            case R.id.navigation_fichas:
                 getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.contenedor, agregarFragment).commit();
                 return true;
             case R.id.navigation_citas:
                 getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.contenedor, citasFragment).commit();
                 return true;
-            case R.id.navigation_consultar:
+            case R.id.navigation_finanzas:
                 consultarFragment.ObtenerOpcion(1);
                 getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.contenedor, consultarFragment).commit();
                 return true;
-            case R.id.navigation_home:
+            case R.id.navigation_perfil:
                 getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.contenedor, inicioFragment).commit();
                 return true;
-            case R.id.navigation_seguimiento:
+            case R.id.navigation_catalogos:
                 consultarFragment2.ObtenerOpcion(2);
                 getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.contenedor, consultarFragment2).commit();
                 return true;

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/navigation_agregar"
+    <item android:id="@+id/navigation_fichas"
         android:icon="@drawable/ic_file"
         android:title="Fichas" />
 
-    <item android:id="@+id/navigation_consultar"
+    <item android:id="@+id/navigation_finanzas"
         android:icon="@drawable/ic_finance"
         android:title="Finanzas"/>
 
-    <item android:id="@+id/navigation_seguimiento"
+    <item android:id="@+id/navigation_catalogos"
         android:icon="@drawable/ic_log"
         android:title="Catalogos"/>
 
@@ -16,7 +16,7 @@
         android:icon="@drawable/icono_citas"
         android:title="Citas"/>
 
-    <item android:id="@+id/navigation_home"
+    <item android:id="@+id/navigation_perfil"
         android:icon="@drawable/ic_correo"
         android:title="Perfil"/>
 </menu>
