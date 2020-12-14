@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/navigation_agregar"
-        android:icon="@drawable/icono_agregar"
-        android:title="Agregar" />
+        android:icon="@drawable/ic_file"
+        android:title="Fichas" />
 
     <item android:id="@+id/navigation_consultar"
-        android:icon="@drawable/icono_buscar"
-        android:title="Consutar"/>
-
-    <item android:id="@+id/navigation_home"
-        android:icon="@drawable/icono_home"
-        android:title="Home"/>
+        android:icon="@drawable/ic_finance"
+        android:title="Finanzas"/>
 
     <item android:id="@+id/navigation_seguimiento"
-        android:icon="@drawable/icono_seguimiento"
-        android:title="Seguimiento"/>
+        android:icon="@drawable/ic_log"
+        android:title="Catalogos"/>
 
     <item android:id="@+id/navigation_citas"
         android:icon="@drawable/icono_citas"
         android:title="Citas"/>
+
+    <item android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_correo"
+        android:title="Perfil"/>
 </menu>
