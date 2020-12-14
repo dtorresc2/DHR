@@ -17,6 +17,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/cat_titulo"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:text="Catalogos Disponibles"
@@ -35,6 +36,7 @@
                 android:weightSum="2">
 
                 <LinearLayout
+                    android:id="@+id/cat_opc_pacientes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -52,6 +54,7 @@
                         android:src="@drawable/ic_correo" />
 
                     <TextView
+                        android:id="@+id/cat_texto_pacientes"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
@@ -61,6 +64,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/cat_opc_servicios"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -78,6 +82,7 @@
                         android:src="@drawable/ic_log" />
 
                     <TextView
+                        android:id="@+id/cat_texto_servicios"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
@@ -85,8 +90,6 @@
                         android:textColor="@color/Blanco"
                         android:textSize="24dp" />
                 </LinearLayout>
-
-
             </LinearLayout>
 
             <LinearLayout
@@ -99,6 +102,7 @@
                 android:weightSum="2">
 
                 <LinearLayout
+                    android:id="@+id/cat_opc_piezas"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -113,9 +117,10 @@
                         android:layout_width="70dp"
                         android:layout_height="70dp"
                         android:layout_gravity="center_horizontal"
-                        android:src="@drawable/ic_diente" />
+                        android:src="@drawable/ic_teeth" />
 
                     <TextView
+                        android:id="@+id/cat_texto_piezas"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
@@ -125,6 +130,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/cat_opc_cuentas"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -142,6 +148,7 @@
                         android:src="@drawable/ic_account" />
 
                     <TextView
+                        android:id="@+id/cat_texto_cuentas"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
