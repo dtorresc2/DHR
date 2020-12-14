@@ -30,6 +30,7 @@ import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.Consultar;
 import com.example.dentalhistoryrecorder.OpcionIngreso.Agregar;
 import com.example.dentalhistoryrecorder.OpcionInicio.Inicio;
 import com.example.dentalhistoryrecorder.OpcionSeguimiento.Seguimiento;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -84,6 +85,8 @@ public class Principal extends AppCompatActivity implements BottomNavigationView
     Inicio inicioFragment = new Inicio();
     Seguimiento seguimientoFragment = new Seguimiento();
 
+    Catalogos catalogosFragment = new Catalogos();
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
@@ -101,8 +104,9 @@ public class Principal extends AppCompatActivity implements BottomNavigationView
                 getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.contenedor, inicioFragment).commit();
                 return true;
             case R.id.navigation_catalogos:
-                consultarFragment2.ObtenerOpcion(2);
-                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.contenedor, consultarFragment2).commit();
+//                consultarFragment2.ObtenerOpcion(2);
+//                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.contenedor, consultarFragment2).commit();
+                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.contenedor, catalogosFragment).commit();
                 return true;
         }
         return false;
