@@ -43,6 +43,18 @@ public class Catalogos extends Fragment {
         texto_cuentas = view.findViewById(R.id.cat_texto_cuentas);
         texto_cuentas.setTypeface(typeface);
 
+        opcion_pacientes = view.findViewById(R.id.cat_opc_pacientes);
+        opcion_servicios = view.findViewById(R.id.cat_opc_servicios);
+        opcion_piezas = view.findViewById(R.id.cat_opc_piezas);
+        opcion_cuentas = view.findViewById(R.id.cat_opc_cuentas);
+
+        opcion_servicios.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
         return view;
     }
 }
