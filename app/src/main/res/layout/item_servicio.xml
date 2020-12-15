@@ -2,14 +2,73 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/AzulOscuro">
+    android:background="@color/FondoSecundario2">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
         android:orientation="horizontal">
 
-        T
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.7"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tituloServicio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:paddingLeft="10dp"
+                android:text="1 - Consulta General"
+                android:textColor="@color/Blanco"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="2"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/montoServicio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.6"
+                    android:gravity="left"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="3dp"
+                    android:text="Q. 150.00 "
+                    android:textColor="@color/Blanco"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/estadoServicio"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.4"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:background="@color/VerdeOscuro"
+                    android:text="Habilitado"
+                    android:textColor="@color/Blanco"
+                    android:textSize="14dp" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/accionesServicio"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3"
+            android:background="@color/FondoSecundario2"
+            android:src="@drawable/ic_log"
+            android:text="Limpiar"
+            android:textColor="@color/Blanco" />
 
     </LinearLayout>
 
