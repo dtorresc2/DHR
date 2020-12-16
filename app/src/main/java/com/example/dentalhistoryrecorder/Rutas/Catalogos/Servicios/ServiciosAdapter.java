@@ -7,8 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.dentalhistoryrecorder.R;
@@ -68,11 +66,9 @@ public class ServiciosAdapter extends RecyclerView.Adapter<ServiciosAdapter.Serv
 
         if (i < mlistaServicios.size()) {
             serviciosViewHolder.separador.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             serviciosViewHolder.separador.setVisibility(View.INVISIBLE);
         }
-
     }
 
     @Override
