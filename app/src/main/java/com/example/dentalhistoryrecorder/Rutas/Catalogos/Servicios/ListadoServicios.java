@@ -2,6 +2,7 @@ package com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,8 +31,16 @@ public class ListadoServicios extends Fragment {
         listaServicios.add(new ItemServicio(1, "Hola Es una prueba", 25.00, true));
         listaServicios.add(new ItemServicio(1, "Hola Es una prueba", 25.00, true));
         listaServicios.add(new ItemServicio(1, "Hola Es una prueba", 25.00, true));
-        listaServicios.add(new ItemServicio(1, "Hola Es una prueba", 25.00, true));
-        listaServicios.add(new ItemServicio(1, "Hola Es una prueba", 25.00, true));
+        listaServicios.add(new ItemServicio(1, "Hola Es una prueba", 25.00, false));
+        listaServicios.add(new ItemServicio(1, "Hola Es una prueba", 25.00, false));
+
+        mRecyclerView = view.findViewById(R.id.listado_servicios);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(getContext());
+        mAdapter = new ServiciosAdapter(listaServicios);
+
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
 
         return view;
     }

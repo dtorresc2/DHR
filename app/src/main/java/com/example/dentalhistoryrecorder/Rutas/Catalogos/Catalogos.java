@@ -3,13 +3,16 @@ package com.example.dentalhistoryrecorder.Rutas.Catalogos;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.dentalhistoryrecorder.OpcionIngreso.Normal.IngPersonales;
 import com.example.dentalhistoryrecorder.R;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.ListadoServicios;
 
 
 public class Catalogos extends Fragment {
@@ -51,7 +54,10 @@ public class Catalogos extends Fragment {
         opcion_servicios.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                ListadoServicios listadoServicios = new ListadoServicios();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                transaction.replace(R.id.contenedor, listadoServicios);
+                transaction.commit();
             }
         });
 
