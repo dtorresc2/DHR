@@ -1,5 +1,7 @@
 package com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,8 +9,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.dentalhistoryrecorder.R;
+import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysCuentas;
+import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysServicios;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -42,6 +50,23 @@ public class ListadoServicios extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
+        final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+
+        QuerysServicios querysServicios = new QuerysServicios(getContext());
+        querysServicios.obtenerListadoServicios(preferenciasUsuario.getInt("ID_USUARIO", 0), new QuerysServicios.VolleyOnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                Toast.makeText(getContext(), object.toString(), Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
+                e.printStackTrace();
+            }
+        });
+
         return view;
     }
+
 }
