@@ -2,6 +2,7 @@ package com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,9 @@ import com.example.dentalhistoryrecorder.R;
 import java.util.ArrayList;
 
 public class ListadoServicios extends Fragment {
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     public ListadoServicios() {
         // Required empty public constructor
