@@ -166,7 +166,6 @@ public class Inicio extends Fragment {
                     }
                 }, 500);
 
-
                 SharedPreferences.Editor editor = preferencias.edit();
                 editor.clear();
                 editor.commit();
@@ -339,7 +338,6 @@ public class Inicio extends Fragment {
                         jsonBody.put("NOMBRE", nombrePerfilAux.getText().toString());
                         jsonBody.put("URL", "url");
                         jsonBody.put("buffer", codigoFoto);
-//
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -404,8 +402,6 @@ public class Inicio extends Fragment {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                } else {
-                    //fotoPerfilA.setImageResource(R.drawable.error);
                 }
                 break;
 

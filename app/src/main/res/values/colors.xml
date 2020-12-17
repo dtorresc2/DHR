@@ -12,4 +12,6 @@
     <color name="Blanco">#FFFFFF</color>
     <color name="Gris">#838383</color>
     <color name="Rojo">#B10000</color>
+    <color name="RojoOscuro">#850101</color>
+    <color name="VerdeOscuro">#066306</color>
 </resources>

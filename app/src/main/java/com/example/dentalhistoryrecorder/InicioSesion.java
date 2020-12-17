@@ -87,10 +87,6 @@ public class InicioSesion extends AppCompatActivity {
                     jsonBody.put("ID_USUARIO", usuario.getText().toString().trim());
                     jsonBody.put("USUARIO", correo.getText().toString().trim());
                     jsonBody.put("PASSWORD", pass.getText().toString().trim());
-//                    jsonBody.put("ID_USUARIO", "1001");
-//                    jsonBody.put("USUARIO", "diegot");
-//                    jsonBody.put("PASSWORD", "321");
-//
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -100,13 +96,6 @@ public class InicioSesion extends AppCompatActivity {
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                 progressDialog.setCancelable(false);
                 progressDialog.show();
-
-//                Handler handler = new Handler();
-//                handler.postDelayed(new Runnable() {
-//                    public void run() {
-//                        progressDialog.dismiss();
-//                    }
-//                }, 500);
 
                 final QuerysCuentas querysCuentas = new QuerysCuentas(getApplicationContext());
                 querysCuentas.inicioSesion(jsonBody, new QuerysCuentas.VolleyOnEventListener() {
@@ -149,7 +138,7 @@ public class InicioSesion extends AppCompatActivity {
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
-//                                    Toast.makeText(getApplicationContext(), object.toString(), Toast.LENGTH_SHORT).show();
+
                                     SharedPreferences preferencias = InicioSesion.this.getSharedPreferences("sesion", Context.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = preferencias.edit();
                                     editor.putInt("ID_USUARIO", id_usuario);
@@ -208,17 +197,6 @@ public class InicioSesion extends AppCompatActivity {
                         progressDialog.dismiss();
                     }
                 });
-
-//                else {
-//                    Alerter.create(InicioSesion.this)
-//                            .setTitle("Error")
-//                            .setText("Faltan datos")
-//                            .setIcon(R.drawable.logonuevo)
-//                            .setTextTypeface(typeface)
-//                            .enableSwipeToDismiss()
-//                            .setBackgroundColorRes(R.color.AzulOscuro)
-//                            .show();
-//                }
             }
         });
     }
@@ -254,107 +232,5 @@ public class InicioSesion extends AppCompatActivity {
             pass.setError(null);
             return true;
         }
-    }
-
-    private void iniciarSesion(String URL) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                JSONArray jsonArray = null;
-                try {
-                    jsonArray = new JSONArray(response);
-                    if (jsonArray.length() > 0) {
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            int idUsuarios = jsonArray.getJSONObject(i).getInt("idUsuarios");
-
-                            final ProgressDialog progressDialog = new ProgressDialog(InicioSesion.this, R.style.progressDialog);
-                            progressDialog.setMessage("Autenticando...");
-                            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                            progressDialog.setCancelable(false);
-                            progressDialog.show();
-
-                            Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                public void run() {
-                                    progressDialog.dismiss();
-                                }
-                            }, 500);
-
-                            if (idUsuarios > 0) {
-                                int mobil = jsonArray.getJSONObject(i).getInt("movil");
-                                switch (mobil) {
-                                    case 0:
-                                        //El usuario NO tiene permiso;
-                                        Typeface face2 = Typeface.createFromAsset(getAssets(), "fonts/bahnschrift.ttf");
-                                        Alerter.create(InicioSesion.this)
-                                                .setTitle("Error")
-                                                .setText("La Cuenta NO Tiene Permiso")
-                                                .setIcon(R.drawable.logonuevo)
-                                                .setTextTypeface(face2)
-                                                .enableSwipeToDismiss()
-                                                .setBackgroundColorRes(R.color.AzulOscuro)
-                                                .show();
-
-                                        break;
-                                    case 1:
-                                        //El usuario TIENE acceso
-                                        SharedPreferences preferencias = InicioSesion.this.getSharedPreferences("sesion", Context.MODE_PRIVATE);
-                                        SharedPreferences.Editor editor = preferencias.edit();
-                                        editor.putString("idUsuario", String.valueOf(idUsuarios));
-
-                                        if (recordatorio.isChecked()) {
-                                            editor.putBoolean("recordar", true);
-                                            editor.putString("correo", correo.getText().toString());
-                                            editor.putString("pass", pass.getText().toString());
-                                        } else {
-                                            editor.putBoolean("recordar", false);
-                                            editor.putString("correo", correo.getText().toString());
-                                            editor.putString("pass", pass.getText().toString());
-                                        }
-
-                                        editor.commit();
-
-                                        Intent intent = new Intent(InicioSesion.this, Principal.class);
-                                        startActivity(intent);
-                                        overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                                        finish();
-                                        break;
-                                }
-                            } else {
-                                Typeface face2 = Typeface.createFromAsset(getAssets(), "fonts/bahnschrift.ttf");
-                                Alerter.create(InicioSesion.this)
-                                        .setTitle("Error")
-                                        .setText("El Usuario o Contraseña erroneos")
-                                        .setIcon(R.drawable.logonuevo)
-                                        .setTextTypeface(face2)
-                                        .enableSwipeToDismiss()
-                                        .setBackgroundColorRes(R.color.AzulOscuro)
-                                        .show();
-                            }
-                        }
-                    }
-
-                } catch (JSONException e) {
-                    Log.i("Error", "" + e);
-                    //e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("Error", "" + error.toString());
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros = new HashMap<String, String>();
-                parametros.put("user", correo.getText().toString());
-                parametros.put("pass", pass.getText().toString());
-                return parametros;
-            }
-
-        };
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
     }
 }

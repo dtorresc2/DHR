@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/FondoSecundario2">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.8"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tituloServicio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:paddingLeft="10dp"
+                    android:text="1 - Consulta General"
+                    android:textColor="@color/Blanco"
+                    android:textSize="20sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <TextView
+                        android:id="@+id/montoServicio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.6"
+                        android:gravity="left"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="3dp"
+                        android:text="Q. 150.00 "
+                        android:textColor="@color/Blanco"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/estadoServicio"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.4"
+                        android:background="@color/VerdeOscuro"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp"
+                        android:text="Habilitado"
+                        android:textColor="@color/Blanco"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/accionesServicio"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:background="@color/FondoSecundario2"
+                android:src="@drawable/ic_opciones"
+                android:text="Limpiar"
+                android:textColor="@color/Blanco" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/separadorServicio"
+            android:layout_width="wrap_content"
+            android:layout_height="4dp"
+            android:background="@color/FondoSecundario" />
+
+    </LinearLayout>
+
+
+</FrameLayout>
