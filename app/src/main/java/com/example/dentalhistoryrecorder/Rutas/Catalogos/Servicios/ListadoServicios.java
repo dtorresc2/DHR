@@ -64,7 +64,10 @@ public class ListadoServicios extends Fragment {
             public boolean onMenuItemClick(MenuItem menuItem) {
                 switch (menuItem.getItemId()){
                     case R.id.opcion_nuevo:
-                        Toast.makeText(getContext(), "Servicio Nuevo", Toast.LENGTH_SHORT).show();
+                        Servicios servicios = new Servicios();
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                        transaction.replace(R.id.contenedor, servicios);
+                        transaction.commit();
                         return true;
 
                     default:
