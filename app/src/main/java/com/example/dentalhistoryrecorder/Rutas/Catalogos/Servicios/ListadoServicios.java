@@ -6,15 +6,19 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.ItemsFichas;
 import com.example.dentalhistoryrecorder.R;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
 import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysCuentas;
 import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysServicios;
 
@@ -26,8 +30,9 @@ import java.util.ArrayList;
 
 public class ListadoServicios extends Fragment {
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private ServiciosAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private Toolbar toolbar;
 
     public ListadoServicios() {
         // Required empty public constructor
@@ -38,6 +43,35 @@ public class ListadoServicios extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_listado_servicios, container, false);
+
+        toolbar = view.findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_cerrar);
+        toolbar.setTitle("Listado de Servicios");
+        toolbar.inflateMenu(R.menu.opciones_toolbar_catalogos);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Catalogos catalogos = new Catalogos();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                transaction.replace(R.id.contenedor, catalogos);
+                transaction.commit();
+            }
+        });
+
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch (menuItem.getItemId()){
+                    case R.id.opcion_nuevo:
+                        Toast.makeText(getContext(), "Servicio Nuevo", Toast.LENGTH_SHORT).show();
+                        return true;
+
+                    default:
+                        return false;
+                }
+            }
+        });
 
         final ArrayList<ItemServicio> listaServicios = new ArrayList<>();
 //        listaServicios.add(new ItemServicio(1, "Hola Es una prueba", 25.00, true));
@@ -60,13 +94,6 @@ public class ListadoServicios extends Fragment {
         progressDialog.setCancelable(false);
         progressDialog.show();
 
-//        Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            public void run() {
-//                progressDialog.dismiss();
-//            }
-//        }, 1000);
-
         final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
 
         QuerysServicios querysServicios = new QuerysServicios(getContext());
@@ -86,6 +113,14 @@ public class ListadoServicios extends Fragment {
                     mAdapter = new ServiciosAdapter(listaServicios);
                     mRecyclerView.setLayoutManager(mLayoutManager);
                     mRecyclerView.setAdapter(mAdapter);
+
+                    mAdapter.setOnItemClickListener(new ServiciosAdapter.OnClickListener() {
+                        @Override
+                        public void onItemClick(int position) {
+                            Toast.makeText(getContext(), "" + position, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
                     progressDialog.dismiss();
                 } catch (JSONException e) {
                     e.printStackTrace();
