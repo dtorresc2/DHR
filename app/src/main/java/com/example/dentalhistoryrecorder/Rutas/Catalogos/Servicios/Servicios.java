@@ -1,6 +1,9 @@
 package com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -15,10 +18,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.dentalhistoryrecorder.InicioSesion;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
+import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysServicios;
 import com.itextpdf.text.xml.simpleparser.EntitiesToUnicode;
+import com.tapadoo.alerter.Alerter;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.regex.Pattern;
 
@@ -30,7 +40,7 @@ public class Servicios extends Fragment {
     private TextView tituloServicio;
 
     private boolean modoEdicion;
-//    private Typeface typeface;
+    private Typeface typeface;
 
     public Servicios() {
         modoEdicion = false;
@@ -45,7 +55,7 @@ public class Servicios extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_servicios, container, false);
-        Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+        typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
 
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_cerrar);
@@ -118,13 +128,65 @@ public class Servicios extends Fragment {
             public void onClick(View view) {
                 if (!descripcionRequerida() || !validarDescripcion() || !montoRequerido())
                     return;
+
+                registrarServicio();
             }
         });
 
         return view;
     }
 
-//    VALIDACIONES
+    private void registrarServicio() {
+        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+        progressDialog.setMessage("Cargando...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+
+        QuerysServicios querysServicios = new QuerysServicios(getContext());
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("DESCRIPCION", descripcionServicio.getText().toString().trim());
+            jsonBody.put("MONTO", montoServicio.getText().toString().trim());
+            jsonBody.put("ESTADO", (trueServicio.isChecked() == true) ? 1 : 0);
+            jsonBody.put("ID_USUARIO", preferenciasUsuario.getInt("ID_USUARIO", 0));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        querysServicios.registrarServicio(jsonBody, new QuerysServicios.VolleyOnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                progressDialog.dismiss();
+
+
+                ListadoServicios listadoServicios = new ListadoServicios();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                transaction.replace(R.id.contenedor, listadoServicios);
+                transaction.commit();
+
+                Alerter.create(getActivity())
+                        .setTitle("Servicio Registrado")
+                        .setIcon(R.drawable.logonuevo)
+                        .setTextTypeface(typeface)
+                        .enableSwipeToDismiss()
+                        .setBackgroundColorRes(R.color.FondoSecundario)
+                        .show();
+
+//                Toast.makeText(getContext(), object.toString(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                progressDialog.dismiss();
+                Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    //    VALIDACIONES
     private boolean descripcionRequerida() {
         String textoCodigo = descripcionServicio.getText().toString().trim();
         if (textoCodigo.isEmpty()) {
@@ -153,21 +215,9 @@ public class Servicios extends Fragment {
         if (patron.matcher(textoDescripcion).matches()) {
             descripcionServicio.setError(null);
             return true;
-        }
-        else {
+        } else {
             descripcionServicio.setError("Descripcion invalida");
             return false;
         }
     }
-
-//    private boolean validacionPass() {
-//        String textPass = pass.getText().toString().trim();
-//        if (textPass.isEmpty()) {
-//            pass.setError("Campo requerido");
-//            return false;
-//        } else {
-//            pass.setError(null);
-//            return true;
-//        }
-//    }
 }
