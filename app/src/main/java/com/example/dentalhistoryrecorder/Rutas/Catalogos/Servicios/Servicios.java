@@ -8,6 +8,8 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,8 @@ import android.widget.TextView;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
 import com.itextpdf.text.xml.simpleparser.EntitiesToUnicode;
+
+import java.util.regex.Pattern;
 
 public class Servicios extends Fragment {
     private Toolbar toolbar;
@@ -60,8 +64,44 @@ public class Servicios extends Fragment {
         descripcionServicio = view.findViewById(R.id.descripcionServicio);
         descripcionServicio.setTypeface(typeface);
 
+        descripcionServicio.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (descripcionRequerida()) {
+                    validarDescripcion();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
         montoServicio = view.findViewById(R.id.montoServicio);
         montoServicio.setTypeface(typeface);
+
+        montoServicio.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                montoRequerido();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         tituloServicio = view.findViewById(R.id.tituloEstadoServicio);
         tituloServicio.setTypeface(typeface);
@@ -76,10 +116,58 @@ public class Servicios extends Fragment {
         guardadorServicio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if (!descripcionRequerida() || !validarDescripcion() || !montoRequerido())
+                    return;
             }
         });
 
         return view;
     }
+
+//    VALIDACIONES
+    private boolean descripcionRequerida() {
+        String textoCodigo = descripcionServicio.getText().toString().trim();
+        if (textoCodigo.isEmpty()) {
+            descripcionServicio.setError("Campo requerido");
+            return false;
+        } else {
+            descripcionServicio.setError(null);
+            return true;
+        }
+    }
+
+    private boolean montoRequerido() {
+        String textCorreo = montoServicio.getText().toString().trim();
+        if (textCorreo.isEmpty()) {
+            montoServicio.setError("Campo requerido");
+            return false;
+        } else {
+            montoServicio.setError(null);
+            return true;
+        }
+    }
+
+    private boolean validarDescripcion() {
+        String textoDescripcion = descripcionServicio.getText().toString().trim();
+        Pattern patron = Pattern.compile("^[a-zA-Z0-9 ]+$");
+        if (patron.matcher(textoDescripcion).matches()) {
+            descripcionServicio.setError(null);
+            return true;
+        }
+        else {
+            descripcionServicio.setError("Descripcion invalida");
+            return false;
+        }
+    }
+
+//    private boolean validacionPass() {
+//        String textPass = pass.getText().toString().trim();
+//        if (textPass.isEmpty()) {
+//            pass.setError("Campo requerido");
+//            return false;
+//        } else {
+//            pass.setError(null);
+//            return true;
+//        }
+//    }
 }
