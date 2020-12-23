@@ -29,7 +29,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class ListadoServicios extends Fragment implements MenuInferior.MenuInferiorListener {
+public class ListadoServicios extends Fragment  {
     private RecyclerView mRecyclerView;
     private ServiciosAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -78,11 +78,6 @@ public class ListadoServicios extends Fragment implements MenuInferior.MenuInfer
         });
 
         final ArrayList<ItemServicio> listaServicios = new ArrayList<>();
-//        listaServicios.add(new ItemServicio(1, "Hola Es una prueba", 25.00, true));
-//        listaServicios.add(new ItemServicio(1, "Hola Es una prueba", 25.00, true));
-//        listaServicios.add(new ItemServicio(1, "Hola Es una prueba", 25.00, true));
-//        listaServicios.add(new ItemServicio(1, "Hola Es una prueba", 25.00, false));
-//        listaServicios.add(new ItemServicio(1, "Hola Es una prueba", 25.00, false));
 
         mRecyclerView = view.findViewById(R.id.listado_servicios);
         mRecyclerView.setHasFixedSize(true);
@@ -121,9 +116,14 @@ public class ListadoServicios extends Fragment implements MenuInferior.MenuInfer
                     mAdapter.setOnItemClickListener(new ServiciosAdapter.OnClickListener() {
                         @Override
                         public void onItemClick(int position) {
-//                            Toast.makeText(getContext(), "" + position, Toast.LENGTH_SHORT).show();
                             MenuInferior menuInferior = new MenuInferior();
                             menuInferior.show(getFragmentManager(), "MenuInferior");
+                            menuInferior.eventoClick(new MenuInferior.MenuInferiorListener() {
+                                @Override
+                                public void onButtonClicked(String text) {
+                                    Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
                     });
 
@@ -135,7 +135,6 @@ public class ListadoServicios extends Fragment implements MenuInferior.MenuInfer
 
             @Override
             public void onFailure(Exception e) {
-//                Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
                 progressDialog.dismiss();
                 Catalogos catalogos = new Catalogos();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
@@ -146,10 +145,5 @@ public class ListadoServicios extends Fragment implements MenuInferior.MenuInfer
         });
 
         return view;
-    }
-
-    @Override
-    public void onButtonClicked(String text) {
-        Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
     }
 }

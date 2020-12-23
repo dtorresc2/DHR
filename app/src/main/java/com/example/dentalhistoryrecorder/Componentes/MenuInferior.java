@@ -13,7 +13,12 @@ import android.widget.Button;
 import com.example.dentalhistoryrecorder.R;
 
 public class MenuInferior extends BottomSheetDialogFragment {
-    private MenuInferiorListener menuInferiorListener;
+    private MenuInferiorListener mMenuInferiorListener;
+    private Context mContext;
+
+    public void eventoClick(MenuInferiorListener menuInferiorListener){
+        mMenuInferiorListener = menuInferiorListener;
+    }
 
     @Nullable
     @Override
@@ -26,7 +31,7 @@ public class MenuInferior extends BottomSheetDialogFragment {
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                menuInferiorListener.onButtonClicked("Editando");
+                mMenuInferiorListener.onButtonClicked("Editando");
                 dismiss();
             }
         });
@@ -34,7 +39,7 @@ public class MenuInferior extends BottomSheetDialogFragment {
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                menuInferiorListener.onButtonClicked("Eliminado");
+                mMenuInferiorListener.onButtonClicked("Eliminado");
                 dismiss();
             }
         });
@@ -46,14 +51,4 @@ public class MenuInferior extends BottomSheetDialogFragment {
         void onButtonClicked(String text);
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        try {
-            menuInferiorListener = (MenuInferiorListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + "Must implement BottonSheet");
-        }
-    }
 }
