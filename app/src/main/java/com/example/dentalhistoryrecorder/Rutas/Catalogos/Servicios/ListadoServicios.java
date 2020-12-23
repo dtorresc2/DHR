@@ -118,10 +118,11 @@ public class ListadoServicios extends Fragment  {
                         public void onItemClick(int position) {
                             MenuInferior menuInferior = new MenuInferior();
                             menuInferior.show(getFragmentManager(), "MenuInferior");
+                            menuInferior.recibirTitulo("Servicio #", listaServicios.get(position).getCodigoServicio());
                             menuInferior.eventoClick(new MenuInferior.MenuInferiorListener() {
                                 @Override
-                                public void onButtonClicked(String text) {
-                                    Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
+                                public void onButtonClicked(int opcion) {
+                                    Toast.makeText(getContext(), String.valueOf(opcion), Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }

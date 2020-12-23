@@ -1,6 +1,7 @@
 package com.example.dentalhistoryrecorder.Componentes;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,46 +10,87 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.dentalhistoryrecorder.R;
+import com.itextpdf.text.pdf.parser.Line;
 
 public class MenuInferior extends BottomSheetDialogFragment {
     private MenuInferiorListener mMenuInferiorListener;
     private Context mContext;
+    private int ID;
+    private String titulo;
 
     public void eventoClick(MenuInferiorListener menuInferiorListener){
         mMenuInferiorListener = menuInferiorListener;
+        titulo = "Titulo #";
+        ID = 1;
+    }
+
+    public void recibirTitulo(String mTitulo, int mID){
+        titulo = mTitulo;
+        ID = mID;
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.menu_inferior, container, false);
+        Typeface typeface = Typeface.createFromAsset(view.getContext().getAssets(), "fonts/bahnschrift.ttf");
 
-        Button button1 = view.findViewById(R.id.boton1);
-        Button button2 = view.findViewById(R.id.boton2);
-
-        button1.setOnClickListener(new View.OnClickListener() {
+        LinearLayout opcionEditar = view.findViewById(R.id.opc_editar);
+        opcionEditar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mMenuInferiorListener.onButtonClicked("Editando");
+                mMenuInferiorListener.onButtonClicked(1);
                 dismiss();
             }
         });
 
-        button2.setOnClickListener(new View.OnClickListener() {
+        LinearLayout opcionEliminar = view.findViewById(R.id.opc_eliminar);
+        opcionEliminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mMenuInferiorListener.onButtonClicked("Eliminado");
+                mMenuInferiorListener.onButtonClicked(2);
                 dismiss();
             }
         });
+
+        TextView tituloEditar = view.findViewById(R.id.texto_opc_editar);
+        tituloEditar.setTypeface(typeface);
+
+        TextView tituloEliminar = view.findViewById(R.id.texto_opc_eliminar);
+        tituloEliminar.setTypeface(typeface);
+
+        TextView tituloMenu = view.findViewById(R.id.tituloMenu);
+        tituloMenu.setTypeface(typeface);
+        tituloMenu.setText(titulo + ID);
+
+//        Button button1 = view.findViewById(R.id.boton1);
+//        Button button2 = view.findViewById(R.id.boton2);
+//
+//        button1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mMenuInferiorListener.onButtonClicked("Editando");
+//                dismiss();
+//            }
+//        });
+//
+//        button2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mMenuInferiorListener.onButtonClicked("Eliminado");
+//                dismiss();
+//            }
+//        });
 
         return view;
     }
 
     public interface MenuInferiorListener {
-        void onButtonClicked(String text);
+        void onButtonClicked(int opcion);
     }
 
 }

@@ -2,28 +2,177 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:padding="16dp"
-    android:background="@color/AzulOscuro">
+    android:background="@color/FondoSecundario3">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Este es el menu inferior"
-        android:textSize="25dp"
-        android:textColor="@color/Blanco"
-        />
+<!--    <TextView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Este es el menu inferior"-->
+<!--        android:textSize="25dp"-->
+<!--        android:textColor="@color/Blanco"-->
+<!--        />-->
 
-    <Button
-        android:id="@+id/boton1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Boton 1"/>
+<!--    <Button-->
+<!--        android:id="@+id/boton1"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Boton 1"/>-->
 
-    <Button
-        android:id="@+id/boton2"
-        android:layout_width="wrap_content"
+<!--    <Button-->
+<!--        android:id="@+id/boton2"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Boton 2"/>-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Boton 2"/>
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tituloMenu"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Ficha #1"
+            android:textColor="@color/Blanco"
+            android:textSize="24dp"
+            android:gravity="center_horizontal|center_vertical"
+            android:background="@color/FondoSecundario2" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="10dp"
+            android:weightSum="2">
+
+            <LinearLayout
+                android:id="@+id/opc_editar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/FondoSecundario2"
+                android:orientation="vertical"
+                android:paddingTop="10dp"
+                android:layout_weight="1"
+                android:layout_marginRight="10dp"
+                android:paddingBottom="10dp">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/icono_seguimiento" />
+
+                <TextView
+                    android:id="@+id/texto_opc_editar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="Editar"
+                    android:textColor="@color/Blanco"
+                    android:textSize="18dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/opc_eliminar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/FondoSecundario2"
+                android:orientation="vertical"
+                android:paddingTop="10dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:paddingBottom="10dp">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ic_borar" />
+
+                <TextView
+                    android:id="@+id/texto_opc_eliminar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="Eliminar"
+                    android:textColor="@color/Blanco"
+                    android:textSize="18dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:layout_marginLeft="12dp"-->
+<!--            android:layout_marginRight="12dp"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:weightSum="2">-->
+
+<!--            <LinearLayout-->
+<!--                android:id="@+id/cat_opc_piezas"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:background="@color/FondoSecundario2"-->
+<!--                android:orientation="vertical"-->
+<!--                android:paddingTop="10dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:layout_marginRight="10dp"-->
+<!--                android:paddingBottom="10dp">-->
+
+<!--                <ImageView-->
+<!--                    android:layout_width="70dp"-->
+<!--                    android:layout_height="70dp"-->
+<!--                    android:layout_gravity="center_horizontal"-->
+<!--                    android:src="@drawable/ic_teeth" />-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/cat_texto_piezas"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:gravity="center_horizontal"-->
+<!--                    android:text="Piezas"-->
+<!--                    android:textColor="@color/Blanco"-->
+<!--                    android:textSize="24dp" />-->
+<!--            </LinearLayout>-->
+
+<!--            <LinearLayout-->
+<!--                android:id="@+id/cat_opc_cuentas"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:background="@color/FondoSecundario2"-->
+<!--                android:orientation="vertical"-->
+<!--                android:paddingTop="10dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:layout_marginLeft="10dp"-->
+<!--                android:paddingBottom="10dp">-->
+
+<!--                <ImageView-->
+<!--                    android:layout_width="70dp"-->
+<!--                    android:layout_height="70dp"-->
+<!--                    android:layout_gravity="center_horizontal"-->
+<!--                    android:src="@drawable/ic_account" />-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/cat_texto_cuentas"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:gravity="center_horizontal"-->
+<!--                    android:text="Cuentas"-->
+<!--                    android:textColor="@color/Blanco"-->
+<!--                    android:textSize="24dp" />-->
+<!--            </LinearLayout>-->
+
+<!--        </LinearLayout>-->
+
+    </LinearLayout>
 
 </LinearLayout>
