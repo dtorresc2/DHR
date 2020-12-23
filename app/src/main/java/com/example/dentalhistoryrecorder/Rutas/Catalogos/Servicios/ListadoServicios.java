@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.dentalhistoryrecorder.Componentes.MenuInferior;
 import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.ItemsFichas;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
@@ -120,7 +121,9 @@ public class ListadoServicios extends Fragment {
                     mAdapter.setOnItemClickListener(new ServiciosAdapter.OnClickListener() {
                         @Override
                         public void onItemClick(int position) {
-                            Toast.makeText(getContext(), "" + position, Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(getContext(), "" + position, Toast.LENGTH_SHORT).show();
+                            MenuInferior menuInferior = new MenuInferior();
+                            menuInferior.show(getFragmentManager(), "MenuInferior");
                         }
                     });
 
