@@ -4,13 +4,14 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:padding="16dp"
-    android:background="@color/FondoSecundario2">
+    android:background="@color/AzulOscuro">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Este es el menu inferior"
         android:textSize="25dp"
+        android:textColor="@color/Blanco"
         />
 
     <Button

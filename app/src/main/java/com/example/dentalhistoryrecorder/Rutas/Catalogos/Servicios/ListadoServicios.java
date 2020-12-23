@@ -29,7 +29,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class ListadoServicios extends Fragment {
+public class ListadoServicios extends Fragment implements MenuInferior.MenuInferiorListener {
     private RecyclerView mRecyclerView;
     private ServiciosAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -148,4 +148,8 @@ public class ListadoServicios extends Fragment {
         return view;
     }
 
+    @Override
+    public void onButtonClicked(String text) {
+        Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
+    }
 }
