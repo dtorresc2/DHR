@@ -41,6 +41,7 @@ public class Servicios extends Fragment {
 
     private boolean modoEdicion;
     private Typeface typeface;
+    private int ID_SERVICIO;
 
     public Servicios() {
         modoEdicion = false;
@@ -48,6 +49,7 @@ public class Servicios extends Fragment {
 
     public void editarServicio(int id) {
         modoEdicion = true;
+        ID_SERVICIO = id;
     }
 
     @Override
@@ -59,7 +61,10 @@ public class Servicios extends Fragment {
 
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_cerrar);
-        toolbar.setTitle("Servicio Nuevo");
+        if (modoEdicion)
+            toolbar.setTitle("Servicio Nuevo");
+        else
+            toolbar.setTitle("Servicio #" + ID_SERVICIO);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,7 +166,6 @@ public class Servicios extends Fragment {
             public void onSuccess(Object object) {
                 progressDialog.dismiss();
 
-
                 ListadoServicios listadoServicios = new ListadoServicios();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
                 transaction.replace(R.id.contenedor, listadoServicios);
@@ -174,8 +178,6 @@ public class Servicios extends Fragment {
                         .enableSwipeToDismiss()
                         .setBackgroundColorRes(R.color.FondoSecundario)
                         .show();
-
-//                Toast.makeText(getContext(), object.toString(), Toast.LENGTH_SHORT).show();
             }
 
             @Override

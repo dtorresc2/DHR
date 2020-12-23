@@ -115,14 +115,14 @@ public class ListadoServicios extends Fragment  {
 
                     mAdapter.setOnItemClickListener(new ServiciosAdapter.OnClickListener() {
                         @Override
-                        public void onItemClick(int position) {
+                        public void onItemClick(final int position) {
                             MenuInferior menuInferior = new MenuInferior();
                             menuInferior.show(getFragmentManager(), "MenuInferior");
                             menuInferior.recibirTitulo("Servicio #", listaServicios.get(position).getCodigoServicio());
                             menuInferior.eventoClick(new MenuInferior.MenuInferiorListener() {
                                 @Override
                                 public void onButtonClicked(int opcion) {
-                                    Toast.makeText(getContext(), String.valueOf(opcion), Toast.LENGTH_SHORT).show();
+                                    realizarAccion(opcion, listaServicios.get(position).getCodigoServicio());
                                 }
                             });
                         }
@@ -146,5 +146,21 @@ public class ListadoServicios extends Fragment  {
         });
 
         return view;
+    }
+
+    public void realizarAccion (int opcion, int ID) {
+        switch (opcion){
+            case 1:
+                Servicios servicios = new Servicios();
+                servicios.editarServicio(ID);
+                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                transaction.replace(R.id.contenedor, servicios);
+                transaction.commit();
+                break;
+            case 2:
+                break;
+            default:
+                return;
+        }
     }
 }

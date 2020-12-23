@@ -19,13 +19,11 @@ import com.itextpdf.text.pdf.parser.Line;
 public class MenuInferior extends BottomSheetDialogFragment {
     private MenuInferiorListener mMenuInferiorListener;
     private Context mContext;
-    private int ID;
-    private String titulo;
+    private int ID = 1;
+    private String titulo = "Titulo #";
 
     public void eventoClick(MenuInferiorListener menuInferiorListener){
         mMenuInferiorListener = menuInferiorListener;
-        titulo = "Titulo #";
-        ID = 1;
     }
 
     public void recibirTitulo(String mTitulo, int mID){
@@ -67,30 +65,10 @@ public class MenuInferior extends BottomSheetDialogFragment {
         tituloMenu.setTypeface(typeface);
         tituloMenu.setText(titulo + ID);
 
-//        Button button1 = view.findViewById(R.id.boton1);
-//        Button button2 = view.findViewById(R.id.boton2);
-//
-//        button1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mMenuInferiorListener.onButtonClicked("Editando");
-//                dismiss();
-//            }
-//        });
-//
-//        button2.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mMenuInferiorListener.onButtonClicked("Eliminado");
-//                dismiss();
-//            }
-//        });
-
         return view;
     }
 
     public interface MenuInferiorListener {
         void onButtonClicked(int opcion);
     }
-
 }
