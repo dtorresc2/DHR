@@ -3,6 +3,7 @@ package com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -17,11 +18,13 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.dentalhistoryrecorder.Componentes.MenuInferior;
+import com.example.dentalhistoryrecorder.InicioSesion;
 import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.ItemsFichas;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
 import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysCuentas;
 import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysServicios;
+import com.tapadoo.alerter.Alerter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,6 +37,8 @@ public class ListadoServicios extends Fragment {
     private ServiciosAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private Toolbar toolbar;
+    private boolean estadoServicio = true;
+    private ArrayList<ItemServicio> listaServicios;
 
     public ListadoServicios() {
         // Required empty public constructor
@@ -77,7 +82,7 @@ public class ListadoServicios extends Fragment {
             }
         });
 
-        final ArrayList<ItemServicio> listaServicios = new ArrayList<>();
+        listaServicios = new ArrayList<>();
 
         mRecyclerView = view.findViewById(R.id.listado_servicios);
         mRecyclerView.setHasFixedSize(true);
@@ -86,6 +91,34 @@ public class ListadoServicios extends Fragment {
 //
 //        mRecyclerView.setLayoutManager(mLayoutManager);
 //        mRecyclerView.setAdapter(mAdapter);
+
+        listarServicios();
+
+        return view;
+    }
+
+    public void realizarAccion(int opcion, int ID) {
+        switch (opcion) {
+            case 1:
+                Servicios servicios = new Servicios();
+                servicios.editarServicio(ID);
+                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                transaction.replace(R.id.contenedor, servicios);
+                transaction.commit();
+                break;
+            case 2:
+                actualizarEstado(ID);
+                break;
+
+            case 3:
+                break;
+            default:
+                return;
+        }
+    }
+
+    public void listarServicios() {
+        listaServicios.clear();
 
         final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
         progressDialog.setMessage("Cargando...");
@@ -123,6 +156,7 @@ public class ListadoServicios extends Fragment {
                                 @Override
                                 public void onButtonClicked(int opcion) {
                                     realizarAccion(opcion, listaServicios.get(position).getCodigoServicio());
+                                    estadoServicio = listaServicios.get(position).getEstadoServicio();
                                 }
                             });
                         }
@@ -144,27 +178,57 @@ public class ListadoServicios extends Fragment {
                 e.printStackTrace();
             }
         });
-
-        return view;
     }
 
-    public void realizarAccion(int opcion, int ID) {
-        switch (opcion) {
-            case 1:
-                Servicios servicios = new Servicios();
-                servicios.editarServicio(ID);
-                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                transaction.replace(R.id.contenedor, servicios);
-                transaction.commit();
-                break;
-            case 2:
-                Toast.makeText(getContext(), "Bloqueando", Toast.LENGTH_SHORT).show();
-                break;
+    public void actualizarEstado(int ID) {
+        if (estadoServicio) {
+            final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+            progressDialog.setMessage("Cargando...");
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
 
-            case 3:
-                break;
-            default:
-                return;
+            QuerysServicios querysServicios = new QuerysServicios(getContext());
+            JSONObject jsonBody = new JSONObject();
+            try {
+                jsonBody.put("ESTADO", false);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            querysServicios.actualizarEstado(ID, jsonBody, new QuerysServicios.VolleyOnEventListener() {
+                @Override
+                public void onSuccess(Object object) {
+                    progressDialog.dismiss();
+
+                    Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                    Alerter.create(getActivity())
+                            .setText("Deshabilitado Correctamente")
+                            .setIcon(R.drawable.logonuevo)
+                            .setTextTypeface(typeface)
+                            .enableSwipeToDismiss()
+                            .setBackgroundColorRes(R.color.FondoSecundario)
+                            .show();
+
+                    listarServicios();
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    progressDialog.dismiss();
+                }
+            });
+        } else {
+            Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+
+            Alerter.create(getActivity())
+                    .setTitle("Error")
+                    .setText("El servicio esta deshabilitado")
+                    .setIcon(R.drawable.logonuevo)
+                    .setTextTypeface(typeface)
+                    .enableSwipeToDismiss()
+                    .setBackgroundColorRes(R.color.FondoSecundario)
+                    .show();
         }
     }
 }
