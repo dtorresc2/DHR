@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/FondoSecundario3">
+    android:background="@color/FondoSecundario3"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,19 +15,19 @@
             android:id="@+id/tituloMenu"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:background="@color/FondoSecundario2"
+            android:gravity="center_horizontal|center_vertical"
             android:text="Ficha #1"
             android:textColor="@color/Blanco"
-            android:textSize="24dp"
-            android:gravity="center_horizontal|center_vertical"
-            android:background="@color/FondoSecundario2" />
+            android:textSize="24dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
             android:layout_marginTop="10dp"
+            android:layout_marginRight="12dp"
+            android:orientation="horizontal"
             android:weightSum="2">
 
             <LinearLayout
@@ -34,11 +35,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
                 android:background="@color/FondoSecundario2"
                 android:orientation="vertical"
                 android:paddingTop="10dp"
-                android:layout_weight="1"
-                android:layout_marginRight="10dp"
                 android:paddingBottom="10dp">
 
                 <ImageView
@@ -58,15 +59,54 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/opc_deshabilitar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:background="@color/FondoSecundario2"
+                android:orientation="vertical"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ic_cerrar" />
+
+                <TextView
+                    android:id="@+id/texto_opc_deshabilitar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="Deshabilitar"
+                    android:textColor="@color/Blanco"
+                    android:textSize="18dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="12dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+
+            <LinearLayout
                 android:id="@+id/opc_eliminar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
                 android:background="@color/FondoSecundario2"
                 android:orientation="vertical"
                 android:paddingTop="10dp"
-                android:layout_weight="1"
-                android:layout_marginLeft="10dp"
                 android:paddingBottom="10dp">
 
                 <ImageView
@@ -84,6 +124,16 @@
                     android:textColor="@color/Blanco"
                     android:textSize="18dp" />
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"></LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

@@ -29,7 +29,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class ListadoServicios extends Fragment  {
+public class ListadoServicios extends Fragment {
     private RecyclerView mRecyclerView;
     private ServiciosAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -63,7 +63,7 @@ public class ListadoServicios extends Fragment  {
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                switch (menuItem.getItemId()){
+                switch (menuItem.getItemId()) {
                     case R.id.opcion_nuevo:
                         Servicios servicios = new Servicios();
                         FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
@@ -148,8 +148,8 @@ public class ListadoServicios extends Fragment  {
         return view;
     }
 
-    public void realizarAccion (int opcion, int ID) {
-        switch (opcion){
+    public void realizarAccion(int opcion, int ID) {
+        switch (opcion) {
             case 1:
                 Servicios servicios = new Servicios();
                 servicios.editarServicio(ID);
@@ -158,6 +158,10 @@ public class ListadoServicios extends Fragment  {
                 transaction.commit();
                 break;
             case 2:
+                Toast.makeText(getContext(), "Bloqueando", Toast.LENGTH_SHORT).show();
+                break;
+
+            case 3:
                 break;
             default:
                 return;

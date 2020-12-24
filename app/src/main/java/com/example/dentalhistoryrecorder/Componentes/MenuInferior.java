@@ -46,8 +46,8 @@ public class MenuInferior extends BottomSheetDialogFragment {
             }
         });
 
-        LinearLayout opcionEliminar = view.findViewById(R.id.opc_eliminar);
-        opcionEliminar.setOnClickListener(new View.OnClickListener() {
+        LinearLayout opcionDeshabilitar = view.findViewById(R.id.opc_deshabilitar);
+        opcionDeshabilitar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mMenuInferiorListener.onButtonClicked(2);
@@ -55,8 +55,20 @@ public class MenuInferior extends BottomSheetDialogFragment {
             }
         });
 
+        LinearLayout opcionEliminar = view.findViewById(R.id.opc_eliminar);
+        opcionEliminar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMenuInferiorListener.onButtonClicked(3);
+                dismiss();
+            }
+        });
+
         TextView tituloEditar = view.findViewById(R.id.texto_opc_editar);
         tituloEditar.setTypeface(typeface);
+
+        TextView tituloBloquear = view.findViewById(R.id.texto_opc_deshabilitar);
+        tituloBloquear.setTypeface(typeface);
 
         TextView tituloEliminar = view.findViewById(R.id.texto_opc_eliminar);
         tituloEliminar.setTypeface(typeface);

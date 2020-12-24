@@ -208,15 +208,12 @@ public class Servicios extends Fragment {
         progressDialog.setCancelable(false);
         progressDialog.show();
 
-//        final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
-
         QuerysServicios querysServicios = new QuerysServicios(getContext());
         JSONObject jsonBody = new JSONObject();
         try {
             jsonBody.put("DESCRIPCION", descripcionServicio.getText().toString().trim());
             jsonBody.put("MONTO", montoServicio.getText().toString().trim());
             jsonBody.put("ESTADO", (trueServicio.isChecked() == true) ? 1 : 0);
-//            jsonBody.put("ID_USUARIO", preferenciasUsuario.getInt("ID_USUARIO", 0));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -333,6 +330,4 @@ public class Servicios extends Fragment {
             return false;
         }
     }
-
-//    '^[0-9]+(\.[0-9]{2})$'
 }
