@@ -37,7 +37,7 @@ public class ListadoServicios extends Fragment {
     private ServiciosAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private Toolbar toolbar;
-    private boolean estadoServicio = true;
+    private boolean estadoServicio = false;
     private ArrayList<ItemServicio> listaServicios;
 
     public ListadoServicios() {
@@ -119,6 +119,7 @@ public class ListadoServicios extends Fragment {
 
     public void listarServicios() {
         listaServicios.clear();
+        estadoServicio = false;
 
         final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
         progressDialog.setMessage("Cargando...");
@@ -200,6 +201,7 @@ public class ListadoServicios extends Fragment {
                 @Override
                 public void onSuccess(Object object) {
                     progressDialog.dismiss();
+                    estadoServicio = false;
 
                     Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
                     Alerter.create(getActivity())
@@ -220,7 +222,6 @@ public class ListadoServicios extends Fragment {
             });
         } else {
             Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-
             Alerter.create(getActivity())
                     .setTitle("Error")
                     .setText("El servicio esta deshabilitado")
