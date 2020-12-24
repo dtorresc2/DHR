@@ -53,6 +53,30 @@ public class QuerysServicios {
         requestQueue.add(stringRequest);
     }
 
+    public void obtenerServicioEspecifico(final int id, QuerysServicios.VolleyOnEventListener callback) {
+        mCallBack = callback;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, mContext.getResources().getString(R.string.API) + "servicios/" + id, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                mCallBack.onSuccess(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mCallBack.onFailure(error);
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        requestQueue.add(stringRequest);
+    }
+
     public void registrarServicio(final JSONObject jsonBody, QuerysServicios.VolleyOnEventListener callback) {
         mCallBack = callback;
 

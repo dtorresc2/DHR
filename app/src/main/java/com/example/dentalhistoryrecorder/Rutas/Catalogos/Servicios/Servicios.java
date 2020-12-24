@@ -27,6 +27,7 @@ import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysServicios;
 import com.itextpdf.text.xml.simpleparser.EntitiesToUnicode;
 import com.tapadoo.alerter.Alerter;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -61,7 +62,7 @@ public class Servicios extends Fragment {
 
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_cerrar);
-        if (modoEdicion)
+        if (!modoEdicion)
             toolbar.setTitle("Servicio Nuevo");
         else
             toolbar.setTitle("Servicio #" + ID_SERVICIO);
@@ -184,6 +185,38 @@ public class Servicios extends Fragment {
             public void onFailure(Exception e) {
                 progressDialog.dismiss();
                 Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void obtenerServicio() {
+        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+        progressDialog.setMessage("Cargando...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        QuerysServicios querysServicios = new QuerysServicios(getContext());
+        querysServicios.obtenerServicioEspecifico(ID_SERVICIO, new QuerysServicios.VolleyOnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                try {
+                    JSONArray jsonArray = new JSONArray(object.toString());
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        descripcionServicio.setText(jsonArray.getJSONObject(i).getString("DESCRIPCION"));
+                        montoServicio.setText(String.format("%.2f", jsonArray.getJSONObject(i).getDouble("MONTO")));
+                        boolean habilitado = ((jsonArray.getJSONObject(i).getInt("ESTADO")) > 0 ? true : false);
+                        trueServicio.setSelected(habilitado);
+                        falseServicio.setSelected(!habilitado);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
             }
         });
     }

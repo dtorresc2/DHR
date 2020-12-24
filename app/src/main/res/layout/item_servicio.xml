@@ -19,9 +19,9 @@
             android:paddingBottom="3dp">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.8"
+                android:layout_weight="1.5"
                 android:orientation="vertical">
 
                 <TextView
@@ -33,13 +33,14 @@
                     android:text="1 - Consulta General"
                     android:textColor="@color/Blanco"
                     android:textSize="20sp"
-                    android:ellipsize="end"
-                    android:lines="2"/>
+                    android:breakStrategy="simple"
+                    />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:layout_marginTop="4dp"
                     android:weightSum="2">
 
                     <TextView
@@ -71,9 +72,9 @@
 
             <ImageButton
                 android:id="@+id/accionesServicio"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.2"
+                android:layout_weight="10"
                 android:background="@color/FondoSecundario2"
                 android:src="@drawable/ic_opciones"
                 android:text="Limpiar"
