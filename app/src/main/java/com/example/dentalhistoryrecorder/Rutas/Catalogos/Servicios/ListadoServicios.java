@@ -8,13 +8,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.dentalhistoryrecorder.Componentes.MenuInferior;
@@ -48,11 +51,11 @@ public class ListadoServicios extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_listado_servicios, container, false);
+        final View view = inflater.inflate(R.layout.fragment_listado_servicios, container, false);
 
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_cerrar);
-        toolbar.setTitle("Listado de Servicios");
+        toolbar.setTitle("Servicios");
         toolbar.inflateMenu(R.menu.opciones_toolbar_catalogos);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -74,6 +77,24 @@ public class ListadoServicios extends Fragment {
                         FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
                         transaction.replace(R.id.contenedor, servicios);
                         transaction.commit();
+                        return true;
+
+                    case R.id.opcion_filtrar:
+                        MenuItem searchItem = menuItem;
+                        SearchView searchView = (SearchView) searchItem.getActionView();
+
+                        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                            @Override
+                            public boolean onQueryTextSubmit(String query) {
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onQueryTextChange(String newText) {
+                                mAdapter.getFilter().filter(newText);
+                                return false;
+                            }
+                        });
                         return true;
 
                     default:
