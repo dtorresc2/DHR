@@ -156,8 +156,8 @@ public class ListadoServicios extends Fragment {
                             menuInferior.eventoClick(new MenuInferior.MenuInferiorListener() {
                                 @Override
                                 public void onButtonClicked(int opcion) {
-                                    realizarAccion(opcion, listaServicios.get(position).getCodigoServicio());
                                     estadoServicio = listaServicios.get(position).getEstadoServicio();
+                                    realizarAccion(opcion, listaServicios.get(position).getCodigoServicio());
                                 }
                             });
                         }
@@ -200,7 +200,6 @@ public class ListadoServicios extends Fragment {
             querysServicios.actualizarEstado(ID, jsonBody, new QuerysServicios.VolleyOnEventListener() {
                 @Override
                 public void onSuccess(Object object) {
-                    progressDialog.dismiss();
                     estadoServicio = false;
 
                     Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
@@ -212,7 +211,13 @@ public class ListadoServicios extends Fragment {
                             .setBackgroundColorRes(R.color.FondoSecundario)
                             .show();
 
-                    listarServicios();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressDialog.dismiss();
+                            listarServicios();
+                        }
+                    }, 1000);
                 }
 
                 @Override
@@ -223,8 +228,7 @@ public class ListadoServicios extends Fragment {
         } else {
             Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
             Alerter.create(getActivity())
-                    .setTitle("Error")
-                    .setText("El servicio esta deshabilitado")
+                    .setTitle("El servicio esta deshabilitado")
                     .setIcon(R.drawable.logonuevo)
                     .setTextTypeface(typeface)
                     .enableSwipeToDismiss()
