@@ -97,6 +97,10 @@ public class ListadoServicios extends Fragment {
                         });
                         return true;
 
+                    case R.id.opcion_actualizar:
+                        listarServicios();
+                        return true;
+
                     default:
                         return false;
                 }
