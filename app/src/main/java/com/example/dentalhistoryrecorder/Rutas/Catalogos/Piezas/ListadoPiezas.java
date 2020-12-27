@@ -63,12 +63,12 @@ public class ListadoPiezas extends Fragment {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
-//                    case R.id.opcion_nuevo:
-//                        Servicios servicios = new Servicios();
-//                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-//                        transaction.replace(R.id.contenedor, servicios);
-//                        transaction.commit();
-//                        return true;
+                    case R.id.opcion_nuevo:
+                        Piezas piezas = new Piezas();
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                        transaction.replace(R.id.contenedor, piezas);
+                        transaction.commit();
+                        return true;
 
                     case R.id.opcion_filtrar:
                         MenuItem searchItem = menuItem;
