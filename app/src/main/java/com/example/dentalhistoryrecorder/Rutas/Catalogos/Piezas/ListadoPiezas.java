@@ -3,6 +3,8 @@ package com.example.dentalhistoryrecorder.Rutas.Catalogos.Piezas;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -12,8 +14,14 @@ import android.view.ViewGroup;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
 
+import java.util.ArrayList;
+
 public class ListadoPiezas extends Fragment {
     private Toolbar toolbar;
+    private RecyclerView mRecyclerView;
+    private PiezasAdapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private ArrayList<ItemPieza> listaPiezas;
 
     public ListadoPiezas() {
         // Required empty public constructor
@@ -46,6 +54,21 @@ public class ListadoPiezas extends Fragment {
                 return false;
             }
         });
+
+        listaPiezas = new ArrayList<>();
+
+        mRecyclerView = view.findViewById(R.id.listado_piezas);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(getContext());
+
+        listaPiezas.add(new ItemPieza(1, 23, "Muela", true));
+        listaPiezas.add(new ItemPieza(1, 23, "Muela", true));
+        listaPiezas.add(new ItemPieza(1, 23, "Muela", true));
+        listaPiezas.add(new ItemPieza(1, 23, "Muela", true));
+
+        mAdapter = new PiezasAdapter(listaPiezas);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
 
         return view;
     }
