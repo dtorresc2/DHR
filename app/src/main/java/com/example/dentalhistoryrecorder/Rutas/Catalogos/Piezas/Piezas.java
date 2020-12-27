@@ -1,6 +1,7 @@
 package com.example.dentalhistoryrecorder.Rutas.Catalogos.Piezas;
 
 import android.graphics.Typeface;
+import android.icu.util.ValueIterator;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
@@ -44,6 +45,7 @@ public class Piezas extends Fragment {
 
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_cerrar);
+
         if (!modoEdicion)
             toolbar.setTitle("Pieza Nueva");
         else
@@ -56,6 +58,29 @@ public class Piezas extends Fragment {
                 FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
                 transaction.replace(R.id.contenedor, listadoPiezas);
                 transaction.commit();
+            }
+        });
+
+        nombrePieza = view.findViewById(R.id.nombrePieza);
+        nombrePieza.setTypeface(typeface);
+
+        numeroPieza = view.findViewById(R.id.numeroPieza);
+        numeroPieza.setTypeface(typeface);
+
+        tituloPieza = view.findViewById(R.id.tituloEstadoPieza);
+        tituloPieza.setTypeface(typeface);
+
+        truePieza = view.findViewById(R.id.truePieza);
+        truePieza.setTypeface(typeface);
+
+        falsePieza = view.findViewById(R.id.falsePieza);
+        falsePieza.setTypeface(typeface);
+
+        guardadorPieza = view.findViewById(R.id.grabarPieza);
+        guardadorPieza.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 
