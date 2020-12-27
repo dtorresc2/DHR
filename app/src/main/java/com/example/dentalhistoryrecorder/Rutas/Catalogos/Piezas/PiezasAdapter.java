@@ -6,18 +6,20 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.ItemServicio;
-import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.ServiciosAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
-public class PiezasAdapter extends RecyclerView.Adapter<PiezasAdapter.PiezasViewHolder> {
-    private ArrayList<ItemPieza> mListaPieza;
-    private ArrayList<ItemPieza> mlistaServiciosFull;
+public class PiezasAdapter extends RecyclerView.Adapter<PiezasAdapter.PiezasViewHolder> implements Filterable {
+    private ArrayList<ItemPieza> mListaPiezas;
+    private ArrayList<ItemPieza> mListaPiezasFull;
     private ViewGroup mViewGroup;
     private PiezasAdapter.OnClickListener mListener;
 
@@ -25,7 +27,7 @@ public class PiezasAdapter extends RecyclerView.Adapter<PiezasAdapter.PiezasView
         void onItemClick(int position);
     }
 
-    public void setOnItemClickListener(PiezasAdapter.OnClickListener onItemClickListener){
+    public void setOnItemClickListener(PiezasAdapter.OnClickListener onItemClickListener) {
         mListener = onItemClickListener;
     }
 
@@ -42,9 +44,9 @@ public class PiezasAdapter extends RecyclerView.Adapter<PiezasAdapter.PiezasView
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (listener != null){
+                    if (listener != null) {
                         int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION){
+                        if (position != RecyclerView.NO_POSITION) {
                             listener.onItemClick(position);
                         }
                     }
@@ -53,8 +55,9 @@ public class PiezasAdapter extends RecyclerView.Adapter<PiezasAdapter.PiezasView
         }
     }
 
-    public PiezasAdapter(ArrayList<ItemPieza> listaPiezas){
-        mListaPieza = listaPiezas;
+    public PiezasAdapter(ArrayList<ItemPieza> listaPiezas) {
+        mListaPiezas = listaPiezas;
+        mListaPiezasFull = new ArrayList<>(listaPiezas);
     }
 
     @NonNull
@@ -67,13 +70,12 @@ public class PiezasAdapter extends RecyclerView.Adapter<PiezasAdapter.PiezasView
         PiezasViewHolder piezasViewHolder = new PiezasViewHolder(view, mListener);
         piezasViewHolder.descripcion.setTypeface(typeface);
         piezasViewHolder.estado.setTypeface(typeface);
-
         return piezasViewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull PiezasViewHolder piezasViewHolder, int i) {
-        ItemPieza itemPieza = mListaPieza.get(i);
+        ItemPieza itemPieza = mListaPiezas.get(i);
         piezasViewHolder.descripcion.setText(itemPieza.getNumeroPieza() + " - " + itemPieza.getNombrePieza());
 
         if (itemPieza.getEstadoPieza()) {
@@ -84,7 +86,7 @@ public class PiezasAdapter extends RecyclerView.Adapter<PiezasAdapter.PiezasView
             piezasViewHolder.estado.setBackgroundColor(mViewGroup.getContext().getResources().getColor(R.color.RojoOscuro));
         }
 
-        if (i < mListaPieza.size()) {
+        if (i < mListaPiezas.size()) {
             piezasViewHolder.separador.setVisibility(View.VISIBLE);
         } else {
             piezasViewHolder.separador.setVisibility(View.INVISIBLE);
@@ -93,6 +95,40 @@ public class PiezasAdapter extends RecyclerView.Adapter<PiezasAdapter.PiezasView
 
     @Override
     public int getItemCount() {
-        return mListaPieza.size();
+        return mListaPiezas.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return filtroPieza;
+    }
+
+    private Filter filtroPieza = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            ArrayList<ItemPieza> listaFiltrada = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                listaFiltrada.addAll(mListaPiezasFull);
+            } else {
+                String filter = constraint.toString().toLowerCase().trim();
+                for (ItemPieza item : mListaPiezasFull) {
+                    if (item.getNombrePieza().toLowerCase().contains(filter)) {
+                        listaFiltrada.add(item);
+                    }
+                }
+            }
+
+            FilterResults filterResults = new FilterResults();
+            filterResults.values = listaFiltrada;
+            return filterResults;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            mListaPiezas.clear();
+            mListaPiezas.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
 }

@@ -126,7 +126,7 @@ public class ServiciosAdapter extends RecyclerView.Adapter<ServiciosAdapter.Serv
 
             FilterResults filterResults = new FilterResults();
             filterResults.values = listaFiltrada;
-            return  filterResults;
+            return filterResults;
         }
 
         @Override

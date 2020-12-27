@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -18,8 +19,6 @@ import android.widget.Toast;
 import com.example.dentalhistoryrecorder.Componentes.MenuInferior;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
-import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.ItemServicio;
-import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.ServiciosAdapter;
 import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysPiezas;
 
 import org.json.JSONArray;
@@ -62,7 +61,39 @@ public class ListadoPiezas extends Fragment {
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                return false;
+                switch (menuItem.getItemId()) {
+//                    case R.id.opcion_nuevo:
+//                        Servicios servicios = new Servicios();
+//                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+//                        transaction.replace(R.id.contenedor, servicios);
+//                        transaction.commit();
+//                        return true;
+
+                    case R.id.opcion_filtrar:
+                        MenuItem searchItem = menuItem;
+                        SearchView searchView = (SearchView) searchItem.getActionView();
+
+                        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                            @Override
+                            public boolean onQueryTextSubmit(String query) {
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onQueryTextChange(String newText) {
+                                mAdapter.getFilter().filter(newText);
+                                return false;
+                            }
+                        });
+                        return true;
+
+                    case R.id.opcion_actualizar:
+                        listarPiezas();
+                        return true;
+
+                    default:
+                        return false;
+                }
             }
         });
 
@@ -105,22 +136,6 @@ public class ListadoPiezas extends Fragment {
                     mAdapter = new PiezasAdapter(listaPiezas);
                     mRecyclerView.setLayoutManager(mLayoutManager);
                     mRecyclerView.setAdapter(mAdapter);
-
-//                    mAdapter.setOnItemClickListener(new ServiciosAdapter.OnClickListener() {
-//                        @Override
-//                        public void onItemClick(final int position) {
-//                            MenuInferior menuInferior = new MenuInferior();
-//                            menuInferior.show(getFragmentManager(), "MenuInferior");
-//                            menuInferior.recibirTitulo("Servicio #", listaServicios.get(position).getCodigoServicio());
-//                            menuInferior.eventoClick(new MenuInferior.MenuInferiorListener() {
-//                                @Override
-//                                public void onButtonClicked(int opcion) {
-//                                    estadoServicio = listaServicios.get(position).getEstadoServicio();
-//                                    realizarAccion(opcion, listaServicios.get(position).getCodigoServicio());
-//                                }
-//                            });
-//                        }
-//                    });
 
                     mAdapter.setOnItemClickListener(new PiezasAdapter.OnClickListener() {
                         @Override
