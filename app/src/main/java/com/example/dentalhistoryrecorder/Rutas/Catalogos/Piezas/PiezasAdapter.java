@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.ItemServicio;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.ServiciosAdapter;
 
 import java.util.ArrayList;
 
@@ -18,16 +19,37 @@ public class PiezasAdapter extends RecyclerView.Adapter<PiezasAdapter.PiezasView
     private ArrayList<ItemPieza> mListaPieza;
     private ArrayList<ItemPieza> mlistaServiciosFull;
     private ViewGroup mViewGroup;
+    private PiezasAdapter.OnClickListener mListener;
+
+    public interface OnClickListener {
+        void onItemClick(int position);
+    }
+
+    public void setOnItemClickListener(PiezasAdapter.OnClickListener onItemClickListener){
+        mListener = onItemClickListener;
+    }
 
     public static class PiezasViewHolder extends RecyclerView.ViewHolder {
         TextView descripcion, estado;
         public View separador;
 
-        public PiezasViewHolder(@NonNull View itemView) {
+        public PiezasViewHolder(@NonNull View itemView, final PiezasAdapter.OnClickListener listener) {
             super(itemView);
             descripcion = itemView.findViewById(R.id.tituloPieza);
             estado = itemView.findViewById(R.id.estadoPieza);
             separador = itemView.findViewById(R.id.separadorPieza);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (listener != null){
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION){
+                            listener.onItemClick(position);
+                        }
+                    }
+                }
+            });
         }
     }
 
@@ -42,7 +64,7 @@ public class PiezasAdapter extends RecyclerView.Adapter<PiezasAdapter.PiezasView
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_pieza, viewGroup, false);
         Typeface typeface = Typeface.createFromAsset(view.getContext().getAssets(), "fonts/bahnschrift.ttf");
 
-        PiezasViewHolder piezasViewHolder = new PiezasViewHolder(view);
+        PiezasViewHolder piezasViewHolder = new PiezasViewHolder(view, mListener);
         piezasViewHolder.descripcion.setTypeface(typeface);
         piezasViewHolder.estado.setTypeface(typeface);
 

@@ -72,15 +72,6 @@ public class ListadoPiezas extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
 
-//        listaPiezas.add(new ItemPieza(1, 23, "Muela", true));
-//        listaPiezas.add(new ItemPieza(1, 23, "Muela", true));
-//        listaPiezas.add(new ItemPieza(1, 23, "Muela", true));
-//        listaPiezas.add(new ItemPieza(1, 23, "Muela", true));
-//
-//        mAdapter = new PiezasAdapter(listaPiezas);
-//        mRecyclerView.setLayoutManager(mLayoutManager);
-//        mRecyclerView.setAdapter(mAdapter);
-
         listarPiezas();
 
         return view;
@@ -101,7 +92,6 @@ public class ListadoPiezas extends Fragment {
         querysPiezas.obtenerListadoPiezas(preferenciasUsuario.getInt("ID_USUARIO", 0), new QuerysPiezas.VolleyOnEventListener() {
             @Override
             public void onSuccess(Object object) {
-                Toast.makeText(getContext(), object.toString(), Toast.LENGTH_LONG).show();
                 try {
                     JSONArray jsonArray = new JSONArray(object.toString());
                     for (int i = 0; i < jsonArray.length(); i++) {
@@ -132,6 +122,23 @@ public class ListadoPiezas extends Fragment {
 //                        }
 //                    });
 
+                    mAdapter.setOnItemClickListener(new PiezasAdapter.OnClickListener() {
+                        @Override
+                        public void onItemClick(int position) {
+                            MenuInferior menuInferior = new MenuInferior();
+                            menuInferior.show(getFragmentManager(), "MenuInferior");
+                            menuInferior.recibirTitulo("Pieza #", listaPiezas.get(position).getNumeroPieza());
+                            menuInferior.eventoClick(new MenuInferior.MenuInferiorListener() {
+                                @Override
+                                public void onButtonClicked(int opcion) {
+                                    Toast.makeText(getContext(), String.valueOf(opcion), Toast.LENGTH_SHORT).show();
+//                                    estadoServicio = listaServicios.get(position).getEstadoServicio();
+//                                    realizarAccion(opcion, listaServicios.get(position).getCodigoServicio());
+                                }
+                            });
+                        }
+                    });
+
                     progressDialog.dismiss();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -141,7 +148,6 @@ public class ListadoPiezas extends Fragment {
             @Override
             public void onFailure(Exception e) {
                 progressDialog.dismiss();
-                Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
                 Catalogos catalogos = new Catalogos();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
                 transaction.replace(R.id.contenedor, catalogos);
