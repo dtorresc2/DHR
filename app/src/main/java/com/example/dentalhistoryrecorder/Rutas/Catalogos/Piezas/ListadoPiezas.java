@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.example.dentalhistoryrecorder.Componentes.MenuInferior;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.Servicios;
 import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysPiezas;
 
 import org.json.JSONArray;
@@ -106,6 +107,27 @@ public class ListadoPiezas extends Fragment {
         listarPiezas();
 
         return view;
+    }
+
+    public void realizarAccion(int opcion, int ID) {
+        switch (opcion) {
+            case 1:
+//                Servicios servicios = new Servicios();
+//                servicios.editarServicio(ID);
+//                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+//                transaction.replace(R.id.contenedor, servicios);
+//                transaction.commit();
+                break;
+            case 2:
+//                actualizarEstado(ID);
+                break;
+
+            case 3:
+                break;
+
+            default:
+                return;
+        }
     }
 
     public void listarPiezas() {
