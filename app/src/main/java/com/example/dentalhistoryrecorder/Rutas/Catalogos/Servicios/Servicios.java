@@ -141,7 +141,7 @@ public class Servicios extends Fragment {
         guardadorServicio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!descripcionRequerida() || !validarDescripcion() || !montoRequerido())
+                if (!descripcionRequerida() || !validarDescripcion() || !montoRequerido() || !validarMonto())
                     return;
 
                 if (!modoEdicion)

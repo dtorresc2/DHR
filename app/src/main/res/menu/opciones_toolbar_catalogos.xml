@@ -9,17 +9,17 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/opcion_actualizar"
-        android:icon="@drawable/ic_actualizar"
-        android:orderInCategory="200"
-        android:title="Nuevo"
-        app:showAsAction="ifRoom" />
-
-    <item
         android:id="@+id/opcion_filtrar"
         android:icon="@drawable/icono_buscar"
+        android:orderInCategory="200"
         android:title="Buscar"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="ifRoom|collapseActionView" />
+
+    <item
+        android:id="@+id/opcion_actualizar"
+        android:icon="@drawable/ic_actualizar"
         android:orderInCategory="300"
-        app:showAsAction="ifRoom|collapseActionView"
-        app:actionViewClass="android.support.v7.widget.SearchView"/>
+        android:title="Nuevo"
+        app:showAsAction="ifRoom" />
 </menu>
