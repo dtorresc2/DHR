@@ -1,5 +1,8 @@
 package com.example.dentalhistoryrecorder.Rutas.Catalogos.Piezas;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.icu.util.ValueIterator;
 import android.os.Bundle;
@@ -15,8 +18,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.dentalhistoryrecorder.R;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.ListadoServicios;
+import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysPiezas;
+import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysServicios;
+import com.tapadoo.alerter.Alerter;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.regex.Pattern;
 
@@ -120,10 +131,59 @@ public class Piezas extends Fragment {
             public void onClick(View v) {
                 if (!nombreRequerido() || !numeroRequerido() || !validarNombre() || !validarNumero())
                     return;
+
+                registrarPieza();
             }
         });
 
         return view;
+    }
+
+    private void registrarPieza() {
+        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+        progressDialog.setMessage("Cargando...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+
+        QuerysPiezas querysPiezas = new QuerysPiezas(getContext());
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("NUMERO", numeroPieza.getText().toString().trim());
+            jsonBody.put("NOMBRE", nombrePieza.getText().toString().trim());
+            jsonBody.put("ESTADO", (truePieza.isChecked() == true) ? 1 : 0);
+            jsonBody.put("ID_USUARIO", preferenciasUsuario.getInt("ID_USUARIO", 0));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        querysPiezas.registrarPieza(jsonBody, new QuerysPiezas.VolleyOnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                progressDialog.dismiss();
+
+                ListadoPiezas listadoPiezas = new ListadoPiezas();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                transaction.replace(R.id.contenedor, listadoPiezas);
+                transaction.commit();
+
+                Alerter.create(getActivity())
+                        .setTitle("Pieza Registrada")
+                        .setIcon(R.drawable.logonuevo)
+                        .setTextTypeface(typeface)
+                        .enableSwipeToDismiss()
+                        .setBackgroundColorRes(R.color.FondoSecundario)
+                        .show();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                progressDialog.dismiss();
+                Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     //    VALIDACIONES

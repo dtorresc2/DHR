@@ -10,6 +10,10 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.dentalhistoryrecorder.R;
 
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+
 public class QuerysPiezas {
     Context mContext;
     private QuerysPiezas.VolleyOnEventListener<String> mCallBack;
@@ -40,6 +44,41 @@ public class QuerysPiezas {
             @Override
             public String getBodyContentType() {
                 return "application/json; charset=utf-8";
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        requestQueue.add(stringRequest);
+    }
+
+    public void registrarPieza(final JSONObject jsonBody, QuerysPiezas.VolleyOnEventListener callback) {
+        mCallBack = callback;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, mContext.getResources().getString(R.string.API) + "piezas", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) { ;
+                mCallBack.onSuccess(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mCallBack.onFailure(error);
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() {
+                try {
+                    final String mRequestBody = jsonBody.toString();
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                return null;
             }
         };
 
