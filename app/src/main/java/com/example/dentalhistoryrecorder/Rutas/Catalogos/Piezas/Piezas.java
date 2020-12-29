@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.icu.util.ValueIterator;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -125,6 +127,10 @@ public class Piezas extends Fragment {
         falsePieza = view.findViewById(R.id.falsePieza);
         falsePieza.setTypeface(typeface);
 
+        if (modoEdicion) {
+            obtenerPieza();
+        }
+
         guardadorPieza = view.findViewById(R.id.grabarPieza);
         guardadorPieza.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,11 +138,49 @@ public class Piezas extends Fragment {
                 if (!nombreRequerido() || !numeroRequerido() || !validarNombre() || !validarNumero())
                     return;
 
-                registrarPieza();
+                if (!modoEdicion)
+                    registrarPieza();
+                else
+                    actualizarPieza();
             }
         });
 
         return view;
+    }
+
+    private void obtenerPieza() {
+        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+        progressDialog.setMessage("Cargando...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        QuerysPiezas querysPiezas = new QuerysPiezas(getContext());
+        querysPiezas.obtenerPiezaEspecifica(ID_PIEZA, new QuerysPiezas.VolleyOnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                progressDialog.dismiss();
+                try {
+                    JSONObject jsonObject = new JSONObject(object.toString());
+                    nombrePieza.setText(jsonObject.getString("NOMBRE"));
+                    numeroPieza.setText(jsonObject.getString("NUMERO"));
+                    boolean habilitado = ((jsonObject.getInt("ESTADO")) > 0 ? true : false);
+                    truePieza.setChecked(habilitado);
+                    falsePieza.setChecked(!habilitado);
+                } catch (JSONException e) {
+                    progressDialog.dismiss();
+                    Log.i("PIEZA", e.toString());
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                progressDialog.dismiss();
+                Log.i("PIEZA", e.toString());
+                e.printStackTrace();
+            }
+        });
     }
 
     private void registrarPieza() {
@@ -176,6 +220,54 @@ public class Piezas extends Fragment {
                         .enableSwipeToDismiss()
                         .setBackgroundColorRes(R.color.FondoSecundario)
                         .show();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                progressDialog.dismiss();
+                Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void actualizarPieza() {
+        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+        progressDialog.setMessage("Cargando...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        QuerysPiezas querysPiezas = new QuerysPiezas(getContext());
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("NUMERO", numeroPieza.getText().toString().trim());
+            jsonBody.put("NOMBRE", nombrePieza.getText().toString().trim());
+            jsonBody.put("ESTADO", (truePieza.isChecked() == true) ? 1 : 0);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        querysPiezas.actualizarPieza(ID_PIEZA, jsonBody, new QuerysPiezas.VolleyOnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                Alerter.create(getActivity())
+                        .setTitle("Pieza Actualizada")
+                        .setIcon(R.drawable.logonuevo)
+                        .setTextTypeface(typeface)
+                        .enableSwipeToDismiss()
+                        .setBackgroundColorRes(R.color.FondoSecundario)
+                        .show();
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressDialog.dismiss();
+                        ListadoPiezas listadoPiezas = new ListadoPiezas();
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                        transaction.replace(R.id.contenedor, listadoPiezas);
+                        transaction.commit();
+                    }
+                }, 1000);
             }
 
             @Override

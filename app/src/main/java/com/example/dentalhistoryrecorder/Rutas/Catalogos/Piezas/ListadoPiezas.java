@@ -112,11 +112,13 @@ public class ListadoPiezas extends Fragment {
     public void realizarAccion(int opcion, int ID) {
         switch (opcion) {
             case 1:
+                Piezas piezas = new Piezas();
+                piezas.editarPieza(ID);
 //                Servicios servicios = new Servicios();
 //                servicios.editarServicio(ID);
-//                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-//                transaction.replace(R.id.contenedor, servicios);
-//                transaction.commit();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                transaction.replace(R.id.contenedor, piezas);
+                transaction.commit();
                 break;
             case 2:
 //                actualizarEstado(ID);
@@ -161,7 +163,7 @@ public class ListadoPiezas extends Fragment {
 
                     mAdapter.setOnItemClickListener(new PiezasAdapter.OnClickListener() {
                         @Override
-                        public void onItemClick(int position) {
+                        public void onItemClick(final int position) {
                             MenuInferior menuInferior = new MenuInferior();
                             menuInferior.show(getFragmentManager(), "MenuInferior");
                             menuInferior.recibirTitulo("Pieza #", listaPiezas.get(position).getNumeroPieza());
@@ -170,7 +172,7 @@ public class ListadoPiezas extends Fragment {
                                 public void onButtonClicked(int opcion) {
                                     Toast.makeText(getContext(), String.valueOf(opcion), Toast.LENGTH_SHORT).show();
 //                                    estadoServicio = listaServicios.get(position).getEstadoServicio();
-//                                    realizarAccion(opcion, listaServicios.get(position).getCodigoServicio());
+                                    realizarAccion(opcion, listaPiezas.get(position).getCodigoPieza());
                                 }
                             });
                         }
