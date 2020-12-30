@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@color/FondoSecundario2">
 
     <LinearLayout
@@ -25,48 +25,15 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tituloPieza"
+                    android:id="@+id/tituloCuenta"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:breakStrategy="simple"
                     android:gravity="left"
                     android:paddingLeft="10dp"
-                    android:text="1 - Diente de Leche"
+                    android:text="admin"
                     android:textColor="@color/Blanco"
-                    android:textSize="20sp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
-
-                    <TextView
-                        android:id="@+id/descPieza"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.6"
-                        android:gravity="left"
-                        android:paddingLeft="10dp"
-                        android:paddingTop="3dp"
-                        android:text=""
-                        android:textColor="@color/Blanco"
-                        android:textSize="15sp" />
-
-                    <TextView
-                        android:id="@+id/estadoPieza"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1.4"
-                        android:background="@color/VerdeOscuro"
-                        android:gravity="center_horizontal|center_vertical"
-                        android:paddingLeft="2dp"
-                        android:paddingRight="2dp"
-                        android:text="Habilitado"
-                        android:textColor="@color/Blanco"
-                        android:textSize="14sp" />
-                </LinearLayout>
+                    android:textSize="22sp" />
             </LinearLayout>
 
             <ImageButton
