@@ -4,7 +4,7 @@ public class ItemCuenta {
     private int mCodigoCuenta;
     private String mUsuarioCuenta;
 
-    public ItemCuenta(int codigoCuenta, String usuarioCuenta){
+    public ItemCuenta(int codigoCuenta, String usuarioCuenta) {
         mCodigoCuenta = codigoCuenta;
         mUsuarioCuenta = usuarioCuenta;
     }
@@ -13,7 +13,7 @@ public class ItemCuenta {
         return mCodigoCuenta;
     }
 
-    private String getUsuarioCuenta(){
+    public String getUsuarioCuenta() {
         return mUsuarioCuenta;
     }
 }
