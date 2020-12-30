@@ -177,13 +177,6 @@ public class Servicios extends Fragment {
         querysServicios.registrarServicio(jsonBody, new QuerysServicios.VolleyOnEventListener() {
             @Override
             public void onSuccess(Object object) {
-                progressDialog.dismiss();
-
-                ListadoServicios listadoServicios = new ListadoServicios();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                transaction.replace(R.id.contenedor, listadoServicios);
-                transaction.commit();
-
                 Alerter.create(getActivity())
                         .setTitle("Servicio Registrado")
                         .setIcon(R.drawable.logonuevo)
@@ -191,6 +184,17 @@ public class Servicios extends Fragment {
                         .enableSwipeToDismiss()
                         .setBackgroundColorRes(R.color.FondoSecundario)
                         .show();
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressDialog.dismiss();
+                        ListadoServicios listadoServicios = new ListadoServicios();
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                        transaction.replace(R.id.contenedor, listadoServicios);
+                        transaction.commit();
+                    }
+                }, 1000);
             }
 
             @Override

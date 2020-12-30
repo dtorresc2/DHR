@@ -1,9 +1,12 @@
 package com.example.dentalhistoryrecorder.Rutas.Catalogos.Piezas;
 
 import android.app.ProgressDialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,9 +24,11 @@ import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.Servicios;
 import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysPiezas;
+import com.tapadoo.alerter.Alerter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -33,6 +38,8 @@ public class ListadoPiezas extends Fragment {
     private PiezasAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<ItemPieza> listaPiezas;
+    private boolean estadoPieza = false;
+    private ItemPieza itemPieza;
 
     public ListadoPiezas() {
         // Required empty public constructor
@@ -114,14 +121,12 @@ public class ListadoPiezas extends Fragment {
             case 1:
                 Piezas piezas = new Piezas();
                 piezas.editarPieza(ID);
-//                Servicios servicios = new Servicios();
-//                servicios.editarServicio(ID);
                 FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
                 transaction.replace(R.id.contenedor, piezas);
                 transaction.commit();
                 break;
             case 2:
-//                actualizarEstado(ID);
+                deshabilitarPieza(ID);
                 break;
 
             case 3:
@@ -170,8 +175,8 @@ public class ListadoPiezas extends Fragment {
                             menuInferior.eventoClick(new MenuInferior.MenuInferiorListener() {
                                 @Override
                                 public void onButtonClicked(int opcion) {
-                                    Toast.makeText(getContext(), String.valueOf(opcion), Toast.LENGTH_SHORT).show();
-//                                    estadoServicio = listaServicios.get(position).getEstadoServicio();
+                                    estadoPieza = listaPiezas.get(position).getEstadoPieza();
+                                    itemPieza = listaPiezas.get(position);
                                     realizarAccion(opcion, listaPiezas.get(position).getCodigoPieza());
                                 }
                             });
@@ -194,5 +199,67 @@ public class ListadoPiezas extends Fragment {
                 e.printStackTrace();
             }
         });
+    }
+
+    private void deshabilitarPieza(int ID) {
+        if (estadoPieza) {
+            final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+            progressDialog.setMessage("Cargando...");
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+
+            QuerysPiezas querysPiezas = new QuerysPiezas(getContext());
+            JSONObject jsonBody = new JSONObject();
+            try {
+                jsonBody.put("NUMERO", itemPieza.getNumeroPieza());
+                jsonBody.put("NOMBRE", itemPieza.getNombrePieza());
+                jsonBody.put("ESTADO", false);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            querysPiezas.actualizarPieza(ID, jsonBody, new QuerysPiezas.VolleyOnEventListener() {
+                @Override
+                public void onSuccess(Object object) {
+                    Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+
+                    Alerter.create(getActivity())
+                            .setTitle("Deshabilitado correctamente")
+                            .setIcon(R.drawable.logonuevo)
+                            .setTextTypeface(typeface)
+                            .enableSwipeToDismiss()
+                            .setBackgroundColorRes(R.color.FondoSecundario)
+                            .show();
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressDialog.dismiss();
+                            ListadoPiezas listadoPiezas = new ListadoPiezas();
+                            FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                            transaction.replace(R.id.contenedor, listadoPiezas);
+                            transaction.commit();
+                        }
+                    }, 1000);
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    progressDialog.dismiss();
+//                Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        else {
+            Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+            Alerter.create(getActivity())
+                    .setTitle("La pieza esta deshabilitada")
+                    .setIcon(R.drawable.logonuevo)
+                    .setTextTypeface(typeface)
+                    .enableSwipeToDismiss()
+                    .setBackgroundColorRes(R.color.FondoSecundario)
+                    .show();
+        }
     }
 }

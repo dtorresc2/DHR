@@ -206,13 +206,6 @@ public class Piezas extends Fragment {
         querysPiezas.registrarPieza(jsonBody, new QuerysPiezas.VolleyOnEventListener() {
             @Override
             public void onSuccess(Object object) {
-                progressDialog.dismiss();
-
-                ListadoPiezas listadoPiezas = new ListadoPiezas();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                transaction.replace(R.id.contenedor, listadoPiezas);
-                transaction.commit();
-
                 Alerter.create(getActivity())
                         .setTitle("Pieza Registrada")
                         .setIcon(R.drawable.logonuevo)
@@ -220,6 +213,17 @@ public class Piezas extends Fragment {
                         .enableSwipeToDismiss()
                         .setBackgroundColorRes(R.color.FondoSecundario)
                         .show();
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressDialog.dismiss();
+                        ListadoPiezas listadoPiezas = new ListadoPiezas();
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                        transaction.replace(R.id.contenedor, listadoPiezas);
+                        transaction.commit();
+                    }
+                }, 1000);
             }
 
             @Override
