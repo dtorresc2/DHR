@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.example.dentalhistoryrecorder.OpcionIngreso.Normal.IngPersonales;
 import com.example.dentalhistoryrecorder.R;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Cuentas.ListadoCuentas;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Piezas.ListadoPiezas;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.ListadoServicios;
 
@@ -68,6 +69,16 @@ public class Catalogos extends Fragment {
                 ListadoPiezas listadoPiezas = new ListadoPiezas();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
                 transaction.replace(R.id.contenedor, listadoPiezas);
+                transaction.commit();
+            }
+        });
+
+        opcion_cuentas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ListadoCuentas listadoCuentas = new ListadoCuentas();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                transaction.replace(R.id.contenedor, listadoCuentas);
                 transaction.commit();
             }
         });
