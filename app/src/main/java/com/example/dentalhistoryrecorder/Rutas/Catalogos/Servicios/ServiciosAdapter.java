@@ -7,14 +7,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.example.dentalhistoryrecorder.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class ServiciosAdapter extends RecyclerView.Adapter<ServiciosAdapter.ServiciosViewHolder> {
+public class ServiciosAdapter extends RecyclerView.Adapter<ServiciosAdapter.ServiciosViewHolder> implements Filterable {
     private ArrayList<ItemServicio> mlistaServicios;
+    private ArrayList<ItemServicio> mlistaServiciosFull;
     private ViewGroup mViewGroup;
     private OnClickListener mListener;
 
@@ -53,6 +57,7 @@ public class ServiciosAdapter extends RecyclerView.Adapter<ServiciosAdapter.Serv
 
     public ServiciosAdapter(ArrayList<ItemServicio> listaServicios) {
         mlistaServicios = listaServicios;
+        mlistaServiciosFull = new ArrayList<>(listaServicios);
     }
 
     @NonNull
@@ -73,8 +78,8 @@ public class ServiciosAdapter extends RecyclerView.Adapter<ServiciosAdapter.Serv
     @Override
     public void onBindViewHolder(@NonNull ServiciosViewHolder serviciosViewHolder, int i) {
         ItemServicio itemServicio = mlistaServicios.get(i);
-
-        serviciosViewHolder.descripcion.setText(itemServicio.getCodigoServicio() + "-" + itemServicio.getDescripcionServicio());
+//        serviciosViewHolder.descripcion.setText(itemServicio.getCodigoServicio() + "-" + itemServicio.getDescripcionServicio());
+        serviciosViewHolder.descripcion.setText(itemServicio.getDescripcionServicio());
         serviciosViewHolder.monto.setText(String.format("%.2f", itemServicio.getMontoServicio()));
 
         if (itemServicio.getEstadoServicio()) {
@@ -96,4 +101,39 @@ public class ServiciosAdapter extends RecyclerView.Adapter<ServiciosAdapter.Serv
     public int getItemCount() {
         return mlistaServicios.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return filtroServicio;
+    }
+
+    private Filter filtroServicio = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            ArrayList<ItemServicio> listaFiltrada = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0){
+                listaFiltrada.addAll(mlistaServiciosFull);
+            }
+            else {
+                String filter = constraint.toString().toLowerCase().trim();
+                for (ItemServicio item : mlistaServiciosFull){
+                    if (item.getDescripcionServicio().toLowerCase().contains(filter)){
+                        listaFiltrada.add(item);
+                    }
+                }
+            }
+
+            FilterResults filterResults = new FilterResults();
+            filterResults.values = listaFiltrada;
+            return filterResults;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            mlistaServicios.clear();
+            mlistaServicios.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
 }

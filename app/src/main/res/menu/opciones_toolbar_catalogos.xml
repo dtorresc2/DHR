@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/opcion_nuevo"
+    <item
+        android:id="@+id/opcion_nuevo"
         android:icon="@drawable/ic_add"
         android:orderInCategory="100"
-        app:showAsAction="ifRoom"
-        android:title="Nuevo" />
+        android:title="Nuevo"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/opcion_filtrar"
+        android:icon="@drawable/icono_buscar"
+        android:orderInCategory="200"
+        android:title="Buscar"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="ifRoom|collapseActionView" />
+
+    <item
+        android:id="@+id/opcion_actualizar"
+        android:icon="@drawable/ic_actualizar"
+        android:orderInCategory="300"
+        android:title="Nuevo"
+        app:showAsAction="ifRoom" />
 </menu>

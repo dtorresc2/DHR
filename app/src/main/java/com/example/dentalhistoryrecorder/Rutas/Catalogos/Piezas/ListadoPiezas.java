@@ -1,6 +1,7 @@
-package com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios;
+package com.example.dentalhistoryrecorder.Rutas.Catalogos.Piezas;
 
 import android.app.ProgressDialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
@@ -8,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -17,16 +17,13 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.dentalhistoryrecorder.Componentes.MenuInferior;
-import com.example.dentalhistoryrecorder.InicioSesion;
-import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.ItemsFichas;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
-import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysCuentas;
-import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysServicios;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.Servicios;
+import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysPiezas;
 import com.tapadoo.alerter.Alerter;
 
 import org.json.JSONArray;
@@ -35,15 +32,16 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class ListadoServicios extends Fragment {
-    private RecyclerView mRecyclerView;
-    private ServiciosAdapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+public class ListadoPiezas extends Fragment {
     private Toolbar toolbar;
-    private boolean estadoServicio = false;
-    private ArrayList<ItemServicio> listaServicios;
+    private RecyclerView mRecyclerView;
+    private PiezasAdapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private ArrayList<ItemPieza> listaPiezas;
+    private boolean estadoPieza = false;
+    private ItemPieza itemPieza;
 
-    public ListadoServicios() {
+    public ListadoPiezas() {
         // Required empty public constructor
     }
 
@@ -51,11 +49,11 @@ public class ListadoServicios extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.fragment_listado_servicios, container, false);
+        View view = inflater.inflate(R.layout.fragment_listado_piezas, container, false);
 
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_cerrar);
-        toolbar.setTitle("Servicios");
+        toolbar.setTitle("Piezas");
         toolbar.inflateMenu(R.menu.opciones_toolbar_catalogos);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -73,9 +71,9 @@ public class ListadoServicios extends Fragment {
             public boolean onMenuItemClick(MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.opcion_nuevo:
-                        Servicios servicios = new Servicios();
+                        Piezas piezas = new Piezas();
                         FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                        transaction.replace(R.id.contenedor, servicios);
+                        transaction.replace(R.id.contenedor, piezas);
                         transaction.commit();
                         return true;
 
@@ -98,7 +96,7 @@ public class ListadoServicios extends Fragment {
                         return true;
 
                     case R.id.opcion_actualizar:
-                        listarServicios();
+                        listarPiezas();
                         return true;
 
                     default:
@@ -107,17 +105,13 @@ public class ListadoServicios extends Fragment {
             }
         });
 
-        listaServicios = new ArrayList<>();
+        listaPiezas = new ArrayList<>();
 
-        mRecyclerView = view.findViewById(R.id.listado_servicios);
+        mRecyclerView = view.findViewById(R.id.listado_piezas);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
-//        mAdapter = new ServiciosAdapter(listaServicios);
-//
-//        mRecyclerView.setLayoutManager(mLayoutManager);
-//        mRecyclerView.setAdapter(mAdapter);
 
-        listarServicios();
+        listarPiezas();
 
         return view;
     }
@@ -125,26 +119,26 @@ public class ListadoServicios extends Fragment {
     public void realizarAccion(int opcion, int ID) {
         switch (opcion) {
             case 1:
-                Servicios servicios = new Servicios();
-                servicios.editarServicio(ID);
+                Piezas piezas = new Piezas();
+                piezas.editarPieza(ID);
                 FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                transaction.replace(R.id.contenedor, servicios);
+                transaction.replace(R.id.contenedor, piezas);
                 transaction.commit();
                 break;
             case 2:
-                actualizarEstado(ID);
+                deshabilitarPieza(ID);
                 break;
 
             case 3:
                 break;
+
             default:
                 return;
         }
     }
 
-    public void listarServicios() {
-        listaServicios.clear();
-        estadoServicio = false;
+    public void listarPiezas() {
+        listaPiezas.clear();
 
         final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
         progressDialog.setMessage("Cargando...");
@@ -154,35 +148,36 @@ public class ListadoServicios extends Fragment {
 
         final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
 
-        QuerysServicios querysServicios = new QuerysServicios(getContext());
-        querysServicios.obtenerListadoServicios(preferenciasUsuario.getInt("ID_USUARIO", 0), new QuerysServicios.VolleyOnEventListener() {
+        QuerysPiezas querysPiezas = new QuerysPiezas(getContext());
+        querysPiezas.obtenerListadoPiezas(preferenciasUsuario.getInt("ID_USUARIO", 0), new QuerysPiezas.VolleyOnEventListener() {
             @Override
             public void onSuccess(Object object) {
                 try {
                     JSONArray jsonArray = new JSONArray(object.toString());
                     for (int i = 0; i < jsonArray.length(); i++) {
-                        listaServicios.add(new ItemServicio(
-                                jsonArray.getJSONObject(i).getInt("ID_SERVICIO"),
-                                jsonArray.getJSONObject(i).getString("DESCRIPCION"),
-                                jsonArray.getJSONObject(i).getDouble("MONTO"),
+                        listaPiezas.add(new ItemPieza(
+                                jsonArray.getJSONObject(i).getInt("ID_PIEZA"),
+                                jsonArray.getJSONObject(i).getInt("NUMERO"),
+                                jsonArray.getJSONObject(i).getString("NOMBRE"),
                                 (jsonArray.getJSONObject(i).getInt("ESTADO") > 0) ? true : false
                         ));
                     }
-                    mAdapter = new ServiciosAdapter(listaServicios);
+                    mAdapter = new PiezasAdapter(listaPiezas);
                     mRecyclerView.setLayoutManager(mLayoutManager);
                     mRecyclerView.setAdapter(mAdapter);
 
-                    mAdapter.setOnItemClickListener(new ServiciosAdapter.OnClickListener() {
+                    mAdapter.setOnItemClickListener(new PiezasAdapter.OnClickListener() {
                         @Override
                         public void onItemClick(final int position) {
                             MenuInferior menuInferior = new MenuInferior();
                             menuInferior.show(getFragmentManager(), "MenuInferior");
-                            menuInferior.recibirTitulo("Servicio #", listaServicios.get(position).getCodigoServicio());
+                            menuInferior.recibirTitulo("Pieza #", listaPiezas.get(position).getNumeroPieza());
                             menuInferior.eventoClick(new MenuInferior.MenuInferiorListener() {
                                 @Override
                                 public void onButtonClicked(int opcion) {
-                                    estadoServicio = listaServicios.get(position).getEstadoServicio();
-                                    realizarAccion(opcion, listaServicios.get(position).getCodigoServicio());
+                                    estadoPieza = listaPiezas.get(position).getEstadoPieza();
+                                    itemPieza = listaPiezas.get(position);
+                                    realizarAccion(opcion, listaPiezas.get(position).getCodigoPieza());
                                 }
                             });
                         }
@@ -206,30 +201,31 @@ public class ListadoServicios extends Fragment {
         });
     }
 
-    public void actualizarEstado(int ID) {
-        if (estadoServicio) {
+    private void deshabilitarPieza(int ID) {
+        if (estadoPieza) {
             final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
             progressDialog.setMessage("Cargando...");
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progressDialog.setCancelable(false);
             progressDialog.show();
 
-            QuerysServicios querysServicios = new QuerysServicios(getContext());
+            QuerysPiezas querysPiezas = new QuerysPiezas(getContext());
             JSONObject jsonBody = new JSONObject();
             try {
+                jsonBody.put("NUMERO", itemPieza.getNumeroPieza());
+                jsonBody.put("NOMBRE", itemPieza.getNombrePieza());
                 jsonBody.put("ESTADO", false);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-            querysServicios.actualizarEstado(ID, jsonBody, new QuerysServicios.VolleyOnEventListener() {
+            querysPiezas.actualizarPieza(ID, jsonBody, new QuerysPiezas.VolleyOnEventListener() {
                 @Override
                 public void onSuccess(Object object) {
-                    estadoServicio = false;
-
                     Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+
                     Alerter.create(getActivity())
-                            .setText("Deshabilitado Correctamente")
+                            .setTitle("Deshabilitado correctamente")
                             .setIcon(R.drawable.logonuevo)
                             .setTextTypeface(typeface)
                             .enableSwipeToDismiss()
@@ -240,7 +236,10 @@ public class ListadoServicios extends Fragment {
                         @Override
                         public void run() {
                             progressDialog.dismiss();
-                            listarServicios();
+                            ListadoPiezas listadoPiezas = new ListadoPiezas();
+                            FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                            transaction.replace(R.id.contenedor, listadoPiezas);
+                            transaction.commit();
                         }
                     }, 1000);
                 }
@@ -248,12 +247,14 @@ public class ListadoServicios extends Fragment {
                 @Override
                 public void onFailure(Exception e) {
                     progressDialog.dismiss();
+//                Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
                 }
             });
-        } else {
+        }
+        else {
             Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
             Alerter.create(getActivity())
-                    .setTitle("El servicio esta deshabilitado")
+                    .setTitle("La pieza esta deshabilitada")
                     .setIcon(R.drawable.logonuevo)
                     .setTextTypeface(typeface)
                     .enableSwipeToDismiss()
