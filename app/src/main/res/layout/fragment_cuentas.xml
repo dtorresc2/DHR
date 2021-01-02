@@ -36,12 +36,14 @@
             android:orientation="vertical">
 
             <android.support.design.widget.TextInputLayout
+                android:id="@+id/usuarioCuentaLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Cuenta"
                 app:counterEnabled="true"
                 app:errorEnabled="true"
-                app:counterMaxLength="20">
+                app:counterMaxLength="20"
+                app:errorTextAppearance="@style/error_appearance">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/usuarioCuenta"
@@ -53,13 +55,15 @@
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
+                android:id="@+id/passwordLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Contraseña"
                 app:errorEnabled="true"
                 app:counterEnabled="true"
                 app:counterMaxLength="20"
-                app:passwordToggleEnabled="true">
+                app:passwordToggleEnabled="true"
+                app:errorTextAppearance="@style/error_appearance">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/password"
@@ -71,13 +75,15 @@
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
+                android:id="@+id/passwordConfirmLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Confirmar Contraseña"
                 app:errorEnabled="true"
                 app:counterEnabled="true"
                 app:counterMaxLength="20"
-                app:passwordToggleEnabled="true">
+                app:passwordToggleEnabled="true"
+                app:errorTextAppearance="@style/error_appearance">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/passwordConfirm"

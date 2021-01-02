@@ -57,5 +57,10 @@
         <item name="android:windowExitAnimation">@anim/slide_down</item>
     </style>
 
+    <style name="error_appearance" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/Rojo</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
 
 </resources>

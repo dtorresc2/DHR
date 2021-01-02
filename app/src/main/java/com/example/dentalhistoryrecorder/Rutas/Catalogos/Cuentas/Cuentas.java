@@ -4,6 +4,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
@@ -19,6 +20,7 @@ import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.ListadoServic
 public class Cuentas extends Fragment {
     private Toolbar toolbar;
     private TextInputEditText usuarioCuenta, password, passwordConfirm;
+    private TextInputLayout usuarioCuentaLayout, passwordLayout;
     private FloatingActionButton guardadorCuenta;
 
     private boolean modoEdicion;
@@ -57,6 +59,12 @@ public class Cuentas extends Fragment {
             }
         });
 
+        usuarioCuentaLayout = view.findViewById(R.id.usuarioCuentaLayout);
+        usuarioCuentaLayout.setTypeface(typeface);
+
+        passwordLayout = view.findViewById(R.id.passwordLayout);
+        passwordLayout.setTypeface(typeface);
+
         usuarioCuenta = view.findViewById(R.id.usuarioCuenta);
         usuarioCuenta.setTypeface(typeface);
         usuarioCuenta.addTextChangedListener(new TextWatcher() {
@@ -67,7 +75,9 @@ public class Cuentas extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (usuarioRequerido()) {
 
+                }
             }
 
             @Override
@@ -86,7 +96,9 @@ public class Cuentas extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (passwordRequerido()) {
 
+                }
             }
 
             @Override
@@ -118,10 +130,34 @@ public class Cuentas extends Fragment {
         guardadorCuenta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (!usuarioRequerido() || !passwordRequerido())
+                    return;
             }
         });
 
         return view;
+    }
+
+    //    VALIDACIONES
+    private boolean usuarioRequerido() {
+        String textoCodigo = usuarioCuenta.getText().toString().trim();
+        if (textoCodigo.isEmpty()) {
+            usuarioCuentaLayout.setError("Campo requerido");
+            return false;
+        } else {
+            usuarioCuentaLayout.setError(null);
+            return true;
+        }
+    }
+
+    private boolean passwordRequerido() {
+        String textoCodigo = password.getText().toString().trim();
+        if (textoCodigo.isEmpty()) {
+            password.setError("Campo requerido");
+            return false;
+        } else {
+            password.setError(null);
+            return true;
+        }
     }
 }
