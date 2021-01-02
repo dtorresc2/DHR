@@ -18,11 +18,7 @@ import android.view.ViewGroup;
 import com.example.dentalhistoryrecorder.Componentes.MenuInferior;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
-import com.example.dentalhistoryrecorder.Rutas.Catalogos.Piezas.PiezasAdapter;
-import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.ItemServicio;
-import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.ServiciosAdapter;
 import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysCuentas;
-import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysServicios;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -67,6 +63,10 @@ public class ListadoCuentas extends Fragment {
             public boolean onMenuItemClick(MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.opcion_nuevo:
+                        Cuentas cuentas = new Cuentas();
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                        transaction.replace(R.id.contenedor, cuentas);
+                        transaction.commit();
                         return true;
 
                     case R.id.opcion_filtrar:
