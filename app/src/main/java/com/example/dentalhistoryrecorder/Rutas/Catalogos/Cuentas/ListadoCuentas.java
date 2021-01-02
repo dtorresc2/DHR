@@ -107,7 +107,7 @@ public class ListadoCuentas extends Fragment {
         return view;
     }
 
-    public void obtenerCuentas(){
+    public void obtenerCuentas() {
         listaCuentas.clear();
         estadoCuenta = false;
 

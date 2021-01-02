@@ -56,6 +56,7 @@ public class CuentasAdapter extends RecyclerView.Adapter<CuentasAdapter.CuentasV
 
     public CuentasAdapter(ArrayList<ItemCuenta> listaCuentas){
         mListaCuentas = listaCuentas;
+        mListaCuentasFull = new ArrayList<>(listaCuentas);
     }
 
     @NonNull
