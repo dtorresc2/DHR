@@ -34,6 +34,7 @@ public class QuerysCuentas {
 
     public interface VolleyOnEventListener<T> {
         void onSuccess(T object);
+
         void onFailure(Exception e);
     }
 
@@ -110,6 +111,30 @@ public class QuerysCuentas {
         mCallBack = callback;
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, mContext.getResources().getString(R.string.API) + "cuentas/" + id + "/usuario/" + usuario, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                mCallBack.onSuccess(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mCallBack.onFailure(error);
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        requestQueue.add(stringRequest);
+    }
+
+    public void obtenerCuentas(int id, VolleyOnEventListener callback) {
+        mCallBack = callback;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, mContext.getResources().getString(R.string.API) + "cuentas/" + id, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 mCallBack.onSuccess(response);

@@ -1,5 +1,8 @@
 package com.example.dentalhistoryrecorder.Rutas.Catalogos.Cuentas;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -11,9 +14,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.dentalhistoryrecorder.Componentes.MenuInferior;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Piezas.PiezasAdapter;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.ItemServicio;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.ServiciosAdapter;
+import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysCuentas;
+import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysServicios;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -58,21 +69,83 @@ public class ListadoCuentas extends Fragment {
 
         listaCuentas = new ArrayList<>();
 
-
-
         mRecyclerView = view.findViewById(R.id.listado_cuentas);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
 
-        listaCuentas.add(new ItemCuenta(1, "diegot"));
-        listaCuentas.add(new ItemCuenta(1, "diegot"));
-        listaCuentas.add(new ItemCuenta(1, "diegot"));
-        listaCuentas.add(new ItemCuenta(1, "diegot"));
+//        listaCuentas.add(new ItemCuenta(1, "diegot"));
+//        listaCuentas.add(new ItemCuenta(1, "diegot"));
+//        listaCuentas.add(new ItemCuenta(1, "diegot"));
+//        listaCuentas.add(new ItemCuenta(1, "diegot"));
+//
+//        mAdapter = new CuentasAdapter(listaCuentas);
+//        mRecyclerView.setLayoutManager(mLayoutManager);
+//        mRecyclerView.setAdapter(mAdapter);
 
-        mAdapter = new CuentasAdapter(listaCuentas);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
+        obtenerCuentas();
 
         return view;
+    }
+
+    public void obtenerCuentas(){
+        listaCuentas.clear();
+//        estadoServicio = false;
+
+        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+        progressDialog.setMessage("Cargando...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+
+        QuerysCuentas querysCuentas = new QuerysCuentas(getContext());
+        querysCuentas.obtenerCuentas(preferenciasUsuario.getInt("ID_USUARIO", 0), new QuerysCuentas.VolleyOnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                try {
+                    JSONArray jsonArray = new JSONArray(object.toString());
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        listaCuentas.add(new ItemCuenta(
+                                jsonArray.getJSONObject(i).getInt("ID_CUENTA"),
+                                jsonArray.getJSONObject(i).getString("USUARIO")
+                        ));
+                    }
+                    mAdapter = new CuentasAdapter(listaCuentas);
+                    mRecyclerView.setLayoutManager(mLayoutManager);
+                    mRecyclerView.setAdapter(mAdapter);
+
+//                    mAdapter.setOnItemClickListener(new ServiciosAdapter.OnClickListener() {
+//                        @Override
+//                        public void onItemClick(final int position) {
+//                            MenuInferior menuInferior = new MenuInferior();
+//                            menuInferior.show(getFragmentManager(), "MenuInferior");
+//                            menuInferior.recibirTitulo("Servicio #", listaServicios.get(position).getCodigoServicio());
+//                            menuInferior.eventoClick(new MenuInferior.MenuInferiorListener() {
+//                                @Override
+//                                public void onButtonClicked(int opcion) {
+//                                    estadoServicio = listaServicios.get(position).getEstadoServicio();
+//                                    realizarAccion(opcion, listaServicios.get(position).getCodigoServicio());
+//                                }
+//                            });
+//                        }
+//                    });
+
+                    progressDialog.dismiss();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                progressDialog.dismiss();
+                Catalogos catalogos = new Catalogos();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                transaction.replace(R.id.contenedor, catalogos);
+                transaction.commit();
+                e.printStackTrace();
+            }
+        });
     }
 }
