@@ -17,10 +17,12 @@ import android.view.ViewGroup;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.ListadoServicios;
 
+import java.util.regex.Pattern;
+
 public class Cuentas extends Fragment {
     private Toolbar toolbar;
     private TextInputEditText usuarioCuenta, password, passwordConfirm;
-    private TextInputLayout usuarioCuentaLayout, passwordLayout;
+    private TextInputLayout usuarioCuentaLayout, passwordLayout, passwordConfirmLayout;
     private FloatingActionButton guardadorCuenta;
 
     private boolean modoEdicion;
@@ -65,6 +67,9 @@ public class Cuentas extends Fragment {
         passwordLayout = view.findViewById(R.id.passwordLayout);
         passwordLayout.setTypeface(typeface);
 
+        passwordConfirmLayout = view.findViewById(R.id.passwordConfirmLayout);
+        passwordConfirmLayout.setTypeface(typeface);
+
         usuarioCuenta = view.findViewById(R.id.usuarioCuenta);
         usuarioCuenta.setTypeface(typeface);
         usuarioCuenta.addTextChangedListener(new TextWatcher() {
@@ -76,7 +81,7 @@ public class Cuentas extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (usuarioRequerido()) {
-
+                    validarUsuario();
                 }
             }
 
@@ -96,9 +101,7 @@ public class Cuentas extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (passwordRequerido()) {
-
-                }
+                passwordRequerido();
             }
 
             @Override
@@ -117,7 +120,9 @@ public class Cuentas extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                if (passwordConfirmRequerido()) {
+                    validarPassword();
+                }
             }
 
             @Override
@@ -130,7 +135,7 @@ public class Cuentas extends Fragment {
         guardadorCuenta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!usuarioRequerido() || !passwordRequerido())
+                if (!usuarioRequerido() || !passwordRequerido() || !passwordConfirmRequerido() || !validarUsuario() || !validarPassword())
                     return;
             }
         });
@@ -153,11 +158,57 @@ public class Cuentas extends Fragment {
     private boolean passwordRequerido() {
         String textoCodigo = password.getText().toString().trim();
         if (textoCodigo.isEmpty()) {
-            password.setError("Campo requerido");
+            passwordLayout.setError("Campo requerido");
             return false;
         } else {
-            password.setError(null);
+            passwordLayout.setError(null);
             return true;
         }
+    }
+
+    private boolean passwordConfirmRequerido() {
+        String textoCodigo = passwordConfirm.getText().toString().trim();
+        if (textoCodigo.isEmpty()) {
+            passwordConfirmLayout.setError("Campo requerido");
+            return false;
+        } else {
+            passwordConfirmLayout.setError(null);
+            return true;
+        }
+    }
+
+    private boolean validarUsuario() {
+        String textoDescripcion = usuarioCuenta.getText().toString().trim();
+        Pattern patron = Pattern.compile("^[a-z0-9]+$");
+        if (patron.matcher(textoDescripcion).matches()) {
+            usuarioCuentaLayout.setError(null);
+            return true;
+        } else {
+            usuarioCuentaLayout.setError("Usuario invalido");
+            return false;
+        }
+    }
+
+    private boolean validarPassword() {
+        String pass = password.getText().toString().trim();
+        String passConfirm = passwordConfirm.getText().toString().trim();
+
+        if (pass.contains(passConfirm)){
+            passwordConfirmLayout.setError(null);
+            return true;
+        }
+        else {
+            passwordConfirmLayout.setError("Las contraseñas no coinciden");
+            return false;
+        }
+
+//        Pattern patron = Pattern.compile("^[a-z0-9]+$");
+//        if (patron.matcher(textoDescripcion).matches()) {
+//            usuarioCuentaLayout.setError(null);
+//            return true;
+//        } else {
+//            usuarioCuentaLayout.setError("Usuario invalido");
+//            return false;
+//        }
     }
 }
