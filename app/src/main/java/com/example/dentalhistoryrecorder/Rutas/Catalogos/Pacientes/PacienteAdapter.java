@@ -1,4 +1,4 @@
-package com.example.dentalhistoryrecorder.OpcionConsulta.Normal.Adaptadores;
+package com.example.dentalhistoryrecorder.Rutas.Catalogos.Pacientes;
 
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
@@ -10,13 +10,12 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
-import com.example.dentalhistoryrecorder.OpcionConsulta.Items;
 import com.example.dentalhistoryrecorder.R;
 
 import java.util.ArrayList;
 
-public class AdaptadorConsulta extends RecyclerView.Adapter<AdaptadorConsulta.ViewHolderConsulta> {
-    private ArrayList<Items> mLista;
+public class PacienteAdapter extends RecyclerView.Adapter<PacienteAdapter.ViewHolderConsulta> {
+    private ArrayList<ItemPaciente> mLista;
     private int lastPosition = -1;
     private OnItemClickListener mlistener;
 
@@ -59,7 +58,7 @@ public class AdaptadorConsulta extends RecyclerView.Adapter<AdaptadorConsulta.Vi
         }
     }
 
-    public AdaptadorConsulta(ArrayList<Items> lista) {
+    public PacienteAdapter(ArrayList<ItemPaciente> lista) {
         mLista = lista;
     }
 
@@ -80,13 +79,13 @@ public class AdaptadorConsulta extends RecyclerView.Adapter<AdaptadorConsulta.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolderConsulta viewHolderConsulta, int i) {
-        Items items = mLista.get(i);
-        viewHolderConsulta.mid.setText(items.getMid());
-        viewHolderConsulta.mnombre.setText(items.getMnombre());
-        viewHolderConsulta.mcontadorN.setText(items.getMcontadorN());
-        viewHolderConsulta.mcontadorE.setText(items.getMcontadorE());
-        viewHolderConsulta.medad.setText(items.getMedad());
-        viewHolderConsulta.mfecha.setText(items.getMfecha());
+        ItemPaciente itemPaciente = mLista.get(i);
+        viewHolderConsulta.mid.setText(itemPaciente.getMid());
+        viewHolderConsulta.mnombre.setText(itemPaciente.getMnombre());
+        viewHolderConsulta.mcontadorN.setText(itemPaciente.getMcontadorN());
+        viewHolderConsulta.mcontadorE.setText(itemPaciente.getMcontadorE());
+        viewHolderConsulta.medad.setText(itemPaciente.getMedad());
+        viewHolderConsulta.mfecha.setText(itemPaciente.getMfecha());
         setAnimation(viewHolderConsulta.itemView, i);
     }
 

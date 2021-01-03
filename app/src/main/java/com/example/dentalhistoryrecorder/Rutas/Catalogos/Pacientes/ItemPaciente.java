@@ -1,6 +1,6 @@
-package com.example.dentalhistoryrecorder.OpcionConsulta;
+package com.example.dentalhistoryrecorder.Rutas.Catalogos.Pacientes;
 
-public class Items {
+public class ItemPaciente {
     private String mid;
     private String mnombre;
     private String mcontadorN;
@@ -8,7 +8,7 @@ public class Items {
     private String medad;
     private String mfecha;
 
-    public Items(String id, String nombre, String contadorN, String contadorE, String edad, String fecha){
+    public ItemPaciente(String id, String nombre, String contadorN, String contadorE, String edad, String fecha){
         mid = id;
         mnombre = nombre;
         mcontadorN = contadorN;

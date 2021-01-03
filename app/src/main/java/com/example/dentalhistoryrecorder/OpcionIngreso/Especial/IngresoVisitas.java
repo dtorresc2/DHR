@@ -107,7 +107,7 @@ public class IngresoVisitas extends Fragment {
         });
 
         preferencias = getActivity().getSharedPreferences("Terapia", Context.MODE_PRIVATE);
-        preferencias2 = getActivity().getSharedPreferences("Consultar", Context.MODE_PRIVATE);
+        preferencias2 = getActivity().getSharedPreferences("ListadoPacientes", Context.MODE_PRIVATE);
         final SharedPreferences.Editor escritor = preferencias2.edit();
 
         final Calendar calendar = Calendar.getInstance();

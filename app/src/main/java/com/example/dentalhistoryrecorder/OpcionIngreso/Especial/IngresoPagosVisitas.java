@@ -106,7 +106,7 @@ public class IngresoPagosVisitas extends Fragment {
             }
         });
 
-        preferencias = getActivity().getSharedPreferences("Consultar", Context.MODE_PRIVATE);
+        preferencias = getActivity().getSharedPreferences("ListadoPacientes", Context.MODE_PRIVATE);
 
         final Calendar calendar = Calendar.getInstance();
         int yy = calendar.get(Calendar.YEAR);
@@ -433,7 +433,7 @@ public class IngresoPagosVisitas extends Fragment {
         mOpcion = opcion;
     }
 
-    //Consultar Historial Odontodologico - Tratamiento
+    //ListadoPacientes Historial Odontodologico - Tratamiento
     public void consultarTratamiento(String URL, final String id) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override

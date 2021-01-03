@@ -82,7 +82,7 @@ public class IngHOdon extends Fragment {
         final Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         requestQueue = Volley.newRequestQueue(getContext());
 
-        preferencias = getActivity().getSharedPreferences("Consultar", Context.MODE_PRIVATE);
+        preferencias = getActivity().getSharedPreferences("ListadoPacientes", Context.MODE_PRIVATE);
 
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         //spinner = view.findViewById(R.id.ing_piezas);

@@ -3,14 +3,12 @@ package com.example.dentalhistoryrecorder.Rutas.Catalogos.Pacientes;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
@@ -24,10 +22,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,9 +34,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.dentalhistoryrecorder.OpcionConsulta.Items;
-import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.Adaptadores.AdaptadorConsulta;
-import com.example.dentalhistoryrecorder.OpcionIngreso.Agregar;
 import com.example.dentalhistoryrecorder.OpcionIngreso.Normal.IngDetalle;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
@@ -65,7 +58,7 @@ public class Pacientes extends Fragment {
     private ImageButton fecha;
     RequestQueue requestQueue;
     private RecyclerView listaPac;
-    private AdaptadorConsulta adapter;
+    private PacienteAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
     public Pacientes() {
@@ -318,7 +311,7 @@ public class Pacientes extends Fragment {
                 JSONArray jsonArray = null;
                 try {
                     jsonArray = new JSONArray(response);
-                    final ArrayList<Items> lista = new ArrayList<>();
+                    final ArrayList<ItemPaciente> lista = new ArrayList<>();
                     if (jsonArray.length() > 0) {
                         for (int i = 0; i < jsonArray.length(); i++) {
                             String id = jsonArray.getJSONObject(i).getString("idPaciente");
@@ -332,14 +325,14 @@ public class Pacientes extends Fragment {
                             String edad = jsonArray.getJSONObject(i).getString("edad");
                             String fecha = jsonArray.getJSONObject(i).getString("fecha_nac");
 
-                            lista.add(new Items(id, nom, contN, contE, edad, fecha));
+                            lista.add(new ItemPaciente(id, nom, contN, contE, edad, fecha));
                         }
                         listaPac.setHasFixedSize(true);
                         layoutManager = new LinearLayoutManager(getContext());
-                        adapter = new AdaptadorConsulta(lista);
+                        adapter = new PacienteAdapter(lista);
                         listaPac.setLayoutManager(layoutManager);
                         listaPac.setAdapter(adapter);
-                        adapter.setOnItemClickListener(new AdaptadorConsulta.OnItemClickListener() {
+                        adapter.setOnItemClickListener(new PacienteAdapter.OnItemClickListener() {
                             @Override
                             public void onItemClick(final int position) {
                                 if (Integer.parseInt(lista.get(position).getMcontadorN()) > 0) {

@@ -1,4 +1,4 @@
-package com.example.dentalhistoryrecorder.OpcionConsulta.Normal;
+package com.example.dentalhistoryrecorder.Rutas.Catalogos.Pacientes;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -19,13 +19,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.accessibility.AccessibilityManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -34,9 +31,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.dentalhistoryrecorder.InicioSesion;
-import com.example.dentalhistoryrecorder.OpcionConsulta.Items;
-import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.Adaptadores.AdaptadorConsulta;
+import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.consultarFichas;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Pacientes.ItemPaciente;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Pacientes.PacienteAdapter;
 import com.example.dentalhistoryrecorder.OpcionIngreso.Especial.IngCostos;
 import com.example.dentalhistoryrecorder.R;
 import com.tapadoo.alerter.Alerter;
@@ -48,13 +45,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Consultar extends Fragment {
+public class ListadoPacientes extends Fragment {
     private EditText pnombre, papellido;
     private FloatingActionButton buscar;
     private Toolbar toolbar;
 
     private RecyclerView lista_pacientes;
-    private AdaptadorConsulta adapter;
+    private PacienteAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     RequestQueue requestQueue;
     private static final String TAG = "MyActivity";
@@ -62,7 +59,7 @@ public class Consultar extends Fragment {
     private int mOpcion = 0;
     private TextView etiquetaN, etiquetaE;
 
-    public Consultar() {
+    public ListadoPacientes() {
         // Required empty public constructor
     }
 
@@ -73,7 +70,7 @@ public class Consultar extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_consultar, container, false);
         final Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         requestQueue = Volley.newRequestQueue(getContext());
-        preferencias = getActivity().getSharedPreferences("Consultar", Context.MODE_PRIVATE);
+        preferencias = getActivity().getSharedPreferences("ListadoPacientes", Context.MODE_PRIVATE);
         toolbar = view.findViewById(R.id.toolbar);
 
         switch (mOpcion) {
@@ -168,7 +165,7 @@ public class Consultar extends Fragment {
                 JSONArray jsonArray = null;
                 try {
                     jsonArray = new JSONArray(response);
-                    final ArrayList<Items> lista = new ArrayList<>();
+                    final ArrayList<ItemPaciente> lista = new ArrayList<>();
                     if (jsonArray.length() > 0) {
                         for (int i = 0; i < jsonArray.length(); i++) {
                             String id = jsonArray.getJSONObject(i).getString("idPaciente");
@@ -182,16 +179,16 @@ public class Consultar extends Fragment {
                             String edad = jsonArray.getJSONObject(i).getString("edad");
                             String fecha = jsonArray.getJSONObject(i).getString("fecha_nac");
 
-                            lista.add(new Items(id, nom, contN, contE, edad, fecha));
+                            lista.add(new ItemPaciente(id, nom, contN, contE, edad, fecha));
                         }
                         lista_pacientes.setHasFixedSize(true);
                         layoutManager = new LinearLayoutManager(getContext());
-                        adapter = new AdaptadorConsulta(lista);
+                        adapter = new PacienteAdapter(lista);
                         lista_pacientes.setLayoutManager(layoutManager);
                         lista_pacientes.setAdapter(adapter);
                         pnombre.setText(null);
                         papellido.setText(null);
-                        adapter.setOnItemClickListener(new AdaptadorConsulta.OnItemClickListener() {
+                        adapter.setOnItemClickListener(new PacienteAdapter.OnItemClickListener() {
                             @Override
                             public void onItemClick(final int position) {
                                 //Toast.makeText(getActivity(),"Posicion: " + position,Toast.LENGTH_LONG).show();

@@ -1,9 +1,7 @@
 package com.example.dentalhistoryrecorder.OpcionSeguimiento;
 
-import android.app.ProgressDialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
@@ -14,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.Consultar;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Pacientes.ListadoPacientes;
 import com.example.dentalhistoryrecorder.OpcionIngreso.Normal.IngHOdon;
 import com.example.dentalhistoryrecorder.OpcionIngreso.Normal.Ing_HFoto;
 import com.example.dentalhistoryrecorder.R;
@@ -40,10 +38,10 @@ public class Seguimiento extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Consultar consultar = new Consultar();
-                consultar.ObtenerOpcion(2);
+                ListadoPacientes listadoPacientes = new ListadoPacientes();
+                listadoPacientes.ObtenerOpcion(2);
                 FragmentTransaction transaction2 = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                transaction2.replace(R.id.contenedor, consultar);
+                transaction2.replace(R.id.contenedor, listadoPacientes);
                 transaction2.commit();
             }
         });

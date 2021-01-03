@@ -107,7 +107,7 @@ public class SegPagos extends Fragment {
         eliminador = view.findViewById(R.id.eliminador);
         eliminador.setTypeface(face);
 
-        preferencias = getActivity().getSharedPreferences("Consultar", Context.MODE_PRIVATE);
+        preferencias = getActivity().getSharedPreferences("ListadoPacientes", Context.MODE_PRIVATE);
 
         tableLayout = view.findViewById(R.id.tablaPagos);
 
@@ -398,7 +398,7 @@ public class SegPagos extends Fragment {
         mOpcion = opcion;
     }
 
-    //Consultar Historial Odontodologico - Tratamiento
+    //ListadoPacientes Historial Odontodologico - Tratamiento
     public void consultarTratamiento(String URL, final String id) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override

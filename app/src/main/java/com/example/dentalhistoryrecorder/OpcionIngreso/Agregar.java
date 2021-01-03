@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.Consultar;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Pacientes.ListadoPacientes;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Pacientes.Pacientes;
 import com.example.dentalhistoryrecorder.R;
 
@@ -55,10 +55,10 @@ public class Agregar extends Fragment {
         botonNuevoEspecial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Consultar consultar = new Consultar();
-                consultar.ObtenerOpcion(3);
+                ListadoPacientes listadoPacientes = new ListadoPacientes();
+                listadoPacientes.ObtenerOpcion(3);
                 FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                transaction.replace(R.id.contenedor, consultar);
+                transaction.replace(R.id.contenedor, listadoPacientes);
                 transaction.commit();
 
             }

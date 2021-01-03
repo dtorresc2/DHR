@@ -13,11 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.Consultar;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Pacientes.ListadoPacientes;
 import com.example.dentalhistoryrecorder.OpcionIngreso.Especial.IngresoPagosVisitas;
 import com.example.dentalhistoryrecorder.OpcionIngreso.Especial.IngresoVisitas;
-import com.example.dentalhistoryrecorder.OpcionIngreso.Normal.IngHOdon;
-import com.example.dentalhistoryrecorder.OpcionIngreso.Normal.Ing_HFoto;
 import com.example.dentalhistoryrecorder.R;
 
 public class SeguimientoEspecial extends Fragment {
@@ -42,10 +40,10 @@ public class SeguimientoEspecial extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Consultar consultar = new Consultar();
-                consultar.ObtenerOpcion(2);
+                ListadoPacientes listadoPacientes = new ListadoPacientes();
+                listadoPacientes.ObtenerOpcion(2);
                 FragmentTransaction transaction2 = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                transaction2.replace(R.id.contenedor, consultar);
+                transaction2.replace(R.id.contenedor, listadoPacientes);
                 transaction2.commit();
             }
         });

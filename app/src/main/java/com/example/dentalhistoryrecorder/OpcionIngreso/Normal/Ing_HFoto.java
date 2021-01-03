@@ -33,7 +33,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.Consultar;
 import com.example.dentalhistoryrecorder.OpcionIngreso.Agregar;
 import com.example.dentalhistoryrecorder.OpcionSeguimiento.Seguimiento;
 import com.example.dentalhistoryrecorder.R;
@@ -103,7 +102,7 @@ public class Ing_HFoto extends Fragment {
         toolbar.setNavigationIcon(R.drawable.ic_cerrar);
         requestQueue = Volley.newRequestQueue(getContext());
 
-        preferencias = getActivity().getSharedPreferences("Consultar", Context.MODE_PRIVATE);
+        preferencias = getActivity().getSharedPreferences("ListadoPacientes", Context.MODE_PRIVATE);
 
         galeria = view.findViewById(R.id.visor);
         galeria.setOnClickListener(new View.OnClickListener() {
