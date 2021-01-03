@@ -98,31 +98,31 @@ public class Pacientes extends Fragment {
             }
         });
 
-        //Datos Personales
-//        existente = (Switch) view.findViewById(R.id.existente);
-//        existente.setTypeface(face);
         primerNombre = view.findViewById(R.id.primerNombre);
         primerNombre.setTypeface(face);
-//        segundoNombre = view.findViewById(R.id.segundoNombre);
-//        segundoNombre.setTypeface(face);
-//        primerApellido = view.findViewById(R.id.primerApellido);
-//        primerApellido.setTypeface(face);
-//        segundoApellido = view.findViewById(R.id.segundoApellido);
-//        segundoApellido.setTypeface(face);
+
         edad = view.findViewById(R.id.edad);
         edad.setTypeface(face);
+
         telefono = view.findViewById(R.id.telefono);
         telefono.setTypeface(face);
+
         ocupacion = view.findViewById(R.id.ocupacion);
         ocupacion.setTypeface(face);
+
         sexo = (RadioButton) view.findViewById(R.id.masculino);
         sexo.setTypeface(face);
+
         sexof = view.findViewById(R.id.femenino);
         sexof.setTypeface(face);
+
         agregador = view.findViewById(R.id.agregar_dp);
+
         fecha = view.findViewById(R.id.fecha_dp);
+
         fechap = view.findViewById(R.id.fecha_persona);
         fechap.setTypeface(face);
+
         buscador = view.findViewById(R.id.buscar_dp);
 
         Calendar calendar = Calendar.getInstance();
@@ -160,163 +160,22 @@ public class Pacientes extends Fragment {
             }
         });
 
-        //Persistencia de Datos
-        /*SharedPreferences preferencias = getActivity().getSharedPreferences("datospersonales", Context.MODE_PRIVATE);
-        primerNombre.setText(preferencias.getString("pnombre", " "));
-        segundoNombre.setText(preferencias.getString("snombre", " "));
-        primerApellido.setText(preferencias.getString("papellido", " "));
-        segundoApellido.setText(preferencias.getString("sapellido", " "));
-        telefono.setText(preferencias.getString("telefono", " "));
-        ocupacion.setText(preferencias.getString("ocupacion", " "));
-        sexo.setChecked(preferencias.getBoolean("sexo", true));
-        edad.setText(String.valueOf(preferencias.getInt("edad", 0)));*/
-
-        //Guardador de datos
-        //final SharedPreferences.Editor escritor = preferencias.edit();
+        String[] auxFecha = fechap.getText().toString().split("/");
+//        Toast.makeText(getContext(), auxFecha[2] + "-" + auxFecha[1] + "-" + auxFecha[0], Toast.LENGTH_SHORT).show();
 
         //Guardando datos temporalmente
         agregador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!existente.isChecked()) {
-                    //Toast.makeText(getActivity(), "Ingresado Correctamente", Toast.LENGTH_SHORT).show();
-                    /*escritor.putString("pnombre", primerNombre.getText().toString());
-                    escritor.putString("snombre", segundoNombre.getText().toString());
-                    escritor.putString("papellido", primerApellido.getText().toString());
-                    escritor.putString("sapellido", segundoApellido.getText().toString());
-                    escritor.putString("telefono", telefono.getText().toString());
-                    escritor.putString("ocupacion", ocupacion.getText().toString());
-                    escritor.putInt("edad", Integer.parseInt(edad.getText().toString()));
-                    escritor.putBoolean("sexo", sexo.isChecked());
-                    escritor.commit();*/
 
-                    final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-                    progressDialog.setMessage("Cargando...");
-                    progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                    progressDialog.setCancelable(false);
-                    progressDialog.show();
-
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        public void run() {
-                            progressDialog.dismiss();
-                        }
-                    }, 1000);
-
-                    boolean validado = false;
-                    if (!primerNombre.getText().toString().isEmpty()) {
-                        validado = true;
-                        if (!segundoNombre.getText().toString().isEmpty()) {
-                            validado = true;
-                            if (!primerApellido.getText().toString().isEmpty()) {
-                                validado = true;
-                                if (!segundoApellido.getText().toString().isEmpty()) {
-                                    validado = true;
-
-                                    ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-                                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-                                    if (networkInfo != null && networkInfo.isConnected()) {
-                                        insertarPaciente("http://dhr.sistemasdt.xyz/Normal/ficha.php?estado=1");
-
-                                        IngDetalle ingDetalle = new IngDetalle();
-                                        ingDetalle.obtenerPaciente(0);
-                                        FragmentTransaction transaction = getFragmentManager().beginTransaction()
-                                                .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                                        transaction.replace(R.id.contenedor, ingDetalle);
-                                        transaction.commit();
-
-                                    } else {
-                                        Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-                                        Alerter.create(getActivity())
-                                                .setTitle("Error")
-                                                .setText("Fallo en Conexion a Internet")
-                                                .setIcon(R.drawable.logonuevo)
-                                                .setTextTypeface(face2)
-                                                .enableSwipeToDismiss()
-                                                .setBackgroundColorRes(R.color.AzulOscuro)
-                                                .show();
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    if (validado == false) {
-                        Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-                        Alerter.create(getActivity())
-                                .setTitle("Faltan Campos")
-                                .setIcon(R.drawable.logonuevo)
-                                .setTextTypeface(face2)
-                                .enableSwipeToDismiss()
-                                .setBackgroundColorRes(R.color.AzulOscuro)
-                                .show();
-                    }
-                }
             }
         });
 
-//        existente.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (existente.isChecked()) {
-//                    segundoNombre.setEnabled(false);
-//                    segundoApellido.setEnabled(false);
-//                    edad.setEnabled(false);
-//                    telefono.setEnabled(false);
-//                    ocupacion.setEnabled(false);
-//                    sexo.setEnabled(false);
-//                    sexof.setEnabled(false);
-//
-//                } else {
-//                    primerApellido.setText(null);
-//                    primerNombre.setText(null);
-//                    segundoNombre.setEnabled(true);
-//                    segundoApellido.setEnabled(true);
-//                    edad.setEnabled(true);
-//                    telefono.setEnabled(true);
-//                    ocupacion.setEnabled(true);
-//                    sexo.setEnabled(true);
-//                    sexof.setEnabled(true);
-//                }
-//            }
-//        });
 
         buscador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!primerNombre.getText().toString().isEmpty() && !primerApellido.getText().toString().isEmpty() && existente.isChecked()) {
-                    final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-                    progressDialog.setMessage("Cargando...");
-                    progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                    progressDialog.setCancelable(false);
-                    progressDialog.show();
 
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        public void run() {
-                            progressDialog.dismiss();
-                        }
-                    }, 3000);
-
-                    ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-                    if (networkInfo != null && networkInfo.isConnected()) {
-                        obtenerPacientes("http://dhr.sistemasdt.xyz/Normal/consultaficha.php?estado=8");
-                    } else {
-                        Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-                        Alerter.create(getActivity())
-                                .setTitle("Error")
-                                .setText("Fallo en Conexion a Internet")
-                                .setIcon(R.drawable.logonuevo)
-                                .setTextTypeface(face2)
-                                .enableSwipeToDismiss()
-                                .setBackgroundColorRes(R.color.AzulOscuro)
-                                .show();
-                    }
-
-                }
             }
         });
         return view;
