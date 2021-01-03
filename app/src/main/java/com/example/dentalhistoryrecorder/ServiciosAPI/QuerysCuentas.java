@@ -264,7 +264,7 @@ public class QuerysCuentas {
         requestQueue.add(stringRequest);
     }
 
-    public void eliminarCuenta(int id, final JSONObject jsonBody, VolleyOnEventListener callback) {
+    public void eliminarCuenta(int id, VolleyOnEventListener callback) {
         mCallBack = callback;
 
         StringRequest stringRequest = new StringRequest(Request.Method.DELETE, mContext.getResources().getString(R.string.API) + "cuentas/" + id, new Response.Listener<String>() {
@@ -281,17 +281,6 @@ public class QuerysCuentas {
             @Override
             public String getBodyContentType() {
                 return "application/json; charset=utf-8";
-            }
-
-            @Override
-            public byte[] getBody() {
-                try {
-                    final String mRequestBody = jsonBody.toString();
-                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-                return null;
             }
         };
 

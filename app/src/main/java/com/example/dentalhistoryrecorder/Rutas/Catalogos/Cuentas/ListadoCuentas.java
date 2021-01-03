@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -24,6 +25,7 @@ import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.Servicios;
 import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysCuentas;
+import com.tapadoo.alerter.Alerter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,6 +39,7 @@ public class ListadoCuentas extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<ItemCuenta> listaCuentas;
     private boolean estadoCuenta = false;
+    private Typeface typeface;
 
     public ListadoCuentas() {
         // Required empty public constructor
@@ -47,6 +50,8 @@ public class ListadoCuentas extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_listado_cuentas, container, false);
+        typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+
 
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_cerrar);
@@ -124,7 +129,7 @@ public class ListadoCuentas extends Fragment {
                 transaction.commit();
                 break;
             case 2:
-                eliminarCuenta();
+                eliminarCuenta(ID);
                 break;
             default:
                 return;
@@ -192,13 +197,33 @@ public class ListadoCuentas extends Fragment {
         });
     }
 
-    public void eliminarCuenta() {
+    public void eliminarCuenta(final int ID) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
+        builder.setIcon(R.drawable.logonuevo);
         builder.setTitle("Eliminar Cuenta");
         builder.setMessage("Desea eliminar la cuenta?");
         builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                // User clicked OK button
+                QuerysCuentas querysCuentas = new QuerysCuentas(getContext());
+                querysCuentas.eliminarCuenta(ID, new QuerysCuentas.VolleyOnEventListener() {
+                    @Override
+                    public void onSuccess(Object object) {
+                        Alerter.create(getActivity())
+                                .setTitle("Cuenta eliminada")
+                                .setIcon(R.drawable.logonuevo)
+                                .setTextTypeface(typeface)
+                                .enableSwipeToDismiss()
+                                .setBackgroundColorRes(R.color.FondoSecundario)
+                                .show();
+
+                        obtenerCuentas();
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+
+                    }
+                });
             }
         });
         builder.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
@@ -207,7 +232,6 @@ public class ListadoCuentas extends Fragment {
             }
         });
 
-// Create the AlertDialog
         AlertDialog dialog = builder.create();
         dialog.show();
 
