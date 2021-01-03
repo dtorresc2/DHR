@@ -82,7 +82,6 @@ public class Servicios extends Fragment {
 
         descripcionServicio = view.findViewById(R.id.descripcionServicio);
         descripcionServicio.setTypeface(typeface);
-
         descripcionServicio.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -104,7 +103,6 @@ public class Servicios extends Fragment {
 
         montoServicio = view.findViewById(R.id.montoServicio);
         montoServicio.setTypeface(typeface);
-
         montoServicio.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
