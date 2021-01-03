@@ -7,7 +7,7 @@
         <item name="colorPrimaryDark">@color/AzulOscuro</item>
         <item name="colorAccent">@color/Blanco</item>
     </style>
-    
+
     <style name="TextLabel" parent="TextAppearance.AppCompat">
         <item name="android:textColorHint">@color/Blanco</item>
         <item name="android:textSize">20sp</item>
@@ -22,8 +22,8 @@
     </style>
 
     <style name="fondoetiqueta">
-        <item name ="android:background">@drawable/etiqueta_menu</item>
-        <item name ="android:textColor">#ffff</item>
+        <item name="android:background">@drawable/etiqueta_menu</item>
+        <item name="android:textColor">#ffff</item>
     </style>
 
     <style name="progressDialog" parent="Theme.AppCompat.Dialog">
@@ -31,6 +31,18 @@
         <item name="android:textColorPrimary">@color/Blanco</item>
         <item name="android:background">@color/AzulOscuro</item>
         <item name="android:textSize">18sp</item>
+        <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
+        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
+
+    </style>
+
+    <!--    Botones del Componente-->
+    <style name="NegativeButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/Blanco</item>
+    </style>
+
+    <style name="PositiveButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/Blanco</item>
     </style>
 
     <!-- <style name="AppTheme.Dark.Dialog" parent="Theme.AppCompat.Dialog">

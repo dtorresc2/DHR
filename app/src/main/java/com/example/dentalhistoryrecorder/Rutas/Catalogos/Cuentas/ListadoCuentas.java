@@ -1,7 +1,9 @@
 package com.example.dentalhistoryrecorder.Rutas.Catalogos.Cuentas;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -122,7 +124,7 @@ public class ListadoCuentas extends Fragment {
                 transaction.commit();
                 break;
             case 2:
-//                actualizarEstado(ID);
+                eliminarCuenta();
                 break;
             default:
                 return;
@@ -188,5 +190,26 @@ public class ListadoCuentas extends Fragment {
                 e.printStackTrace();
             }
         });
+    }
+
+    public void eliminarCuenta() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
+        builder.setTitle("Eliminar Cuenta");
+        builder.setMessage("Desea eliminar la cuenta?");
+        builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK button
+            }
+        });
+        builder.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+
+// Create the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
     }
 }
