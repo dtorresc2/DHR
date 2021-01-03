@@ -11,7 +11,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -42,7 +44,6 @@ import com.example.dentalhistoryrecorder.OpcionIngreso.Agregar;
 import com.example.dentalhistoryrecorder.OpcionIngreso.Normal.IngDetalle;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
-import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.tapadoo.alerter.Alerter;
 
 import org.json.JSONArray;
@@ -55,16 +56,11 @@ import java.util.Map;
 
 public class Pacientes extends Fragment {
     private Toolbar toolbar;
-    private TextInputEditText primerNombre, segundoNombre, primerApellido, segundoApellido;
-    private TextInputEditText edad, telefono, ocupacion, fechap;
+    private TextInputEditText primerNombre, edad, telefono, ocupacion, fechap, dpi;
+    private TextInputLayout nombreLayout, edadLayout, fechaLayout, dpiLayout, ocupacionLayout, telLayout;
     private RadioButton sexo, sexof;
-    private Switch existente;
-    private TextView etiqueta;
-    private String dato1, dato2, dato3, dato4, dato5, dato6, dato7, dato8;
     private ArrayList<String> lista1 = new ArrayList<String>();
-    private final Bundle bundle = new Bundle();
-    private FloatingActionButton agregador, buscador;
-    private EditText prua;
+    private FloatingActionButton agregador;
     private static final String TAG = "MyActivity";
     private ImageButton fecha;
     RequestQueue requestQueue;
@@ -82,7 +78,7 @@ public class Pacientes extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_pacientes, container, false);
         Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         requestQueue = Volley.newRequestQueue(getContext());
-        //Barra de Titulo
+
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_cerrar);
         toolbar.setTitle("Paciente");
@@ -90,7 +86,6 @@ public class Pacientes extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(getActivity(), "ATRAS", Toast.LENGTH_SHORT).show();
                 Catalogos catalogos = new Catalogos();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
                 transaction.replace(R.id.contenedor, catalogos);
@@ -116,14 +111,12 @@ public class Pacientes extends Fragment {
         sexof = view.findViewById(R.id.femenino);
         sexof.setTypeface(face);
 
-        agregador = view.findViewById(R.id.agregar_dp);
+        agregador = view.findViewById(R.id.grabarPaciente);
 
         fecha = view.findViewById(R.id.fecha_dp);
 
         fechap = view.findViewById(R.id.fecha_persona);
         fechap.setTypeface(face);
-
-        buscador = view.findViewById(R.id.buscar_dp);
 
         Calendar calendar = Calendar.getInstance();
         int dia = calendar.get(Calendar.DAY_OF_MONTH);
@@ -160,22 +153,11 @@ public class Pacientes extends Fragment {
             }
         });
 
-        String[] auxFecha = fechap.getText().toString().split("/");
-//        Toast.makeText(getContext(), auxFecha[2] + "-" + auxFecha[1] + "-" + auxFecha[0], Toast.LENGTH_SHORT).show();
-
-        //Guardando datos temporalmente
         agregador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-            }
-        });
-
-
-        buscador.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
+                String[] auxFecha = fechap.getText().toString().split("/");
+                Toast.makeText(getContext(), auxFecha[2] + "-" + auxFecha[1] + "-" + auxFecha[0], Toast.LENGTH_SHORT).show();
             }
         });
         return view;
@@ -202,9 +184,9 @@ public class Pacientes extends Fragment {
                 Map<String, String> parametros = new HashMap<String, String>();
                 //parametros.put("id", id[0]);
                 parametros.put("pnombre", primerNombre.getText().toString());
-                parametros.put("snombre", segundoNombre.getText().toString());
-                parametros.put("papellido", primerApellido.getText().toString());
-                parametros.put("sapellido", segundoApellido.getText().toString());
+//                parametros.put("snombre", segundoNombre.getText().toString());
+//                parametros.put("papellido", primerApellido.getText().toString());
+//                parametros.put("sapellido", segundoApellido.getText().toString());
                 parametros.put("edad", edad.getText().toString());
                 parametros.put("ocupacion", ocupacion.getText().toString());
                 parametros.put("sexo", String.valueOf((sexo.isChecked()) ? 1 : 0));
@@ -283,7 +265,7 @@ public class Pacientes extends Fragment {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> parametros = new HashMap<String, String>();
                 parametros.put("pnombre", primerNombre.getText().toString());
-                parametros.put("papellido", primerApellido.getText().toString());
+//                parametros.put("papellido", primerApellido.getText().toString());
                 SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
                 parametros.put("id", preferencias2.getString("idUsuario", "1"));
                 return parametros;
@@ -355,7 +337,7 @@ public class Pacientes extends Fragment {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> parametros = new HashMap<String, String>();
                 parametros.put("pnombre", primerNombre.getText().toString());
-                parametros.put("papellido", primerApellido.getText().toString());
+//                parametros.put("papellido", primerApellido.getText().toString());
                 SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
                 parametros.put("id", preferencias2.getString("idUsuario", "1"));
                 return parametros;

@@ -12,41 +12,53 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
 
-    <com.getbase.floatingactionbutton.FloatingActionsMenu
-        android:id="@+id/menuDP"
+<!--    <com.getbase.floatingactionbutton.FloatingActionsMenu-->
+<!--        android:id="@+id/menuDP"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="bottom|end"-->
+<!--        android:layout_marginEnd="10dp"-->
+<!--        android:layout_marginRight="10dp"-->
+<!--        android:layout_marginBottom="65dp"-->
+<!--        android:clickable="true"-->
+<!--        android:elevation="10dp"-->
+<!--        app:fab_addButtonColorNormal="@color/AzulOscuro"-->
+<!--        app:fab_addButtonColorPressed="@color/FondoSecundario"-->
+<!--        app:fab_labelStyle="@style/fondoetiqueta">-->
+
+<!--        <com.getbase.floatingactionbutton.FloatingActionButton-->
+<!--            android:id="@+id/agregar_dp"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:fabSize="normal"-->
+<!--            app:fab_colorNormal="@color/FondoSecundario"-->
+<!--            app:fab_colorPressed="@color/AzulOscuro"-->
+<!--            app:fab_icon="@drawable/icono_agregar"-->
+<!--            app:fab_title="Agregar" />-->
+
+<!--        <com.getbase.floatingactionbutton.FloatingActionButton-->
+<!--            android:id="@+id/buscar_dp"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:fabSize="normal"-->
+<!--            app:fab_colorNormal="@color/FondoSecundario"-->
+<!--            app:fab_colorPressed="@color/AzulOscuro"-->
+<!--            app:fab_icon="@drawable/icono_buscar"-->
+<!--            app:fab_title="Buscar" />-->
+
+<!--    </com.getbase.floatingactionbutton.FloatingActionsMenu>-->
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/grabarPaciente"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="65dp"
         android:clickable="true"
         android:elevation="10dp"
-        app:fab_addButtonColorNormal="@color/AzulOscuro"
-        app:fab_addButtonColorPressed="@color/FondoSecundario"
-        app:fab_labelStyle="@style/fondoetiqueta">
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/agregar_dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:fabSize="normal"
-            app:fab_colorNormal="@color/FondoSecundario"
-            app:fab_colorPressed="@color/AzulOscuro"
-            app:fab_icon="@drawable/icono_agregar"
-            app:fab_title="Agregar" />
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/buscar_dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:fabSize="normal"
-            app:fab_colorNormal="@color/FondoSecundario"
-            app:fab_colorPressed="@color/AzulOscuro"
-            app:fab_icon="@drawable/icono_buscar"
-            app:fab_title="Buscar" />
-
-    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+        android:src="@drawable/ic_check"
+        app:backgroundTint="@color/AzulOscuro" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -57,7 +69,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="65dp"
             android:orientation="vertical">
 
             <android.support.design.widget.TextInputLayout
@@ -72,42 +84,6 @@
                     android:hint="Nombre"
                     android:inputType="textPersonName" />
             </android.support.design.widget.TextInputLayout>
-
-            <!--            <android.support.design.widget.TextInputLayout-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="match_parent">-->
-
-            <!--                <android.support.design.widget.TextInputEditText-->
-            <!--                    android:id="@+id/segundoNombre"-->
-            <!--                    android:layout_width="match_parent"-->
-            <!--                    android:layout_height="wrap_content"-->
-            <!--                    android:hint="Segundo Nombre"-->
-            <!--                    android:inputType="textPersonName" />-->
-            <!--            </android.support.design.widget.TextInputLayout>-->
-
-            <!--            <android.support.design.widget.TextInputLayout-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="match_parent">-->
-
-            <!--                <android.support.design.widget.TextInputEditText-->
-            <!--                    android:id="@+id/primerApellido"-->
-            <!--                    android:layout_width="match_parent"-->
-            <!--                    android:layout_height="wrap_content"-->
-            <!--                    android:hint="Primer Apellido"-->
-            <!--                    android:inputType="textPersonName" />-->
-            <!--            </android.support.design.widget.TextInputLayout>-->
-
-            <!--            <android.support.design.widget.TextInputLayout-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="match_parent">-->
-
-            <!--                <android.support.design.widget.TextInputEditText-->
-            <!--                    android:id="@+id/segundoApellido"-->
-            <!--                    android:layout_width="match_parent"-->
-            <!--                    android:layout_height="wrap_content"-->
-            <!--                    android:hint="Segundo Apellido"-->
-            <!--                    android:inputType="textPersonName" />-->
-            <!--            </android.support.design.widget.TextInputLayout>-->
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/telefonoLayout"
