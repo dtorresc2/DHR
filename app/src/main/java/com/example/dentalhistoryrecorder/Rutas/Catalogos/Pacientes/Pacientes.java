@@ -86,16 +86,16 @@ public class Pacientes extends Fragment {
         toolbar.setTitle("Datos Personales");
 
         //Datos Personales
-        existente = (Switch) view.findViewById(R.id.existente);
-        existente.setTypeface(face);
+//        existente = (Switch) view.findViewById(R.id.existente);
+//        existente.setTypeface(face);
         primerNombre = view.findViewById(R.id.primerNombre);
         primerNombre.setTypeface(face);
-        segundoNombre = view.findViewById(R.id.segundoNombre);
-        segundoNombre.setTypeface(face);
-        primerApellido = view.findViewById(R.id.primerApellido);
-        primerApellido.setTypeface(face);
-        segundoApellido = view.findViewById(R.id.segundoApellido);
-        segundoApellido.setTypeface(face);
+//        segundoNombre = view.findViewById(R.id.segundoNombre);
+//        segundoNombre.setTypeface(face);
+//        primerApellido = view.findViewById(R.id.primerApellido);
+//        primerApellido.setTypeface(face);
+//        segundoApellido = view.findViewById(R.id.segundoApellido);
+//        segundoApellido.setTypeface(face);
         edad = view.findViewById(R.id.edad);
         edad.setTypeface(face);
         telefono = view.findViewById(R.id.telefono);

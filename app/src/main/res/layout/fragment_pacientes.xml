@@ -57,19 +57,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="60dp" />
-
-            <Switch
-                android:id="@+id/existente"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:text="Existente   "
-                android:textSize="18sp" />
+            android:orientation="vertical"
+            android:layout_marginTop="60dp">
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -79,45 +68,45 @@
                     android:id="@+id/primerNombre"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Primer Nombre"
+                    android:hint="Nombre Completo"
                     android:inputType="textPersonName" />
             </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+<!--            <android.support.design.widget.TextInputLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent">-->
 
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/segundoNombre"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Segundo Nombre"
-                    android:inputType="textPersonName" />
-            </android.support.design.widget.TextInputLayout>
+<!--                <android.support.design.widget.TextInputEditText-->
+<!--                    android:id="@+id/segundoNombre"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:hint="Segundo Nombre"-->
+<!--                    android:inputType="textPersonName" />-->
+<!--            </android.support.design.widget.TextInputLayout>-->
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+<!--            <android.support.design.widget.TextInputLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent">-->
 
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/primerApellido"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Primer Apellido"
-                    android:inputType="textPersonName" />
-            </android.support.design.widget.TextInputLayout>
+<!--                <android.support.design.widget.TextInputEditText-->
+<!--                    android:id="@+id/primerApellido"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:hint="Primer Apellido"-->
+<!--                    android:inputType="textPersonName" />-->
+<!--            </android.support.design.widget.TextInputLayout>-->
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+<!--            <android.support.design.widget.TextInputLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent">-->
 
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/segundoApellido"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Segundo Apellido"
-                    android:inputType="textPersonName" />
-            </android.support.design.widget.TextInputLayout>
+<!--                <android.support.design.widget.TextInputEditText-->
+<!--                    android:id="@+id/segundoApellido"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:hint="Segundo Apellido"-->
+<!--                    android:inputType="textPersonName" />-->
+<!--            </android.support.design.widget.TextInputLayout>-->
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -158,55 +147,47 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="2">
 
                 <ImageButton
                     android:id="@+id/fecha_dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="8dp"
-                    android:layout_weight="0.7"
+                    android:layout_weight="1.5"
                     android:background="@color/FondoSecundario"
                     android:src="@drawable/icono_citas" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.9" />
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="402dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.3">
+                    android:layout_weight="0.5"
+                    android:layout_marginLeft="10dp">
 
                     <android.support.design.widget.TextInputEditText
                         android:id="@+id/fecha_persona"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:editable="false"
-                        android:hint="Fecha"
+                        android:hint="Fecha Nacimiento"
                         tools:ignore="Deprecated" />
                 </android.support.design.widget.TextInputLayout>
-
-
-
-
             </LinearLayout>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="5dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
 
                 <RadioGroup
                     android:id="@+id/sexo"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_gravity="center"
+                    android:gravity="center">
 
                     <RadioButton
                         android:id="@+id/masculino"
@@ -222,17 +203,9 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Femenino" />
-
-                    <Space
-                        android:layout_width="100dp"
-                        android:layout_height="10dp" />
                 </RadioGroup>
+
             </LinearLayout>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="70dp" />
-
         </LinearLayout>
     </ScrollView>
 
