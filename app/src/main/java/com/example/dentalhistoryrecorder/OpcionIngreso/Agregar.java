@@ -4,17 +4,14 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.Consultar;
-import com.example.dentalhistoryrecorder.OpcionIngreso.Especial.IngCostos;
-import com.example.dentalhistoryrecorder.OpcionIngreso.Normal.IngPersonales;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Pacientes.Pacientes;
 import com.example.dentalhistoryrecorder.R;
 
 
@@ -47,9 +44,9 @@ public class Agregar extends Fragment {
         botonNuevo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IngPersonales ingPersonales = new IngPersonales();
+                Pacientes pacientes = new Pacientes();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                transaction.replace(R.id.contenedor, ingPersonales);
+                transaction.replace(R.id.contenedor, pacientes);
                 transaction.commit();
             }
         });

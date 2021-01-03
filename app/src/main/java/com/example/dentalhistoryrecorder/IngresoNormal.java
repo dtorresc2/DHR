@@ -28,7 +28,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.dentalhistoryrecorder.OpcionIngreso.Normal.IngDetalle;
 import com.example.dentalhistoryrecorder.OpcionIngreso.Normal.IngHMedico;
 import com.example.dentalhistoryrecorder.OpcionIngreso.Normal.IngHOdon;
-import com.example.dentalhistoryrecorder.OpcionIngreso.Normal.IngPersonales;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Pacientes.Pacientes;
 import com.example.dentalhistoryrecorder.OpcionIngreso.Normal.Ing_HFoto;
 
 import org.json.JSONArray;
@@ -203,10 +203,10 @@ public class IngresoNormal extends Fragment {
                 public void onClick(View v) {
                     switch (dato) {
                         case 1:
-                            IngPersonales ingPersonales = new IngPersonales();
+                            Pacientes pacientes = new Pacientes();
                             FragmentTransaction transaction = getFragmentManager().beginTransaction()
                                     .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                            transaction.replace(R.id.contenedor, ingPersonales);
+                            transaction.replace(R.id.contenedor, pacientes);
                             transaction.commit();
                             break;
 

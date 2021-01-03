@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.dentalhistoryrecorder.OpcionIngreso.Normal.IngPersonales;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Cuentas.ListadoCuentas;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Piezas.ListadoPiezas;
