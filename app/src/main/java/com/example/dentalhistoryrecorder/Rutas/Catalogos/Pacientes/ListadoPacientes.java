@@ -10,6 +10,7 @@ import android.net.NetworkInfo;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -17,6 +18,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -34,6 +36,8 @@ import com.android.volley.toolbox.Volley;
 import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.consultarFichas;
 import com.example.dentalhistoryrecorder.OpcionIngreso.Especial.IngCostos;
 import com.example.dentalhistoryrecorder.R;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Piezas.Piezas;
 import com.tapadoo.alerter.Alerter;
 
 import org.json.JSONArray;
@@ -71,24 +75,57 @@ public class ListadoPacientes extends Fragment {
         preferencias = getActivity().getSharedPreferences("ListadoPacientes", Context.MODE_PRIVATE);
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle("Pacientes");
+        toolbar.setNavigationIcon(R.drawable.ic_cerrar);
+        toolbar.inflateMenu(R.menu.opciones_toolbar_catalogos);
 
-//        switch (mOpcion) {
-//            case 1:
-//                toolbar.setTitle("Consulta de Fichas");
-//                break;
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Catalogos catalogos = new Catalogos();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                transaction.replace(R.id.contenedor, catalogos);
+                transaction.commit();
+            }
+        });
+
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.opcion_nuevo:
+                        Pacientes pacientes = new Pacientes();
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                        transaction.replace(R.id.contenedor, pacientes);
+                        transaction.commit();
+                        return true;
+
+                    case R.id.opcion_filtrar:
+//                        MenuItem searchItem = menuItem;
+//                        SearchView searchView = (SearchView) searchItem.getActionView();
 //
-//            case 2:
-//                toolbar.setTitle("Seguimiento de  Fichas");
-//                break;
+//                        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//                            @Override
+//                            public boolean onQueryTextSubmit(String query) {
+//                                return false;
+//                            }
 //
-//            case 3:
-//                toolbar.setTitle("Evaluacion Myobrace");
-//                break;
-//
-//            default:
-//                toolbar.setTitle("Consulta");
-//                break;
-//        }
+//                            @Override
+//                            public boolean onQueryTextChange(String newText) {
+//                                mAdapter.getFilter().filter(newText);
+//                                return false;
+//                            }
+//                        });
+                        return true;
+
+                    case R.id.opcion_actualizar:
+//                        listarPiezas();
+                        return true;
+
+                    default:
+                        return false;
+                }
+            }
+        });
 
         pnombre = view.findViewById(R.id.pnom_bus);
         pnombre.setTypeface(face);
@@ -107,285 +144,15 @@ public class ListadoPacientes extends Fragment {
         buscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //consultarPaciente("http://192.168.56.1/DHR/IngresoN/consultaficha.php?db=u578331993_clinc&user=root");
-                //consultarPaciente("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=1");
-//                if (!pnombre.getText().toString().isEmpty() && !papellido.getText().toString().isEmpty()) {
-//                    final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-//                    progressDialog.setMessage("Cargando...");
-//                    progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-//                    progressDialog.setCancelable(false);
-//                    progressDialog.show();
-//
-//                    Handler handler = new Handler();
-//                    handler.postDelayed(new Runnable() {
-//                        public void run() {
-//                            progressDialog.dismiss();
-//                        }
-//                    }, 1000);
-//
-//                    ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-//                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-//
-//                    if (networkInfo != null && networkInfo.isConnected()) {
-//                        obtenerPacientes("http://dhr.sistemasdt.xyz/Normal/consultaficha.php?estado=8");
-//                    } else {
-//                        Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-//                        Alerter.create(getActivity())
-//                                .setTitle("Error")
-//                                .setText("Fallo en Conexion a Internet")
-//                                .setIcon(R.drawable.logonuevo)
-//                                .setTextTypeface(face2)
-//                                .enableSwipeToDismiss()
-//                                .setBackgroundColorRes(R.color.AzulOscuro)
-//                                .show();
-//                    }
-//                }
-//                else {
-//                    Alerter.create(getActivity())
-//                            .setTitle("Hay Campos Vacios")
-//                            .setIcon(R.drawable.logonuevo)
-//                            .setTextTypeface(face)
-//                            .enableSwipeToDismiss()
-//                            .setBackgroundColorRes(R.color.AzulOscuro)
-//                            .show();
-//                }
+
             }
         });
 
         return view;
     }
 
-    //Insertar Datos Personales y Obtener ID Pacientes ----------------------------------------------
-    public void consultarPaciente(String URL) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                JSONArray jsonArray = null;
-                try {
-                    jsonArray = new JSONArray(response);
-                    final ArrayList<ItemPaciente> lista = new ArrayList<>();
-                    if (jsonArray.length() > 0) {
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            String id = jsonArray.getJSONObject(i).getString("idPaciente");
-                            Log.i(TAG, "id: " + id);
-                            String nom = jsonArray.getJSONObject(i).getString("Nombre");
-                            Log.i(TAG, "nombre: " + nom);
-                            String contN = jsonArray.getJSONObject(i).getString("Fichas");
-                            Log.i(TAG, "contadorN: " + contN);
-                            String contE = jsonArray.getJSONObject(i).getString("Fichas2");
-                            Log.i(TAG, "contadorE: " + contE);
-                            String edad = jsonArray.getJSONObject(i).getString("edad");
-                            String fecha = jsonArray.getJSONObject(i).getString("fecha_nac");
-
-                            lista.add(new ItemPaciente(id, nom, contN, contE, edad, fecha));
-                        }
-                        lista_pacientes.setHasFixedSize(true);
-                        layoutManager = new LinearLayoutManager(getContext());
-                        adapter = new PacienteAdapter(lista);
-                        lista_pacientes.setLayoutManager(layoutManager);
-                        lista_pacientes.setAdapter(adapter);
-                        pnombre.setText(null);
-                        papellido.setText(null);
-                        adapter.setOnItemClickListener(new PacienteAdapter.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(final int position) {
-                                //Toast.makeText(getActivity(),"Posicion: " + position,Toast.LENGTH_LONG).show();
-                                if (mOpcion != 3) {
-                                    final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                                    Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-                                    View viewCuadro = getLayoutInflater().inflate(R.layout.dialogo_fichas, null);
-                                    Button cancelar = viewCuadro.findViewById(R.id.cancelar_cfichas);
-                                    cancelar.setTypeface(face2);
-                                    TextView tituloN = viewCuadro.findViewById(R.id.textView2);
-                                    tituloN.setTypeface(face2);
-                                    TextView tituloE = viewCuadro.findViewById(R.id.textView3);
-                                    tituloE.setTypeface(face2);
-
-                                    ImageView normales = viewCuadro.findViewById(R.id.entrarNormales);
-                                    ImageView especiales = viewCuadro.findViewById(R.id.entrarEspeciales);
-
-                                    builder.setView(viewCuadro);
-                                    final AlertDialog dialog = builder.create();
-
-                                    normales.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            if (Integer.parseInt(lista.get(position).getMcontadorN()) > 0) {
-
-                                                ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-                                                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-                                                if (networkInfo != null && networkInfo.isConnected()) {
-                                                    consultarFichas consultarFichas1 = new consultarFichas(lista.get(position).getMid(), mOpcion);
-                                                    SharedPreferences.Editor escritor2 = preferencias.edit();
-                                                    escritor2.putString("nombre", lista.get(position).getMnombre());
-                                                    escritor2.putString("edad", lista.get(position).getMedad());
-                                                    escritor2.commit();
-                                                    FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                                                    transaction.replace(R.id.contenedor, consultarFichas1);
-                                                    transaction.commit();
-                                                    dialog.dismiss();
-                                                } else {
-                                                    Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-                                                    Alerter.create(getActivity())
-                                                            .setTitle("Error")
-                                                            .setText("Fallo en Conexion a Internet")
-                                                            .setIcon(R.drawable.logonuevo)
-                                                            .setTextTypeface(face2)
-                                                            .enableSwipeToDismiss()
-                                                            .setBackgroundColorRes(R.color.AzulOscuro)
-                                                            .show();
-                                                }
-                                            }
-                                        }
-                                    });
-
-                                    especiales.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            if (Integer.parseInt(lista.get(position).getMcontadorE()) > 0) {
-
-                                                ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-                                                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-                                                if (networkInfo != null && networkInfo.isConnected()) {
-                                                    if (mOpcion != 2) {
-                                                        consultarFichas consultarFichas1 = new consultarFichas(lista.get(position).getMid(), 4);
-                                                        SharedPreferences.Editor escritor2 = preferencias.edit();
-                                                        escritor2.putString("nombre", lista.get(position).getMnombre());
-                                                        escritor2.putString("edad", lista.get(position).getMedad());
-                                                        escritor2.commit();
-                                                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                                                        transaction.replace(R.id.contenedor, consultarFichas1);
-                                                        transaction.commit();
-                                                        dialog.dismiss();
-                                                    } else {
-                                                        consultarFichas consultarFichas1 = new consultarFichas(lista.get(position).getMid(), 5);
-                                                        SharedPreferences.Editor escritor2 = preferencias.edit();
-                                                        escritor2.putString("nombre", lista.get(position).getMnombre());
-                                                        escritor2.putString("edad", lista.get(position).getMedad());
-                                                        escritor2.commit();
-                                                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                                                        transaction.replace(R.id.contenedor, consultarFichas1);
-                                                        transaction.commit();
-                                                        dialog.dismiss();
-                                                    }
-                                                } else {
-                                                    Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-                                                    Alerter.create(getActivity())
-                                                            .setTitle("Error")
-                                                            .setText("Fallo en Conexion a Internet")
-                                                            .setIcon(R.drawable.logonuevo)
-                                                            .setTextTypeface(face2)
-                                                            .enableSwipeToDismiss()
-                                                            .setBackgroundColorRes(R.color.AzulOscuro)
-                                                            .show();
-                                                }
-                                            }
-                                        }
-                                    });
-
-                                    cancelar.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            dialog.dismiss();
-                                        }
-                                    });
-
-                                    dialog.show();
-                                } else {
-                                    IngCostos ingCostos = new IngCostos();
-                                    ingCostos.ObtenerPaciente(lista.get(position).getMid());
-                                    FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                                    transaction.replace(R.id.contenedor, ingCostos);
-                                    transaction.commit();
-                                }
-                            }
-                        });
-                    }
-
-                } catch (JSONException e) {
-                    Log.i(TAG, "" + e);
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i(TAG, "" + error.toString());
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros = new HashMap<String, String>();
-                parametros.put("pnombre", pnombre.getText().toString());
-                parametros.put("papellido", papellido.getText().toString());
-                SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
-                parametros.put("id", preferencias2.getString("idUsuario", "1"));
-                return parametros;
-            }
-
-        };
-        requestQueue.add(stringRequest);
-    }
-
     public void ObtenerOpcion(int opcion) {
         mOpcion = opcion;
     }
 
-    public void obtenerPacientes(String URL) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                if (Integer.parseInt(response) > 0) {
-
-                    ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-                    if (networkInfo != null && networkInfo.isConnected()) {
-                        consultarPaciente("http://dhr.sistemasdt.xyz/Normal/consultaficha.php?estado=1");
-                    } else {
-                        Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-                        Alerter.create(getActivity())
-                                .setTitle("Error")
-                                .setText("Fallo en Conexion a Internet")
-                                .setIcon(R.drawable.logonuevo)
-                                .setTextTypeface(face2)
-                                .enableSwipeToDismiss()
-                                .setBackgroundColorRes(R.color.AzulOscuro)
-                                .show();
-                    }
-
-                } else {
-                    Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-                    Alerter.create(getActivity())
-                            .setTitle("NO se encontraron coincidencias")
-                            .setIcon(R.drawable.logonuevo)
-                            .setTextTypeface(face2)
-                            .enableSwipeToDismiss()
-                            .setBackgroundColorRes(R.color.AzulOscuro)
-                            .show();
-                    pnombre.setText(null);
-                    papellido.setText(null);
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i(TAG, "" + error.toString());
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros = new HashMap<String, String>();
-                parametros.put("pnombre", pnombre.getText().toString());
-                parametros.put("papellido", papellido.getText().toString());
-                SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
-                parametros.put("id", preferencias2.getString("idUsuario", "1"));
-                return parametros;
-            }
-
-        };
-        requestQueue.add(stringRequest);
-    }
 }
