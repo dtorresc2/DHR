@@ -118,6 +118,27 @@ public class Pacientes extends Fragment {
         fechap = view.findViewById(R.id.fecha_persona);
         fechap.setTypeface(face);
 
+        dpi = view.findViewById(R.id.dpi);
+        dpi.setTypeface(face);
+
+        nombreLayout = view.findViewById(R.id.nombreLayout);
+        nombreLayout.setTypeface(face);
+
+        edadLayout = view.findViewById(R.id.edadLayout);
+        edadLayout.setTypeface(face);
+
+        dpiLayout = view.findViewById(R.id.dpiLayout);
+        dpiLayout.setTypeface(face);
+
+        fechaLayout = view.findViewById(R.id.fechaLayout);
+        fechaLayout.setTypeface(face);
+
+        ocupacionLayout = view.findViewById(R.id.ocupacionLayout);
+        ocupacion.setTypeface(face);
+
+        telLayout = view.findViewById(R.id.telefonoLayout);
+        telLayout.setTypeface(face);
+
         Calendar calendar = Calendar.getInstance();
         int dia = calendar.get(Calendar.DAY_OF_MONTH);
         int mes = calendar.get(Calendar.MONTH);
