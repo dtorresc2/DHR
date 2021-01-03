@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -38,6 +39,7 @@ import com.example.dentalhistoryrecorder.OpcionIngreso.Especial.IngCostos;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Piezas.Piezas;
+import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysPacientes;
 import com.tapadoo.alerter.Alerter;
 
 import org.json.JSONArray;
@@ -148,11 +150,30 @@ public class ListadoPacientes extends Fragment {
             }
         });
 
+        obtenerPacientes();
+
         return view;
     }
 
     public void ObtenerOpcion(int opcion) {
         mOpcion = opcion;
+    }
+
+    public void obtenerPacientes() {
+        final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+
+        QuerysPacientes querysPacientes = new QuerysPacientes(getContext());
+        querysPacientes.obtenerPacientes(preferenciasUsuario.getInt("ID_USUARIO", 0), new QuerysPacientes.VolleyOnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                Toast.makeText(getContext(), object.toString(), Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 }
