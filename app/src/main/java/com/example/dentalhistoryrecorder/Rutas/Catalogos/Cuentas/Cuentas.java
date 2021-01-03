@@ -40,7 +40,7 @@ public class Cuentas extends Fragment {
 
     private boolean modoEdicion;
     private Typeface typeface;
-    private int ID_CUENTA;
+    private int ID_CUENTA = 0;
 
     public Cuentas() {
         modoEdicion = false;
@@ -150,6 +150,10 @@ public class Cuentas extends Fragment {
             }
         });
 
+        if (modoEdicion) {
+            obtenerCuenta();
+        }
+
         guardadorCuenta = view.findViewById(R.id.grabarCuenta);
         guardadorCuenta.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,6 +166,8 @@ public class Cuentas extends Fragment {
 
                 if (!modoEdicion)
                     registrarCuenta();
+                else
+                    actualizarCuenta();
             }
         });
 
@@ -216,6 +222,92 @@ public class Cuentas extends Fragment {
                 Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void actualizarCuenta() {
+        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+        progressDialog.setMessage("Cargando...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        QuerysCuentas querysCuentas = new QuerysCuentas(getContext());
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("PASSWORD", password.getText().toString().trim());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        querysCuentas.actualizarPassword(ID_CUENTA, jsonBody, new QuerysCuentas.VolleyOnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                Alerter.create(getActivity())
+                        .setTitle("Cuenta actualizada")
+                        .setIcon(R.drawable.logonuevo)
+                        .setTextTypeface(typeface)
+                        .enableSwipeToDismiss()
+                        .setBackgroundColorRes(R.color.FondoSecundario)
+                        .show();
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressDialog.dismiss();
+                        ListadoCuentas listadoCuentas = new ListadoCuentas();
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                        transaction.replace(R.id.contenedor, listadoCuentas);
+                        transaction.commit();
+                    }
+                }, 1000);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                progressDialog.dismiss();
+                Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void obtenerCuenta() {
+        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+        progressDialog.setMessage("Cargando...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                progressDialog.dismiss();
+            }
+        }, 1000);
+
+        final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+//        final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("PERFIL", Context.MODE_PRIVATE);
+
+        QuerysCuentas querysCuentas = new QuerysCuentas(getContext());
+        querysCuentas.obtenerCuenta(
+                ID_CUENTA,
+                preferenciasUsuario.getInt("ID_USUARIO", 0),
+                new QuerysCuentas.VolleyOnEventListener() {
+                    @Override
+                    public void onSuccess(Object object) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(object.toString());
+                            usuarioCuenta.setText(jsonObject.getString("USUARIO"));
+                            usuarioCuenta.setEnabled(false);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        e.printStackTrace();
+                    }
+                });
     }
 
     //    VALIDACIONES
@@ -282,7 +374,7 @@ public class Cuentas extends Fragment {
         ArrayList<ItemCuenta> listaConsultada = new ArrayList<>();
 
         for (ItemCuenta item : mListadoCuentas) {
-            if (item.getUsuarioCuenta().toLowerCase().equals(usuario)) {
+            if (item.getUsuarioCuenta().toLowerCase().equals(usuario) && item.getCodigoCuenta() != ID_CUENTA) {
                 listaConsultada.add(item);
             }
         }

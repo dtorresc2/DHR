@@ -20,6 +20,7 @@ import com.example.dentalhistoryrecorder.Componentes.MenuInferior;
 import com.example.dentalhistoryrecorder.Componentes.MenuInferiorCuentas;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.Servicios;
 import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysCuentas;
 
 import org.json.JSONArray;
@@ -110,6 +111,24 @@ public class ListadoCuentas extends Fragment {
         return view;
     }
 
+    public void realizarAccion(int opcion, int ID) {
+        switch (opcion) {
+            case 1:
+                Cuentas cuentas = new Cuentas();
+                cuentas.editarCuenta(ID);
+                cuentas.enviarCuentas(listaCuentas);
+                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                transaction.replace(R.id.contenedor, cuentas);
+                transaction.commit();
+                break;
+            case 2:
+//                actualizarEstado(ID);
+                break;
+            default:
+                return;
+        }
+    }
+
     public void obtenerCuentas() {
         listaCuentas.clear();
         estadoCuenta = false;
@@ -141,24 +160,13 @@ public class ListadoCuentas extends Fragment {
                     mAdapter.setOnItemClickListener(new CuentasAdapter.OnClickListener() {
                         @Override
                         public void onItemClick(final int position) {
-//                            MenuInferior menuInferior = new MenuInferior();
-//                            menuInferior.show(getFragmentManager(), "MenuInferior");
-//                            menuInferior.recibirTitulo("Servicio #", listaCuentas.get(position).getCodigoCuenta());
-//                            menuInferior.eventoClick(new MenuInferior.MenuInferiorListener() {
-//                                @Override
-//                                public void onButtonClicked(int opcion) {
-//                                    estadoCuenta = listaServicios.get(position).getEstadoServicio();
-//                                    realizarAccion(opcion, listaServicios.get(position).getCodigoServicio());
-//                                }
-//                            });
-
                             MenuInferiorCuentas menuInferiorCuentas = new MenuInferiorCuentas();
                             menuInferiorCuentas.show(getFragmentManager(), "MenuInferior");
                             menuInferiorCuentas.recibirTitulo(listaCuentas.get(position).getUsuarioCuenta());
                             menuInferiorCuentas.eventoClick(new MenuInferiorCuentas.MenuInferiorListener() {
                                 @Override
                                 public void onButtonClicked(int opcion) {
-                                    Toast.makeText(getContext(), "" + opcion, Toast.LENGTH_SHORT).show();
+                                    realizarAccion(opcion, listaCuentas.get(position).getCodigoCuenta());
                                 }
                             });
                         }

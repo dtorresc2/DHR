@@ -1,6 +1,5 @@
 package com.example.dentalhistoryrecorder.Componentes;
 
-import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,7 +15,6 @@ import com.example.dentalhistoryrecorder.R;
 
 public class MenuInferiorCuentas extends BottomSheetDialogFragment {
     private MenuInferiorCuentas.MenuInferiorListener mMenuInferiorListener;
-    private Context mContext;
     private int ID = 1;
     private String titulo = "Titulo #";
 
@@ -43,29 +41,17 @@ public class MenuInferiorCuentas extends BottomSheetDialogFragment {
             }
         });
 
-//        LinearLayout opcionDeshabilitar = view.findViewById(R.id.opc_deshabilitar);
-//        opcionDeshabilitar.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mMenuInferiorListener.onButtonClicked(2);
-//                dismiss();
-//            }
-//        });
-
         LinearLayout opcionEliminar = view.findViewById(R.id.opc_eliminar);
         opcionEliminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mMenuInferiorListener.onButtonClicked(3);
+                mMenuInferiorListener.onButtonClicked(2);
                 dismiss();
             }
         });
 
         TextView tituloEditar = view.findViewById(R.id.texto_opc_editar);
         tituloEditar.setTypeface(typeface);
-
-//        TextView tituloBloquear = view.findViewById(R.id.texto_opc_deshabilitar);
-//        tituloBloquear.setTypeface(typeface);
 
         TextView tituloEliminar = view.findViewById(R.id.texto_opc_eliminar);
         tituloEliminar.setTypeface(typeface);
