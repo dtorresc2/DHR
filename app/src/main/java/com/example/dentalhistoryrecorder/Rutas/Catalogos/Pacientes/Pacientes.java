@@ -27,6 +27,7 @@ import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -84,7 +85,18 @@ public class Pacientes extends Fragment {
         //Barra de Titulo
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_cerrar);
-        toolbar.setTitle("Datos Personales");
+        toolbar.setTitle("Paciente");
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Toast.makeText(getActivity(), "ATRAS", Toast.LENGTH_SHORT).show();
+                Catalogos catalogos = new Catalogos();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                transaction.replace(R.id.contenedor, catalogos);
+                transaction.commit();
+            }
+        });
 
         //Datos Personales
 //        existente = (Switch) view.findViewById(R.id.existente);
@@ -114,23 +126,16 @@ public class Pacientes extends Fragment {
         buscador = view.findViewById(R.id.buscar_dp);
 
         Calendar calendar = Calendar.getInstance();
-        final int dia = calendar.get(Calendar.DAY_OF_MONTH);
+        int dia = calendar.get(Calendar.DAY_OF_MONTH);
         int mes = calendar.get(Calendar.MONTH);
         int a = calendar.get(Calendar.YEAR);
 
-        String dat = dia + "/" + mes + "/" + a;
-        fechap.setText(dat);
+        mes++;
+        String mesAux = (mes > 9) ? String.valueOf(mes) : "0" + mes;
+        String diaAux = (dia > 9) ? String.valueOf(dia) : "0" + dia;
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Toast.makeText(getActivity(), "ATRAS", Toast.LENGTH_SHORT).show();
-                Catalogos catalogos = new Catalogos();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                transaction.replace(R.id.contenedor, catalogos);
-                transaction.commit();
-            }
-        });
+        String dat = diaAux + "/" + mesAux + "/" + a;
+        fechap.setText(dat);
 
         fecha.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,16 +145,18 @@ public class Pacientes extends Fragment {
                 int mm = calendario.get(Calendar.MONTH);
                 int dd = calendario.get(Calendar.DAY_OF_MONTH);
 
-                DatePickerDialog datePicker = new DatePickerDialog(getActivity(), android.R.style.Theme_Holo_Dialog_MinWidth, new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), R.style.progressDialog, new DatePickerDialog.OnDateSetListener() {
                     @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        String dat = dayOfMonth + "/" + monthOfYear
-                                + "/" + year;
-                        fechap.setText(dat);
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        month++;
+                        String mesAux = (month > 9) ? String.valueOf(month) : "0" + month;
+                        String diaAux = (dayOfMonth > 9) ? String.valueOf(dayOfMonth) : "0" + dayOfMonth;
+
+                        fechap.setText(diaAux + "/" + mesAux + "/" + year);
                     }
                 }, yy, mm, dd);
 
-                datePicker.show();
+                datePickerDialog.show();
             }
         });
 
@@ -249,31 +256,31 @@ public class Pacientes extends Fragment {
             }
         });
 
-        existente.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (existente.isChecked()) {
-                    segundoNombre.setEnabled(false);
-                    segundoApellido.setEnabled(false);
-                    edad.setEnabled(false);
-                    telefono.setEnabled(false);
-                    ocupacion.setEnabled(false);
-                    sexo.setEnabled(false);
-                    sexof.setEnabled(false);
-
-                } else {
-                    primerApellido.setText(null);
-                    primerNombre.setText(null);
-                    segundoNombre.setEnabled(true);
-                    segundoApellido.setEnabled(true);
-                    edad.setEnabled(true);
-                    telefono.setEnabled(true);
-                    ocupacion.setEnabled(true);
-                    sexo.setEnabled(true);
-                    sexof.setEnabled(true);
-                }
-            }
-        });
+//        existente.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (existente.isChecked()) {
+//                    segundoNombre.setEnabled(false);
+//                    segundoApellido.setEnabled(false);
+//                    edad.setEnabled(false);
+//                    telefono.setEnabled(false);
+//                    ocupacion.setEnabled(false);
+//                    sexo.setEnabled(false);
+//                    sexof.setEnabled(false);
+//
+//                } else {
+//                    primerApellido.setText(null);
+//                    primerNombre.setText(null);
+//                    segundoNombre.setEnabled(true);
+//                    segundoApellido.setEnabled(true);
+//                    edad.setEnabled(true);
+//                    telefono.setEnabled(true);
+//                    ocupacion.setEnabled(true);
+//                    sexo.setEnabled(true);
+//                    sexof.setEnabled(true);
+//                }
+//            }
+//        });
 
         buscador.setOnClickListener(new View.OnClickListener() {
             @Override
