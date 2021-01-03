@@ -191,7 +191,7 @@ public class Cuentas extends Fragment {
             @Override
             public void onSuccess(Object object) {
                 Alerter.create(getActivity())
-                        .setTitle("Cuenta Registrada")
+                        .setTitle("Cuenta registrada")
                         .setIcon(R.drawable.logonuevo)
                         .setTextTypeface(typeface)
                         .enableSwipeToDismiss()
