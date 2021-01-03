@@ -32,8 +32,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.consultarFichas;
-import com.example.dentalhistoryrecorder.Rutas.Catalogos.Pacientes.ItemPaciente;
-import com.example.dentalhistoryrecorder.Rutas.Catalogos.Pacientes.PacienteAdapter;
 import com.example.dentalhistoryrecorder.OpcionIngreso.Especial.IngCostos;
 import com.example.dentalhistoryrecorder.R;
 import com.tapadoo.alerter.Alerter;
@@ -67,29 +65,30 @@ public class ListadoPacientes extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.fragment_consultar, container, false);
+        final View view = inflater.inflate(R.layout.fragment_listado_pacientes, container, false);
         final Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         requestQueue = Volley.newRequestQueue(getContext());
         preferencias = getActivity().getSharedPreferences("ListadoPacientes", Context.MODE_PRIVATE);
         toolbar = view.findViewById(R.id.toolbar);
+        toolbar.setTitle("Pacientes");
 
-        switch (mOpcion) {
-            case 1:
-                toolbar.setTitle("Consulta de Fichas");
-                break;
-
-            case 2:
-                toolbar.setTitle("Seguimiento de  Fichas");
-                break;
-
-            case 3:
-                toolbar.setTitle("Evaluacion Myobrace");
-                break;
-
-            default:
-                toolbar.setTitle("Consulta");
-                break;
-        }
+//        switch (mOpcion) {
+//            case 1:
+//                toolbar.setTitle("Consulta de Fichas");
+//                break;
+//
+//            case 2:
+//                toolbar.setTitle("Seguimiento de  Fichas");
+//                break;
+//
+//            case 3:
+//                toolbar.setTitle("Evaluacion Myobrace");
+//                break;
+//
+//            default:
+//                toolbar.setTitle("Consulta");
+//                break;
+//        }
 
         pnombre = view.findViewById(R.id.pnom_bus);
         pnombre.setTypeface(face);
@@ -99,7 +98,6 @@ public class ListadoPacientes extends Fragment {
         buscar = view.findViewById(R.id.consultador);
 
         lista_pacientes = view.findViewById(R.id.lista_pacientes);
-
 
         etiquetaN = view.findViewById(R.id.etiquetaN);
         etiquetaN.setTypeface(face);
@@ -111,53 +109,53 @@ public class ListadoPacientes extends Fragment {
             public void onClick(View v) {
                 //consultarPaciente("http://192.168.56.1/DHR/IngresoN/consultaficha.php?db=u578331993_clinc&user=root");
                 //consultarPaciente("https://diegosistemas.xyz/DHR/Normal/consultaficha.php?estado=1");
-                if (!pnombre.getText().toString().isEmpty() && !papellido.getText().toString().isEmpty()) {
-                    final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-                    progressDialog.setMessage("Cargando...");
-                    progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                    progressDialog.setCancelable(false);
-                    progressDialog.show();
-
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        public void run() {
-                            progressDialog.dismiss();
-                        }
-                    }, 1000);
-
-                    ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-                    if (networkInfo != null && networkInfo.isConnected()) {
-                        obtenerPacientes("http://dhr.sistemasdt.xyz/Normal/consultaficha.php?estado=8");
-                    } else {
-                        Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-                        Alerter.create(getActivity())
-                                .setTitle("Error")
-                                .setText("Fallo en Conexion a Internet")
-                                .setIcon(R.drawable.logonuevo)
-                                .setTextTypeface(face2)
-                                .enableSwipeToDismiss()
-                                .setBackgroundColorRes(R.color.AzulOscuro)
-                                .show();
-                    }
-                }
-                else {
-                    Alerter.create(getActivity())
-                            .setTitle("Hay Campos Vacios")
-                            .setIcon(R.drawable.logonuevo)
-                            .setTextTypeface(face)
-                            .enableSwipeToDismiss()
-                            .setBackgroundColorRes(R.color.AzulOscuro)
-                            .show();
-                }
+//                if (!pnombre.getText().toString().isEmpty() && !papellido.getText().toString().isEmpty()) {
+//                    final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+//                    progressDialog.setMessage("Cargando...");
+//                    progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//                    progressDialog.setCancelable(false);
+//                    progressDialog.show();
+//
+//                    Handler handler = new Handler();
+//                    handler.postDelayed(new Runnable() {
+//                        public void run() {
+//                            progressDialog.dismiss();
+//                        }
+//                    }, 1000);
+//
+//                    ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+//                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+//
+//                    if (networkInfo != null && networkInfo.isConnected()) {
+//                        obtenerPacientes("http://dhr.sistemasdt.xyz/Normal/consultaficha.php?estado=8");
+//                    } else {
+//                        Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+//                        Alerter.create(getActivity())
+//                                .setTitle("Error")
+//                                .setText("Fallo en Conexion a Internet")
+//                                .setIcon(R.drawable.logonuevo)
+//                                .setTextTypeface(face2)
+//                                .enableSwipeToDismiss()
+//                                .setBackgroundColorRes(R.color.AzulOscuro)
+//                                .show();
+//                    }
+//                }
+//                else {
+//                    Alerter.create(getActivity())
+//                            .setTitle("Hay Campos Vacios")
+//                            .setIcon(R.drawable.logonuevo)
+//                            .setTextTypeface(face)
+//                            .enableSwipeToDismiss()
+//                            .setBackgroundColorRes(R.color.AzulOscuro)
+//                            .show();
+//                }
             }
         });
 
         return view;
     }
 
-    //Insertar Datos Personales y Obtener ID Paciente ----------------------------------------------
+    //Insertar Datos Personales y Obtener ID Pacientes ----------------------------------------------
     public void consultarPaciente(String URL) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
@@ -251,7 +249,7 @@ public class ListadoPacientes extends Fragment {
                                                 NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                                                 if (networkInfo != null && networkInfo.isConnected()) {
-                                                    if (mOpcion != 2){
+                                                    if (mOpcion != 2) {
                                                         consultarFichas consultarFichas1 = new consultarFichas(lista.get(position).getMid(), 4);
                                                         SharedPreferences.Editor escritor2 = preferencias.edit();
                                                         escritor2.putString("nombre", lista.get(position).getMnombre());
@@ -261,8 +259,7 @@ public class ListadoPacientes extends Fragment {
                                                         transaction.replace(R.id.contenedor, consultarFichas1);
                                                         transaction.commit();
                                                         dialog.dismiss();
-                                                    }
-                                                    else {
+                                                    } else {
                                                         consultarFichas consultarFichas1 = new consultarFichas(lista.get(position).getMid(), 5);
                                                         SharedPreferences.Editor escritor2 = preferencias.edit();
                                                         escritor2.putString("nombre", lista.get(position).getMnombre());
@@ -296,8 +293,7 @@ public class ListadoPacientes extends Fragment {
                                     });
 
                                     dialog.show();
-                                }
-                                else {
+                                } else {
                                     IngCostos ingCostos = new IngCostos();
                                     ingCostos.ObtenerPaciente(lista.get(position).getMid());
                                     FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);

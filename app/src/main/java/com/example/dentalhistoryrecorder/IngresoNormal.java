@@ -74,7 +74,7 @@ public class IngresoNormal extends Fragment {
         almacen = getActivity().getSharedPreferences("ids", Context.MODE_PRIVATE);
         //Typeface face = Typeface.createFromAsset(getActivity().getAssets(),"fonts/bahnschrift.ttf");
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        toolbar.setTitle("Ingreso de Paciente");
+        toolbar.setTitle("Ingreso de Pacientes");
         menu = (GridLayout) view.findViewById(R.id.menuingeso);
         setSingleEvent(menu);
         guardador = view.findViewById(R.id.guardarBD);
@@ -93,7 +93,7 @@ public class IngresoNormal extends Fragment {
                 sex = preferencias.getBoolean("sexo", true);
                 edad = preferencias.getInt("edad", 0);
 
-                //Insercion de Paciente
+                //Insercion de Pacientes
                 insertarPaciente("http://192.168.56.1:80/DHR/IngresoN/ficha.php?db=u578331993_clinc&user=root&estado=1");
                 SharedPreferences.Editor editor = preferencias.edit();
                 editor.clear().commit();
@@ -253,7 +253,7 @@ public class IngresoNormal extends Fragment {
         }
     }
 
-    //Insertar Datos Personales y Obtener ID Paciente ----------------------------------------------
+    //Insertar Datos Personales y Obtener ID Pacientes ----------------------------------------------
     public void insertarPaciente(String URL) {
         final String[] id = new String[1];
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
@@ -349,7 +349,7 @@ public class IngresoNormal extends Fragment {
         //idFichaa = id[0];
     }
 
-    //Insertar Datos Personales y Obtener ID Paciente ----------------------------------------------
+    //Insertar Datos Personales y Obtener ID Pacientes ----------------------------------------------
     public void insertarHMedico(String URL) {
         final String[] id = new String[1];
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
@@ -399,7 +399,7 @@ public class IngresoNormal extends Fragment {
         //idHisMedd = id[0];
     }
 
-    //Insertar Datos Personales y Obtener ID Paciente ----------------------------------------------
+    //Insertar Datos Personales y Obtener ID Pacientes ----------------------------------------------
     public void insertarPadecimientos(String URL) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override

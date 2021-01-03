@@ -12,9 +12,12 @@ import android.widget.TextView;
 
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Cuentas.ListadoCuentas;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Pacientes.ListadoPacientes;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Pacientes.Pacientes;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Piezas.ListadoPiezas;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.ListadoServicios;
+
+import java.util.List;
 
 
 public class Catalogos extends Fragment {
@@ -86,9 +89,9 @@ public class Catalogos extends Fragment {
         opcion_pacientes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Pacientes pacientes = new Pacientes();
+                ListadoPacientes listadoPacientes = new ListadoPacientes();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                transaction.replace(R.id.contenedor, pacientes);
+                transaction.replace(R.id.contenedor, listadoPacientes);
                 transaction.commit();
             }
         });

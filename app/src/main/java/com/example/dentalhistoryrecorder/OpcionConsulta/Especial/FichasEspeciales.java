@@ -1119,7 +1119,7 @@ public class FichasEspeciales extends Fragment {
             cb.showText(preferencias.getString("idficha", ""));
             cb.endText();
 
-            //Nombre del Paciente
+            //Nombre del Pacientes
             PdfContentByte cb2 = escritorpdf.getDirectContent();
             cb2.beginText();
             posy = documento.getPageSize().getHeight() - 101;
@@ -1219,7 +1219,7 @@ public class FichasEspeciales extends Fragment {
             cbb.showText(preferencias.getString("idficha", ""));
             cbb.endText();
 
-            //Nombre del Paciente
+            //Nombre del Pacientes
             PdfContentByte cbb2 = escritorpdf1.getDirectContent();
             cbb2.beginText();
             posy1 = documento2.getPageSize().getHeight() - 101;
@@ -1237,7 +1237,7 @@ public class FichasEspeciales extends Fragment {
             cbb3.showText(preferencias.getString("edad", ""));
             cbb3.endText();
 
-            //Firma del Paciente
+            //Firma del Pacientes
             Image imagen = Image.getInstance(fotoFirma);
             posy1 = documento2.getPageSize().getHeight() - 650;
             imagen.scaleAbsolute(250, 135);
@@ -1298,7 +1298,7 @@ public class FichasEspeciales extends Fragment {
             cbbb1.showText(preferencias.getString("idficha", ""));
             cbbb1.endText();
 
-            //Nombre del Paciente
+            //Nombre del Pacientes
             PdfContentByte cbbb2 = escritorpdf2.getDirectContent();
             cbbb2.beginText();
             posy2 = documento3.getPageSize().getHeight() - 101;
@@ -2000,7 +2000,7 @@ public class FichasEspeciales extends Fragment {
             cb17.showText(preferencias.getString("idficha", ""));
             cb17.endText();
 
-            //Nombre del Paciente
+            //Nombre del Pacientes
             PdfContentByte cb18 = escritorpdf3.getDirectContent();
             cb18.beginText();
             posy3 = documento4.getPageSize().getHeight() - 101;

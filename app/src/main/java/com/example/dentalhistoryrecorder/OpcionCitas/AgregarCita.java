@@ -201,8 +201,8 @@ public class AgregarCita extends DialogFragment {
         pnombre.setTypeface(face);
         papellido = view.findViewById(R.id.pape_bus);
         papellido.setTypeface(face);
-        paciente = view.findViewById(R.id.paciente);
-        paciente.setTypeface(face);
+//        paciente = view.findViewById(R.id.paciente);
+//        paciente.setTypeface(face);
         descripcion = view.findViewById(R.id.descripcion);
         descripcion.setTypeface(face);
 
@@ -331,7 +331,7 @@ public class AgregarCita extends DialogFragment {
         recogerFecha.show();
     }
 
-    //Insertar Datos Personales y Obtener ID Paciente ----------------------------------------------
+    //Insertar Datos Personales y Obtener ID Pacientes ----------------------------------------------
     public void consultarPaciente(String URL) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
@@ -452,7 +452,7 @@ public class AgregarCita extends DialogFragment {
         requestQueue.add(stringRequest);
     }
 
-    //Insertar Datos Personales y Obtener ID Paciente ----------------------------------------------
+    //Insertar Datos Personales y Obtener ID Pacientes ----------------------------------------------
     public void insertarCitas(String URL) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override

@@ -74,7 +74,7 @@ public class Pacientes extends Fragment {
 
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_cerrar);
-        toolbar.setTitle("Paciente");
+        toolbar.setTitle("Pacientes");
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -189,7 +189,7 @@ public class Pacientes extends Fragment {
         return view;
     }
 
-    //Insertar Datos Personales y Obtener ID Paciente ----------------------------------------------
+    //Insertar Datos Personales y Obtener ID Pacientes ----------------------------------------------
     public void insertarPaciente(String URL) {
         final String[] id = new String[1];
         //id[0] = obtenerNumPacientes("https://diegosistemas.xyz/DHR/Normal/ficha.php?estado=3");
@@ -303,7 +303,7 @@ public class Pacientes extends Fragment {
         //idPacientee = id[0];
     }
 
-    //Insertar Datos Personales y Obtener ID Paciente ----------------------------------------------
+    //Insertar Datos Personales y Obtener ID Pacientes ----------------------------------------------
     public void consultarPaciente(String URL, final AlertDialog dialog) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override

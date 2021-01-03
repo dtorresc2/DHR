@@ -377,7 +377,7 @@ public class IngresoPagosVisitas extends Fragment {
         return rows;
     }
 
-    //Insertar Datos Personales y Obtener ID Paciente ----------------------------------------------
+    //Insertar Datos Personales y Obtener ID Pacientes ----------------------------------------------
     public void agregarPagos(String URL, final String fecha, final String desc, final String costo) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
