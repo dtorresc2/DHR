@@ -40,6 +40,7 @@ import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.Adaptadores.Adapt
 import com.example.dentalhistoryrecorder.OpcionIngreso.Agregar;
 import com.example.dentalhistoryrecorder.OpcionIngreso.Normal.IngDetalle;
 import com.example.dentalhistoryrecorder.R;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.tapadoo.alerter.Alerter;
 
@@ -124,9 +125,9 @@ public class Pacientes extends Fragment {
             @Override
             public void onClick(View v) {
                 //Toast.makeText(getActivity(), "ATRAS", Toast.LENGTH_SHORT).show();
-                Agregar agregar = new Agregar();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                transaction.replace(R.id.contenedor, agregar);
+                Catalogos catalogos = new Catalogos();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                transaction.replace(R.id.contenedor, catalogos);
                 transaction.commit();
             }
         });
@@ -142,8 +143,8 @@ public class Pacientes extends Fragment {
                 DatePickerDialog datePicker = new DatePickerDialog(getActivity(), android.R.style.Theme_Holo_Dialog_MinWidth, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        String dat = String.valueOf(dayOfMonth) + "/" + String.valueOf(monthOfYear)
-                                + "/" + String.valueOf(year);
+                        String dat = dayOfMonth + "/" + monthOfYear
+                                + "/" + year;
                         fechap.setText(dat);
                     }
                 }, yy, mm, dd);
