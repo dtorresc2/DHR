@@ -58,8 +58,8 @@ public class Pacientes extends Fragment {
     private Toolbar toolbar;
     private TextInputEditText primerNombre, edad, telefono, ocupacion, fechap, dpi;
     private TextInputLayout nombreLayout, edadLayout, fechaLayout, dpiLayout, ocupacionLayout, telLayout;
-    private RadioButton sexo, sexof;
-    private ArrayList<String> lista1 = new ArrayList<String>();
+    private RadioButton sexo, sexof, truePaciente, falsePaciente;
+    private TextView tituloEstado, tituloGenero;
     private FloatingActionButton agregador;
     private static final String TAG = "MyActivity";
     private ImageButton fecha;
@@ -134,10 +134,22 @@ public class Pacientes extends Fragment {
         fechaLayout.setTypeface(face);
 
         ocupacionLayout = view.findViewById(R.id.ocupacionLayout);
-        ocupacion.setTypeface(face);
+        ocupacionLayout.setTypeface(face);
 
         telLayout = view.findViewById(R.id.telefonoLayout);
         telLayout.setTypeface(face);
+
+        truePaciente = view.findViewById(R.id.pacienteTrue);
+        truePaciente.setTypeface(face);
+
+        falsePaciente = view.findViewById(R.id.pacienteFalse);
+        falsePaciente.setTypeface(face);
+
+        tituloEstado = view.findViewById(R.id.tituloEstadoPaciente);
+        tituloEstado.setTypeface(face);
+
+        tituloGenero = view.findViewById(R.id.tituloSexo);
+        tituloGenero.setTypeface(face);
 
         Calendar calendar = Calendar.getInstance();
         int dia = calendar.get(Calendar.DAY_OF_MONTH);
