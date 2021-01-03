@@ -52,7 +52,6 @@ public class ListadoCuentas extends Fragment {
         View view = inflater.inflate(R.layout.fragment_listado_cuentas, container, false);
         typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
 
-
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_cerrar);
         toolbar.setTitle("Cuentas");
@@ -204,26 +203,40 @@ public class ListadoCuentas extends Fragment {
         builder.setMessage("Desea eliminar la cuenta?");
         builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                QuerysCuentas querysCuentas = new QuerysCuentas(getContext());
-                querysCuentas.eliminarCuenta(ID, new QuerysCuentas.VolleyOnEventListener() {
-                    @Override
-                    public void onSuccess(Object object) {
-                        Alerter.create(getActivity())
-                                .setTitle("Cuenta eliminada")
-                                .setIcon(R.drawable.logonuevo)
-                                .setTextTypeface(typeface)
-                                .enableSwipeToDismiss()
-                                .setBackgroundColorRes(R.color.FondoSecundario)
-                                .show();
+                final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
 
-                        obtenerCuentas();
-                    }
+                if (ID != preferenciasUsuario.getInt("ID_CUENTA", 0)) {
+                    QuerysCuentas querysCuentas = new QuerysCuentas(getContext());
+                    querysCuentas.eliminarCuenta(ID, new QuerysCuentas.VolleyOnEventListener() {
+                        @Override
+                        public void onSuccess(Object object) {
+                            Alerter.create(getActivity())
+                                    .setTitle("Cuenta eliminada")
+                                    .setIcon(R.drawable.logonuevo)
+                                    .setTextTypeface(typeface)
+                                    .enableSwipeToDismiss()
+                                    .setBackgroundColorRes(R.color.FondoSecundario)
+                                    .show();
 
-                    @Override
-                    public void onFailure(Exception e) {
+                            obtenerCuentas();
+                        }
 
-                    }
-                });
+                        @Override
+                        public void onFailure(Exception e) {
+
+                        }
+                    });
+                }
+                else {
+                    Alerter.create(getActivity())
+                            .setTitle("Error")
+                            .setText("No puede eliminar la cuenta en uso")
+                            .setIcon(R.drawable.logonuevo)
+                            .setTextTypeface(typeface)
+                            .enableSwipeToDismiss()
+                            .setBackgroundColorRes(R.color.FondoSecundario)
+                            .show();
+                }
             }
         });
         builder.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
@@ -234,6 +247,5 @@ public class ListadoCuentas extends Fragment {
 
         AlertDialog dialog = builder.create();
         dialog.show();
-
     }
 }
