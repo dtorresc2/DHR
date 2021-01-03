@@ -64,6 +64,7 @@ public class ListadoCuentas extends Fragment {
                 switch (menuItem.getItemId()) {
                     case R.id.opcion_nuevo:
                         Cuentas cuentas = new Cuentas();
+                        cuentas.enviarCuentas(listaCuentas);
                         FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
                         transaction.replace(R.id.contenedor, cuentas);
                         transaction.commit();
