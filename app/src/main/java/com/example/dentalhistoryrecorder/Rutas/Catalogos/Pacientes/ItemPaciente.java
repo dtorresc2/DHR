@@ -1,43 +1,67 @@
 package com.example.dentalhistoryrecorder.Rutas.Catalogos.Pacientes;
 
 public class ItemPaciente {
-    private String mid;
-    private String mnombre;
-    private String mcontadorN;
-    private String mcontadorE;
-    private String medad;
-    private String mfecha;
+    private int mCodigo;
+    private String mNombre;
+    private String mTelefono;
+    private String mDpi;
+    private int mEdad;
+    private String mFecha;
+    private boolean mEstado;
+    private double mDebe;
+    private double mHaber;
+    private double mSaldo;
 
-    public ItemPaciente(String id, String nombre, String contadorN, String contadorE, String edad, String fecha){
-        mid = id;
-        mnombre = nombre;
-        mcontadorN = contadorN;
-        mcontadorE = contadorE;
-        medad = edad;
-        mfecha = fecha;
+    public ItemPaciente(int id, String nombre, String telefono, String dpi, int edad, String fecha, boolean estado, double debe, double haber, double saldo) {
+        mCodigo = id;
+        mNombre = nombre;
+        mTelefono = telefono;
+        mDpi = dpi;
+        mEdad = edad;
+        mFecha = fecha;
+        mEstado = estado;
+        mDebe = debe;
+        mHaber = haber;
+        mSaldo = saldo;
     }
 
-    public String getMid() {
-        return mid;
+    public int getCodigo() {
+        return mCodigo;
     }
 
-    public String getMnombre() {
-        return mnombre;
+    public String getNombre() {
+        return mNombre;
     }
 
-    public String getMcontadorN() {
-        return mcontadorN;
+    public String getTelefono() {
+        return mTelefono;
     }
 
-    public String getMcontadorE() {
-        return mcontadorE;
+    public String getDpi() {
+        return mDpi;
     }
 
-    public String getMedad() {
-        return medad;
+    public int getEdad() {
+        return mEdad;
     }
 
-    public String getMfecha() {
-        return mfecha;
+    public String getFecha() {
+        return mFecha;
+    }
+
+    public double getDebe() {
+        return mDebe;
+    }
+
+    public double getHaber() {
+        return mHaber;
+    }
+
+    public double getSaldo() {
+        return mSaldo;
+    }
+
+    public boolean getEstado() {
+        return mEstado;
     }
 }

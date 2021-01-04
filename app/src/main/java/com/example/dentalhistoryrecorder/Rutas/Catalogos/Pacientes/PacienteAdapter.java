@@ -30,19 +30,23 @@ public class PacienteAdapter extends RecyclerView.Adapter<PacienteAdapter.ViewHo
     public static class ViewHolderConsulta extends RecyclerView.ViewHolder {
         public TextView mid;
         public TextView mnombre;
-        public TextView mcontadorN;
-        public TextView mcontadorE;
         public TextView medad;
         public TextView mfecha;
+        public TextView mdebe;
+        public TextView mhaber;
+        public TextView msaldo;
+        public TextView mestado;
 
         public ViewHolderConsulta(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
             mid = itemView.findViewById(R.id.idPac);
             mnombre = itemView.findViewById(R.id.nombrePaciente);
-            mcontadorN = itemView.findViewById(R.id.contadorN);
-            mcontadorE = itemView.findViewById(R.id.contadorE);
             medad = itemView.findViewById(R.id.edadPaciente);
-            mfecha = itemView.findViewById(R.id.fechaPaciente);
+            mfecha = itemView.findViewById(R.id.fechaNacimientoPaciente);
+            mdebe = itemView.findViewById(R.id.debePaciente);
+            mhaber = itemView.findViewById(R.id.haberPaciente);
+            msaldo = itemView.findViewById(R.id.saldoPaciente);
+            mestado = itemView.findViewById(R.id.estadoPaciente);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -70,22 +74,26 @@ public class PacienteAdapter extends RecyclerView.Adapter<PacienteAdapter.ViewHo
         ViewHolderConsulta viewHolderConsulta = new ViewHolderConsulta(view, mlistener);
         viewHolderConsulta.mid.setTypeface(face);
         viewHolderConsulta.mnombre.setTypeface(face);
-        viewHolderConsulta.mcontadorN.setTypeface(face);
-        viewHolderConsulta.mcontadorE.setTypeface(face);
         viewHolderConsulta.medad.setTypeface(face);
         viewHolderConsulta.mfecha.setTypeface(face);
+        viewHolderConsulta.mdebe.setTypeface(face);
+        viewHolderConsulta.mhaber.setTypeface(face);
+        viewHolderConsulta.msaldo.setTypeface(face);
+        viewHolderConsulta.mestado.setTypeface(face);
         return viewHolderConsulta;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolderConsulta viewHolderConsulta, int i) {
         ItemPaciente itemPaciente = mLista.get(i);
-        viewHolderConsulta.mid.setText(itemPaciente.getMid());
-        viewHolderConsulta.mnombre.setText(itemPaciente.getMnombre());
-        viewHolderConsulta.mcontadorN.setText(itemPaciente.getMcontadorN());
-        viewHolderConsulta.mcontadorE.setText(itemPaciente.getMcontadorE());
-        viewHolderConsulta.medad.setText(itemPaciente.getMedad());
-        viewHolderConsulta.mfecha.setText(itemPaciente.getMfecha());
+        viewHolderConsulta.mid.setText(itemPaciente.getCodigo());
+        viewHolderConsulta.mnombre.setText(itemPaciente.getNombre());
+        viewHolderConsulta.medad.setText(itemPaciente.getEdad());
+        viewHolderConsulta.mfecha.setText(itemPaciente.getFecha());
+        viewHolderConsulta.mdebe.setText(itemPaciente.getFecha());
+        viewHolderConsulta.mhaber.setText(itemPaciente.getFecha());
+        viewHolderConsulta.msaldo.setText(itemPaciente.getFecha());
+        viewHolderConsulta.mestado.setText(itemPaciente.getFecha());
         setAnimation(viewHolderConsulta.itemView, i);
     }
 

@@ -158,10 +158,10 @@ public class ListadoPacientes extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
 
-        listaPacientes.add(new ItemPaciente("1","Diego Torres", "2", "2","123","20/10/2020"));
-        listaPacientes.add(new ItemPaciente("1","Diego Torres", "2", "2","123","20/10/2020"));
-        listaPacientes.add(new ItemPaciente("1","Diego Torres", "2", "2","123","20/10/2020"));
-        listaPacientes.add(new ItemPaciente("1","Diego Torres", "2", "2","123","20/10/2020"));
+        listaPacientes.add(new ItemPaciente(1,"Diego Torres", "2", "2",123,"20/10/2020"));
+        listaPacientes.add(new ItemPaciente(1,"Diego Torres", "2", "2",123,"20/10/2020"));
+        listaPacientes.add(new ItemPaciente(1,"Diego Torres", "2", "2",123,"20/10/2020"));
+        listaPacientes.add(new ItemPaciente(1,"Diego Torres", "2", "2",123,"20/10/2020"));
 
         mAdapter = new PacienteAdapter(listaPacientes);
         mRecyclerView.setLayoutManager(mLayoutManager);
