@@ -1,84 +1,229 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><!--<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    app:cardBackgroundColor="@color/FondoTerciario"-->
+<!--    app:cardCornerRadius="4dp">-->
+
+<!--    <RelativeLayout-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="4dp"-->
+<!--        android:background="@color/AzulOscuro">-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/idFic"-->
+<!--            android:layout_width="100dp"-->
+<!--            android:layout_height="30dp"-->
+<!--            android:background="@color/FondoSecundario"-->
+<!--            android:gravity="center_horizontal|center_vertical"-->
+<!--            android:padding="2dp"-->
+<!--            android:text="001"-->
+<!--            android:textColor="@color/Blanco"-->
+<!--            android:textSize="18sp" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/e1"-->
+<!--            android:layout_width="329dp"-->
+<!--            android:layout_height="30dp"-->
+<!--            android:layout_alignParentStart="true"-->
+<!--            android:layout_alignParentLeft="true"-->
+<!--            android:layout_alignParentTop="true"-->
+<!--            android:layout_marginStart="10dp"-->
+<!--            android:layout_marginLeft="10dp"-->
+<!--            android:layout_marginTop="64dp"-->
+<!--            android:gravity="center_vertical"-->
+<!--            android:text="TextView"-->
+<!--            android:textColor="@color/Blanco"-->
+<!--            android:textSize="18sp" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/e2"-->
+<!--            android:layout_width="329dp"-->
+<!--            android:layout_height="30dp"-->
+<!--            android:layout_alignParentStart="true"-->
+<!--            android:layout_alignParentLeft="true"-->
+<!--            android:layout_alignParentTop="true"-->
+<!--            android:layout_marginStart="10dp"-->
+<!--            android:layout_marginLeft="10dp"-->
+<!--            android:layout_marginTop="32dp"-->
+<!--            android:gravity="center_vertical"-->
+<!--            android:text="TextView"-->
+<!--            android:textColor="@color/Blanco"-->
+<!--            android:textSize="18sp" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/e3"-->
+<!--            android:layout_width="230dp"-->
+<!--            android:layout_height="30dp"-->
+<!--            android:layout_alignParentStart="true"-->
+<!--            android:layout_alignParentLeft="true"-->
+<!--            android:layout_alignParentTop="true"-->
+<!--            android:layout_marginStart="109dp"-->
+<!--            android:layout_marginLeft="109dp"-->
+<!--            android:layout_marginTop="2dp"-->
+<!--            android:gravity="center_vertical"-->
+<!--            android:text="TextView"-->
+<!--            android:textColor="@color/Blanco"-->
+<!--            android:textSize="18sp" />-->
+
+
+<!--        <ImageView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="93dp"-->
+<!--            android:layout_alignParentTop="true"-->
+<!--            android:layout_marginLeft="340dp"-->
+<!--            android:layout_marginTop="0dp"-->
+<!--            app:srcCompat="@drawable/ic_adelante"-->
+<!--            tools:ignore="VectorDrawableCompat" />-->
+
+<!--    </RelativeLayout>-->
+
+<!--</android.support.v7.widget.CardView>-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    app:cardBackgroundColor="@color/FondoTerciario"
-    app:cardCornerRadius="4dp">
+    android:background="@color/FondoSecundario2">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        android:background="@color/AzulOscuro">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/idFic"
-            android:layout_width="100dp"
-            android:layout_height="30dp"
-            android:background="@color/FondoSecundario"
-            android:gravity="center_horizontal|center_vertical"
-            android:padding="2dp"
-            android:text="001"
-            android:textColor="@color/Blanco"
-            android:textSize="18sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="3dp"
+            android:paddingTop="3dp"
+            android:paddingRight="3dp"
+            android:paddingBottom="3dp">
 
-        <TextView
-            android:id="@+id/e1"
-            android:layout_width="329dp"
-            android:layout_height="30dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="64dp"
-            android:gravity="center_vertical"
-            android:text="TextView"
-            android:textColor="@color/Blanco"
-            android:textSize="18sp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5"
+                android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/e2"
-            android:layout_width="329dp"
-            android:layout_height="30dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="32dp"
-            android:gravity="center_vertical"
-            android:text="TextView"
-            android:textColor="@color/Blanco"
-            android:textSize="18sp" />
+                <TextView
+                    android:id="@+id/nombrePaciente"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:breakStrategy="simple"
+                    android:gravity="left"
+                    android:paddingLeft="10dp"
+                    android:text="Diego Torres"
+                    android:textColor="@color/Blanco"
+                    android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/e3"
-            android:layout_width="230dp"
-            android:layout_height="30dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="109dp"
-            android:layout_marginLeft="109dp"
-            android:layout_marginTop="2dp"
-            android:gravity="center_vertical"
-            android:text="TextView"
-            android:textColor="@color/Blanco"
-            android:textSize="18sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+
+                    <TextView
+                        android:id="@+id/fechaNacimiento"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="left"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="3dp"
+                        android:text="20/10/2021"
+                        android:textColor="@color/Blanco"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/estadoServicio"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.1"
+                        android:gravity="left"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="3dp"
+                        android:text="12 Años"
+                        android:textColor="@color/Blanco"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.9"
+                        android:background="@color/VerdeOscuro"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp"
+                        android:text="Habilitado"
+                        android:textColor="@color/Blanco"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="left"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="3dp"
+                        android:text="15.25"
+                        android:textColor="@color/Blanco"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="left"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="3dp"
+                        android:text="15.25"
+                        android:textColor="@color/Blanco"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="left"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="3dp"
+                        android:text="15.25"
+                        android:textColor="@color/Blanco"
+                        android:textSize="15sp" />
+                </LinearLayout>
 
 
-        <ImageView
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/accionesPaciente"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="10"
+                android:background="@color/FondoSecundario2"
+                android:src="@drawable/ic_opciones"
+                android:text="Limpiar"
+                android:textColor="@color/Blanco" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/separadorPaciente"
             android:layout_width="wrap_content"
-            android:layout_height="93dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="340dp"
-            android:layout_marginTop="0dp"
-            app:srcCompat="@drawable/ic_adelante"
-            tools:ignore="VectorDrawableCompat" />
+            android:layout_height="4dp"
+            android:background="@color/FondoSecundario" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
-</android.support.v7.widget.CardView>
+
+</FrameLayout>

@@ -39,6 +39,7 @@ import com.example.dentalhistoryrecorder.OpcionIngreso.Especial.IngCostos;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Piezas.Piezas;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.ItemServicio;
 import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysPacientes;
 import com.tapadoo.alerter.Alerter;
 
@@ -54,14 +55,16 @@ public class ListadoPacientes extends Fragment {
     private FloatingActionButton buscar;
     private Toolbar toolbar;
 
-    private RecyclerView lista_pacientes;
-    private PacienteAdapter adapter;
-    private RecyclerView.LayoutManager layoutManager;
+    private RecyclerView mRecyclerView;
+    private PacienteAdapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
     RequestQueue requestQueue;
     private static final String TAG = "MyActivity";
     SharedPreferences preferencias;
     private int mOpcion = 0;
     private TextView etiquetaN, etiquetaE;
+
+    private ArrayList<ItemPaciente> listaPacientes;
 
     public ListadoPacientes() {
         // Required empty public constructor
@@ -129,14 +132,15 @@ public class ListadoPacientes extends Fragment {
             }
         });
 
+        listaPacientes = new ArrayList<>();
+        listaPacientes.clear();
+
         pnombre = view.findViewById(R.id.pnom_bus);
         pnombre.setTypeface(face);
         papellido = view.findViewById(R.id.pape_bus);
         papellido.setTypeface(face);
 
         buscar = view.findViewById(R.id.consultador);
-
-        lista_pacientes = view.findViewById(R.id.lista_pacientes);
 
         etiquetaN = view.findViewById(R.id.etiquetaN);
         etiquetaN.setTypeface(face);
@@ -149,6 +153,19 @@ public class ListadoPacientes extends Fragment {
 
             }
         });
+
+        mRecyclerView = view.findViewById(R.id.lista_pacientes);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(getContext());
+
+        listaPacientes.add(new ItemPaciente("1","Diego Torres", "2", "2","123","20/10/2020"));
+        listaPacientes.add(new ItemPaciente("1","Diego Torres", "2", "2","123","20/10/2020"));
+        listaPacientes.add(new ItemPaciente("1","Diego Torres", "2", "2","123","20/10/2020"));
+        listaPacientes.add(new ItemPaciente("1","Diego Torres", "2", "2","123","20/10/2020"));
+
+        mAdapter = new PacienteAdapter(listaPacientes);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
 
         obtenerPacientes();
 
@@ -166,7 +183,7 @@ public class ListadoPacientes extends Fragment {
         querysPacientes.obtenerPacientes(preferenciasUsuario.getInt("ID_USUARIO", 0), new QuerysPacientes.VolleyOnEventListener() {
             @Override
             public void onSuccess(Object object) {
-                Toast.makeText(getContext(), object.toString(), Toast.LENGTH_LONG).show();
+//                Toast.makeText(getContext(), object.toString(), Toast.LENGTH_LONG).show();
             }
 
             @Override
