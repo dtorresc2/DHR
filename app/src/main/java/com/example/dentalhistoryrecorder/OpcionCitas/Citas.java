@@ -6,7 +6,6 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
-import android.icu.text.UnicodeSetSpanner;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -18,7 +17,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -27,7 +25,6 @@ import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -37,8 +34,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.dentalhistoryrecorder.OpcionCitas.Adaptador.AdaptadorCita;
-import com.example.dentalhistoryrecorder.OpcionConsulta.Items;
-import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.Adaptadores.AdaptadorConsulta;
 import com.example.dentalhistoryrecorder.R;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.tapadoo.alerter.Alerter;
@@ -354,7 +349,7 @@ public class Citas extends Fragment {
                 Toast.makeText(getActivity(), part1 + " " + partes[0], Toast.LENGTH_LONG).show();*/
     }
 
-    //Insertar Datos Personales y Obtener ID Paciente ----------------------------------------------
+    //Insertar Datos Personales y Obtener ID Pacientes ----------------------------------------------
     public void consultarCitas(String URL) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
@@ -561,7 +556,7 @@ public class Citas extends Fragment {
         requestQueue.add(stringRequest);
     }
 
-    //Insertar Datos Personales y Obtener ID Paciente ----------------------------------------------
+    //Insertar Datos Personales y Obtener ID Pacientes ----------------------------------------------
     public void consultarCitas2(String URL) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
@@ -773,7 +768,7 @@ public class Citas extends Fragment {
         requestQueue.add(stringRequest);
     }
 
-    //Insertar Datos Personales y Obtener ID Paciente ----------------------------------------------
+    //Insertar Datos Personales y Obtener ID Pacientes ----------------------------------------------
     public void consultarCitas3(String URL) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
@@ -986,7 +981,7 @@ public class Citas extends Fragment {
         requestQueue.add(stringRequest);
     }
 
-    //Insertar Datos Personales y Obtener ID Paciente ----------------------------------------------
+    //Insertar Datos Personales y Obtener ID Pacientes ----------------------------------------------
     public void consultarCitas4(String URL) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
@@ -1198,7 +1193,7 @@ public class Citas extends Fragment {
         requestQueue.add(stringRequest);
     }
 
-    //Insertar Datos Personales y Obtener ID Paciente ----------------------------------------------
+    //Insertar Datos Personales y Obtener ID Pacientes ----------------------------------------------
     public void actualizarCita(String URL, final String idd, final String realizado, final int estado) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override

@@ -18,8 +18,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -28,15 +26,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.dentalhistoryrecorder.OpcionConsulta.Items;
 import com.example.dentalhistoryrecorder.OpcionIngreso.Agregar;
 import com.example.dentalhistoryrecorder.R;
 import com.tapadoo.alerter.Alerter;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -146,7 +139,7 @@ public class IngCostos extends Fragment {
         return view;
     }
 
-    //Insertar Datos Personales y Obtener ID Paciente ----------------------------------------------
+    //Insertar Datos Personales y Obtener ID Pacientes ----------------------------------------------
     public void crearFicha(String URL) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
@@ -182,7 +175,7 @@ public class IngCostos extends Fragment {
         requestQueue.add(stringRequest);
     }
 
-    //Insertar Datos Personales y Obtener ID Paciente ----------------------------------------------
+    //Insertar Datos Personales y Obtener ID Pacientes ----------------------------------------------
     public void agregarCostos(String URL) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override

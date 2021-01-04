@@ -98,7 +98,7 @@ public class Inicio extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_inicio, container, false);
         final Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         requestQueue = Volley.newRequestQueue(getContext());
-        preferencias = getActivity().getSharedPreferences("Consultar", Context.MODE_PRIVATE);
+        preferencias = getActivity().getSharedPreferences("ListadoPacientes", Context.MODE_PRIVATE);
 
         String mesFormateado = (mes < 10) ? "0" + mes : String.valueOf(mes);
 

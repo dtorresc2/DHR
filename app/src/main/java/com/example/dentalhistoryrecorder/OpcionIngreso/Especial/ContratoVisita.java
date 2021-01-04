@@ -313,7 +313,7 @@ public class ContratoVisita extends Fragment {
         }
     }
 
-    //Insertar Datos Personales y Obtener ID Paciente ----------------------------------------------
+    //Insertar Datos Personales y Obtener ID Pacientes ----------------------------------------------
     public void agregarFirma(String URL, final String foto) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override

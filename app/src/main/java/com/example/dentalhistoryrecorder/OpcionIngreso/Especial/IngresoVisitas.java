@@ -107,7 +107,7 @@ public class IngresoVisitas extends Fragment {
         });
 
         preferencias = getActivity().getSharedPreferences("Terapia", Context.MODE_PRIVATE);
-        preferencias2 = getActivity().getSharedPreferences("Consultar", Context.MODE_PRIVATE);
+        preferencias2 = getActivity().getSharedPreferences("ListadoPacientes", Context.MODE_PRIVATE);
         final SharedPreferences.Editor escritor = preferencias2.edit();
 
         final Calendar calendar = Calendar.getInstance();
@@ -341,7 +341,7 @@ public class IngresoVisitas extends Fragment {
         return rows;
     }
 
-    //Insertar Datos Personales y Obtener ID Paciente ----------------------------------------------
+    //Insertar Datos Personales y Obtener ID Pacientes ----------------------------------------------
     public void agregarVisitas(String URL, final String fecha, final String desc, final String costo) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
@@ -367,7 +367,7 @@ public class IngresoVisitas extends Fragment {
         requestQueue.add(stringRequest);
     }
 
-    //Insertar Datos Personales y Obtener ID Paciente ----------------------------------------------
+    //Insertar Datos Personales y Obtener ID Pacientes ----------------------------------------------
     public void segVisitas(String URL, final String fecha, final String desc, final String costo) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override

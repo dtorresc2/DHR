@@ -40,10 +40,10 @@ public class AdaptadorConsultaFicha extends RecyclerView.Adapter<AdaptadorConsul
 
         public ViewHolderConsultaFicha(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
-            id = itemView.findViewById(R.id.idFic);
-            motivo = itemView.findViewById(R.id.e1);
-            medico = itemView.findViewById(R.id.e2);
-            fecha = itemView.findViewById(R.id.e3);
+//            id = itemView.findViewById(R.id.idFic);
+//            motivo = itemView.findViewById(R.id.e1);
+//            medico = itemView.findViewById(R.id.e2);
+//            fecha = itemView.findViewById(R.id.e3);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

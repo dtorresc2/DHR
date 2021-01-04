@@ -1,6 +1,5 @@
 package com.example.dentalhistoryrecorder.OpcionCitas;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -12,11 +11,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
-import android.print.PageRange;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -25,13 +22,11 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -40,16 +35,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.dentalhistoryrecorder.OpcionConsulta.Items;
-import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.Adaptadores.AdaptadorConsulta;
-import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.consultarFichas;
-import com.example.dentalhistoryrecorder.OpcionIngreso.Especial.IngCostos;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Pacientes.ItemPaciente;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Pacientes.PacienteAdapter;
 import com.example.dentalhistoryrecorder.R;
 import com.tapadoo.alerter.Alerter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -65,7 +57,7 @@ public class AgregarCita extends DialogFragment {
     private FloatingActionButton buscar;
 
     private RecyclerView lista_pacientes;
-    private AdaptadorConsulta adapter;
+    private PacienteAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     RequestQueue requestQueue;
 
@@ -209,8 +201,8 @@ public class AgregarCita extends DialogFragment {
         pnombre.setTypeface(face);
         papellido = view.findViewById(R.id.pape_bus);
         papellido.setTypeface(face);
-        paciente = view.findViewById(R.id.paciente);
-        paciente.setTypeface(face);
+//        paciente = view.findViewById(R.id.paciente);
+//        paciente.setTypeface(face);
         descripcion = view.findViewById(R.id.descripcion);
         descripcion.setTypeface(face);
 
@@ -339,7 +331,7 @@ public class AgregarCita extends DialogFragment {
         recogerFecha.show();
     }
 
-    //Insertar Datos Personales y Obtener ID Paciente ----------------------------------------------
+    //Insertar Datos Personales y Obtener ID Pacientes ----------------------------------------------
     public void consultarPaciente(String URL) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
@@ -347,7 +339,7 @@ public class AgregarCita extends DialogFragment {
                 JSONArray jsonArray = null;
                 try {
                     jsonArray = new JSONArray(response);
-                    final ArrayList<Items> lista = new ArrayList<>();
+                    final ArrayList<ItemPaciente> lista = new ArrayList<>();
                     if (jsonArray.length() > 0) {
                         for (int i = 0; i < jsonArray.length(); i++) {
                             String id = jsonArray.getJSONObject(i).getString("idPaciente");
@@ -361,20 +353,20 @@ public class AgregarCita extends DialogFragment {
                             String edad = jsonArray.getJSONObject(i).getString("edad");
                             String fecha = jsonArray.getJSONObject(i).getString("fecha_nac");
 
-                            lista.add(new Items(id, nom, contN, contE, edad, fecha));
+//                            lista.add(new ItemPaciente(id, nom, contN, contE, edad, fecha));
                         }
                         lista_pacientes.setHasFixedSize(true);
                         layoutManager = new LinearLayoutManager(getContext());
-                        adapter = new AdaptadorConsulta(lista);
+                        adapter = new PacienteAdapter(lista);
                         lista_pacientes.setLayoutManager(layoutManager);
                         lista_pacientes.setAdapter(adapter);
                         pnombre.setText(null);
                         papellido.setText(null);
-                        adapter.setOnItemClickListener(new AdaptadorConsulta.OnItemClickListener() {
+                        adapter.setOnItemClickListener(new PacienteAdapter.OnItemClickListener() {
                             @Override
                             public void onItemClick(final int position) {
-                                paciente.setText(lista.get(position).getMnombre());
-                                id = lista.get(position).getMid();
+//                                paciente.setText(lista.get(position).getMnombre());
+//                                id = lista.get(position).getMid();
                             }
                         });
                     }
@@ -460,7 +452,7 @@ public class AgregarCita extends DialogFragment {
         requestQueue.add(stringRequest);
     }
 
-    //Insertar Datos Personales y Obtener ID Paciente ----------------------------------------------
+    //Insertar Datos Personales y Obtener ID Pacientes ----------------------------------------------
     public void insertarCitas(String URL) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override

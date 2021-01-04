@@ -1,13 +1,11 @@
 package com.example.dentalhistoryrecorder.OpcionConsulta.Normal;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -17,17 +15,13 @@ import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -45,11 +39,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.Adaptadores.AdaptadorConsultaFicha;
 import com.example.dentalhistoryrecorder.PDF.LectorPDF;
 import com.example.dentalhistoryrecorder.R;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Pacientes.ListadoPacientes;
 import com.example.dentalhistoryrecorder.Tabla.TablaDinamica;
-import com.github.barteksc.pdfviewer.PDFView;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -71,7 +64,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -79,7 +71,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.zip.GZIPInputStream;
 
 public class Historiales extends Fragment {
     private Toolbar toolbar;
@@ -116,7 +107,7 @@ public class Historiales extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_historiales, container, false);
         Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         requestQueue = Volley.newRequestQueue(getContext());
-        preferencias = getActivity().getSharedPreferences("Consultar", Context.MODE_PRIVATE);
+        preferencias = getActivity().getSharedPreferences("ListadoPacientes", Context.MODE_PRIVATE);
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle("Ficha Normal");
         toolbar.inflateMenu(R.menu.opciones_toolbar);
@@ -125,9 +116,9 @@ public class Historiales extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Consultar consultar = new Consultar();
+                ListadoPacientes listadoPacientes = new ListadoPacientes();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                transaction.replace(R.id.contenedor, consultar);
+                transaction.replace(R.id.contenedor, listadoPacientes);
                 transaction.commit();
             }
         });
@@ -345,7 +336,7 @@ public class Historiales extends Fragment {
         return rows2;
     }
 
-    //Consultar Historial Medico
+    //ListadoPacientes Historial Medico
     public void consultarHM(String URL) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
@@ -393,7 +384,7 @@ public class Historiales extends Fragment {
         requestQueue.add(stringRequest);
     }
 
-    //Consultar Historial Medico - Padecimientos
+    //ListadoPacientes Historial Medico - Padecimientos
     public void consultarPadecimientos(String URL, final String id) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
@@ -437,7 +428,7 @@ public class Historiales extends Fragment {
         requestQueue.add(stringRequest);
     }
 
-    //Consultar Historial Odontodologico
+    //ListadoPacientes Historial Odontodologico
     public void consultarHO(String URL) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
@@ -481,7 +472,7 @@ public class Historiales extends Fragment {
         requestQueue.add(stringRequest);
     }
 
-    //Consultar Historial Odontodologico - Tratamiento
+    //ListadoPacientes Historial Odontodologico - Tratamiento
     public void consultarTratamiento(String URL, final String id) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
@@ -528,7 +519,7 @@ public class Historiales extends Fragment {
         requestQueue.add(stringRequest);
     }
 
-    //Consultar Historial Fotografico
+    //ListadoPacientes Historial Fotografico
     public void consultarHF(String URL) {
 
         final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.progressDialog);

@@ -109,7 +109,7 @@
                     android:src="@drawable/ic_correo" />
 
                 <TextView
-                    android:id="@+id/paciente"
+                    android:id="@+id/pacientes"
                     android:layout_width="100dp"
                     android:layout_height="35dp"
                     android:layout_weight="1"

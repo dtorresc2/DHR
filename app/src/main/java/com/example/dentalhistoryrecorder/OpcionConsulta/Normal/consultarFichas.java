@@ -20,7 +20,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -30,8 +29,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.dentalhistoryrecorder.OpcionConsulta.Especial.FichasEspeciales;
-import com.example.dentalhistoryrecorder.OpcionConsulta.Items;
-import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.Adaptadores.AdaptadorConsulta;
 import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.Adaptadores.AdaptadorConsultaFicha;
 import com.example.dentalhistoryrecorder.OpcionSeguimiento.Seguimiento;
 import com.example.dentalhistoryrecorder.OpcionSeguimiento.SeguimientoEspecial;
@@ -75,7 +72,7 @@ public class consultarFichas extends Fragment {
         requestQueue = Volley.newRequestQueue(getContext());
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle("Fichas");
-        preferencias = getActivity().getSharedPreferences("Consultar", Context.MODE_PRIVATE);
+        preferencias = getActivity().getSharedPreferences("ListadoPacientes", Context.MODE_PRIVATE);
 
         nombre = view.findViewById(R.id.nombre_con);
         nombre.setTypeface(face);
@@ -122,7 +119,7 @@ public class consultarFichas extends Fragment {
         return view;
     }
 
-    //Insertar Datos Personales y Obtener ID Paciente ----------------------------------------------
+    //Insertar Datos Personales y Obtener ID Pacientes ----------------------------------------------
     public void consultarFichas(String URL) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
