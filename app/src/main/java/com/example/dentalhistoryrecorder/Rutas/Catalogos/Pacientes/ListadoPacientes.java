@@ -34,12 +34,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.dentalhistoryrecorder.Componentes.MenuInferior;
 import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.consultarFichas;
 import com.example.dentalhistoryrecorder.OpcionIngreso.Especial.IngCostos;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Piezas.Piezas;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.ItemServicio;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.ServiciosAdapter;
 import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysPacientes;
 import com.tapadoo.alerter.Alerter;
 
@@ -123,7 +125,7 @@ public class ListadoPacientes extends Fragment {
                         return true;
 
                     case R.id.opcion_actualizar:
-//                        listarPiezas();
+                        obtenerPacientes();
                         return true;
 
                     default:
@@ -133,7 +135,6 @@ public class ListadoPacientes extends Fragment {
         });
 
         listaPacientes = new ArrayList<>();
-        listaPacientes.clear();
 
         buscar = view.findViewById(R.id.consultador);
         buscar.setOnClickListener(new View.OnClickListener() {
@@ -147,17 +148,7 @@ public class ListadoPacientes extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
 
-        listaPacientes.add(new ItemPaciente(1,"Diego Torres", "2", "2",123,"20/10/2020", true, 0.00, 0.00, 0.00));
-        listaPacientes.add(new ItemPaciente(1,"Diego Torres", "2", "2",123,"20/10/2020", true, 0.00, 0.00, 0.00));
-        listaPacientes.add(new ItemPaciente(1,"Diego Torres", "2", "2",123,"20/10/2020", true, 0.00, 0.00, 0.00));
-        listaPacientes.add(new ItemPaciente(1,"Diego Torres", "2", "2",123,"20/10/2020", true, 0.00, 0.00, 0.00));
-
-        mAdapter = new PacienteAdapter(listaPacientes);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-
         obtenerPacientes();
-
         return view;
     }
 
@@ -166,13 +157,67 @@ public class ListadoPacientes extends Fragment {
     }
 
     public void obtenerPacientes() {
+        listaPacientes.clear();
+//        estadoServicio = false;
+
+        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+        progressDialog.setMessage("Cargando...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
         final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
 
         QuerysPacientes querysPacientes = new QuerysPacientes(getContext());
         querysPacientes.obtenerPacientes(preferenciasUsuario.getInt("ID_USUARIO", 0), new QuerysPacientes.VolleyOnEventListener() {
             @Override
             public void onSuccess(Object object) {
-//                Toast.makeText(getContext(), object.toString(), Toast.LENGTH_LONG).show();
+                try {
+                    JSONArray jsonArray = new JSONArray(object.toString());
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        listaPacientes.add(new ItemPaciente(
+                                jsonArray.getJSONObject(i).getInt("ID_PACIENTE"),
+                                jsonArray.getJSONObject(i).getString("NOMBRE"),
+                                jsonArray.getJSONObject(i).getString("TELEFONO"),
+                                jsonArray.getJSONObject(i).getString("DPI"),
+                                jsonArray.getJSONObject(i).getInt("EDAD"),
+                                jsonArray.getJSONObject(i).getString("FECHA_NACIMIENTO"),
+                                (jsonArray.getJSONObject(i).getInt("ESTADO") > 0) ? true : false,
+                                jsonArray.getJSONObject(i).getDouble("DEBE"),
+                                jsonArray.getJSONObject(i).getDouble("HABER"),
+                                jsonArray.getJSONObject(i).getDouble("SALDO")
+                        ));
+                    }
+
+                    mAdapter = new PacienteAdapter(listaPacientes);
+                    mRecyclerView.setLayoutManager(mLayoutManager);
+                    mRecyclerView.setAdapter(mAdapter);
+
+                    mAdapter.setOnItemClickListener(new PacienteAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(final int position) {
+                            MenuInferior menuInferior = new MenuInferior();
+                            menuInferior.show(getFragmentManager(), "MenuInferior");
+                            menuInferior.recibirTitulo("Paciente #", listaPacientes.get(position).getCodigo());
+                            menuInferior.eventoClick(new MenuInferior.MenuInferiorListener() {
+                                @Override
+                                public void onButtonClicked(int opcion) {
+//                                    estadoServicio = listaServicios.get(position).getEstadoServicio();
+//                                    realizarAccion(opcion, listaServicios.get(position).getCodigoServicio());
+                                }
+                            });
+                        }
+                    });
+
+                    progressDialog.dismiss();
+                } catch (JSONException e) {
+                    progressDialog.dismiss();
+                    Catalogos catalogos = new Catalogos();
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                    transaction.replace(R.id.contenedor, catalogos);
+                    transaction.commit();
+                    e.printStackTrace();
+                }
             }
 
             @Override
