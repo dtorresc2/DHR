@@ -105,21 +105,21 @@ public class ListadoPacientes extends Fragment {
                         return true;
 
                     case R.id.opcion_filtrar:
-//                        MenuItem searchItem = menuItem;
-//                        SearchView searchView = (SearchView) searchItem.getActionView();
-//
-//                        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//                            @Override
-//                            public boolean onQueryTextSubmit(String query) {
-//                                return false;
-//                            }
-//
-//                            @Override
-//                            public boolean onQueryTextChange(String newText) {
-//                                mAdapter.getFilter().filter(newText);
-//                                return false;
-//                            }
-//                        });
+                        MenuItem searchItem = menuItem;
+                        SearchView searchView = (SearchView) searchItem.getActionView();
+
+                        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                            @Override
+                            public boolean onQueryTextSubmit(String query) {
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onQueryTextChange(String newText) {
+                                mAdapter.getFilter().filter(newText);
+                                return false;
+                            }
+                        });
                         return true;
 
                     case R.id.opcion_actualizar:
@@ -135,18 +135,7 @@ public class ListadoPacientes extends Fragment {
         listaPacientes = new ArrayList<>();
         listaPacientes.clear();
 
-//        pnombre = view.findViewById(R.id.pnom_bus);
-//        pnombre.setTypeface(face);
-//        papellido = view.findViewById(R.id.pape_bus);
-//        papellido.setTypeface(face);
-
         buscar = view.findViewById(R.id.consultador);
-
-//        etiquetaN = view.findViewById(R.id.etiquetaN);
-//        etiquetaN.setTypeface(face);
-//        etiquetaE = view.findViewById(R.id.etiquetaE);
-//        etiquetaE.setTypeface(face);
-
         buscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

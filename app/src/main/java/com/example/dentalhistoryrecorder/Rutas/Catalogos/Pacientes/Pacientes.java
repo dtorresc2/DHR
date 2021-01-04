@@ -45,6 +45,7 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Pacientes extends Fragment {
@@ -79,9 +80,9 @@ public class Pacientes extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Catalogos catalogos = new Catalogos();
+                ListadoPacientes listadoPacientes = new ListadoPacientes();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                transaction.replace(R.id.contenedor, catalogos);
+                transaction.replace(R.id.contenedor, listadoPacientes);
                 transaction.commit();
             }
         });

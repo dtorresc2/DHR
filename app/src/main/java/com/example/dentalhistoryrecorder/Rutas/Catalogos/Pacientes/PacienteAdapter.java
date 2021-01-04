@@ -8,14 +8,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.example.dentalhistoryrecorder.R;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.ItemServicio;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class PacienteAdapter extends RecyclerView.Adapter<PacienteAdapter.ViewHolderConsulta> {
+public class PacienteAdapter extends RecyclerView.Adapter<PacienteAdapter.ViewHolderConsulta> implements Filterable {
     private ArrayList<ItemPaciente> mLista;
+    private ArrayList<ItemPaciente> mListaFull;
     private int lastPosition = -1;
     private OnItemClickListener mlistener;
     private ViewGroup mViewGroup;
@@ -67,6 +72,7 @@ public class PacienteAdapter extends RecyclerView.Adapter<PacienteAdapter.ViewHo
 
     public PacienteAdapter(ArrayList<ItemPaciente> lista) {
         mLista = lista;
+        mListaFull = new ArrayList<>(lista);
     }
 
     @NonNull
@@ -90,13 +96,18 @@ public class PacienteAdapter extends RecyclerView.Adapter<PacienteAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolderConsulta viewHolderConsulta, int i) {
         ItemPaciente itemPaciente = mLista.get(i);
-//        viewHolderConsulta.mid.setText(itemPaciente.getCodigo());
         viewHolderConsulta.mnombre.setText(itemPaciente.getNombre());
-        viewHolderConsulta.medad.setText(String.valueOf(itemPaciente.getEdad()));
         viewHolderConsulta.mfecha.setText(itemPaciente.getFecha());
-        viewHolderConsulta.mdebe.setText(String.valueOf(itemPaciente.getDebe()));
-        viewHolderConsulta.mhaber.setText(String.valueOf(itemPaciente.getHaber()));
-        viewHolderConsulta.msaldo.setText(String.valueOf(itemPaciente.getSaldo()));
+        viewHolderConsulta.mdebe.setText(String.format("%.2f", itemPaciente.getDebe()));
+        viewHolderConsulta.mhaber.setText(String.format("%.2f", itemPaciente.getHaber()));
+        viewHolderConsulta.msaldo.setText(String.format("%.2f", itemPaciente.getSaldo()));
+
+        if (itemPaciente.getEdad() == 1) {
+            viewHolderConsulta.medad.setText(String.valueOf(itemPaciente.getEdad()) + " Año");
+        }
+        else {
+            viewHolderConsulta.medad.setText(String.valueOf(itemPaciente.getEdad()) + " Años");
+        }
 
         if (itemPaciente.getEstado()) {
             viewHolderConsulta.mestado.setText("Habilitado");
@@ -126,4 +137,39 @@ public class PacienteAdapter extends RecyclerView.Adapter<PacienteAdapter.ViewHo
             lastPosition = position;
         }
     }
+
+    @Override
+    public Filter getFilter() {
+        return filtroPaciente;
+    }
+
+    private Filter filtroPaciente = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            ArrayList<ItemPaciente> listaFiltrada = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0){
+                listaFiltrada.addAll(mListaFull);
+            }
+            else {
+                String filter = constraint.toString().toLowerCase().trim();
+                for (ItemPaciente item : mListaFull){
+                    if (item.getNombre().toLowerCase().contains(filter)){
+                        listaFiltrada.add(item);
+                    }
+                }
+            }
+
+            FilterResults filterResults = new FilterResults();
+            filterResults.values = listaFiltrada;
+            return filterResults;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            mLista.clear();
+            mLista.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
 }
