@@ -135,17 +135,17 @@ public class ListadoPacientes extends Fragment {
         listaPacientes = new ArrayList<>();
         listaPacientes.clear();
 
-        pnombre = view.findViewById(R.id.pnom_bus);
-        pnombre.setTypeface(face);
-        papellido = view.findViewById(R.id.pape_bus);
-        papellido.setTypeface(face);
+//        pnombre = view.findViewById(R.id.pnom_bus);
+//        pnombre.setTypeface(face);
+//        papellido = view.findViewById(R.id.pape_bus);
+//        papellido.setTypeface(face);
 
         buscar = view.findViewById(R.id.consultador);
 
-        etiquetaN = view.findViewById(R.id.etiquetaN);
-        etiquetaN.setTypeface(face);
-        etiquetaE = view.findViewById(R.id.etiquetaE);
-        etiquetaE.setTypeface(face);
+//        etiquetaN = view.findViewById(R.id.etiquetaN);
+//        etiquetaN.setTypeface(face);
+//        etiquetaE = view.findViewById(R.id.etiquetaE);
+//        etiquetaE.setTypeface(face);
 
         buscar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,10 +158,10 @@ public class ListadoPacientes extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
 
-        listaPacientes.add(new ItemPaciente(1,"Diego Torres", "2", "2",123,"20/10/2020"));
-        listaPacientes.add(new ItemPaciente(1,"Diego Torres", "2", "2",123,"20/10/2020"));
-        listaPacientes.add(new ItemPaciente(1,"Diego Torres", "2", "2",123,"20/10/2020"));
-        listaPacientes.add(new ItemPaciente(1,"Diego Torres", "2", "2",123,"20/10/2020"));
+        listaPacientes.add(new ItemPaciente(1,"Diego Torres", "2", "2",123,"20/10/2020", true, 0.00, 0.00, 0.00));
+        listaPacientes.add(new ItemPaciente(1,"Diego Torres", "2", "2",123,"20/10/2020", true, 0.00, 0.00, 0.00));
+        listaPacientes.add(new ItemPaciente(1,"Diego Torres", "2", "2",123,"20/10/2020", true, 0.00, 0.00, 0.00));
+        listaPacientes.add(new ItemPaciente(1,"Diego Torres", "2", "2",123,"20/10/2020", true, 0.00, 0.00, 0.00));
 
         mAdapter = new PacienteAdapter(listaPacientes);
         mRecyclerView.setLayoutManager(mLayoutManager);

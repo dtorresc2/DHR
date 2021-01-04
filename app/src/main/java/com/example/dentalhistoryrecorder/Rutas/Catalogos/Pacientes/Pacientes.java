@@ -325,7 +325,7 @@ public class Pacientes extends Fragment {
                             String edad = jsonArray.getJSONObject(i).getString("edad");
                             String fecha = jsonArray.getJSONObject(i).getString("fecha_nac");
 
-                            lista.add(new ItemPaciente(id, nom, contN, contE, edad, fecha));
+//                            lista.add(new ItemPaciente(id, nom, contN, contE, edad, fecha));
                         }
                         listaPac.setHasFixedSize(true);
                         layoutManager = new LinearLayoutManager(getContext());
@@ -335,15 +335,15 @@ public class Pacientes extends Fragment {
                         adapter.setOnItemClickListener(new PacienteAdapter.OnItemClickListener() {
                             @Override
                             public void onItemClick(final int position) {
-                                if (Integer.parseInt(lista.get(position).getMcontadorN()) > 0) {
-                                    IngDetalle ingDetalle = new IngDetalle();
-                                    ingDetalle.obtenerPaciente(Integer.parseInt(lista.get(position).getMid()));
-
-                                    FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                                    transaction.replace(R.id.contenedor, ingDetalle);
-                                    transaction.commit();
-                                    dialog.dismiss();
-                                }
+//                                if (Integer.parseInt(lista.get(position).getMcontadorN()) > 0) {
+//                                    IngDetalle ingDetalle = new IngDetalle();
+//                                    ingDetalle.obtenerPaciente(Integer.parseInt(lista.get(position).getMid()));
+//
+//                                    FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+//                                    transaction.replace(R.id.contenedor, ingDetalle);
+//                                    transaction.commit();
+//                                    dialog.dismiss();
+//                                }
                             }
                         });
                     }

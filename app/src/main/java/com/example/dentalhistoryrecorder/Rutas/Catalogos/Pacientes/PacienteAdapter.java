@@ -18,12 +18,13 @@ public class PacienteAdapter extends RecyclerView.Adapter<PacienteAdapter.ViewHo
     private ArrayList<ItemPaciente> mLista;
     private int lastPosition = -1;
     private OnItemClickListener mlistener;
+    private ViewGroup mViewGroup;
 
-    public interface OnItemClickListener{
+    public interface OnItemClickListener {
         void onItemClick(int position);
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener){
+    public void setOnItemClickListener(OnItemClickListener listener) {
         mlistener = listener;
     }
 
@@ -36,10 +37,11 @@ public class PacienteAdapter extends RecyclerView.Adapter<PacienteAdapter.ViewHo
         public TextView mhaber;
         public TextView msaldo;
         public TextView mestado;
+        public View separador;
 
         public ViewHolderConsulta(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
-            mid = itemView.findViewById(R.id.idPac);
+//            mid = itemView.findViewById(R.id.co);
             mnombre = itemView.findViewById(R.id.nombrePaciente);
             medad = itemView.findViewById(R.id.edadPaciente);
             mfecha = itemView.findViewById(R.id.fechaNacimientoPaciente);
@@ -47,13 +49,14 @@ public class PacienteAdapter extends RecyclerView.Adapter<PacienteAdapter.ViewHo
             mhaber = itemView.findViewById(R.id.haberPaciente);
             msaldo = itemView.findViewById(R.id.saldoPaciente);
             mestado = itemView.findViewById(R.id.estadoPaciente);
+            separador = itemView.findViewById(R.id.separadorPaciente);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (listener != null){
+                    if (listener != null) {
                         int posicion = getAdapterPosition();
-                        if (posicion != RecyclerView.NO_POSITION){
+                        if (posicion != RecyclerView.NO_POSITION) {
                             listener.onItemClick(posicion);
                         }
                     }
@@ -69,10 +72,11 @@ public class PacienteAdapter extends RecyclerView.Adapter<PacienteAdapter.ViewHo
     @NonNull
     @Override
     public ViewHolderConsulta onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        mViewGroup = viewGroup;
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.items, viewGroup, false);
         Typeface face = Typeface.createFromAsset(view.getContext().getAssets(), "fonts/bahnschrift.ttf");
         ViewHolderConsulta viewHolderConsulta = new ViewHolderConsulta(view, mlistener);
-        viewHolderConsulta.mid.setTypeface(face);
+//        viewHolderConsulta.mid.setTypeface(face);
         viewHolderConsulta.mnombre.setTypeface(face);
         viewHolderConsulta.medad.setTypeface(face);
         viewHolderConsulta.mfecha.setTypeface(face);
@@ -86,14 +90,27 @@ public class PacienteAdapter extends RecyclerView.Adapter<PacienteAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolderConsulta viewHolderConsulta, int i) {
         ItemPaciente itemPaciente = mLista.get(i);
-        viewHolderConsulta.mid.setText(itemPaciente.getCodigo());
+//        viewHolderConsulta.mid.setText(itemPaciente.getCodigo());
         viewHolderConsulta.mnombre.setText(itemPaciente.getNombre());
-        viewHolderConsulta.medad.setText(itemPaciente.getEdad());
+        viewHolderConsulta.medad.setText(String.valueOf(itemPaciente.getEdad()));
         viewHolderConsulta.mfecha.setText(itemPaciente.getFecha());
-        viewHolderConsulta.mdebe.setText(itemPaciente.getFecha());
-        viewHolderConsulta.mhaber.setText(itemPaciente.getFecha());
-        viewHolderConsulta.msaldo.setText(itemPaciente.getFecha());
-        viewHolderConsulta.mestado.setText(itemPaciente.getFecha());
+        viewHolderConsulta.mdebe.setText(String.valueOf(itemPaciente.getDebe()));
+        viewHolderConsulta.mhaber.setText(String.valueOf(itemPaciente.getHaber()));
+        viewHolderConsulta.msaldo.setText(String.valueOf(itemPaciente.getSaldo()));
+
+        if (itemPaciente.getEstado()) {
+            viewHolderConsulta.mestado.setText("Habilitado");
+            viewHolderConsulta.mestado.setBackgroundColor(mViewGroup.getContext().getResources().getColor(R.color.VerdeOscuro));
+        } else {
+            viewHolderConsulta.mestado.setText("Deshabilitado");
+            viewHolderConsulta.mestado.setBackgroundColor(mViewGroup.getContext().getResources().getColor(R.color.RojoOscuro));
+        }
+
+        if (i < mLista.size()) {
+            viewHolderConsulta.separador.setVisibility(View.VISIBLE);
+        } else {
+            viewHolderConsulta.separador.setVisibility(View.INVISIBLE);
+        }
         setAnimation(viewHolderConsulta.itemView, i);
     }
 

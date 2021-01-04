@@ -353,7 +353,7 @@ public class AgregarCita extends DialogFragment {
                             String edad = jsonArray.getJSONObject(i).getString("edad");
                             String fecha = jsonArray.getJSONObject(i).getString("fecha_nac");
 
-                            lista.add(new ItemPaciente(id, nom, contN, contE, edad, fecha));
+//                            lista.add(new ItemPaciente(id, nom, contN, contE, edad, fecha));
                         }
                         lista_pacientes.setHasFixedSize(true);
                         layoutManager = new LinearLayoutManager(getContext());
@@ -365,8 +365,8 @@ public class AgregarCita extends DialogFragment {
                         adapter.setOnItemClickListener(new PacienteAdapter.OnItemClickListener() {
                             @Override
                             public void onItemClick(final int position) {
-                                paciente.setText(lista.get(position).getMnombre());
-                                id = lista.get(position).getMid();
+//                                paciente.setText(lista.get(position).getMnombre());
+//                                id = lista.get(position).getMid();
                             }
                         });
                     }
