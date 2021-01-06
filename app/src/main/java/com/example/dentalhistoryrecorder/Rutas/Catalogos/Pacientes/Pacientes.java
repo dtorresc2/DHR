@@ -1,14 +1,11 @@
 package com.example.dentalhistoryrecorder.Rutas.Catalogos.Pacientes;
 
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -16,12 +13,9 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,30 +25,16 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.example.dentalhistoryrecorder.OpcionIngreso.Normal.IngDetalle;
 import com.example.dentalhistoryrecorder.R;
-import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
-import com.example.dentalhistoryrecorder.Rutas.Catalogos.Cuentas.ListadoCuentas;
-import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysCuentas;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Cuentas.ItemCuenta;
 import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysPacientes;
 import com.tapadoo.alerter.Alerter;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 public class Pacientes extends Fragment {
@@ -64,16 +44,23 @@ public class Pacientes extends Fragment {
     private RadioButton sexo, sexof, truePaciente, falsePaciente;
     private TextView tituloEstado, tituloGenero;
     private FloatingActionButton agregador;
-    private static final String TAG = "MyActivity";
     private ImageButton fecha;
-    RequestQueue requestQueue;
-    private RecyclerView listaPac;
-    private PacienteAdapter adapter;
-    private RecyclerView.LayoutManager layoutManager;
-    Typeface face;
+    private Typeface face;
+    private ArrayList<ItemPaciente> mListadoPacientes;
+    private boolean modoEdicion;
+    private int ID_PACIENTE = 0;
 
     public Pacientes() {
-        // Required empty public constructor
+        modoEdicion = true;
+    }
+
+    public void enviarPacientes(ArrayList<ItemPaciente> listadoPacientes) {
+        mListadoPacientes = listadoPacientes;
+    }
+
+    public void editarPaciente(int id) {
+        modoEdicion = true;
+        ID_PACIENTE = id;
     }
 
     @Override
@@ -81,11 +68,13 @@ public class Pacientes extends Fragment {
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_pacientes, container, false);
         face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-        requestQueue = Volley.newRequestQueue(getContext());
 
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_cerrar);
-        toolbar.setTitle("Paciente Nuevo");
+        if (!modoEdicion)
+            toolbar.setTitle("Paciente Nuevo");
+        else
+            toolbar.setTitle("Paciente #" + ID_PACIENTE);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -251,8 +240,6 @@ public class Pacientes extends Fragment {
                     return;
 
                 registrarPaciente();
-//                String[] auxFecha = fechap.getText().toString().split("/");
-//                Toast.makeText(getContext(), auxFecha[2] + "-" + auxFecha[1] + "-" + auxFecha[0], Toast.LENGTH_SHORT).show();
             }
         });
         return view;
@@ -271,14 +258,7 @@ public class Pacientes extends Fragment {
         JSONObject jsonBody = new JSONObject();
         String[] auxFecha = fechap.getText().toString().split("/");
         String fechaBD = auxFecha[2] + "/" + auxFecha[1] + "/" + auxFecha[0];
-//        "NOMBRE": "Claudia Guisela Claros Perez",
-//                "EDAD": "50",
-//                "OCUPACION": "Optometrista",
-//                "SEXO": "1",
-//                "TELEFONO": "2222-2222",
-//                "FECHA_NACIMIENTO": "1970/09/05",
-//                "DPI": "3453453453",
-//                "ID_USUARIO": "1"
+
         try {
             jsonBody.put("NOMBRE", primerNombre.getText().toString().trim());
             jsonBody.put("EDAD", edad.getText().toString().trim());
