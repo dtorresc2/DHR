@@ -3,12 +3,14 @@ package com.example.dentalhistoryrecorder.Rutas.Catalogos.Pacientes;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
@@ -39,10 +41,14 @@ import com.android.volley.toolbox.Volley;
 import com.example.dentalhistoryrecorder.OpcionIngreso.Normal.IngDetalle;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Cuentas.ListadoCuentas;
+import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysCuentas;
+import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysPacientes;
 import com.tapadoo.alerter.Alerter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -64,6 +70,7 @@ public class Pacientes extends Fragment {
     private RecyclerView listaPac;
     private PacienteAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
+    Typeface face;
 
     public Pacientes() {
         // Required empty public constructor
@@ -73,12 +80,12 @@ public class Pacientes extends Fragment {
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_pacientes, container, false);
-        Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+        face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         requestQueue = Volley.newRequestQueue(getContext());
 
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_cerrar);
-        toolbar.setTitle("Pacientes");
+        toolbar.setTitle("Paciente Nuevo");
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -243,11 +250,77 @@ public class Pacientes extends Fragment {
                 if (!nombreRequerido() || !telefonoRequerido() || !edadRequerida() || !validarNombre() || !validarEdad())
                     return;
 
-                String[] auxFecha = fechap.getText().toString().split("/");
-                Toast.makeText(getContext(), auxFecha[2] + "-" + auxFecha[1] + "-" + auxFecha[0], Toast.LENGTH_SHORT).show();
+                registrarPaciente();
+//                String[] auxFecha = fechap.getText().toString().split("/");
+//                Toast.makeText(getContext(), auxFecha[2] + "-" + auxFecha[1] + "-" + auxFecha[0], Toast.LENGTH_SHORT).show();
             }
         });
         return view;
+    }
+
+    private void registrarPaciente() {
+        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+        progressDialog.setMessage("Cargando...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+
+        QuerysPacientes querysPacientes = new QuerysPacientes(getContext());
+        JSONObject jsonBody = new JSONObject();
+        String[] auxFecha = fechap.getText().toString().split("/");
+        String fechaBD = auxFecha[2] + "/" + auxFecha[1] + "/" + auxFecha[0];
+//        "NOMBRE": "Claudia Guisela Claros Perez",
+//                "EDAD": "50",
+//                "OCUPACION": "Optometrista",
+//                "SEXO": "1",
+//                "TELEFONO": "2222-2222",
+//                "FECHA_NACIMIENTO": "1970/09/05",
+//                "DPI": "3453453453",
+//                "ID_USUARIO": "1"
+        try {
+            jsonBody.put("NOMBRE", primerNombre.getText().toString().trim());
+            jsonBody.put("EDAD", edad.getText().toString().trim());
+            jsonBody.put("OCUPACION", ocupacion.getText().toString().trim());
+            jsonBody.put("SEXO", (truePaciente.isChecked() == true) ? 1 : 0);
+            jsonBody.put("TELEFONO", telefono.getText().toString().trim());
+            jsonBody.put("FECHA_NACIMIENTO", fechaBD);
+            jsonBody.put("DPI", dpi.getText().toString().trim());
+            jsonBody.put("ID_USUARIO", preferenciasUsuario.getInt("ID_USUARIO", 0));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        querysPacientes.registrarPaciente(jsonBody, new QuerysPacientes.VolleyOnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                Alerter.create(getActivity())
+                        .setTitle("Paciente registrado")
+                        .setIcon(R.drawable.logonuevo)
+                        .setTextTypeface(face)
+                        .enableSwipeToDismiss()
+                        .setBackgroundColorRes(R.color.FondoSecundario)
+                        .show();
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressDialog.dismiss();
+                        ListadoPacientes listadoPacientes = new ListadoPacientes();
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                        transaction.replace(R.id.contenedor, listadoPacientes);
+                        transaction.commit();
+                    }
+                }, 1000);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                progressDialog.dismiss();
+                Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     // VALIDACIONES
