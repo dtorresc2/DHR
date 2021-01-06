@@ -222,7 +222,12 @@ public class ListadoPacientes extends Fragment {
 
             @Override
             public void onFailure(Exception e) {
-                Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+                Catalogos catalogos = new Catalogos();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                transaction.replace(R.id.contenedor, catalogos);
+                transaction.commit();
+                e.printStackTrace();
             }
         });
     }

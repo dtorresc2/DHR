@@ -17,6 +17,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +49,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class Pacientes extends Fragment {
     private Toolbar toolbar;
@@ -89,17 +92,69 @@ public class Pacientes extends Fragment {
 
         primerNombre = view.findViewById(R.id.primerNombre);
         primerNombre.setTypeface(face);
+        primerNombre.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (nombreRequerido()) {
+                    validarNombre();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         edad = view.findViewById(R.id.edad);
         edad.setTypeface(face);
+        edad.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (edadRequerida()) {
+                    validarEdad();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         telefono = view.findViewById(R.id.telefono);
         telefono.setTypeface(face);
+        telefono.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                telefonoRequerido();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         ocupacion = view.findViewById(R.id.ocupacion);
         ocupacion.setTypeface(face);
 
-        sexo = (RadioButton) view.findViewById(R.id.masculino);
+        sexo = view.findViewById(R.id.masculino);
         sexo.setTypeface(face);
 
         sexof = view.findViewById(R.id.femenino);
@@ -151,6 +206,7 @@ public class Pacientes extends Fragment {
         int a = calendar.get(Calendar.YEAR);
 
         mes++;
+        dia--;
         String mesAux = (mes > 9) ? String.valueOf(mes) : "0" + mes;
         String diaAux = (dia > 9) ? String.valueOf(dia) : "0" + dia;
 
@@ -164,6 +220,7 @@ public class Pacientes extends Fragment {
                 int yy = calendario.get(Calendar.YEAR);
                 int mm = calendario.get(Calendar.MONTH);
                 int dd = calendario.get(Calendar.DAY_OF_MONTH);
+                dd--;
 
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), R.style.progressDialog, new DatePickerDialog.OnDateSetListener() {
                     @Override
@@ -183,6 +240,9 @@ public class Pacientes extends Fragment {
         agregador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!nombreRequerido() || !telefonoRequerido() || !edadRequerida() || !validarNombre() || !validarEdad())
+                    return;
+
                 String[] auxFecha = fechap.getText().toString().split("/");
                 Toast.makeText(getContext(), auxFecha[2] + "-" + auxFecha[1] + "-" + auxFecha[0], Toast.LENGTH_SHORT).show();
             }
@@ -190,186 +250,61 @@ public class Pacientes extends Fragment {
         return view;
     }
 
-    //Insertar Datos Personales y Obtener ID Pacientes ----------------------------------------------
-    public void insertarPaciente(String URL) {
-        final String[] id = new String[1];
-        //id[0] = obtenerNumPacientes("https://diegosistemas.xyz/DHR/Normal/ficha.php?estado=3");
-        //Log.i("Id",id[0]);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i(TAG, "" + error.toString());
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros = new HashMap<String, String>();
-                //parametros.put("id", id[0]);
-                parametros.put("pnombre", primerNombre.getText().toString());
-//                parametros.put("snombre", segundoNombre.getText().toString());
-//                parametros.put("papellido", primerApellido.getText().toString());
-//                parametros.put("sapellido", segundoApellido.getText().toString());
-                parametros.put("edad", edad.getText().toString());
-                parametros.put("ocupacion", ocupacion.getText().toString());
-                parametros.put("sexo", String.valueOf((sexo.isChecked()) ? 1 : 0));
-                parametros.put("tel", telefono.getText().toString());
-                parametros.put("fecha", fechap.getText().toString());
-                SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
-                parametros.put("user", preferencias2.getString("idUsuario", "1"));
-                return parametros;
-            }
-
-        };
-        //RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-        requestQueue.add(stringRequest);
-        //idPacientee = id[0];
+    // VALIDACIONES
+    private boolean nombreRequerido() {
+        String texto = primerNombre.getText().toString().trim();
+        if (texto.isEmpty()) {
+            nombreLayout.setError("Campo requerido");
+            return false;
+        } else {
+            nombreLayout.setError(null);
+            return true;
+        }
     }
 
-    public void obtenerPacientes(String URL) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                if (Integer.parseInt(response) > 0) {
-                    final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-                    View viewCuadro = getLayoutInflater().inflate(R.layout.dialogo_pac_exis, null);
-                    listaPac = viewCuadro.findViewById(R.id.lista_pacientesExis);
-                    Toolbar toolbar = viewCuadro.findViewById(R.id.toolbar2);
-                    toolbar.setTitle("Pacientes");
-                    toolbar.setNavigationIcon(R.drawable.ic_cerrar);
-
-                    builder.setView(viewCuadro);
-                    final AlertDialog dialog = builder.create();
-
-                    toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            dialog.dismiss();
-                        }
-                    });
-
-                    ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-                    if (networkInfo != null && networkInfo.isConnected()) {
-                        consultarPaciente("http://dhr.sistemasdt.xyz/Normal/consultaficha.php?estado=1", dialog);
-                    } else {
-                        Alerter.create(getActivity())
-                                .setTitle("Error")
-                                .setText("Fallo en Conexion a Internet")
-                                .setIcon(R.drawable.logonuevo)
-                                .setTextTypeface(face2)
-                                .enableSwipeToDismiss()
-                                .setBackgroundColorRes(R.color.AzulOscuro)
-                                .show();
-                    }
-
-                    dialog.show();
-
-                } else {
-                    Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-                    Alerter.create(getActivity())
-                            .setTitle("NO se encontraron coincidencias")
-                            .setIcon(R.drawable.logonuevo)
-                            .setTextTypeface(face2)
-                            .enableSwipeToDismiss()
-                            .setBackgroundColorRes(R.color.AzulOscuro)
-                            .show();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i(TAG, "" + error.toString());
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros = new HashMap<String, String>();
-                parametros.put("pnombre", primerNombre.getText().toString());
-//                parametros.put("papellido", primerApellido.getText().toString());
-                SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
-                parametros.put("id", preferencias2.getString("idUsuario", "1"));
-                return parametros;
-            }
-
-        };
-        //RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-        requestQueue.add(stringRequest);
-        //idPacientee = id[0];
+    private boolean telefonoRequerido() {
+        String texto = telefono.getText().toString().trim();
+        if (texto.isEmpty()) {
+            telLayout.setError("Campo requerido");
+            return false;
+        } else {
+            telLayout.setError(null);
+            return true;
+        }
     }
 
-    //Insertar Datos Personales y Obtener ID Pacientes ----------------------------------------------
-    public void consultarPaciente(String URL, final AlertDialog dialog) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                JSONArray jsonArray = null;
-                try {
-                    jsonArray = new JSONArray(response);
-                    final ArrayList<ItemPaciente> lista = new ArrayList<>();
-                    if (jsonArray.length() > 0) {
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            String id = jsonArray.getJSONObject(i).getString("idPaciente");
-                            Log.i(TAG, "id: " + id);
-                            String nom = jsonArray.getJSONObject(i).getString("Nombre");
-                            Log.i(TAG, "nombre: " + nom);
-                            String contN = jsonArray.getJSONObject(i).getString("Fichas");
-                            Log.i(TAG, "contadorN: " + contN);
-                            String contE = jsonArray.getJSONObject(i).getString("Fichas2");
-                            Log.i(TAG, "contadorE: " + contE);
-                            String edad = jsonArray.getJSONObject(i).getString("edad");
-                            String fecha = jsonArray.getJSONObject(i).getString("fecha_nac");
+    private boolean edadRequerida() {
+        String texto = edad.getText().toString().trim();
+        if (texto.isEmpty()) {
+            edadLayout.setError("Campo requerido");
+            return false;
+        } else {
+            edadLayout.setError(null);
+            return true;
+        }
+    }
 
-//                            lista.add(new ItemPaciente(id, nom, contN, contE, edad, fecha));
-                        }
-                        listaPac.setHasFixedSize(true);
-                        layoutManager = new LinearLayoutManager(getContext());
-                        adapter = new PacienteAdapter(lista);
-                        listaPac.setLayoutManager(layoutManager);
-                        listaPac.setAdapter(adapter);
-                        adapter.setOnItemClickListener(new PacienteAdapter.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(final int position) {
-//                                if (Integer.parseInt(lista.get(position).getMcontadorN()) > 0) {
-//                                    IngDetalle ingDetalle = new IngDetalle();
-//                                    ingDetalle.obtenerPaciente(Integer.parseInt(lista.get(position).getMid()));
-//
-//                                    FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-//                                    transaction.replace(R.id.contenedor, ingDetalle);
-//                                    transaction.commit();
-//                                    dialog.dismiss();
-//                                }
-                            }
-                        });
-                    }
+    private boolean validarNombre() {
+        String texto = primerNombre.getText().toString().trim();
+        Pattern patron = Pattern.compile("^[A-Z][a-z]+([' ']?[A-Z][a-z]+){0,3}$");
+        if (patron.matcher(texto).matches()) {
+            nombreLayout.setError(null);
+            return true;
+        } else {
+            nombreLayout.setError("Nombre invalido");
+            return false;
+        }
+    }
 
-                } catch (JSONException e) {
-                    Log.i(TAG, "" + e);
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i(TAG, "" + error.toString());
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros = new HashMap<String, String>();
-                parametros.put("pnombre", primerNombre.getText().toString());
-//                parametros.put("papellido", primerApellido.getText().toString());
-                SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
-                parametros.put("id", preferencias2.getString("idUsuario", "1"));
-                return parametros;
-            }
-        };
-        requestQueue.add(stringRequest);
+    private boolean validarEdad() {
+        String texto = edad.getText().toString().trim();
+        Pattern patron = Pattern.compile("^[0-9]{1,3}$");
+        if (patron.matcher(texto).matches()) {
+            edadLayout.setError(null);
+            return true;
+        } else {
+            edadLayout.setError("Edad invalida");
+            return false;
+        }
     }
 }
