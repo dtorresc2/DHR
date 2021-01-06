@@ -25,7 +25,6 @@ import android.widget.ImageButton;
 import android.widget.NumberPicker;
 import android.widget.TableLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -37,7 +36,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.dentalhistoryrecorder.OpcionIngreso.Agregar;
 import com.example.dentalhistoryrecorder.OpcionSeguimiento.SeguimientoEspecial;
 import com.example.dentalhistoryrecorder.R;
-import com.example.dentalhistoryrecorder.Tabla.TablaDinamica;
+import com.example.dentalhistoryrecorder.Componentes.Tabla.TablaDinamica;
 import com.tapadoo.alerter.Alerter;
 
 import java.util.ArrayList;

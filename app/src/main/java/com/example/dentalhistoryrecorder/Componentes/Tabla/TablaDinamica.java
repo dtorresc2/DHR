@@ -1,4 +1,4 @@
-package com.example.dentalhistoryrecorder.Tabla;
+package com.example.dentalhistoryrecorder.Componentes.Tabla;
 
 import android.content.Context;
 import android.graphics.Typeface;

@@ -3,12 +3,10 @@ package com.example.dentalhistoryrecorder.OpcionIngreso.Especial;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.arch.lifecycle.ViewModelProvider;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
-import android.media.Image;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -39,14 +37,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.dentalhistoryrecorder.OpcionIngreso.Agregar;
-import com.example.dentalhistoryrecorder.Pizarron.Lienzo;
+import com.example.dentalhistoryrecorder.Componentes.Pizarron.Lienzo;
 import com.example.dentalhistoryrecorder.R;
 import com.tapadoo.alerter.Alerter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.sql.Struct;
 import java.util.HashMap;
 import java.util.Map;
 

@@ -1,4 +1,4 @@
-package com.example.dentalhistoryrecorder.PDF;
+package com.example.dentalhistoryrecorder.Componentes.PDF;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -15,10 +15,6 @@ import android.view.ViewGroup;
 import com.example.dentalhistoryrecorder.R;
 import com.github.barteksc.pdfviewer.PDFView;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URI;
 
 @SuppressLint("ValidFragment")
 public class LectorPDF extends DialogFragment {

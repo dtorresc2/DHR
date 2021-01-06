@@ -1,4 +1,4 @@
-package com.example.dentalhistoryrecorder.Pizarron;
+package com.example.dentalhistoryrecorder.Componentes.Pizarron;
 
 import android.content.Context;
 import android.graphics.Bitmap;

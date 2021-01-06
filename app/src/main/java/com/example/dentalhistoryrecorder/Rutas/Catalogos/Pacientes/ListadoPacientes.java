@@ -1,13 +1,9 @@
 package com.example.dentalhistoryrecorder.Rutas.Catalogos.Pacientes;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
@@ -16,41 +12,24 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.dentalhistoryrecorder.Componentes.MenuInferior;
-import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.consultarFichas;
-import com.example.dentalhistoryrecorder.OpcionIngreso.Especial.IngCostos;
+import com.example.dentalhistoryrecorder.Componentes.MenusInferiores.MenuInferior;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
-import com.example.dentalhistoryrecorder.Rutas.Catalogos.Piezas.Piezas;
-import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.ItemServicio;
-import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.ServiciosAdapter;
 import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysPacientes;
-import com.tapadoo.alerter.Alerter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ListadoPacientes extends Fragment {
     private EditText pnombre, papellido;

@@ -23,7 +23,6 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TableLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -34,13 +33,9 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.dentalhistoryrecorder.OpcionIngreso.Agregar;
 import com.example.dentalhistoryrecorder.OpcionIngreso.Normal.Ing_HFoto;
-import com.example.dentalhistoryrecorder.OpcionSeguimiento.Seguimiento;
 import com.example.dentalhistoryrecorder.R;
-import com.example.dentalhistoryrecorder.Tabla.TablaDinamica;
+import com.example.dentalhistoryrecorder.Componentes.Tabla.TablaDinamica;
 import com.tapadoo.alerter.Alerter;
-
-import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
