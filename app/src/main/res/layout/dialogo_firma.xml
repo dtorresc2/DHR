@@ -60,7 +60,7 @@
         android:layout_width="match_parent"
         android:layout_height="15dp" />
 
-    <com.example.dentalhistoryrecorder.Pizarron.Lienzo
+    <com.example.dentalhistoryrecorder.Componentes.Pizarron.Lienzo
         android:id="@+id/lienzo"
         android:layout_width="250dp"
         android:layout_height="135dp"

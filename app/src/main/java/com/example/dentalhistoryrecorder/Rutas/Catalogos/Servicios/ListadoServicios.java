@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -17,15 +16,10 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.example.dentalhistoryrecorder.Componentes.MenuInferior;
-import com.example.dentalhistoryrecorder.InicioSesion;
-import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.ItemsFichas;
+import com.example.dentalhistoryrecorder.Componentes.MenusInferiores.MenuInferior;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
-import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysCuentas;
 import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysServicios;
 import com.tapadoo.alerter.Alerter;
 

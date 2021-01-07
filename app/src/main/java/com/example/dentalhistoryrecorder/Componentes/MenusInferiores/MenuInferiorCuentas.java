@@ -1,4 +1,4 @@
-package com.example.dentalhistoryrecorder.Componentes;
+package com.example.dentalhistoryrecorder.Componentes.MenusInferiores;
 
 import android.graphics.Typeface;
 import android.os.Bundle;

@@ -1,12 +1,9 @@
 package com.example.dentalhistoryrecorder.Rutas.Catalogos.Pacientes;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,41 +13,28 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.dentalhistoryrecorder.Componentes.MenuInferior;
-import com.example.dentalhistoryrecorder.OpcionConsulta.Normal.consultarFichas;
-import com.example.dentalhistoryrecorder.OpcionIngreso.Especial.IngCostos;
+import com.example.dentalhistoryrecorder.Componentes.MenusInferiores.MenuInferior;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
-import com.example.dentalhistoryrecorder.Rutas.Catalogos.Piezas.Piezas;
-import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.ItemServicio;
-import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.ServiciosAdapter;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.Servicios;
 import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysPacientes;
+import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysServicios;
 import com.tapadoo.alerter.Alerter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ListadoPacientes extends Fragment {
     private EditText pnombre, papellido;
@@ -64,7 +48,7 @@ public class ListadoPacientes extends Fragment {
     private static final String TAG = "MyActivity";
     SharedPreferences preferencias;
     private int mOpcion = 0;
-    private TextView etiquetaN, etiquetaE;
+    private boolean estadoPaciente = false;
 
     private ArrayList<ItemPaciente> listaPacientes;
 
@@ -136,13 +120,13 @@ public class ListadoPacientes extends Fragment {
 
         listaPacientes = new ArrayList<>();
 
-        buscar = view.findViewById(R.id.consultador);
-        buscar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+//        buscar = view.findViewById(R.id.consultador);
+//        buscar.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
 
         mRecyclerView = view.findViewById(R.id.lista_pacientes);
         mRecyclerView.setHasFixedSize(true);
@@ -152,13 +136,33 @@ public class ListadoPacientes extends Fragment {
         return view;
     }
 
+    public void realizarAccion(int opcion, int ID, int posicion) {
+        switch (opcion) {
+            case 1:
+                Pacientes pacientes = new Pacientes();
+                pacientes.editarPaciente(ID);
+                pacientes.enviarPacientes(listaPacientes);
+                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                transaction.replace(R.id.contenedor, pacientes);
+                transaction.commit();
+                break;
+            case 2:
+                actualizarEstado(posicion);
+                break;
+            case 3:
+                break;
+            default:
+                return;
+        }
+    }
+
     public void ObtenerOpcion(int opcion) {
         mOpcion = opcion;
     }
 
     public void obtenerPacientes() {
         listaPacientes.clear();
-//        estadoServicio = false;
+        estadoPaciente = false;
 
         final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
         progressDialog.setMessage("Cargando...");
@@ -185,7 +189,9 @@ public class ListadoPacientes extends Fragment {
                                 (jsonArray.getJSONObject(i).getInt("ESTADO") > 0) ? true : false,
                                 jsonArray.getJSONObject(i).getDouble("DEBE"),
                                 jsonArray.getJSONObject(i).getDouble("HABER"),
-                                jsonArray.getJSONObject(i).getDouble("SALDO")
+                                jsonArray.getJSONObject(i).getDouble("SALDO"),
+                                jsonArray.getJSONObject(i).getString("OCUPACION"),
+                                (jsonArray.getJSONObject(i).getInt("SEXO") > 0) ? true : false
                         ));
                     }
 
@@ -202,8 +208,8 @@ public class ListadoPacientes extends Fragment {
                             menuInferior.eventoClick(new MenuInferior.MenuInferiorListener() {
                                 @Override
                                 public void onButtonClicked(int opcion) {
-//                                    estadoServicio = listaServicios.get(position).getEstadoServicio();
-//                                    realizarAccion(opcion, listaServicios.get(position).getCodigoServicio());
+                                    estadoPaciente = listaPacientes.get(position).getEstado();
+                                    realizarAccion(opcion, listaPacientes.get(position).getCodigo(), position);
                                 }
                             });
                         }
@@ -222,9 +228,81 @@ public class ListadoPacientes extends Fragment {
 
             @Override
             public void onFailure(Exception e) {
-                Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+                Catalogos catalogos = new Catalogos();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                transaction.replace(R.id.contenedor, catalogos);
+                transaction.commit();
+                e.printStackTrace();
             }
         });
+    }
+
+    public void actualizarEstado(int ID) {
+        if (estadoPaciente) {
+            final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+            progressDialog.setMessage("Cargando...");
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+
+            QuerysPacientes querysPacientes = new QuerysPacientes(getContext());
+            JSONObject jsonBody = new JSONObject();
+
+            String[] auxFecha = listaPacientes.get(ID).getFecha().split("/");
+            String fechaBD = auxFecha[2] + "/" + auxFecha[1] + "/" + auxFecha[0];
+
+            try {
+                jsonBody.put("ESTADO", false);
+                jsonBody.put("NOMBRE", listaPacientes.get(ID).getNombre());
+                jsonBody.put("EDAD", listaPacientes.get(ID).getEdad());
+                jsonBody.put("OCUPACION", listaPacientes.get(ID).getOcupacion());
+                jsonBody.put("TELEFONO", listaPacientes.get(ID).getTelefono());
+                jsonBody.put("FECHA_NACIMIENTO", fechaBD);
+                jsonBody.put("DPI", listaPacientes.get(ID).getDpi());
+                jsonBody.put("SEXO", listaPacientes.get(ID).getGenero());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            querysPacientes.actualizarPaciente(listaPacientes.get(ID).getCodigo(), jsonBody, new QuerysPacientes.VolleyOnEventListener() {
+                @Override
+                public void onSuccess(Object object) {
+                    estadoPaciente = false;
+
+                    Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                    Alerter.create(getActivity())
+                            .setText("Deshabilitado Correctamente")
+                            .setIcon(R.drawable.logonuevo)
+                            .setTextTypeface(typeface)
+                            .enableSwipeToDismiss()
+                            .setBackgroundColorRes(R.color.FondoSecundario)
+                            .show();
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressDialog.dismiss();
+                            obtenerPacientes();
+                        }
+                    }, 1000);
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    progressDialog.dismiss();
+                }
+            });
+        } else {
+            Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+            Alerter.create(getActivity())
+                    .setTitle("El paciente esta deshabilitado")
+                    .setIcon(R.drawable.logonuevo)
+                    .setTextTypeface(typeface)
+                    .enableSwipeToDismiss()
+                    .setBackgroundColorRes(R.color.FondoSecundario)
+                    .show();
+        }
     }
 
 }
