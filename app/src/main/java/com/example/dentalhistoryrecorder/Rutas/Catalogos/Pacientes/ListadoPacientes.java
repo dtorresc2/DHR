@@ -116,13 +116,13 @@ public class ListadoPacientes extends Fragment {
 
         listaPacientes = new ArrayList<>();
 
-        buscar = view.findViewById(R.id.consultador);
-        buscar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+//        buscar = view.findViewById(R.id.consultador);
+//        buscar.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
 
         mRecyclerView = view.findViewById(R.id.lista_pacientes);
         mRecyclerView.setHasFixedSize(true);
@@ -137,6 +137,7 @@ public class ListadoPacientes extends Fragment {
             case 1:
                 Pacientes pacientes = new Pacientes();
                 pacientes.editarPaciente(ID);
+                pacientes.enviarPacientes(listaPacientes);
                 FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
                 transaction.replace(R.id.contenedor, pacientes);
                 transaction.commit();

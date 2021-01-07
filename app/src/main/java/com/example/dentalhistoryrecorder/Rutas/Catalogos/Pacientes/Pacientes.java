@@ -100,7 +100,9 @@ public class Pacientes extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (nombreRequerido()) {
-                    validarNombre();
+                    if (validarNombre()) {
+                        validarUsuarioRepetido();
+                    }
                 }
             }
 
@@ -243,10 +245,10 @@ public class Pacientes extends Fragment {
         agregador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!nombreRequerido() || !telefonoRequerido() || !edadRequerida() || !validarNombre() || !validarEdad())
+                if (!nombreRequerido() || !telefonoRequerido() || !edadRequerida() || !validarNombre() || !validarEdad() || !validarUsuarioRepetido())
                     return;
 
-                if(!modoEdicion)
+                if (!modoEdicion)
                     registrarPaciente();
                 else
                     actualizarPaciente();
@@ -396,14 +398,6 @@ public class Pacientes extends Fragment {
                     habilitado = ((jsonObject.getInt("ESTADO")) > 0 ? true : false);
                     truePaciente.setChecked(habilitado);
                     falsePaciente.setChecked(!habilitado);
-
-//                    jsonBody.put("NOMBRE", primerNombre.getText().toString().trim());
-//                    jsonBody.put("EDAD", edad.getText().toString().trim());
-//                    jsonBody.put("OCUPACION", ocupacion.getText().toString().trim());
-//                    jsonBody.put("SEXO", (truePaciente.isChecked() == true) ? 1 : 0);
-//                    jsonBody.put("TELEFONO", telefono.getText().toString().trim());
-//                    jsonBody.put("FECHA_NACIMIENTO", fechaBD);
-//                    jsonBody.put("DPI", dpi.getText().toString().trim());
                 } catch (JSONException e) {
                     progressDialog.dismiss();
                     Log.i("SERVICIO", e.toString());
@@ -474,6 +468,25 @@ public class Pacientes extends Fragment {
             return true;
         } else {
             edadLayout.setError("Edad invalida");
+            return false;
+        }
+    }
+
+    private boolean validarUsuarioRepetido() {
+        String texto = primerNombre.getText().toString().trim();
+        ArrayList<ItemPaciente> listaConsultada = new ArrayList<>();
+
+        for (ItemPaciente item : mListadoPacientes) {
+            if (item.getNombre().equals(texto) && item.getCodigo() != ID_PACIENTE) {
+                listaConsultada.add(item);
+            }
+        }
+
+        if (listaConsultada.size() == 0) {
+            nombreLayout.setError(null);
+            return true;
+        } else {
+            nombreLayout.setError("Paciente duplicado");
             return false;
         }
     }
