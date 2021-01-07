@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
@@ -26,9 +27,12 @@ import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.Servicios;
 import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysPacientes;
+import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysServicios;
+import com.tapadoo.alerter.Alerter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -44,7 +48,7 @@ public class ListadoPacientes extends Fragment {
     private static final String TAG = "MyActivity";
     SharedPreferences preferencias;
     private int mOpcion = 0;
-    private TextView etiquetaN, etiquetaE;
+    private boolean estadoPaciente = false;
 
     private ArrayList<ItemPaciente> listaPacientes;
 
@@ -132,7 +136,7 @@ public class ListadoPacientes extends Fragment {
         return view;
     }
 
-    public void realizarAccion(int opcion, int ID) {
+    public void realizarAccion(int opcion, int ID, int posicion) {
         switch (opcion) {
             case 1:
                 Pacientes pacientes = new Pacientes();
@@ -143,9 +147,8 @@ public class ListadoPacientes extends Fragment {
                 transaction.commit();
                 break;
             case 2:
-//                actualizarEstado(ID);
+                actualizarEstado(posicion);
                 break;
-
             case 3:
                 break;
             default:
@@ -159,7 +162,7 @@ public class ListadoPacientes extends Fragment {
 
     public void obtenerPacientes() {
         listaPacientes.clear();
-//        estadoServicio = false;
+        estadoPaciente = false;
 
         final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
         progressDialog.setMessage("Cargando...");
@@ -186,7 +189,9 @@ public class ListadoPacientes extends Fragment {
                                 (jsonArray.getJSONObject(i).getInt("ESTADO") > 0) ? true : false,
                                 jsonArray.getJSONObject(i).getDouble("DEBE"),
                                 jsonArray.getJSONObject(i).getDouble("HABER"),
-                                jsonArray.getJSONObject(i).getDouble("SALDO")
+                                jsonArray.getJSONObject(i).getDouble("SALDO"),
+                                jsonArray.getJSONObject(i).getString("OCUPACION"),
+                                (jsonArray.getJSONObject(i).getInt("SEXO") > 0) ? true : false
                         ));
                     }
 
@@ -203,8 +208,8 @@ public class ListadoPacientes extends Fragment {
                             menuInferior.eventoClick(new MenuInferior.MenuInferiorListener() {
                                 @Override
                                 public void onButtonClicked(int opcion) {
-//                                    estadoServicio = listaServicios.get(position).getEstadoServicio();
-                                    realizarAccion(opcion, listaPacientes.get(position).getCodigo());
+                                    estadoPaciente = listaPacientes.get(position).getEstado();
+                                    realizarAccion(opcion, listaPacientes.get(position).getCodigo(), position);
                                 }
                             });
                         }
@@ -231,6 +236,73 @@ public class ListadoPacientes extends Fragment {
                 e.printStackTrace();
             }
         });
+    }
+
+    public void actualizarEstado(int ID) {
+        if (estadoPaciente) {
+            final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+            progressDialog.setMessage("Cargando...");
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+
+            QuerysPacientes querysPacientes = new QuerysPacientes(getContext());
+            JSONObject jsonBody = new JSONObject();
+
+            String[] auxFecha = listaPacientes.get(ID).getFecha().split("/");
+            String fechaBD = auxFecha[2] + "/" + auxFecha[1] + "/" + auxFecha[0];
+
+            try {
+                jsonBody.put("ESTADO", false);
+                jsonBody.put("NOMBRE", listaPacientes.get(ID).getNombre());
+                jsonBody.put("EDAD", listaPacientes.get(ID).getEdad());
+                jsonBody.put("OCUPACION", listaPacientes.get(ID).getOcupacion());
+                jsonBody.put("TELEFONO", listaPacientes.get(ID).getTelefono());
+                jsonBody.put("FECHA_NACIMIENTO", fechaBD);
+                jsonBody.put("DPI", listaPacientes.get(ID).getDpi());
+                jsonBody.put("SEXO", listaPacientes.get(ID).getGenero());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            querysPacientes.actualizarPaciente(listaPacientes.get(ID).getCodigo(), jsonBody, new QuerysPacientes.VolleyOnEventListener() {
+                @Override
+                public void onSuccess(Object object) {
+                    estadoPaciente = false;
+
+                    Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                    Alerter.create(getActivity())
+                            .setText("Deshabilitado Correctamente")
+                            .setIcon(R.drawable.logonuevo)
+                            .setTextTypeface(typeface)
+                            .enableSwipeToDismiss()
+                            .setBackgroundColorRes(R.color.FondoSecundario)
+                            .show();
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressDialog.dismiss();
+                            obtenerPacientes();
+                        }
+                    }, 1000);
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    progressDialog.dismiss();
+                }
+            });
+        } else {
+            Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+            Alerter.create(getActivity())
+                    .setTitle("El paciente esta deshabilitado")
+                    .setIcon(R.drawable.logonuevo)
+                    .setTextTypeface(typeface)
+                    .enableSwipeToDismiss()
+                    .setBackgroundColorRes(R.color.FondoSecundario)
+                    .show();
+        }
     }
 
 }
