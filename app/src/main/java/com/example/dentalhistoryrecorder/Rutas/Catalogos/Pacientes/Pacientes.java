@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +28,9 @@ import android.widget.Toast;
 
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Cuentas.ItemCuenta;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.ListadoServicios;
 import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysPacientes;
+import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysServicios;
 import com.tapadoo.alerter.Alerter;
 
 import org.json.JSONException;
@@ -69,7 +72,7 @@ public class Pacientes extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_pacientes, container, false);
         face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
 
-        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        toolbar = view.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_cerrar);
         if (!modoEdicion)
             toolbar.setTitle("Paciente Nuevo");
@@ -233,13 +236,20 @@ public class Pacientes extends Fragment {
             }
         });
 
+        if (modoEdicion) {
+            obtenerPaciente();
+        }
+
         agregador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!nombreRequerido() || !telefonoRequerido() || !edadRequerida() || !validarNombre() || !validarEdad())
                     return;
 
-                registrarPaciente();
+                if(!modoEdicion)
+                    registrarPaciente();
+                else
+                    actualizarPaciente();
             }
         });
         return view;
@@ -263,7 +273,7 @@ public class Pacientes extends Fragment {
             jsonBody.put("NOMBRE", primerNombre.getText().toString().trim());
             jsonBody.put("EDAD", edad.getText().toString().trim());
             jsonBody.put("OCUPACION", ocupacion.getText().toString().trim());
-            jsonBody.put("SEXO", (truePaciente.isChecked() == true) ? 1 : 0);
+            jsonBody.put("SEXO", (sexo.isChecked() == true) ? 1 : 0);
             jsonBody.put("TELEFONO", telefono.getText().toString().trim());
             jsonBody.put("FECHA_NACIMIENTO", fechaBD);
             jsonBody.put("DPI", dpi.getText().toString().trim());
@@ -299,6 +309,113 @@ public class Pacientes extends Fragment {
             public void onFailure(Exception e) {
                 progressDialog.dismiss();
                 Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void actualizarPaciente() {
+        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+        progressDialog.setMessage("Cargando...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        QuerysPacientes querysPacientes = new QuerysPacientes(getContext());
+        JSONObject jsonBody = new JSONObject();
+        String[] auxFecha = fechap.getText().toString().split("/");
+        String fechaBD = auxFecha[2] + "/" + auxFecha[1] + "/" + auxFecha[0];
+
+        try {
+            jsonBody.put("NOMBRE", primerNombre.getText().toString().trim());
+            jsonBody.put("EDAD", edad.getText().toString().trim());
+            jsonBody.put("OCUPACION", ocupacion.getText().toString().trim());
+            jsonBody.put("SEXO", (sexo.isChecked() == true) ? 1 : 0);
+            jsonBody.put("ESTADO", (truePaciente.isChecked() == true) ? 1 : 0);
+            jsonBody.put("TELEFONO", telefono.getText().toString().trim());
+            jsonBody.put("FECHA_NACIMIENTO", fechaBD);
+            jsonBody.put("DPI", dpi.getText().toString().trim());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        querysPacientes.actualizarPaciente(ID_PACIENTE, jsonBody, new QuerysPacientes.VolleyOnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                Alerter.create(getActivity())
+                        .setTitle("Paciente actualizado")
+                        .setIcon(R.drawable.logonuevo)
+                        .setTextTypeface(face)
+                        .enableSwipeToDismiss()
+                        .setBackgroundColorRes(R.color.FondoSecundario)
+                        .show();
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressDialog.dismiss();
+                        ListadoPacientes listadoPacientes = new ListadoPacientes();
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                        transaction.replace(R.id.contenedor, listadoPacientes);
+                        transaction.commit();
+                    }
+                }, 1000);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                progressDialog.dismiss();
+                Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void obtenerPaciente() {
+        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+        progressDialog.setMessage("Cargando...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        QuerysPacientes querysPacientes = new QuerysPacientes(getContext());
+        querysPacientes.obtenerPacienteEspecifico(ID_PACIENTE, new QuerysPacientes.VolleyOnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                progressDialog.dismiss();
+                try {
+                    JSONObject jsonObject = new JSONObject(object.toString());
+                    primerNombre.setText(jsonObject.getString("NOMBRE"));
+                    edad.setText(jsonObject.getString("EDAD"));
+                    ocupacion.setText(jsonObject.getString("OCUPACION"));
+                    telefono.setText(jsonObject.getString("TELEFONO"));
+                    fechap.setText(jsonObject.getString("FECHA_NACIMIENTO"));
+                    dpi.setText(jsonObject.getString("DPI"));
+                    boolean habilitado = ((jsonObject.getInt("SEXO")) > 0 ? true : false);
+                    sexo.setChecked(habilitado);
+                    sexof.setChecked(!habilitado);
+
+                    habilitado = ((jsonObject.getInt("ESTADO")) > 0 ? true : false);
+                    truePaciente.setChecked(habilitado);
+                    falsePaciente.setChecked(!habilitado);
+
+//                    jsonBody.put("NOMBRE", primerNombre.getText().toString().trim());
+//                    jsonBody.put("EDAD", edad.getText().toString().trim());
+//                    jsonBody.put("OCUPACION", ocupacion.getText().toString().trim());
+//                    jsonBody.put("SEXO", (truePaciente.isChecked() == true) ? 1 : 0);
+//                    jsonBody.put("TELEFONO", telefono.getText().toString().trim());
+//                    jsonBody.put("FECHA_NACIMIENTO", fechaBD);
+//                    jsonBody.put("DPI", dpi.getText().toString().trim());
+                } catch (JSONException e) {
+                    progressDialog.dismiss();
+                    Log.i("SERVICIO", e.toString());
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                progressDialog.dismiss();
+                Log.i("SERVICIO", e.toString());
+                e.printStackTrace();
             }
         });
     }

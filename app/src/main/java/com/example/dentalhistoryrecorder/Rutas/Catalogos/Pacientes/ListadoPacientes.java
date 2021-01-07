@@ -24,6 +24,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.dentalhistoryrecorder.Componentes.MenusInferiores.MenuInferior;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.Servicios;
 import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysPacientes;
 
 import org.json.JSONArray;
@@ -131,6 +132,26 @@ public class ListadoPacientes extends Fragment {
         return view;
     }
 
+    public void realizarAccion(int opcion, int ID) {
+        switch (opcion) {
+            case 1:
+                Pacientes pacientes = new Pacientes();
+                pacientes.editarPaciente(ID);
+                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                transaction.replace(R.id.contenedor, pacientes);
+                transaction.commit();
+                break;
+            case 2:
+//                actualizarEstado(ID);
+                break;
+
+            case 3:
+                break;
+            default:
+                return;
+        }
+    }
+
     public void ObtenerOpcion(int opcion) {
         mOpcion = opcion;
     }
@@ -182,7 +203,7 @@ public class ListadoPacientes extends Fragment {
                                 @Override
                                 public void onButtonClicked(int opcion) {
 //                                    estadoServicio = listaServicios.get(position).getEstadoServicio();
-//                                    realizarAccion(opcion, listaServicios.get(position).getCodigoServicio());
+                                    realizarAccion(opcion, listaPacientes.get(position).getCodigo());
                                 }
                             });
                         }

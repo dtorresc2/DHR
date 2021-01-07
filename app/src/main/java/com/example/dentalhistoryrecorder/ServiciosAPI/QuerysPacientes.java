@@ -88,4 +88,64 @@ public class QuerysPacientes {
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
         requestQueue.add(stringRequest);
     }
+
+    public void obtenerPacienteEspecifico(final int id, QuerysPacientes.VolleyOnEventListener callback) {
+        mCallBack = callback;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, mContext.getResources().getString(R.string.API) + "pacientes/" + id, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                mCallBack.onSuccess(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mCallBack.onFailure(error);
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        requestQueue.add(stringRequest);
+    }
+
+    public void actualizarPaciente(final int id, final JSONObject jsonBody, QuerysPacientes.VolleyOnEventListener callback) {
+        mCallBack = callback;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.PUT, mContext.getResources().getString(R.string.API) + "pacientes/" + id, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                mCallBack.onSuccess(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mCallBack.onFailure(error);
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    final String mRequestBody = jsonBody.toString();
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        requestQueue.add(stringRequest);
+    }
 }
