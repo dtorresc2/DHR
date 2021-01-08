@@ -1,4 +1,4 @@
-package com.example.dentalhistoryrecorder.Componentes.Dialogos;
+package com.example.dentalhistoryrecorder.Componentes.Dialogos.Bitacora;
 
 import android.app.Dialog;
 import android.os.Bundle;
