@@ -1,11 +1,15 @@
 package com.example.dentalhistoryrecorder.Componentes.Dialogos.Bitacora;
 
 import android.app.Dialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -13,18 +17,26 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.dentalhistoryrecorder.R;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Piezas.ItemPieza;
+import com.example.dentalhistoryrecorder.Rutas.Catalogos.Piezas.PiezasAdapter;
 
-public class Bitacora extends DialogFragment {
+import java.util.ArrayList;
+
+public class DialogoBitacora extends DialogFragment {
     private Toolbar toolbar;
+    private RecyclerView mRecyclerView;
+    private BitacoraAdapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private ArrayList<ItemBitacora> listaBitacora;
 
-    public Bitacora() {
+    public DialogoBitacora() {
 
     }
 
-    public static Bitacora display(FragmentManager fragmentManager) {
-        Bitacora bitacora = new Bitacora();
-        bitacora.show(fragmentManager, "Dialogo Bitacora");
-        return bitacora;
+    public static DialogoBitacora display(FragmentManager fragmentManager) {
+        DialogoBitacora dialogoBitacora = new DialogoBitacora();
+        dialogoBitacora.show(fragmentManager, "Dialogo DialogoBitacora");
+        return dialogoBitacora;
     }
 
     @Override
@@ -52,7 +64,7 @@ public class Bitacora extends DialogFragment {
         View view = inflater.inflate(R.layout.dialogo_bitacora, container, false);
 
         toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setTitle("Bitacora");
+        toolbar.setTitle("Bitacora del Sistema");
         toolbar.setTitleTextColor(getResources().getColor(R.color.Blanco));
 
         toolbar.inflateMenu(R.menu.opciones_toolbarcitas);
@@ -69,6 +81,36 @@ public class Bitacora extends DialogFragment {
                 }
             }
         });
+
+        listaBitacora = new ArrayList<>();
+
+        mRecyclerView = view.findViewById(R.id.listaBitacora);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(getContext());
+
+        final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+
+        listaBitacora.add(new ItemBitacora(1,
+                "Ficha Registrada",
+                "20/12/2021 4:55 PM",
+                String.valueOf(preferenciasUsuario.getInt("ID_CUENTA", 0))
+        ));
+
+        listaBitacora.add(new ItemBitacora(1,
+                "Ficha Registrada",
+                "20/12/2021 4:55 PM",
+                String.valueOf(preferenciasUsuario.getInt("ID_CUENTA", 0))
+        ));
+
+        listaBitacora.add(new ItemBitacora(1,
+                "Ficha Registrada",
+                "20/12/2021 4:55 PM",
+                String.valueOf(preferenciasUsuario.getInt("ID_CUENTA", 0))
+        ));
+
+        mAdapter = new BitacoraAdapter(listaBitacora);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
 
         return view;
     }

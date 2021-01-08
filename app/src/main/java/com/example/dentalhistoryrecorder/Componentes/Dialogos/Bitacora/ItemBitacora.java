@@ -2,11 +2,11 @@ package com.example.dentalhistoryrecorder.Componentes.Dialogos.Bitacora;
 
 public class ItemBitacora {
     int mCodigoBitacora;
-    int mAccion;
+    String mAccion;
     String mFecha;
     String mCuenta;
 
-    public ItemBitacora(int mCodigoBitacora, int mAccion, String mFecha, String mCuenta) {
+    public ItemBitacora(int mCodigoBitacora, String mAccion, String mFecha, String mCuenta) {
         this.mCodigoBitacora = mCodigoBitacora;
         this.mAccion = mAccion;
         this.mFecha = mFecha;
@@ -17,7 +17,7 @@ public class ItemBitacora {
         return mCodigoBitacora;
     }
 
-    public int getAccion() {
+    public String getAccion() {
         return mAccion;
     }
 
