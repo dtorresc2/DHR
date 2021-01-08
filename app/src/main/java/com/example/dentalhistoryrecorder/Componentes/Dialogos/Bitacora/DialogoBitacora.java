@@ -88,24 +88,29 @@ public class DialogoBitacora extends DialogFragment {
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
 
-        final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+//        final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+//        listaBitacora.add(new ItemBitacora(1,
+//                "Ficha Registrada",
+//                "20/12/2021 4:55 PM",
+//                String.valueOf(preferenciasUsuario.getInt("ID_CUENTA", 0))
+//        ));
 
         listaBitacora.add(new ItemBitacora(1,
                 "Ficha Registrada",
                 "20/12/2021 4:55 PM",
-                String.valueOf(preferenciasUsuario.getInt("ID_CUENTA", 0))
+                "admin"
         ));
 
         listaBitacora.add(new ItemBitacora(1,
                 "Ficha Registrada",
                 "20/12/2021 4:55 PM",
-                String.valueOf(preferenciasUsuario.getInt("ID_CUENTA", 0))
+                "admin"
         ));
 
         listaBitacora.add(new ItemBitacora(1,
                 "Ficha Registrada",
                 "20/12/2021 4:55 PM",
-                String.valueOf(preferenciasUsuario.getInt("ID_CUENTA", 0))
+                "admin"
         ));
 
         mAdapter = new BitacoraAdapter(listaBitacora);
