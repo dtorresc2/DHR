@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.example.dentalhistoryrecorder.Componentes.Dialogos.Bitacora.FuncionesBitacora;
 import com.example.dentalhistoryrecorder.Componentes.MenusInferiores.MenuInferior;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
@@ -87,6 +88,7 @@ public class ListadoPacientes extends Fragment {
                 switch (menuItem.getItemId()) {
                     case R.id.opcion_nuevo:
                         Pacientes pacientes = new Pacientes();
+                        pacientes.enviarPacientes(listaPacientes);
                         FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
                         transaction.replace(R.id.contenedor, pacientes);
                         transaction.commit();
@@ -257,7 +259,7 @@ public class ListadoPacientes extends Fragment {
         });
     }
 
-    public void actualizarEstado(int ID) {
+    public void actualizarEstado(final int ID) {
         if (estadoPaciente) {
             final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
             progressDialog.setMessage("Cargando...");
@@ -297,6 +299,9 @@ public class ListadoPacientes extends Fragment {
                             .enableSwipeToDismiss()
                             .setBackgroundColorRes(R.color.FondoSecundario)
                             .show();
+
+                    FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
+                    funcionesBitacora.registrarBitacora("Se deshabilito el paciente #" + ID);
 
                     new Handler().postDelayed(new Runnable() {
                         @Override
