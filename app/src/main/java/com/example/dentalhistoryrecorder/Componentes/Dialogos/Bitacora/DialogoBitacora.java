@@ -1,6 +1,7 @@
 package com.example.dentalhistoryrecorder.Componentes.Dialogos.Bitacora;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -15,10 +16,16 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.example.dentalhistoryrecorder.Componentes.MenusInferiores.MenuInferior;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Piezas.ItemPieza;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Piezas.PiezasAdapter;
+import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysBitacoras;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -84,39 +91,51 @@ public class DialogoBitacora extends DialogFragment {
 
         listaBitacora = new ArrayList<>();
 
-        mRecyclerView = view.findViewById(R.id.listaBitacora);
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(getContext());
-
-//        final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
-//        listaBitacora.add(new ItemBitacora(1,
-//                "Ficha Registrada",
-//                "20/12/2021 4:55 PM",
-//                String.valueOf(preferenciasUsuario.getInt("ID_CUENTA", 0))
-//        ));
-
-        listaBitacora.add(new ItemBitacora(1,
-                "Ficha Registrada",
-                "20/12/2021 4:55 PM",
-                "admin"
-        ));
-
-        listaBitacora.add(new ItemBitacora(1,
-                "Ficha Registrada",
-                "20/12/2021 4:55 PM",
-                "admin"
-        ));
-
-        listaBitacora.add(new ItemBitacora(1,
-                "Ficha Registrada",
-                "20/12/2021 4:55 PM",
-                "admin"
-        ));
-
-        mAdapter = new BitacoraAdapter(listaBitacora);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-
+        obtenerBitacora();
         return view;
+    }
+
+    public void obtenerBitacora(){
+        listaBitacora.clear();
+
+        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+        progressDialog.setMessage("Cargando...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+
+        QuerysBitacoras querysBitacoras = new QuerysBitacoras(getContext());
+        querysBitacoras.obtenerBitacora(preferenciasUsuario.getInt("ID_USUARIO", 0), new QuerysBitacoras.VolleyOnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                try {
+                    JSONArray jsonArray = new JSONArray(object.toString());
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        listaBitacora.add(new ItemBitacora(
+                                jsonArray.getJSONObject(i).getInt("ID_BITACORA"),
+                                jsonArray.getJSONObject(i).getString("ACCION"),
+                                jsonArray.getJSONObject(i).getString("FECHA"),
+                                jsonArray.getJSONObject(i).getString("ID_CUENTA")
+                        ));
+                    }
+                    mAdapter = new BitacoraAdapter(listaBitacora);
+                    mRecyclerView.setLayoutManager(mLayoutManager);
+                    mRecyclerView.setAdapter(mAdapter);
+
+                    progressDialog.dismiss();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
+                progressDialog.dismiss();
+            }
+        });
     }
 }
