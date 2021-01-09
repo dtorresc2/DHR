@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.dentalhistoryrecorder.Componentes.Dialogos.Bitacora.FuncionesBitacora;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.ListadoServicios;
 import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysBitacoras;
@@ -205,7 +206,9 @@ public class Cuentas extends Fragment {
                         .setBackgroundColorRes(R.color.FondoSecundario)
                         .show();
 
-                registrarBitacora("Se creo una cuenta");
+//                registrarBitacora("Se creo una cuenta");
+                FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
+                funcionesBitacora.registrarBitacora("Se creo una cuenta");
 
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -252,7 +255,8 @@ public class Cuentas extends Fragment {
                         .setBackgroundColorRes(R.color.FondoSecundario)
                         .show();
 
-                registrarBitacora("Se actualizo el password de la cuenta #" + ID_CUENTA);
+                FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
+                funcionesBitacora.registrarBitacora("Se actualizo el password de la cuenta #" + ID_CUENTA);
 
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -311,32 +315,6 @@ public class Cuentas extends Fragment {
                         e.printStackTrace();
                     }
                 });
-    }
-
-    public void registrarBitacora(String accion){
-        final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
-        QuerysBitacoras querysBitacoras = new QuerysBitacoras(getContext());
-        JSONObject jsonBodyAux = new JSONObject();
-        try {
-            jsonBodyAux.put("ACCION", accion);
-            jsonBodyAux.put("FECHA", " ");
-            jsonBodyAux.put("ID_CUENTA", sharedPreferences.getInt("ID_CUENTA", 0));
-            jsonBodyAux.put("ID_USUARIO", sharedPreferences.getInt("ID_USUARIO", 0));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        querysBitacoras.registrarBitacora(jsonBodyAux, new QuerysBitacoras.VolleyOnEventListener() {
-            @Override
-            public void onSuccess(Object object) {
-
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-
-            }
-        });
     }
 
     //    VALIDACIONES
