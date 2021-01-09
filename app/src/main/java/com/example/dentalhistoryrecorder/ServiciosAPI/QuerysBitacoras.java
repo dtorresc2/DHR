@@ -83,7 +83,6 @@ public class QuerysBitacoras {
 
                 return null;
             }
-
         };
 
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);

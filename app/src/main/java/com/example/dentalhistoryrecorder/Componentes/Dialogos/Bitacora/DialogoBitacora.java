@@ -120,7 +120,7 @@ public class DialogoBitacora extends DialogFragment {
                                 jsonArray.getJSONObject(i).getInt("ID_BITACORA"),
                                 jsonArray.getJSONObject(i).getString("ACCION"),
                                 jsonArray.getJSONObject(i).getString("FECHA"),
-                                jsonArray.getJSONObject(i).getString("ID_CUENTA")
+                                jsonArray.getJSONObject(i).getString("CUENTA")
                         ));
                     }
                     mAdapter = new BitacoraAdapter(listaBitacora);

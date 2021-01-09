@@ -33,7 +33,7 @@
                     android:paddingLeft="10dp"
                     android:text="Registro de Ficha Orinaria"
                     android:textColor="@color/Blanco"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
