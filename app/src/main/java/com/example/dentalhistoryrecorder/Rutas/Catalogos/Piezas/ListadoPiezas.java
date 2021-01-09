@@ -1,7 +1,9 @@
 package com.example.dentalhistoryrecorder.Rutas.Catalogos.Piezas;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -113,7 +115,7 @@ public class ListadoPiezas extends Fragment {
         return view;
     }
 
-    public void realizarAccion(int opcion, int ID) {
+    public void realizarAccion(int opcion, final int ID) {
         switch (opcion) {
             case 1:
                 Piezas piezas = new Piezas();
@@ -123,7 +125,24 @@ public class ListadoPiezas extends Fragment {
                 transaction.commit();
                 break;
             case 2:
-                deshabilitarPieza(ID);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
+                builder.setIcon(R.drawable.logonuevo);
+                builder.setTitle("Listado de Piezas");
+                builder.setMessage("¿Desea deshabilitar la pieza?");
+                builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                        deshabilitarPieza(ID);
+                    }
+                });
+                builder.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
                 break;
 
             case 3:

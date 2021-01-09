@@ -196,7 +196,7 @@ public class ListadoCuentas extends Fragment {
     public void eliminarCuenta(final int ID) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
         builder.setIcon(R.drawable.logonuevo);
-        builder.setTitle("Eliminar Cuenta");
+        builder.setTitle("Listado de Cuentas");
         builder.setMessage("Desea eliminar la cuenta?");
         builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
