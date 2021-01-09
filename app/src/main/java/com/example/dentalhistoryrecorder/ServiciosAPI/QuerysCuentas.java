@@ -287,6 +287,4 @@ public class QuerysCuentas {
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
         requestQueue.add(stringRequest);
     }
-
 }
-

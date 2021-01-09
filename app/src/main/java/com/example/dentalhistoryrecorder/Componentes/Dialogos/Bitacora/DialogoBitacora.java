@@ -67,7 +67,6 @@ public class DialogoBitacora extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-//        return super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.dialogo_bitacora, container, false);
 
         toolbar = view.findViewById(R.id.toolbar);
@@ -90,6 +89,10 @@ public class DialogoBitacora extends DialogFragment {
         });
 
         listaBitacora = new ArrayList<>();
+
+        mRecyclerView = view.findViewById(R.id.listaBitacora);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(getContext());
 
         obtenerBitacora();
         return view;
@@ -133,7 +136,6 @@ public class DialogoBitacora extends DialogFragment {
 
             @Override
             public void onFailure(Exception e) {
-                Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
                 progressDialog.dismiss();
             }
         });
