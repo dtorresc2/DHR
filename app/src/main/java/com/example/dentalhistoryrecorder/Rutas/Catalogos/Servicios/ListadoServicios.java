@@ -171,7 +171,7 @@ public class ListadoServicios extends Fragment {
                         public void onItemClick(final int position) {
                             MenuInferior menuInferior = new MenuInferior();
                             menuInferior.show(getFragmentManager(), "MenuInferior");
-                            menuInferior.recibirTitulo("Servicio #", listaServicios.get(position).getCodigoServicio());
+                            menuInferior.recibirTitulo(listaServicios.get(position).getDescripcionServicio());
                             menuInferior.eventoClick(new MenuInferior.MenuInferiorListener() {
                                 @Override
                                 public void onButtonClicked(int opcion) {

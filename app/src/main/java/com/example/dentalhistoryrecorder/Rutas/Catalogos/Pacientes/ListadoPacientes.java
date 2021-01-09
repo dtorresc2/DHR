@@ -204,7 +204,7 @@ public class ListadoPacientes extends Fragment {
                         public void onItemClick(final int position) {
                             MenuInferior menuInferior = new MenuInferior();
                             menuInferior.show(getFragmentManager(), "MenuInferior");
-                            menuInferior.recibirTitulo("Paciente #", listaPacientes.get(position).getCodigo());
+                            menuInferior.recibirTitulo(listaPacientes.get(position).getNombre());
                             menuInferior.eventoClick(new MenuInferior.MenuInferiorListener() {
                                 @Override
                                 public void onButtonClicked(int opcion) {

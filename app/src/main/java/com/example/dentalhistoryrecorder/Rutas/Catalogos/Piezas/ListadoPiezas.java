@@ -168,7 +168,7 @@ public class ListadoPiezas extends Fragment {
                         public void onItemClick(final int position) {
                             MenuInferior menuInferior = new MenuInferior();
                             menuInferior.show(getFragmentManager(), "MenuInferior");
-                            menuInferior.recibirTitulo("Pieza #", listaPiezas.get(position).getNumeroPieza());
+                            menuInferior.recibirTitulo(listaPiezas.get(position).getNombrePieza());
                             menuInferior.eventoClick(new MenuInferior.MenuInferiorListener() {
                                 @Override
                                 public void onButtonClicked(int opcion) {
