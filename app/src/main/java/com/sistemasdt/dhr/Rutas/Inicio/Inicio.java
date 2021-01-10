@@ -5,6 +5,7 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -40,6 +41,7 @@ import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
 import com.sistemasdt.dhr.Componentes.Dialogos.Bitacora.DialogoBitacora;
+import com.sistemasdt.dhr.Componentes.Dialogos.Bitacora.FuncionesBitacora;
 import com.sistemasdt.dhr.MainActivity;
 
 import com.sistemasdt.dhr.Componentes.Dialogos.Configuracion.DialogoConfiguracion;
@@ -157,28 +159,44 @@ public class Inicio extends Fragment {
         cerrarSesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences preferencias = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
+                builder.setIcon(R.drawable.logonuevo);
+                builder.setTitle("DHR");
+                builder.setMessage("¿Desea cerrar la sesion?");
+                builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        SharedPreferences preferencias = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
 
-                final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.progressDialog);
-                progressDialog.setMessage("Cerrando Sesion");
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                progressDialog.setCancelable(false);
-                progressDialog.show();
+                        final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.progressDialog);
+                        progressDialog.setMessage("Cerrando Sesion");
+                        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                        progressDialog.setCancelable(false);
+                        progressDialog.show();
 
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        progressDialog.dismiss();
-                        Intent intent = new Intent(getActivity(), MainActivity.class);
-                        getActivity().startActivity(intent);
-                        getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                        getActivity().finish();
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            public void run() {
+                                progressDialog.dismiss();
+                                Intent intent = new Intent(getActivity(), MainActivity.class);
+                                getActivity().startActivity(intent);
+                                getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                                getActivity().finish();
+                            }
+                        }, 500);
+
+                        SharedPreferences.Editor editor = preferencias.edit();
+                        editor.clear();
+                        editor.commit();
                     }
-                }, 500);
+                });
+                builder.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                });
 
-                SharedPreferences.Editor editor = preferencias.edit();
-                editor.clear();
-                editor.commit();
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
 
@@ -320,18 +338,8 @@ public class Inicio extends Fragment {
                     progressDialog.setCancelable(false);
                     progressDialog.show();
 
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        public void run() {
-                            progressDialog.dismiss();
-                            dialog.dismiss();
-                            obtenerPerfi();
-                        }
-                    }, 1000);
-
                     final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
-
-                    String codigoFoto = null;
+                    String codigoFoto;
 
                     if (bitmap != null) {
                         Bitmap bitmap_aux = bitmap;
@@ -356,6 +364,12 @@ public class Inicio extends Fragment {
                     querysCuentas.actualizarPerfil(sharedPreferences.getInt("ID_USUARIO", 0), jsonBody, new QuerysCuentas.VolleyOnEventListener() {
                         @Override
                         public void onSuccess(Object object) {
+                            progressDialog.dismiss();
+                            dialog.dismiss();
+                            obtenerPerfi();
+
+                            FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
+                            funcionesBitacora.registrarBitacora("Se actualizo el perfil");
                         }
 
                         @Override
@@ -558,7 +572,6 @@ public class Inicio extends Fragment {
         long hours = (diff / (1000 * 60 * 60)) % 24;
         //long days = (diff / (1000 * 60 * 60 * 24)) % 365;
         Toast.makeText(getContext(), "Horas: " + hours + " Minutos: " + minutes + " Segundos: " + seconds, Toast.LENGTH_LONG).show();
-
     }
 }
 
