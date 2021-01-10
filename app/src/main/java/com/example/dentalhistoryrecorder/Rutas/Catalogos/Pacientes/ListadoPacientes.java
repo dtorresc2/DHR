@@ -301,7 +301,7 @@ public class ListadoPacientes extends Fragment {
                             .show();
 
                     FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
-                    funcionesBitacora.registrarBitacora("Se deshabilito el paciente #" + ID);
+                    funcionesBitacora.registrarBitacora("Se deshabilito el paciente #" + listaPacientes.get(ID).getCodigo());
 
                     new Handler().postDelayed(new Runnable() {
                         @Override

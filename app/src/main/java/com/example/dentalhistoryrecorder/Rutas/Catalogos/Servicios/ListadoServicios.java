@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.dentalhistoryrecorder.Componentes.Dialogos.Bitacora.FuncionesBitacora;
 import com.example.dentalhistoryrecorder.Componentes.MenusInferiores.MenuInferior;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
@@ -219,7 +220,7 @@ public class ListadoServicios extends Fragment {
         });
     }
 
-    public void actualizarEstado(int ID) {
+    public void actualizarEstado(final int ID) {
         if (estadoServicio) {
             final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
             progressDialog.setMessage("Cargando...");
@@ -248,6 +249,9 @@ public class ListadoServicios extends Fragment {
                             .enableSwipeToDismiss()
                             .setBackgroundColorRes(R.color.FondoSecundario)
                             .show();
+
+                    FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
+                    funcionesBitacora.registrarBitacora("Se deshabilito el servicio #" + ID);
 
                     new Handler().postDelayed(new Runnable() {
                         @Override

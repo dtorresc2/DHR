@@ -23,6 +23,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.dentalhistoryrecorder.Componentes.Dialogos.Bitacora.FuncionesBitacora;
 import com.example.dentalhistoryrecorder.InicioSesion;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
@@ -183,6 +184,9 @@ public class Servicios extends Fragment {
                         .setBackgroundColorRes(R.color.FondoSecundario)
                         .show();
 
+                FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
+                funcionesBitacora.registrarBitacora("Se registro un servicio");
+
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -230,6 +234,9 @@ public class Servicios extends Fragment {
                         .enableSwipeToDismiss()
                         .setBackgroundColorRes(R.color.FondoSecundario)
                         .show();
+
+                FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
+                funcionesBitacora.registrarBitacora("Se actualizo el servicio #" + ID_SERVICIO);
 
                 new Handler().postDelayed(new Runnable() {
                     @Override
