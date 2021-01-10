@@ -79,8 +79,8 @@ public class IngDetalle extends Fragment {
         referente.setTypeface(face);
         calendario = view.findViewById(R.id.obFecha);
         guardador = view.findViewById(R.id.guardador_dt);
-        titulo_fecha = view.findViewById(R.id.titulo_fecha);
-        titulo_fecha.setTypeface(face);
+//        titulo_fecha = view.findViewById(R.id.titulo_fecha);
+//        titulo_fecha.setTypeface(face);
 
         Calendar calendar = Calendar.getInstance();
         int dia = calendar.get(Calendar.DAY_OF_MONTH);
