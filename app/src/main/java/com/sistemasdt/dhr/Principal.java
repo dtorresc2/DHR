@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.sistemasdt.dhr.OpcionCitas.Citas;
+import com.sistemasdt.dhr.Rutas.Fichas.Ficha;
 import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
 import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.ListadoPacientes;
 import com.sistemasdt.dhr.Rutas.Inicio.Inicio;
@@ -63,7 +64,6 @@ public class Principal extends AppCompatActivity implements BottomNavigationView
         timer.schedule(task, 0, 7000);*/
 
 
-
     }
 
     MenuFichas menuFichasFragment = new MenuFichas();
@@ -85,8 +85,10 @@ public class Principal extends AppCompatActivity implements BottomNavigationView
                 getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.contenedor, citasFragment).commit();
                 return true;
             case R.id.navigation_finanzas:
-                listadoPacientesFragment.ObtenerOpcion(1);
-                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.contenedor, listadoPacientesFragment).commit();
+//                listadoPacientesFragment.ObtenerOpcion(1);
+//                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.contenedor, listadoPacientesFragment).commit();
+                Ficha ficha = new Ficha();
+                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.contenedor, ficha).commit();
                 return true;
             case R.id.navigation_perfil:
                 getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.contenedor, inicioFragment).commit();

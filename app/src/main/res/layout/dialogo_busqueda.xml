@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@color/AzulOscuro">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Seleccione su opcion"
+        android:textColor="@color/Blanco"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/buscador"
+        android:padding="12dp"
+        android:singleLine="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:textColor="@color/Blanco"
+        android:textColorHint="@color/Blanco"
+        android:hint="Busca..."
+        android:drawableRight="@drawable/icono_buscar" />
+    
+    <ListView
+        android:id="@+id/lista_items"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

@@ -2,10 +2,13 @@ package com.sistemasdt.dhr.Rutas.Fichas;
 
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -16,14 +19,23 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -34,8 +46,10 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.sistemasdt.dhr.OpcionIngreso.Normal.IngHMedico;
 import com.sistemasdt.dhr.R;
+import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.ItemPaciente;
 import com.tapadoo.alerter.Alerter;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,6 +67,8 @@ public class Ficha extends Fragment {
     private String iddPaciente;
     private int idPacienteExis;
     private TextInputLayout pacienteLayout, motivoLayout, medicoLayout, referenteLayout;
+    private TextView textView;
+    ArrayList<String> listaPacientes;
 
     public Ficha() {
         // Required empty public constructor
@@ -62,7 +78,7 @@ public class Ficha extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_ficha, container, false);
+        final View view = inflater.inflate(R.layout.fragment_ficha, container, false);
         Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         requestQueue = Volley.newRequestQueue(getContext());
 
@@ -89,6 +105,13 @@ public class Ficha extends Fragment {
         pacienteLayout = view.findViewById(R.id.layoutPaciente);
         pacienteLayout.setTypeface(face);
 
+        pacienteLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "Hola", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         motivoLayout = view.findViewById(R.id.layoutMotivo);
         motivoLayout.setTypeface(face);
 
@@ -107,7 +130,7 @@ public class Ficha extends Fragment {
         String mesAux = (mes > 9) ? String.valueOf(mes) : "0" + mes;
         String diaAux = (dia > 9) ? String.valueOf(dia) : "0" + dia;
 
-        String dat = diaAux + "/" + mesAux + "/" + a;
+        final String dat = diaAux + "/" + mesAux + "/" + a;
         fecha.setText(dat);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -162,120 +185,64 @@ public class Ficha extends Fragment {
             }
         });
 
-        //Persistencia de Datos
-        //preferencias = getActivity().getSharedPreferences("datosdetalle", Context.MODE_PRIVATE);
-        preferencias2 = getActivity().getSharedPreferences("ids", Context.MODE_PRIVATE);
+        listaPacientes = new ArrayList<>();
+        listaPacientes.add("1");
+        listaPacientes.add("2");
+        listaPacientes.add("11");
+        listaPacientes.add("12");
 
+        textView = view.findViewById(R.id.text_view1);
 
-        //final SharedPreferences.Editor escritor = preferencias.edit();
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Dialog dialog = new Dialog(getContext());
+                dialog.setContentView(R.layout.dialogo_busqueda);
+                dialog.getWindow().setLayout(view.getWidth() - 50,800);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.setCancelable(false);
+                dialog.show();
+
+                EditText editText = dialog.findViewById(R.id.buscador);
+                ListView listView = dialog.findViewById(R.id.lista_items);
+
+                final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, listaPacientes);
+                listView.setAdapter(adapter);
+
+                editText.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        adapter.getFilter().filter(s);
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
+
+                listView.setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        textView.setText(adapter.getItem(position));
+                        dialog.dismiss();
+                    }
+                });
+            }
+        });
+
         guardador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-//                progressDialog.setMessage("Cargando...");
-//                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-//                progressDialog.setCancelable(false);
-//                progressDialog.show();
-//
-//                Handler handler = new Handler();
-//                handler.postDelayed(new Runnable() {
-//                    public void run() {
-//                        progressDialog.dismiss();
-//                    }
-//                }, 1000);
-//
-//                ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-//                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-//
-//                if (networkInfo != null && networkInfo.isConnected()) {
-//                    if (idPacienteExis == 0) {
-//                        insertarFicha("http://dhr.sistemasdt.xyz/Normal/ficha.php?estado=2");
-//                    } else {
-//                        insertarFichaExistente("http://dhr.sistemasdt.xyz/Normal/ficha.php?estado=3");
-//                    }
-//                    IngHMedico ingHMedico = new IngHMedico();
-//                    FragmentTransaction transaction = getFragmentManager().beginTransaction()
-//                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-//                    transaction.replace(R.id.contenedor, ingHMedico);
-//                    transaction.commit();
-//                } else {
-//                    Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-//                    Alerter.create(getActivity())
-//                            .setTitle("Error")
-//                            .setText("Fallo en Conexion a Internet")
-//                            .setIcon(R.drawable.logonuevo)
-//                            .setTextTypeface(face2)
-//                            .enableSwipeToDismiss()
-//                            .setBackgroundColorRes(R.color.AzulOscuro)
-//                            .show();
-//                }
+                Toast.makeText(getContext(), "Hola", Toast.LENGTH_SHORT).show();
             }
         });
 
         return view;
-    }
-
-
-    //Insertar Ficha
-    public void insertarFicha(String URL) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i(TAG, "" + error.toString());
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros = new HashMap<String, String>();
-                parametros.put("fecha", fecha.getText().toString());
-                parametros.put("medico", medico.getText().toString());
-                parametros.put("motivo", motivo.getText().toString());
-                parametros.put("referente", referente.getText().toString());
-                SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
-                parametros.put("user", preferencias2.getString("idUsuario", "1"));
-                return parametros;
-            }
-
-        };
-        requestQueue.add(stringRequest);
-    }
-
-    //Insertar Ficha
-    public void insertarFichaExistente(String URL) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i(TAG, "" + error.toString());
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros = new HashMap<String, String>();
-                parametros.put("id", String.valueOf(idPacienteExis));
-                parametros.put("fecha", fecha.getText().toString());
-                parametros.put("medico", medico.getText().toString());
-                parametros.put("motivo", motivo.getText().toString());
-                parametros.put("referente", referente.getText().toString());
-                SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
-                parametros.put("user", preferencias2.getString("idUsuario", "1"));
-                return parametros;
-            }
-
-        };
-        requestQueue.add(stringRequest);
-    }
-
-    public void obtenerPaciente(int id) {
-        idPacienteExis = id;
     }
 }
