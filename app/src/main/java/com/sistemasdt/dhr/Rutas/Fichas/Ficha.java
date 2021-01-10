@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
@@ -41,16 +42,17 @@ import java.util.Map;
 
 public class Ficha extends Fragment {
     private Toolbar toolbar;
-    private TextInputEditText motivo, medico, referente;
-    private TextView fecha, titulo_fecha;
+    private TextInputEditText motivo, medico, referente, paciente;
+    private TextView fecha;
     private ImageButton calendario;
     private FloatingActionButton guardador;
     private String idPaciente;
     private static final String TAG = "MyActivity";
-    SharedPreferences preferencias, preferencias2;
+    SharedPreferences preferencias2;
     RequestQueue requestQueue;
     private String iddPaciente;
     private int idPacienteExis;
+    private TextInputLayout pacienteLayout, motivoLayout, medicoLayout, referenteLayout;
 
     public Ficha() {
         // Required empty public constructor
@@ -80,15 +82,33 @@ public class Ficha extends Fragment {
         referente.setTypeface(face);
         calendario = view.findViewById(R.id.obFecha);
         guardador = view.findViewById(R.id.guardador_dt);
-//        titulo_fecha = view.findViewById(R.id.titulo_fecha);
-//        titulo_fecha.setTypeface(face);
+
+        paciente = view.findViewById(R.id.paciente);
+        paciente.setTypeface(face);
+
+        pacienteLayout = view.findViewById(R.id.layoutPaciente);
+        pacienteLayout.setTypeface(face);
+
+        motivoLayout = view.findViewById(R.id.layoutMotivo);
+        motivoLayout.setTypeface(face);
+
+        medicoLayout = view.findViewById(R.id.layoutMedico);
+        medicoLayout.setTypeface(face);
+
+        referenteLayout = view.findViewById(R.id.layoutReferente);
+        referenteLayout.setTypeface(face);
 
         Calendar calendar = Calendar.getInstance();
         int dia = calendar.get(Calendar.DAY_OF_MONTH);
         int mes = calendar.get(Calendar.MONTH);
         int a = calendar.get(Calendar.YEAR);
-        String fe = dia + "/" + mes + "/" + a;
-        fecha.setText(fe);
+        mes++;
+        dia--;
+        String mesAux = (mes > 9) ? String.valueOf(mes) : "0" + mes;
+        String diaAux = (dia > 9) ? String.valueOf(dia) : "0" + dia;
+
+        String dat = diaAux + "/" + mesAux + "/" + a;
+        fecha.setText(dat);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,16 +128,35 @@ public class Ficha extends Fragment {
                 int yy = calendario.get(Calendar.YEAR);
                 int mm = calendario.get(Calendar.MONTH);
                 int dd = calendario.get(Calendar.DAY_OF_MONTH);
+                dd--;
 
                 DatePickerDialog datePicker = new DatePickerDialog(getActivity(),
-                        android.R.style.Theme_Holo_Dialog_MinWidth
+                        R.style.progressDialog
                         , new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        String dat = dayOfMonth + "/" + monthOfYear + "/" + year;
+                        monthOfYear++;
+                        String mesAux = (monthOfYear > 9) ? String.valueOf(monthOfYear) : "0" + monthOfYear;
+                        String diaAux = (dayOfMonth > 9) ? String.valueOf(dayOfMonth) : "0" + dayOfMonth;
+
+                        String dat = diaAux + "/" + mesAux + "/" + year;
                         fecha.setText(dat);
                     }
                 }, yy, mm, dd);
+
+//                DatePickerDialog datePicker = new DatePickerDialog(getActivity(),
+//                        android.R.style.Theme_Holo_Dialog_MinWidth
+//                        , new DatePickerDialog.OnDateSetListener() {
+//                    @Override
+//                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+//                        monthOfYear++;
+//                        String mesAux = (monthOfYear > 9) ? String.valueOf(monthOfYear) : "0" + monthOfYear;
+//                        String diaAux = (dayOfMonth > 9) ? String.valueOf(dayOfMonth) : "0" + dayOfMonth;
+//
+//                        String dat = diaAux + "/" + mesAux + "/" + year;
+//                        fecha.setText(dat);
+//                    }
+//                }, yy, mm, dd);
 
                 datePicker.show();
             }
@@ -132,44 +171,44 @@ public class Ficha extends Fragment {
         guardador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-                progressDialog.setMessage("Cargando...");
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                progressDialog.setCancelable(false);
-                progressDialog.show();
-
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        progressDialog.dismiss();
-                    }
-                }, 1000);
-
-                ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-                if (networkInfo != null && networkInfo.isConnected()) {
-                    if (idPacienteExis == 0) {
-                        insertarFicha("http://dhr.sistemasdt.xyz/Normal/ficha.php?estado=2");
-                    } else {
-                        insertarFichaExistente("http://dhr.sistemasdt.xyz/Normal/ficha.php?estado=3");
-                    }
-                    IngHMedico ingHMedico = new IngHMedico();
-                    FragmentTransaction transaction = getFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                    transaction.replace(R.id.contenedor, ingHMedico);
-                    transaction.commit();
-                } else {
-                    Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-                    Alerter.create(getActivity())
-                            .setTitle("Error")
-                            .setText("Fallo en Conexion a Internet")
-                            .setIcon(R.drawable.logonuevo)
-                            .setTextTypeface(face2)
-                            .enableSwipeToDismiss()
-                            .setBackgroundColorRes(R.color.AzulOscuro)
-                            .show();
-                }
+//                final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+//                progressDialog.setMessage("Cargando...");
+//                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//                progressDialog.setCancelable(false);
+//                progressDialog.show();
+//
+//                Handler handler = new Handler();
+//                handler.postDelayed(new Runnable() {
+//                    public void run() {
+//                        progressDialog.dismiss();
+//                    }
+//                }, 1000);
+//
+//                ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+//                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+//
+//                if (networkInfo != null && networkInfo.isConnected()) {
+//                    if (idPacienteExis == 0) {
+//                        insertarFicha("http://dhr.sistemasdt.xyz/Normal/ficha.php?estado=2");
+//                    } else {
+//                        insertarFichaExistente("http://dhr.sistemasdt.xyz/Normal/ficha.php?estado=3");
+//                    }
+//                    IngHMedico ingHMedico = new IngHMedico();
+//                    FragmentTransaction transaction = getFragmentManager().beginTransaction()
+//                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+//                    transaction.replace(R.id.contenedor, ingHMedico);
+//                    transaction.commit();
+//                } else {
+//                    Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+//                    Alerter.create(getActivity())
+//                            .setTitle("Error")
+//                            .setText("Fallo en Conexion a Internet")
+//                            .setIcon(R.drawable.logonuevo)
+//                            .setTextTypeface(face2)
+//                            .enableSwipeToDismiss()
+//                            .setBackgroundColorRes(R.color.AzulOscuro)
+//                            .show();
+//                }
             }
         });
 

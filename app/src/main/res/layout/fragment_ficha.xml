@@ -48,6 +48,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Paciente"
+                    android:enabled="false"
                     android:inputType="text"
                     android:maxLength="150"
                     android:maxLines="1"/>
