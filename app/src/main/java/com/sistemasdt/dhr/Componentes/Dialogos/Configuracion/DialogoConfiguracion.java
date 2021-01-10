@@ -1,4 +1,4 @@
-package com.sistemasdt.dhr.OpcionInicio;
+package com.sistemasdt.dhr.Componentes.Dialogos.Configuracion;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -28,7 +28,7 @@ import com.sistemasdt.dhr.R;
 
 import java.io.File;
 
-public class Configuracion extends DialogFragment {
+public class DialogoConfiguracion extends DialogFragment {
     private Toolbar toolbar;
     private TextView titulo1, titulo2, titulo3, subtitulo1, subtitulo2, subtitulo3, subtitulo4, subtitulo5;
     private TextView etiquetaEspacioFoto, etiquetaEspacioFichas, etiquetaEspacioFichasE, etiquetaVersion;
@@ -42,14 +42,14 @@ public class Configuracion extends DialogFragment {
     private static final String DIRECTORIO_IMAGEN = CARPETA_PRINCIPAL + CARPETA_IMAGEN; //Ruta del directorio
     private static final int CODIGO_SOLICITUD_PERMISO = 123;
 
-    public Configuracion() {
+    public DialogoConfiguracion() {
 
     }
 
-    public static Configuracion display(FragmentManager fragmentManager) {
-        Configuracion configuracion = new Configuracion();
-        configuracion.show(fragmentManager, "My Activity");
-        return configuracion;
+    public static DialogoConfiguracion display(FragmentManager fragmentManager) {
+        DialogoConfiguracion dialogoConfiguracion = new DialogoConfiguracion();
+        dialogoConfiguracion.show(fragmentManager, "My Activity");
+        return dialogoConfiguracion;
     }
 
     @Override
@@ -76,7 +76,7 @@ public class Configuracion extends DialogFragment {
         View view = inflater.inflate(R.layout.dialogo_configuracion, container, false);
         final Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setTitle("Configuracion");
+        toolbar.setTitle("DialogoConfiguracion");
         toolbar.setTitleTextColor(getResources().getColor(R.color.Blanco));
         //toolbar.setNavigationIcon(R.drawable.ic_cerrar);
         /*toolbar.setNavigationOnClickListener(new View.OnClickListener() {

@@ -19,7 +19,7 @@ import android.view.MenuItem;
 import com.sistemasdt.dhr.OpcionCitas.Citas;
 import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.ListadoPacientes;
 import com.sistemasdt.dhr.OpcionIngreso.Agregar;
-import com.sistemasdt.dhr.OpcionInicio.Inicio;
+import com.sistemasdt.dhr.Rutas.Inicio.Inicio;
 import com.sistemasdt.dhr.OpcionSeguimiento.Seguimiento;
 import com.sistemasdt.dhr.Rutas.Catalogos.Catalogos;
 

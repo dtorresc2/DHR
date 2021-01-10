@@ -1,4 +1,4 @@
-package com.sistemasdt.dhr.OpcionInicio;
+package com.sistemasdt.dhr.Rutas.Inicio;
 
 
 import android.Manifest;
@@ -42,6 +42,7 @@ import com.android.volley.toolbox.Volley;
 import com.sistemasdt.dhr.Componentes.Dialogos.Bitacora.DialogoBitacora;
 import com.sistemasdt.dhr.MainActivity;
 
+import com.sistemasdt.dhr.Componentes.Dialogos.Configuracion.DialogoConfiguracion;
 import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysCuentas;
 
@@ -141,8 +142,8 @@ public class Inicio extends Fragment {
         configuracion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Configuracion configuracion = new Configuracion();
-                configuracion.display(getFragmentManager());
+                DialogoConfiguracion dialogoConfiguracion = new DialogoConfiguracion();
+                dialogoConfiguracion.display(getFragmentManager());
             }
         });
 
