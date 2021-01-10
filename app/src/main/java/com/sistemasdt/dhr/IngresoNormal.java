@@ -25,7 +25,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.sistemasdt.dhr.OpcionIngreso.Normal.IngDetalle;
+import com.sistemasdt.dhr.Rutas.Fichas.Ficha;
 import com.sistemasdt.dhr.OpcionIngreso.Normal.IngHMedico;
 import com.sistemasdt.dhr.OpcionIngreso.Normal.IngHOdon;
 import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.Pacientes;
@@ -211,10 +211,10 @@ public class IngresoNormal extends Fragment {
                             break;
 
                         case 2:
-                            IngDetalle ingDetalle = new IngDetalle();
+                            Ficha ficha = new Ficha();
                             FragmentTransaction transaction2 = getFragmentManager().beginTransaction()
                                     .setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                            transaction2.replace(R.id.contenedor, ingDetalle);
+                            transaction2.replace(R.id.contenedor, ficha);
                             transaction2.commit();
                             break;
 

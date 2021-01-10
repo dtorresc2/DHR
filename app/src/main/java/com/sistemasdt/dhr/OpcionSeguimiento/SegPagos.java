@@ -31,7 +31,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.sistemasdt.dhr.OpcionIngreso.Agregar;
+import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
 import com.sistemasdt.dhr.OpcionIngreso.Normal.Ing_HFoto;
 import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.Componentes.Tabla.TablaDinamica;
@@ -80,9 +80,9 @@ public class SegPagos extends Fragment {
             public void onClick(View v) {
                 switch (mOpcion) {
                     case 1:
-                        Agregar agregar = new Agregar();
+                        MenuFichas menuFichas = new MenuFichas();
                         FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                        transaction.replace(R.id.contenedor, agregar);
+                        transaction.replace(R.id.contenedor, menuFichas);
                         transaction.commit();
                         break;
 

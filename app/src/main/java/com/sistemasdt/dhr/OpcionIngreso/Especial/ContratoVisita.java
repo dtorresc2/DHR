@@ -36,7 +36,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.sistemasdt.dhr.OpcionIngreso.Agregar;
+import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
 import com.sistemasdt.dhr.Componentes.Pizarron.Lienzo;
 import com.sistemasdt.dhr.R;
 import com.tapadoo.alerter.Alerter;
@@ -79,9 +79,9 @@ public class ContratoVisita extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Agregar agregar = new Agregar();
+                MenuFichas menuFichas = new MenuFichas();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                transaction.replace(R.id.contenedor, agregar);
+                transaction.replace(R.id.contenedor, menuFichas);
                 transaction.commit();
             }
         });

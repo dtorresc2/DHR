@@ -1,4 +1,4 @@
-package com.sistemasdt.dhr.OpcionIngreso.Normal;
+package com.sistemasdt.dhr.Rutas.Fichas;
 
 
 import android.app.DatePickerDialog;
@@ -30,7 +30,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.sistemasdt.dhr.OpcionIngreso.Agregar;
+import com.sistemasdt.dhr.OpcionIngreso.Normal.IngHMedico;
 import com.sistemasdt.dhr.R;
 import com.tapadoo.alerter.Alerter;
 
@@ -38,7 +38,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-public class IngDetalle extends Fragment {
+public class Ficha extends Fragment {
     private Toolbar toolbar;
     private TextInputEditText motivo, medico, referente;
     private TextView fecha, titulo_fecha;
@@ -51,7 +51,7 @@ public class IngDetalle extends Fragment {
     private String iddPaciente;
     private int idPacienteExis;
 
-    public IngDetalle() {
+    public Ficha() {
         // Required empty public constructor
     }
 
@@ -59,7 +59,7 @@ public class IngDetalle extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_ing_detalle, container, false);
+        View view = inflater.inflate(R.layout.fragment_ficha, container, false);
         Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         requestQueue = Volley.newRequestQueue(getContext());
 
@@ -92,9 +92,9 @@ public class IngDetalle extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Agregar agregar = new Agregar();
+                MenuFichas menuFichas = new MenuFichas();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                transaction.replace(R.id.contenedor, agregar);
+                transaction.replace(R.id.contenedor, menuFichas);
                 transaction.commit();
             }
         });

@@ -33,7 +33,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.sistemasdt.dhr.OpcionIngreso.Agregar;
+import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
 import com.sistemasdt.dhr.OpcionSeguimiento.Seguimiento;
 import com.sistemasdt.dhr.R;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -135,9 +135,9 @@ public class Ing_HFoto extends Fragment {
 
                 switch (mOpcion){
                     case 1:
-                        Agregar agregar = new Agregar();
+                        MenuFichas menuFichas = new MenuFichas();
                         FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                        transaction.replace(R.id.contenedor, agregar);
+                        transaction.replace(R.id.contenedor, menuFichas);
                         transaction.commit();
                         break;
 
@@ -267,7 +267,7 @@ public class Ing_HFoto extends Fragment {
             }
         });
 
-        //Agregar para insertar en BD
+        //MenuFichas para insertar en BD
         agregador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -331,9 +331,9 @@ public class Ing_HFoto extends Fragment {
 
                 switch (mOpcion) {
                     case 1:
-                        Agregar agregar = new Agregar();
+                        MenuFichas menuFichas = new MenuFichas();
                         FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                        transaction.replace(R.id.contenedor, agregar);
+                        transaction.replace(R.id.contenedor, menuFichas);
                         transaction.commit();
                         break;
 

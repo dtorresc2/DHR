@@ -17,8 +17,8 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.sistemasdt.dhr.OpcionCitas.Citas;
+import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
 import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.ListadoPacientes;
-import com.sistemasdt.dhr.OpcionIngreso.Agregar;
 import com.sistemasdt.dhr.Rutas.Inicio.Inicio;
 import com.sistemasdt.dhr.OpcionSeguimiento.Seguimiento;
 import com.sistemasdt.dhr.Rutas.Catalogos.Catalogos;
@@ -66,7 +66,7 @@ public class Principal extends AppCompatActivity implements BottomNavigationView
 
     }
 
-    Agregar agregarFragment = new Agregar();
+    MenuFichas menuFichasFragment = new MenuFichas();
     Citas citasFragment = new Citas();
     ListadoPacientes listadoPacientesFragment = new ListadoPacientes();
     ListadoPacientes listadoPacientesFragment2 = new ListadoPacientes();
@@ -79,7 +79,7 @@ public class Principal extends AppCompatActivity implements BottomNavigationView
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.navigation_fichas:
-                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.contenedor, agregarFragment).commit();
+                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.contenedor, menuFichasFragment).commit();
                 return true;
             case R.id.navigation_citas:
                 getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.contenedor, citasFragment).commit();

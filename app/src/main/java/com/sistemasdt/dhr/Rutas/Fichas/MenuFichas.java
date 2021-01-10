@@ -1,4 +1,4 @@
-package com.sistemasdt.dhr.OpcionIngreso;
+package com.sistemasdt.dhr.Rutas.Fichas;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -15,11 +15,11 @@ import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.Pacientes;
 import com.sistemasdt.dhr.R;
 
 
-public class Agregar extends Fragment {
+public class MenuFichas extends Fragment {
     private LinearLayout botonNuevo, botonNuevoEspecial;
     private TextView titulo, texto_boton_nuevo, texto_boton_especial;
 
-    public Agregar() {
+    public MenuFichas() {
         // Required empty public constructor
     }
 

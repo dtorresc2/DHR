@@ -34,7 +34,7 @@
     <!--            app:fab_colorNormal="@color/FondoSecundario"-->
     <!--            app:fab_colorPressed="@color/AzulOscuro"-->
     <!--            app:fab_icon="@drawable/icono_agregar"-->
-    <!--            app:fab_title="Agregar" />-->
+    <!--            app:fab_title="MenuFichas" />-->
 
     <!--        <com.getbase.floatingactionbutton.FloatingActionButton-->
     <!--            android:id="@+id/buscar_dp"-->
