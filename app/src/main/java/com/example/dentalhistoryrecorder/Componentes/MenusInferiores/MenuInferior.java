@@ -26,9 +26,8 @@ public class MenuInferior extends BottomSheetDialogFragment {
         mMenuInferiorListener = menuInferiorListener;
     }
 
-    public void recibirTitulo(String mTitulo, int mID){
+    public void recibirTitulo(String mTitulo){
         titulo = mTitulo;
-        ID = mID;
     }
 
     @Nullable
@@ -75,7 +74,7 @@ public class MenuInferior extends BottomSheetDialogFragment {
 
         TextView tituloMenu = view.findViewById(R.id.tituloMenu);
         tituloMenu.setTypeface(typeface);
-        tituloMenu.setText(titulo + ID);
+        tituloMenu.setText(titulo);
 
         return view;
     }

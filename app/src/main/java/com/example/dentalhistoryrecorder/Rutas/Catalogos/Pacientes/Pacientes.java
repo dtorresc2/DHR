@@ -26,6 +26,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.dentalhistoryrecorder.Componentes.Dialogos.Bitacora.FuncionesBitacora;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Cuentas.ItemCuenta;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.ListadoServicios;
@@ -54,7 +55,7 @@ public class Pacientes extends Fragment {
     private int ID_PACIENTE = 0;
 
     public Pacientes() {
-        modoEdicion = true;
+        modoEdicion = false;
     }
 
     public void enviarPacientes(ArrayList<ItemPaciente> listadoPacientes) {
@@ -295,6 +296,9 @@ public class Pacientes extends Fragment {
                         .setBackgroundColorRes(R.color.FondoSecundario)
                         .show();
 
+                FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
+                funcionesBitacora.registrarBitacora("Se registro un paciente");
+
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -350,6 +354,9 @@ public class Pacientes extends Fragment {
                         .enableSwipeToDismiss()
                         .setBackgroundColorRes(R.color.FondoSecundario)
                         .show();
+
+                FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
+                funcionesBitacora.registrarBitacora("Se actualizo el paciente #" + ID_PACIENTE);
 
                 new Handler().postDelayed(new Runnable() {
                     @Override

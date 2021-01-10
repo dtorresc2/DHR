@@ -1,7 +1,9 @@
 package com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -17,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.dentalhistoryrecorder.Componentes.Dialogos.Bitacora.FuncionesBitacora;
 import com.example.dentalhistoryrecorder.Componentes.MenusInferiores.MenuInferior;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
@@ -116,7 +119,7 @@ public class ListadoServicios extends Fragment {
         return view;
     }
 
-    public void realizarAccion(int opcion, int ID) {
+    public void realizarAccion(int opcion, final int ID) {
         switch (opcion) {
             case 1:
                 Servicios servicios = new Servicios();
@@ -126,7 +129,24 @@ public class ListadoServicios extends Fragment {
                 transaction.commit();
                 break;
             case 2:
-                actualizarEstado(ID);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
+                builder.setIcon(R.drawable.logonuevo);
+                builder.setTitle("Listado de Servicios");
+                builder.setMessage("¿Desea deshabilitar el servicio?");
+                builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                        actualizarEstado(ID);
+                    }
+                });
+                builder.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
                 break;
 
             case 3:
@@ -171,7 +191,7 @@ public class ListadoServicios extends Fragment {
                         public void onItemClick(final int position) {
                             MenuInferior menuInferior = new MenuInferior();
                             menuInferior.show(getFragmentManager(), "MenuInferior");
-                            menuInferior.recibirTitulo("Servicio #", listaServicios.get(position).getCodigoServicio());
+                            menuInferior.recibirTitulo(listaServicios.get(position).getDescripcionServicio());
                             menuInferior.eventoClick(new MenuInferior.MenuInferiorListener() {
                                 @Override
                                 public void onButtonClicked(int opcion) {
@@ -200,7 +220,7 @@ public class ListadoServicios extends Fragment {
         });
     }
 
-    public void actualizarEstado(int ID) {
+    public void actualizarEstado(final int ID) {
         if (estadoServicio) {
             final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
             progressDialog.setMessage("Cargando...");
@@ -229,6 +249,9 @@ public class ListadoServicios extends Fragment {
                             .enableSwipeToDismiss()
                             .setBackgroundColorRes(R.color.FondoSecundario)
                             .show();
+
+                    FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
+                    funcionesBitacora.registrarBitacora("Se deshabilito el servicio #" + ID);
 
                     new Handler().postDelayed(new Runnable() {
                         @Override

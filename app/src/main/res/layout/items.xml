@@ -194,7 +194,9 @@
                     android:breakStrategy="simple"
                     android:gravity="left"
                     android:paddingLeft="10dp"
+                    android:paddingBottom="2dp"
                     android:text="Diego Torres"
+                    android:background="@color/AzulOscuro"
                     android:textColor="@color/Blanco"
                     android:textSize="20sp" />
 
@@ -294,7 +296,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="10"
                 android:background="@color/FondoSecundario2"
-                android:src="@drawable/ic_opciones"
+                android:src="@drawable/ic_adelante"
                 android:text="Limpiar"
                 android:textColor="@color/Blanco" />
         </LinearLayout>

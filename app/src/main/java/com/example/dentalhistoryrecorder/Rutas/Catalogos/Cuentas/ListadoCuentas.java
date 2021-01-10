@@ -18,14 +18,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.dentalhistoryrecorder.Componentes.Dialogos.Bitacora.FuncionesBitacora;
 import com.example.dentalhistoryrecorder.Componentes.MenusInferiores.MenuInferiorCuentas;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
+import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysBitacoras;
 import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysCuentas;
 import com.tapadoo.alerter.Alerter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -196,7 +199,7 @@ public class ListadoCuentas extends Fragment {
     public void eliminarCuenta(final int ID) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
         builder.setIcon(R.drawable.logonuevo);
-        builder.setTitle("Eliminar Cuenta");
+        builder.setTitle("Listado de Cuentas");
         builder.setMessage("Desea eliminar la cuenta?");
         builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -215,6 +218,8 @@ public class ListadoCuentas extends Fragment {
                                     .setBackgroundColorRes(R.color.FondoSecundario)
                                     .show();
 
+                            FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
+                            funcionesBitacora.registrarBitacora("Se elimino la cuenta #" + ID);
                             obtenerCuentas();
                         }
 

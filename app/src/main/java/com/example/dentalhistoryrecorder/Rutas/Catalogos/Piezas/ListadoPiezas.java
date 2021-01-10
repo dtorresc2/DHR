@@ -1,7 +1,9 @@
 package com.example.dentalhistoryrecorder.Rutas.Catalogos.Piezas;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -17,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.dentalhistoryrecorder.Componentes.Dialogos.Bitacora.FuncionesBitacora;
 import com.example.dentalhistoryrecorder.Componentes.MenusInferiores.MenuInferior;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
@@ -113,7 +116,7 @@ public class ListadoPiezas extends Fragment {
         return view;
     }
 
-    public void realizarAccion(int opcion, int ID) {
+    public void realizarAccion(int opcion, final int ID) {
         switch (opcion) {
             case 1:
                 Piezas piezas = new Piezas();
@@ -123,7 +126,24 @@ public class ListadoPiezas extends Fragment {
                 transaction.commit();
                 break;
             case 2:
-                deshabilitarPieza(ID);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
+                builder.setIcon(R.drawable.logonuevo);
+                builder.setTitle("Listado de Piezas");
+                builder.setMessage("¿Desea deshabilitar la pieza?");
+                builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                        deshabilitarPieza(ID);
+                    }
+                });
+                builder.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
                 break;
 
             case 3:
@@ -168,7 +188,7 @@ public class ListadoPiezas extends Fragment {
                         public void onItemClick(final int position) {
                             MenuInferior menuInferior = new MenuInferior();
                             menuInferior.show(getFragmentManager(), "MenuInferior");
-                            menuInferior.recibirTitulo("Pieza #", listaPiezas.get(position).getNumeroPieza());
+                            menuInferior.recibirTitulo(listaPiezas.get(position).getNombrePieza());
                             menuInferior.eventoClick(new MenuInferior.MenuInferiorListener() {
                                 @Override
                                 public void onButtonClicked(int opcion) {
@@ -198,7 +218,7 @@ public class ListadoPiezas extends Fragment {
         });
     }
 
-    private void deshabilitarPieza(int ID) {
+    private void deshabilitarPieza(final int ID) {
         if (estadoPieza) {
             final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
             progressDialog.setMessage("Cargando...");
@@ -228,6 +248,9 @@ public class ListadoPiezas extends Fragment {
                             .enableSwipeToDismiss()
                             .setBackgroundColorRes(R.color.FondoSecundario)
                             .show();
+
+                    FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
+                    funcionesBitacora.registrarBitacora("Se deshabilito la pieza #" + ID);
 
                     new Handler().postDelayed(new Runnable() {
                         @Override

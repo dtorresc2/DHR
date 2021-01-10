@@ -1,7 +1,9 @@
 package com.example.dentalhistoryrecorder.Rutas.Catalogos.Pacientes;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Handler;
@@ -22,6 +24,7 @@ import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.example.dentalhistoryrecorder.Componentes.Dialogos.Bitacora.FuncionesBitacora;
 import com.example.dentalhistoryrecorder.Componentes.MenusInferiores.MenuInferior;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Catalogos;
@@ -85,6 +88,7 @@ public class ListadoPacientes extends Fragment {
                 switch (menuItem.getItemId()) {
                     case R.id.opcion_nuevo:
                         Pacientes pacientes = new Pacientes();
+                        pacientes.enviarPacientes(listaPacientes);
                         FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
                         transaction.replace(R.id.contenedor, pacientes);
                         transaction.commit();
@@ -136,7 +140,7 @@ public class ListadoPacientes extends Fragment {
         return view;
     }
 
-    public void realizarAccion(int opcion, int ID, int posicion) {
+    public void realizarAccion(int opcion, int ID, final int posicion) {
         switch (opcion) {
             case 1:
                 Pacientes pacientes = new Pacientes();
@@ -147,7 +151,24 @@ public class ListadoPacientes extends Fragment {
                 transaction.commit();
                 break;
             case 2:
-                actualizarEstado(posicion);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
+                builder.setIcon(R.drawable.logonuevo);
+                builder.setTitle("Listado de Pacientes");
+                builder.setMessage("¿Desea deshabilitar al paciente?");
+                builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                        actualizarEstado(posicion);
+                    }
+                });
+                builder.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
                 break;
             case 3:
                 break;
@@ -204,7 +225,7 @@ public class ListadoPacientes extends Fragment {
                         public void onItemClick(final int position) {
                             MenuInferior menuInferior = new MenuInferior();
                             menuInferior.show(getFragmentManager(), "MenuInferior");
-                            menuInferior.recibirTitulo("Paciente #", listaPacientes.get(position).getCodigo());
+                            menuInferior.recibirTitulo(listaPacientes.get(position).getNombre());
                             menuInferior.eventoClick(new MenuInferior.MenuInferiorListener() {
                                 @Override
                                 public void onButtonClicked(int opcion) {
@@ -238,7 +259,7 @@ public class ListadoPacientes extends Fragment {
         });
     }
 
-    public void actualizarEstado(int ID) {
+    public void actualizarEstado(final int ID) {
         if (estadoPaciente) {
             final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
             progressDialog.setMessage("Cargando...");
@@ -278,6 +299,9 @@ public class ListadoPacientes extends Fragment {
                             .enableSwipeToDismiss()
                             .setBackgroundColorRes(R.color.FondoSecundario)
                             .show();
+
+                    FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
+                    funcionesBitacora.registrarBitacora("Se deshabilito el paciente #" + listaPacientes.get(ID).getCodigo());
 
                     new Handler().postDelayed(new Runnable() {
                         @Override

@@ -39,6 +39,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
+import com.example.dentalhistoryrecorder.Componentes.Dialogos.Bitacora.DialogoBitacora;
 import com.example.dentalhistoryrecorder.MainActivity;
 
 import com.example.dentalhistoryrecorder.R;
@@ -125,6 +126,14 @@ public class Inicio extends Fragment {
 
         bitacora = view.findViewById(R.id.inicio_opc_log_texto);
         bitacora.setTypeface(face2);
+
+        bitacora.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogoBitacora dialogoBitacora = new DialogoBitacora();
+                dialogoBitacora.display(getFragmentManager());
+            }
+        });
 
         cerrarSesion = view.findViewById(R.id.inicio_opc_salir_texto);
         cerrarSesion.setTypeface(face2);

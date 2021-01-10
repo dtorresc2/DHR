@@ -14,8 +14,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingLeft="3dp"
-            android:paddingRight="3dp"
             android:paddingTop="3dp"
+            android:paddingRight="3dp"
             android:paddingBottom="3dp">
 
             <LinearLayout
@@ -25,72 +25,56 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tituloServicio"
+                    android:id="@+id/desc_accion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:breakStrategy="simple"
                     android:gravity="left"
                     android:paddingLeft="10dp"
-                    android:paddingBottom="2dp"
-                    android:text="1 - Consulta General"
-                    android:background="@color/AzulOscuro"
+                    android:text="Registro de Ficha Orinaria"
                     android:textColor="@color/Blanco"
-                    android:textSize="20sp"
-                    android:breakStrategy="simple"
-                    />
+                    android:textSize="18sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:layout_marginTop="4dp"
+                    android:orientation="horizontal"
                     android:weightSum="2">
 
                     <TextView
-                        android:id="@+id/montoServicio"
+                        android:id="@+id/fecha_accion"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.6"
+                        android:layout_weight="0.8"
                         android:gravity="left"
                         android:paddingLeft="10dp"
                         android:paddingTop="3dp"
-                        android:text="Q. 150.00 "
+                        android:text="20/10/2020 1:35 PM"
                         android:textColor="@color/Blanco"
                         android:textSize="15sp" />
 
                     <TextView
-                        android:id="@+id/estadoServicio"
+                        android:id="@+id/cuenta"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1.4"
-                        android:background="@color/VerdeOscuro"
+                        android:layout_weight="1.2"
+                        android:background="@color/AzulOscuro"
                         android:gravity="center_horizontal|center_vertical"
                         android:paddingLeft="2dp"
                         android:paddingRight="2dp"
-                        android:text="Habilitado"
+                        android:text="diegot"
                         android:textColor="@color/Blanco"
                         android:textSize="14sp" />
                 </LinearLayout>
             </LinearLayout>
-
-            <ImageButton
-                android:id="@+id/accionesServicio"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="10"
-                android:background="@color/FondoSecundario2"
-                android:src="@drawable/ic_adelante"
-                android:text="Limpiar"
-                android:textColor="@color/Blanco" />
-
         </LinearLayout>
 
         <View
-            android:id="@+id/separadorServicio"
+            android:id="@+id/separadorBitacora"
             android:layout_width="wrap_content"
             android:layout_height="4dp"
             android:background="@color/FondoSecundario" />
 
     </LinearLayout>
-
-
 </FrameLayout>

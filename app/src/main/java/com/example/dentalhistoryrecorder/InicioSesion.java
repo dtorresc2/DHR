@@ -101,6 +101,7 @@ public class InicioSesion extends AppCompatActivity {
                 querysCuentas.inicioSesion(jsonBody, new QuerysCuentas.VolleyOnEventListener() {
                     @Override
                     public void onSuccess(Object object) {
+                        progressDialog.dismiss();
                         try {
                             JSONObject jsonObject = new JSONObject(object.toString());
 
@@ -157,8 +158,6 @@ public class InicioSesion extends AppCompatActivity {
                                     }
 
                                     editor.commit();
-
-                                    progressDialog.dismiss();
 
                                     Intent intent = new Intent(InicioSesion.this, Principal.class);
                                     startActivity(intent);

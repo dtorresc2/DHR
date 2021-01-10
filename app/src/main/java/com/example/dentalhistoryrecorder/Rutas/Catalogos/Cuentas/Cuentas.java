@@ -19,8 +19,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.dentalhistoryrecorder.Componentes.Dialogos.Bitacora.FuncionesBitacora;
 import com.example.dentalhistoryrecorder.R;
 import com.example.dentalhistoryrecorder.Rutas.Catalogos.Servicios.ListadoServicios;
+import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysBitacoras;
 import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysCuentas;
 import com.example.dentalhistoryrecorder.ServiciosAPI.QuerysServicios;
 import com.tapadoo.alerter.Alerter;
@@ -204,6 +206,10 @@ public class Cuentas extends Fragment {
                         .setBackgroundColorRes(R.color.FondoSecundario)
                         .show();
 
+//                registrarBitacora("Se creo una cuenta");
+                FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
+                funcionesBitacora.registrarBitacora("Se creo una cuenta");
+
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -219,7 +225,6 @@ public class Cuentas extends Fragment {
             @Override
             public void onFailure(Exception e) {
                 progressDialog.dismiss();
-                Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -250,6 +255,9 @@ public class Cuentas extends Fragment {
                         .setBackgroundColorRes(R.color.FondoSecundario)
                         .show();
 
+                FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
+                funcionesBitacora.registrarBitacora("Se actualizo el password de la cuenta #" + ID_CUENTA);
+
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -265,7 +273,6 @@ public class Cuentas extends Fragment {
             @Override
             public void onFailure(Exception e) {
                 progressDialog.dismiss();
-                Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
             }
         });
     }
