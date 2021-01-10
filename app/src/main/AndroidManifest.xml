@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.dentalhistoryrecorder">
+    package="com.sistemasdt.dhr">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -16,11 +16,11 @@
         android:largeHeap="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Principal"
+        <activity android:name="com.sistemasdt.dhr.Principal"
             android:windowSoftInputMode="adjustPan"></activity>
-        <activity android:name=".InicioSesion"
+        <activity android:name="com.sistemasdt.dhr.InicioSesion"
             android:windowSoftInputMode="adjustPan"/>
-        <activity android:name=".MainActivity"
+        <activity android:name="com.sistemasdt.dhr.MainActivity"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
