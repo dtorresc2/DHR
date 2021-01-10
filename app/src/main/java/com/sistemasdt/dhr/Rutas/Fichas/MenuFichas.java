@@ -44,9 +44,10 @@ public class MenuFichas extends Fragment {
         botonNuevo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Pacientes pacientes = new Pacientes();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                transaction.replace(R.id.contenedor, pacientes);
+//                Pacientes pacientes = new Pacientes();
+                Ficha ficha = new Ficha();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                transaction.replace(R.id.contenedor, ficha);
                 transaction.commit();
             }
         });

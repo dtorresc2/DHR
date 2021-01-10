@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -42,7 +43,7 @@ public class Ficha extends Fragment {
     private Toolbar toolbar;
     private TextInputEditText motivo, medico, referente;
     private TextView fecha, titulo_fecha;
-    private Button calendario;
+    private ImageButton calendario;
     private FloatingActionButton guardador;
     private String idPaciente;
     private static final String TAG = "MyActivity";
@@ -65,7 +66,7 @@ public class Ficha extends Fragment {
 
         //Barra de Titulo
         toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setTitle("Detalle de la Ficha");
+        toolbar.setTitle("Ficha");
         toolbar.setNavigationIcon(R.drawable.ic_cerrar);
 
         //Detalle de la ficha
