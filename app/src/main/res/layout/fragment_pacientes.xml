@@ -34,7 +34,7 @@
     <!--            app:fab_colorNormal="@color/FondoSecundario"-->
     <!--            app:fab_colorPressed="@color/AzulOscuro"-->
     <!--            app:fab_icon="@drawable/icono_agregar"-->
-    <!--            app:fab_title="Agregar" />-->
+    <!--            app:fab_title="MenuFichas" />-->
 
     <!--        <com.getbase.floatingactionbutton.FloatingActionButton-->
     <!--            android:id="@+id/buscar_dp"-->
@@ -174,16 +174,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="8dp"
-                    android:layout_weight="1.5"
+                    android:layout_weight="1.7"
                     android:background="@color/AzulOscuro"
                     android:src="@drawable/icono_citas" />
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/fechaLayout"
-                    android:layout_width="402dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:layout_weight="0.5">
+                    android:layout_weight="0.3">
 
                     <android.support.design.widget.TextInputEditText
                         android:id="@+id/fecha_persona"

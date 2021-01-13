@@ -17,8 +17,9 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.sistemasdt.dhr.OpcionCitas.Citas;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaForm.Ficha;
+import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
 import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.ListadoPacientes;
-import com.sistemasdt.dhr.OpcionIngreso.Agregar;
 import com.sistemasdt.dhr.Rutas.Inicio.Inicio;
 import com.sistemasdt.dhr.OpcionSeguimiento.Seguimiento;
 import com.sistemasdt.dhr.Rutas.Catalogos.Catalogos;
@@ -63,10 +64,9 @@ public class Principal extends AppCompatActivity implements BottomNavigationView
         timer.schedule(task, 0, 7000);*/
 
 
-
     }
 
-    Agregar agregarFragment = new Agregar();
+    MenuFichas menuFichasFragment = new MenuFichas();
     Citas citasFragment = new Citas();
     ListadoPacientes listadoPacientesFragment = new ListadoPacientes();
     ListadoPacientes listadoPacientesFragment2 = new ListadoPacientes();
@@ -79,14 +79,16 @@ public class Principal extends AppCompatActivity implements BottomNavigationView
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.navigation_fichas:
-                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.contenedor, agregarFragment).commit();
+                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.contenedor, menuFichasFragment).commit();
                 return true;
             case R.id.navigation_citas:
                 getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.contenedor, citasFragment).commit();
                 return true;
             case R.id.navigation_finanzas:
-                listadoPacientesFragment.ObtenerOpcion(1);
-                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.contenedor, listadoPacientesFragment).commit();
+//                listadoPacientesFragment.ObtenerOpcion(1);
+//                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.contenedor, listadoPacientesFragment).commit();
+                Ficha ficha = new Ficha();
+                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.contenedor, ficha).commit();
                 return true;
             case R.id.navigation_perfil:
                 getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.contenedor, inicioFragment).commit();

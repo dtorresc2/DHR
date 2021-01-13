@@ -26,7 +26,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.sistemasdt.dhr.OpcionIngreso.Agregar;
+import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
 import com.sistemasdt.dhr.R;
 import com.tapadoo.alerter.Alerter;
 
@@ -70,9 +70,9 @@ public class IngEvaluacion extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Agregar agregar = new Agregar();
+                MenuFichas menuFichas = new MenuFichas();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                transaction.replace(R.id.contenedor, agregar);
+                transaction.replace(R.id.contenedor, menuFichas);
                 transaction.commit();
             }
         });
@@ -238,9 +238,9 @@ public class IngEvaluacion extends Fragment {
 
                 if (networkInfo != null && networkInfo.isConnected()) {
                     crearEvaluacion("http://dhr.sistemasdt.xyz/Especial/ingresoE.php?estado=6");
-                    Agregar agregar = new Agregar();
+                    MenuFichas menuFichas = new MenuFichas();
                     FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                    transaction.replace(R.id.contenedor, agregar);
+                    transaction.replace(R.id.contenedor, menuFichas);
                     transaction.commit();
 
                 } else {

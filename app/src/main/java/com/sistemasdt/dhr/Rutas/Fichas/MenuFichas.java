@@ -1,4 +1,4 @@
-package com.sistemasdt.dhr.OpcionIngreso;
+package com.sistemasdt.dhr.Rutas.Fichas;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -11,15 +11,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.ListadoPacientes;
-import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.Pacientes;
 import com.sistemasdt.dhr.R;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaForm.Ficha;
 
 
-public class Agregar extends Fragment {
+public class MenuFichas extends Fragment {
     private LinearLayout botonNuevo, botonNuevoEspecial;
     private TextView titulo, texto_boton_nuevo, texto_boton_especial;
 
-    public Agregar() {
+    public MenuFichas() {
         // Required empty public constructor
     }
 
@@ -44,9 +44,9 @@ public class Agregar extends Fragment {
         botonNuevo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Pacientes pacientes = new Pacientes();
+                Ficha ficha = new Ficha();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                transaction.replace(R.id.contenedor, pacientes);
+                transaction.replace(R.id.contenedor, ficha);
                 transaction.commit();
             }
         });

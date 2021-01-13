@@ -1,4 +1,4 @@
-package com.sistemasdt.dhr.OpcionIngreso.Normal;
+package com.sistemasdt.dhr.Rutas.Fichas.HistorialMedico;
 
 
 import android.app.ProgressDialog;
@@ -29,14 +29,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.sistemasdt.dhr.OpcionIngreso.Agregar;
+import com.sistemasdt.dhr.OpcionIngreso.Normal.HMedico2;
+import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
 import com.sistemasdt.dhr.R;
 import com.tapadoo.alerter.Alerter;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class IngHMedico extends Fragment {
+public class HistorialMed extends Fragment {
     private Toolbar toolbar;
     private CheckBox hospitalizado, alergia, medicamento, tratamiento, hemorragia;
     private CheckBox corazon, artritris, tuberculosis, f_reuma, pres_alta, pres_baja, diabetes, anemia, epilepsia;
@@ -47,7 +48,7 @@ public class IngHMedico extends Fragment {
     SharedPreferences preferencias;
     private static final String TAG = "MyActivity";
 
-    public IngHMedico() {
+    public HistorialMed() {
         // Required empty public constructor
     }
 
@@ -55,7 +56,7 @@ public class IngHMedico extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_ing_hmedico, container, false);
+        View view = inflater.inflate(R.layout.fragment_historialmed, container, false);
         requestQueue = Volley.newRequestQueue(getContext());
         Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         //Barra de Titulo
@@ -66,9 +67,9 @@ public class IngHMedico extends Fragment {
             @Override
             public void onClick(View v) {
                 //Toast.makeText(getActivity(), "ATRAS", Toast.LENGTH_SHORT).show();
-                Agregar agregar = new Agregar();
+                MenuFichas menuFichas = new MenuFichas();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                transaction.replace(R.id.contenedor, agregar);
+                transaction.replace(R.id.contenedor, menuFichas);
                 transaction.commit();
             }
         });

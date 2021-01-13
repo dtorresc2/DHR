@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/FondoSecundario"
+    tools:context=".Rutas.Fichas.FichaForm.Ficha">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/guardador_dt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="65dp"
+        android:clickable="true"
+        android:elevation="10dp"
+        android:src="@drawable/ic_check"
+        app:backgroundTint="@color/AzulOscuro" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tituloPaciente"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="70dp"
+                android:text="Paciente"
+                android:textColor="@color/Blanco"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/paciente"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:background="@color/AzulOscuro"
+                android:drawableRight="@drawable/ic_down"
+                android:gravity="center"
+                android:padding="12dp"
+                android:text="Seleccione paciente"
+                android:textColor="@color/Blanco" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <ImageButton
+                    android:id="@+id/obFecha"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.7"
+                    android:background="@color/AzulOscuro"
+                    android:src="@drawable/icono_citas" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/fechaLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="0.3">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/fecha"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:editable="false"
+                        android:hint="Fecha"
+                        tools:ignore="Deprecated" />
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/layoutMotivo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="50"
+                app:errorEnabled="true">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/motivo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Motivo"
+                    android:inputType="text"
+                    android:maxLength="50"
+                    android:maxLines="1" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/layoutMedico"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:counterEnabled="true"
+                app:counterMaxLength="70"
+                app:errorEnabled="true">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/medico"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Medico"
+                    android:inputType="textPersonName"
+                    android:maxLength="70"
+                    android:maxLines="1" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/layoutReferente"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:counterEnabled="true"
+                app:counterMaxLength="70"
+                app:errorEnabled="true">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/referente"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Referente"
+                    android:inputType="textPersonName"
+                    android:maxLength="70"
+                    android:maxLines="1" />
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>
