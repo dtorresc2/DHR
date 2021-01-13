@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Seleccione su opcion"
+        android:text="Seleccione un paciente"
         android:textColor="@color/Blanco"
         android:gravity="center"
         android:textSize="20sp"
@@ -25,11 +25,12 @@
         android:layout_marginBottom="8dp"
         android:textColor="@color/Blanco"
         android:textColorHint="@color/Blanco"
-        android:hint="Busca..."
+        android:hint="Buscar..."
         android:drawableRight="@drawable/icono_buscar" />
     
     <ListView
         android:id="@+id/lista_items"
+        android:layout_marginTop="8dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

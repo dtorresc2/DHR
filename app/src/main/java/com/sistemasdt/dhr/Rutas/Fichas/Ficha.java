@@ -34,6 +34,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,10 +45,18 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.sistemasdt.dhr.Componentes.MenusInferiores.MenuInferior;
 import com.sistemasdt.dhr.OpcionIngreso.Normal.IngHMedico;
 import com.sistemasdt.dhr.R;
+import com.sistemasdt.dhr.Rutas.Catalogos.Catalogos;
 import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.ItemPaciente;
+import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.PacienteAdapter;
+import com.sistemasdt.dhr.ServiciosAPI.QuerysPacientes;
 import com.tapadoo.alerter.Alerter;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -65,10 +74,11 @@ public class Ficha extends Fragment {
     SharedPreferences preferencias2;
     RequestQueue requestQueue;
     private String iddPaciente;
-    private int idPacienteExis;
+    private int ID_PACIENTE;
     private TextInputLayout pacienteLayout, motivoLayout, medicoLayout, referenteLayout;
     private TextView textView;
     ArrayList<String> listaPacientes;
+    ArrayList<ItemPaciente> listaPacientesGeneral;
 
     public Ficha() {
         // Required empty public constructor
@@ -186,10 +196,9 @@ public class Ficha extends Fragment {
         });
 
         listaPacientes = new ArrayList<>();
-        listaPacientes.add("1");
-        listaPacientes.add("2");
-        listaPacientes.add("11");
-        listaPacientes.add("12");
+        listaPacientesGeneral = new ArrayList<>();
+
+        obtenerPacientes();
 
         textView = view.findViewById(R.id.text_view1);
 
@@ -198,9 +207,9 @@ public class Ficha extends Fragment {
             public void onClick(View v) {
                 final Dialog dialog = new Dialog(getContext());
                 dialog.setContentView(R.layout.dialogo_busqueda);
-                dialog.getWindow().setLayout(view.getWidth() - 50,800);
+                dialog.getWindow().setLayout(view.getWidth() - 50, 1000);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.setCancelable(false);
+//                dialog.setCancelable(false);
                 dialog.show();
 
                 EditText editText = dialog.findViewById(R.id.buscador);
@@ -229,7 +238,17 @@ public class Ficha extends Fragment {
                 listView.setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        String filter = adapter.getItem(position).toLowerCase().trim();
                         textView.setText(adapter.getItem(position));
+
+                        for (ItemPaciente item : listaPacientesGeneral){
+                            if (item.getNombre().toLowerCase().equals(filter)){
+                                ID_PACIENTE = listaPacientesGeneral.get(listaPacientesGeneral.indexOf(item)).getCodigo();
+                                String codigoPaciente = String.valueOf(listaPacientesGeneral.get(listaPacientesGeneral.indexOf(item)).getCodigo());
+                                Toast.makeText(getContext(), codigoPaciente, Toast.LENGTH_LONG).show();
+                            }
+                        }
+
                         dialog.dismiss();
                     }
                 });
@@ -244,5 +263,57 @@ public class Ficha extends Fragment {
         });
 
         return view;
+    }
+
+    public void obtenerPacientes() {
+        listaPacientes.clear();
+        listaPacientesGeneral.clear();
+
+        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+        progressDialog.setMessage("Cargando...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+
+        QuerysPacientes querysPacientes = new QuerysPacientes(getContext());
+        querysPacientes.obtenerPacientes(preferenciasUsuario.getInt("ID_USUARIO", 0), new QuerysPacientes.VolleyOnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                try {
+                    JSONArray jsonArray = new JSONArray(object.toString());
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        ItemPaciente paciente = new ItemPaciente(
+                                jsonArray.getJSONObject(i).getInt("ID_PACIENTE"),
+                                jsonArray.getJSONObject(i).getString("NOMBRE"),
+                                jsonArray.getJSONObject(i).getString("TELEFONO"),
+                                jsonArray.getJSONObject(i).getString("DPI"),
+                                jsonArray.getJSONObject(i).getInt("EDAD"),
+                                jsonArray.getJSONObject(i).getString("FECHA_NACIMIENTO"),
+                                (jsonArray.getJSONObject(i).getInt("ESTADO") > 0) ? true : false,
+                                jsonArray.getJSONObject(i).getDouble("DEBE"),
+                                jsonArray.getJSONObject(i).getDouble("HABER"),
+                                jsonArray.getJSONObject(i).getDouble("SALDO"),
+                                jsonArray.getJSONObject(i).getString("OCUPACION"),
+                                (jsonArray.getJSONObject(i).getInt("SEXO") > 0) ? true : false
+                        );
+
+                        listaPacientes.add(paciente.getNombre());
+                        listaPacientesGeneral.add(paciente);
+                    }
+
+                } catch (JSONException e) {
+                    e.fillInStackTrace();
+                }
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                progressDialog.dismiss();
+                obtenerPacientes();
+            }
+        });
     }
 }
