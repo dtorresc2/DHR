@@ -66,7 +66,7 @@ import java.util.Map;
 public class Ficha extends Fragment {
     private Toolbar toolbar;
     private TextInputEditText motivo, medico, referente;
-    private TextView fecha;
+    private TextView fecha, tituloPaciente;
     private ImageButton calendario;
     private FloatingActionButton guardador;
     private int ID_PACIENTE;
@@ -111,6 +111,9 @@ public class Ficha extends Fragment {
 
         referenteLayout = view.findViewById(R.id.layoutReferente);
         referenteLayout.setTypeface(face);
+
+        tituloPaciente = view.findViewById(R.id.tituloPaciente);
+        tituloPaciente.setTypeface(face);
 
         Calendar calendar = Calendar.getInstance();
         int dia = calendar.get(Calendar.DAY_OF_MONTH);
@@ -195,6 +198,10 @@ public class Ficha extends Fragment {
 
                 EditText editText = dialog.findViewById(R.id.buscador);
                 editText.setTypeface(face);
+
+                TextView textView = dialog.findViewById(R.id.tituloDialogo);
+                textView.setTypeface(face);
+
                 ListView listView = dialog.findViewById(R.id.lista_items);
 
 //                final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, listaPacientes) {
