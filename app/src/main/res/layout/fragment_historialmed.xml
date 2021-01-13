@@ -105,14 +105,14 @@
                     android:id="@+id/medicamento"
                     android:layout_width="120dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1.2"
+                    android:layout_weight="0.6"
                     android:text="Medicamento" />
 
                 <EditText
                     android:id="@+id/desc_medi"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.8"
+                    android:layout_weight="1.4"
                     android:ems="10"
                     android:enabled="false"
                     android:hint="¿Cual?"
