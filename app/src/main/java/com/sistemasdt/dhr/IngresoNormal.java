@@ -25,7 +25,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.sistemasdt.dhr.Rutas.Fichas.Ficha;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaForm.Ficha;
 import com.sistemasdt.dhr.OpcionIngreso.Normal.IngHMedico;
 import com.sistemasdt.dhr.OpcionIngreso.Normal.IngHOdon;
 import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.Pacientes;

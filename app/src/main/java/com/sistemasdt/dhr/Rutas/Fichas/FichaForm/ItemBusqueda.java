@@ -1,4 +1,4 @@
-package com.sistemasdt.dhr.Rutas.Fichas;
+package com.sistemasdt.dhr.Rutas.Fichas.FichaForm;
 
 public class ItemBusqueda {
     String id;

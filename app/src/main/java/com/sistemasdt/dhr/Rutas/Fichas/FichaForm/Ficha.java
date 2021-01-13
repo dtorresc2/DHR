@@ -1,4 +1,4 @@
-package com.sistemasdt.dhr.Rutas.Fichas;
+package com.sistemasdt.dhr.Rutas.Fichas.FichaForm;
 
 
 import android.app.DatePickerDialog;
@@ -21,6 +21,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.HideReturnsTransformationMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +52,7 @@ import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.Rutas.Catalogos.Catalogos;
 import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.ItemPaciente;
 import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.PacienteAdapter;
+import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysPacientes;
 import com.tapadoo.alerter.Alerter;
 
@@ -69,7 +71,7 @@ public class Ficha extends Fragment {
     private TextView fecha, tituloPaciente;
     private ImageButton calendario;
     private FloatingActionButton guardador;
-    private int ID_PACIENTE;
+    private int ID_PACIENTE = 0;
     private TextInputLayout motivoLayout, medicoLayout, referenteLayout;
     private TextView paciente;
     ArrayList<String> listaPacientes;
@@ -90,6 +92,16 @@ public class Ficha extends Fragment {
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle("Ficha");
         toolbar.setNavigationIcon(R.drawable.ic_cerrar);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MenuFichas menuFichas = new MenuFichas();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                transaction.replace(R.id.contenedor, menuFichas);
+                transaction.commit();
+            }
+        });
 
         //Detalle de la ficha
         fecha = view.findViewById(R.id.fecha);
@@ -115,6 +127,23 @@ public class Ficha extends Fragment {
         tituloPaciente = view.findViewById(R.id.tituloPaciente);
         tituloPaciente.setTypeface(face);
 
+        motivo.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                motivoRequerido();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         Calendar calendar = Calendar.getInstance();
         int dia = calendar.get(Calendar.DAY_OF_MONTH);
         int mes = calendar.get(Calendar.MONTH);
@@ -126,16 +155,6 @@ public class Ficha extends Fragment {
 
         final String dat = diaAux + "/" + mesAux + "/" + a;
         fecha.setText(dat);
-
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MenuFichas menuFichas = new MenuFichas();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                transaction.replace(R.id.contenedor, menuFichas);
-                transaction.commit();
-            }
-        });
 
         //Obtener Calendario
         calendario.setOnClickListener(new View.OnClickListener() {
@@ -258,6 +277,21 @@ public class Ficha extends Fragment {
         guardador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!motivoRequerido())
+                    return;
+
+                if (ID_PACIENTE == 0) {
+                    Alerter.create(getActivity())
+                            .setTitle("Error")
+                            .setText("No ha seleccionado un paciente")
+                            .setIcon(R.drawable.logonuevo)
+                            .setTextTypeface(face)
+                            .enableSwipeToDismiss()
+                            .setBackgroundColorRes(R.color.AzulOscuro)
+                            .show();
+                    return;
+                }
+
                 Toast.makeText(getContext(), "Hola", Toast.LENGTH_SHORT).show();
             }
         });
@@ -315,5 +349,17 @@ public class Ficha extends Fragment {
                 obtenerPacientes();
             }
         });
+    }
+
+    // VALIDACIONES
+    private boolean motivoRequerido() {
+        String texto = motivo.getText().toString().trim();
+        if (texto.isEmpty()) {
+            motivoLayout.setError("Campo requerido");
+            return false;
+        } else {
+            motivoLayout.setError(null);
+            return true;
+        }
     }
 }
