@@ -65,18 +65,13 @@ import java.util.Map;
 
 public class Ficha extends Fragment {
     private Toolbar toolbar;
-    private TextInputEditText motivo, medico, referente, paciente;
+    private TextInputEditText motivo, medico, referente;
     private TextView fecha;
     private ImageButton calendario;
     private FloatingActionButton guardador;
-    private String idPaciente;
-    private static final String TAG = "MyActivity";
-    SharedPreferences preferencias2;
-    RequestQueue requestQueue;
-    private String iddPaciente;
     private int ID_PACIENTE;
-    private TextInputLayout pacienteLayout, motivoLayout, medicoLayout, referenteLayout;
-    private TextView textView;
+    private TextInputLayout motivoLayout, medicoLayout, referenteLayout;
+    private TextView paciente;
     ArrayList<String> listaPacientes;
     ArrayList<ItemPaciente> listaPacientesGeneral;
 
@@ -85,12 +80,11 @@ public class Ficha extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_ficha, container, false);
-        Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-        requestQueue = Volley.newRequestQueue(getContext());
+        final Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
 
         //Barra de Titulo
         toolbar = view.findViewById(R.id.toolbar);
@@ -108,19 +102,6 @@ public class Ficha extends Fragment {
         referente.setTypeface(face);
         calendario = view.findViewById(R.id.obFecha);
         guardador = view.findViewById(R.id.guardador_dt);
-
-        paciente = view.findViewById(R.id.paciente);
-        paciente.setTypeface(face);
-
-        pacienteLayout = view.findViewById(R.id.layoutPaciente);
-        pacienteLayout.setTypeface(face);
-
-        pacienteLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext(), "Hola", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         motivoLayout = view.findViewById(R.id.layoutMotivo);
         motivoLayout.setTypeface(face);
@@ -200,20 +181,32 @@ public class Ficha extends Fragment {
 
         obtenerPacientes();
 
-        textView = view.findViewById(R.id.text_view1);
+        paciente = view.findViewById(R.id.paciente);
+        paciente.setTypeface(face);
 
-        textView.setOnClickListener(new View.OnClickListener() {
+        paciente.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Dialog dialog = new Dialog(getContext());
                 dialog.setContentView(R.layout.dialogo_busqueda);
                 dialog.getWindow().setLayout(view.getWidth() - 50, 1000);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//                dialog.setCancelable(false);
                 dialog.show();
 
                 EditText editText = dialog.findViewById(R.id.buscador);
+                editText.setTypeface(face);
                 ListView listView = dialog.findViewById(R.id.lista_items);
+
+//                final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, listaPacientes) {
+//                    @Override
+//                    public View getView(int position, View convertView, ViewGroup parent) {
+//                        View view = LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_list_item_1, parent, false);
+//                        Typeface typeface = Typeface.createFromAsset(view.getContext().getAssets(), "fonts/bahnschrift.ttf");
+//                        TextView textView = view.findViewById(android.R.id.text1);
+//                        textView.setTypeface(typeface);
+//                        return view;
+//                    }
+//                };
 
                 final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, listaPacientes);
                 listView.setAdapter(adapter);
@@ -239,10 +232,10 @@ public class Ficha extends Fragment {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         String filter = adapter.getItem(position).toLowerCase().trim();
-                        textView.setText(adapter.getItem(position));
+                        paciente.setText(adapter.getItem(position));
 
-                        for (ItemPaciente item : listaPacientesGeneral){
-                            if (item.getNombre().toLowerCase().equals(filter)){
+                        for (ItemPaciente item : listaPacientesGeneral) {
+                            if (item.getNombre().toLowerCase().equals(filter)) {
                                 ID_PACIENTE = listaPacientesGeneral.get(listaPacientesGeneral.indexOf(item)).getCodigo();
                                 String codigoPaciente = String.valueOf(listaPacientesGeneral.get(listaPacientesGeneral.indexOf(item)).getCodigo());
                                 Toast.makeText(getContext(), codigoPaciente, Toast.LENGTH_LONG).show();

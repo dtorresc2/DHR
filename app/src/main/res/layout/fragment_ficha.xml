@@ -37,7 +37,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/text_view1"
+                android:id="@+id/paciente"
                 android:text="Seleccione paciente"
                 android:layout_marginTop="70dp"
                 android:padding="12dp"
@@ -46,29 +46,29 @@
                 android:background="@color/AzulOscuro"
                 android:textColor="@color/Blanco"/>
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/layoutPaciente"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:counterEnabled="true"
-                app:counterMaxLength="150"
-                app:errorEnabled="true">
+<!--            <android.support.design.widget.TextInputLayout-->
+<!--                android:id="@+id/layoutPaciente"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                app:counterEnabled="true"-->
+<!--                app:counterMaxLength="150"-->
+<!--                app:errorEnabled="true">-->
 
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/paciente"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Paciente"
-                    android:enabled="false"
-                    android:inputType="text"
-                    android:maxLength="150"
-                    android:maxLines="1"/>
-            </android.support.design.widget.TextInputLayout>
+<!--                <android.support.design.widget.TextInputEditText-->
+<!--                    android:id="@+id/paciente"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:hint="Paciente"-->
+<!--                    android:enabled="false"-->
+<!--                    android:inputType="text"-->
+<!--                    android:maxLength="150"-->
+<!--                    android:maxLines="1"/>-->
+<!--            </android.support.design.widget.TextInputLayout>-->
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="12dp"
                 android:orientation="horizontal"
                 android:weightSum="2">
 
