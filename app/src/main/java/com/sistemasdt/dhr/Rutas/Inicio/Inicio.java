@@ -200,12 +200,12 @@ public class Inicio extends Fragment {
             }
         });
 
-        obtenerPerfi();
+        obtenerPerfil();
 
         return view;
     }
 
-    public void obtenerPerfi() {
+    public void obtenerPerfil() {
         final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
         progressDialog.setMessage("Cargando...");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -240,6 +240,7 @@ public class Inicio extends Fragment {
                     @Override
                     public void onFailure(Exception e) {
                         e.printStackTrace();
+                        obtenerPerfil();
                     }
                 });
 
@@ -268,6 +269,7 @@ public class Inicio extends Fragment {
             @Override
             public void onFailure(Exception e) {
                 e.printStackTrace();
+                obtenerPerfil();
             }
         });
     }
@@ -366,7 +368,7 @@ public class Inicio extends Fragment {
                         public void onSuccess(Object object) {
                             progressDialog.dismiss();
                             dialog.dismiss();
-                            obtenerPerfi();
+                            obtenerPerfil();
 
                             FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
                             funcionesBitacora.registrarBitacora("Se actualizo el perfil");

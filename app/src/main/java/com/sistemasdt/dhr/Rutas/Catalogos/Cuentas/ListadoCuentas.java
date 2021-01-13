@@ -176,20 +176,16 @@ public class ListadoCuentas extends Fragment {
                         }
                     });
 
-                    progressDialog.dismiss();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                progressDialog.dismiss();
             }
 
             @Override
             public void onFailure(Exception e) {
                 progressDialog.dismiss();
-                Catalogos catalogos = new Catalogos();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                transaction.replace(R.id.contenedor, catalogos);
-                transaction.commit();
-                e.printStackTrace();
+                obtenerCuentas();
             }
         });
     }
