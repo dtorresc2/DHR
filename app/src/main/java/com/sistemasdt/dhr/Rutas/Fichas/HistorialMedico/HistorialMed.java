@@ -30,6 +30,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.sistemasdt.dhr.OpcionIngreso.Normal.HMedico2;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaForm.Ficha;
 import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
 import com.sistemasdt.dhr.R;
 import com.tapadoo.alerter.Alerter;
@@ -62,14 +63,14 @@ public class HistorialMed extends Fragment {
         //Barra de Titulo
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle("Historial Medico (1/2)");
-        toolbar.setNavigationIcon(R.drawable.ic_cerrar);
+        toolbar.setNavigationIcon(R.drawable.ic_atras);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Toast.makeText(getActivity(), "ATRAS", Toast.LENGTH_SHORT).show();
-                MenuFichas menuFichas = new MenuFichas();
+                Ficha ficha = new Ficha();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                transaction.replace(R.id.contenedor, menuFichas);
+                transaction.replace(R.id.contenedor, ficha);
                 transaction.commit();
             }
         });
@@ -89,8 +90,8 @@ public class HistorialMed extends Fragment {
         desc_alergia.setTypeface(face);
         desc_medicamento = view.findViewById(R.id.desc_medi);
         desc_medicamento.setTypeface(face);
-        titulo_detalle = view.findViewById(R.id.titulo_detalle_hm);
-        titulo_detalle.setTypeface(face);
+//        titulo_detalle = view.findViewById(R.id.titulo_detalle_hm);
+//        titulo_detalle.setTypeface(face);
 
         tratamiento = view.findViewById(R.id.tratamiento);
         tratamiento.setTypeface(face);
@@ -157,6 +158,18 @@ public class HistorialMed extends Fragment {
         guardador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("HMED1", Context.MODE_PRIVATE);
+                final SharedPreferences.Editor escritor = sharedPreferences.edit();
+                escritor.putBoolean("HOSPITALIZADO", hospitalizado.isChecked());
+                escritor.putString("DESCRIPCION_HOS", desc_hos.getText().toString());
+                escritor.putBoolean("TRATAMIENTO_MEDICO", tratamiento.isChecked());
+                escritor.putBoolean("ALERGIA", alergia.isChecked());
+                escritor.putString("DESCRIPCION_ALERGIA", desc_alergia.getText().toString());
+                escritor.putBoolean("HEMORRAGIA", hemorragia.isChecked());
+                escritor.putBoolean("MEDICAMENTO", medicamento.isChecked());
+                escritor.putString("DESCRIPCION_MEDICAMENTO", desc_medicamento.getText().toString());
+                escritor.commit();
+
                 /*Toast.makeText(getActivity(), "Ingresado Correctamente", Toast.LENGTH_SHORT).show();
                 escritor.putBoolean("hospi", hospitalizado.isChecked());
                 escritor.putString("deshospi", desc_hos.getText().toString());
@@ -185,46 +198,61 @@ public class HistorialMed extends Fragment {
                 obtenerID("http://192.168.56.1:80/DHR/IngresoN/ficha.php?db=u578331993_clinc&user=root&estado=3");
                 obtenerID2("http://192.168.56.1:80/DHR/IngresoN/ficha.php?db=u578331993_clinc&user=root&estado=6");*/
 
-                final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-                progressDialog.setMessage("Cargando...");
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                progressDialog.setCancelable(false);
-                progressDialog.show();
-
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        progressDialog.dismiss();
-                    }
-                }, 1000);
-
-                ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-                if (networkInfo != null && networkInfo.isConnected()) {
-                    insertarHMedico("http://dhr.sistemasdt.xyz/Normal/ficha.php?estado=4");
-                    HMedico2 hMedico2 = new HMedico2();
-                    FragmentTransaction transaction = getFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                    transaction.replace(R.id.contenedor, hMedico2);
-                    transaction.commit();
-                } else {
-                    Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-                    Alerter.create(getActivity())
-                            .setTitle("Error")
-                            .setText("Fallo en Conexion a Internet")
-                            .setIcon(R.drawable.logonuevo)
-                            .setTextTypeface(face2)
-                            .enableSwipeToDismiss()
-                            .setBackgroundColorRes(R.color.AzulOscuro)
-                            .show();
-                }
+//                final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+//                progressDialog.setMessage("Cargando...");
+//                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//                progressDialog.setCancelable(false);
+//                progressDialog.show();
+//
+//                Handler handler = new Handler();
+//                handler.postDelayed(new Runnable() {
+//                    public void run() {
+//                        progressDialog.dismiss();
+//                    }
+//                }, 1000);
+//
+//                ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+//                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+//
+//                if (networkInfo != null && networkInfo.isConnected()) {
+//                    insertarHMedico("http://dhr.sistemasdt.xyz/Normal/ficha.php?estado=4");
+//                    HMedico2 hMedico2 = new HMedico2();
+//                    FragmentTransaction transaction = getFragmentManager().beginTransaction()
+//                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+//                    transaction.replace(R.id.contenedor, hMedico2);
+//                    transaction.commit();
+//                } else {
+//                    Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+//                    Alerter.create(getActivity())
+//                            .setTitle("Error")
+//                            .setText("Fallo en Conexion a Internet")
+//                            .setIcon(R.drawable.logonuevo)
+//                            .setTextTypeface(face2)
+//                            .enableSwipeToDismiss()
+//                            .setBackgroundColorRes(R.color.AzulOscuro)
+//                            .show();
+//                }
             }
         });
+
+        cargarDatos();
+
         return view;
     }
 
-    public void insertarHMedico(String URL) {
+    public void cargarDatos() {
+        final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("HMED1", Context.MODE_PRIVATE);
+        hospitalizado.setChecked(sharedPreferences.getBoolean("HOSPITALIZADO",false));
+        desc_hos.setText(sharedPreferences.getString("DESCRIPCION_HOS",""));
+        alergia.setChecked(sharedPreferences.getBoolean("ALERGIA",false));
+        desc_alergia.setText(sharedPreferences.getString("DESCRIPCION_ALERGIA",""));
+        medicamento.setChecked(sharedPreferences.getBoolean("MEDICAMENTO",false));
+        desc_medicamento.setText(sharedPreferences.getString("DESCRIPCION_MEDICAMENTO",""));
+        tratamiento.setChecked(sharedPreferences.getBoolean("TRATAMIENTO_MEDICO",false));
+        hemorragia.setChecked(sharedPreferences.getBoolean("HEMORRAGIA",false));
+    }
+
+        public void insertarHMedico(String URL) {
         final String[] id = new String[1];
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
