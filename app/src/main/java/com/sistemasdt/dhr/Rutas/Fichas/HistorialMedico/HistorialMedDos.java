@@ -1,60 +1,32 @@
 package com.sistemasdt.dhr.Rutas.Fichas.HistorialMedico;
 
-import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.EditText;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.sistemasdt.dhr.OpcionIngreso.Normal.HOdon2;
-import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
 import com.sistemasdt.dhr.R;
-import com.tapadoo.alerter.Alerter;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class HistorialMedDos extends Fragment {
     private Toolbar toolbar;
     private CheckBox corazon, artritris, tuberculosis, f_reuma, pres_alta, pres_baja, diabetes, anemia, epilepsia;
     private TextInputEditText otro;
-    RequestQueue requestQueue;
     private FloatingActionButton guardador;
     private TextInputLayout otrosLayout;
-    private static final String TAG = "MyActivity";
 
     public HistorialMedDos() {
         // Required empty public constructor
     }
-
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//
-//        }
-//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,7 +34,6 @@ public class HistorialMedDos extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_historialmed2, container, false);
         Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-        requestQueue = Volley.newRequestQueue(getContext());
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle("Historial Medico (2/2)");
         toolbar.setNavigationIcon(R.drawable.ic_atras);
@@ -105,80 +76,38 @@ public class HistorialMedDos extends Fragment {
         guardador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //insertarPadecimientos("http://192.168.56.1:80/DHR/IngresoN/ficha.php?db=u578331993_clinc&user=root&estado=7");
-
-                final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-                progressDialog.setMessage("Cargando...");
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                progressDialog.setCancelable(false);
-                progressDialog.show();
-
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        progressDialog.dismiss();
-                    }
-                }, 1000);
-
-                ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-                if (networkInfo != null && networkInfo.isConnected()) {
-                    insertarPadecimientos("http://dhr.sistemasdt.xyz/Normal/ficha.php?estado=7");
-                    HOdon2 ihOdon2 = new HOdon2();
-                    FragmentTransaction transaction = getFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                    transaction.replace(R.id.contenedor, ihOdon2);
-                    transaction.commit();
-                } else {
-                    Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-                    Alerter.create(getActivity())
-                            .setTitle("Error")
-                            .setText("Fallo en Conexion a Internet")
-                            .setIcon(R.drawable.logonuevo)
-                            .setTextTypeface(face2)
-                            .enableSwipeToDismiss()
-                            .setBackgroundColorRes(R.color.AzulOscuro)
-                            .show();
-                }
+                final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("HMED2", Context.MODE_PRIVATE);
+                final SharedPreferences.Editor escritor = sharedPreferences.edit();
+                escritor.putBoolean("CORAZON", corazon.isChecked());
+                escritor.putBoolean("ARTRITIS", artritris.isChecked());
+                escritor.putBoolean("TUBERCULOSIS", tuberculosis.isChecked());
+                escritor.putBoolean("FIEBREREU", f_reuma.isChecked());
+                escritor.putBoolean("PRESION_ALTA", pres_alta.isChecked());
+                escritor.putBoolean("PRESION_BAJA", pres_baja.isChecked());
+                escritor.putBoolean("DIABETES", diabetes.isChecked());
+                escritor.putBoolean("ANEMIA", anemia.isChecked());
+                escritor.putBoolean("EPILEPSIA", epilepsia.isChecked());
+                escritor.putString("OTROS", otro.getText().toString());
+                escritor.commit();
             }
         });
+
+        obtenerDatos();
 
         return view;
     }
 
-    //Insertar Datos Personales y Obtener ID Pacientes ----------------------------------------------
-    public void insertarPadecimientos(String URL) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i(TAG, "" + error.toString());
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros = new HashMap<String, String>();
-                parametros.put("corazon",String.valueOf((corazon.isChecked()) ? 1 : 0));
-                parametros.put("artritis",String.valueOf((artritris.isChecked()) ? 1 : 0));
-                parametros.put("tuberculosis",String.valueOf((corazon.isChecked()) ? 1 : 0));
-                parametros.put("fiebrereu",String.valueOf((f_reuma.isChecked()) ? 1 : 0));
-                parametros.put("presionalta",String.valueOf((pres_alta.isChecked()) ? 1 : 0));
-                parametros.put("presionbaja",String.valueOf((pres_baja.isChecked()) ? 1 : 0));
-                parametros.put("diabetes",String.valueOf((diabetes.isChecked()) ? 1 : 0));
-                parametros.put("anemia",String.valueOf((anemia.isChecked()) ? 1 : 0));
-                parametros.put("epilepsia",String.valueOf((epilepsia.isChecked()) ? 1 : 0));
-                parametros.put("otros",otro.getText().toString());
-                return parametros;
-            }
-
-        };
-        //RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-        requestQueue.add(stringRequest);
+    public void obtenerDatos() {
+        final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("HMED2", Context.MODE_PRIVATE);
+        corazon.setChecked(sharedPreferences.getBoolean("CORAZON", false));
+        artritris.setChecked(sharedPreferences.getBoolean("ARTRITIS", false));
+        tuberculosis.setChecked(sharedPreferences.getBoolean("TUBERCULOSIS", false));
+        f_reuma.setChecked(sharedPreferences.getBoolean("FIEBREREU", false));
+        pres_alta.setChecked(sharedPreferences.getBoolean("PRESION_ALTA", false));
+        pres_baja.setChecked(sharedPreferences.getBoolean("PRESION_BAJA", false));
+        diabetes.setChecked(sharedPreferences.getBoolean("DIABETES", false));
+        anemia.setChecked(sharedPreferences.getBoolean("ANEMIA", false));
+        epilepsia.setChecked(sharedPreferences.getBoolean("EPILEPSIA", false));
+        otro.setText(sharedPreferences.getString("OTROS", ""));
     }
-
 }

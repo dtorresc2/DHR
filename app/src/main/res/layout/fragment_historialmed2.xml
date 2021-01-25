@@ -173,7 +173,7 @@
                     android:id="@+id/otro_hm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Otro"
+                    android:hint="Otros"
                     android:inputType="text"
                     android:maxLength="60"
                     android:maxLines="1" />

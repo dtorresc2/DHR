@@ -32,14 +32,14 @@ import com.tapadoo.alerter.Alerter;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HOdon2 extends Fragment {
+public class HistorialOdon extends Fragment {
     private Toolbar toolbar;
     RequestQueue requestQueue;
     private FloatingActionButton guardador;
     private static final String TAG = "MyActivity";
     CheckBox dolor, gingivitis;
     private EditText otros, desc_dolor;
-    public HOdon2() {
+    public HistorialOdon() {
         // Required empty public constructor
     }
 
