@@ -8,6 +8,8 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
@@ -36,9 +38,10 @@ import java.util.Map;
 public class HistorialMedDos extends Fragment {
     private Toolbar toolbar;
     private CheckBox corazon, artritris, tuberculosis, f_reuma, pres_alta, pres_baja, diabetes, anemia, epilepsia;
-    private EditText otro;
+    private TextInputEditText otro;
     RequestQueue requestQueue;
     private FloatingActionButton guardador;
+    private TextInputLayout otrosLayout;
     private static final String TAG = "MyActivity";
 
     public HistorialMedDos() {
@@ -62,7 +65,7 @@ public class HistorialMedDos extends Fragment {
         requestQueue = Volley.newRequestQueue(getContext());
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle("Historial Medico (2/2)");
-        toolbar.setNavigationIcon(R.drawable.ic_cerrar);
+        toolbar.setNavigationIcon(R.drawable.ic_atras);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,6 +98,9 @@ public class HistorialMedDos extends Fragment {
         epilepsia.setTypeface(face);
         otro = view.findViewById(R.id.otro_hm);
         otro.setTypeface(face);
+
+        otrosLayout = view.findViewById(R.id.otroLayout);
+        otrosLayout.setTypeface(face);
 
         guardador.setOnClickListener(new View.OnClickListener() {
             @Override
