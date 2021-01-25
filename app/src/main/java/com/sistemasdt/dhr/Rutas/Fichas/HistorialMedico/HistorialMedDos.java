@@ -32,7 +32,7 @@ public class HistorialMedDos extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_historialmed2, container, false);
+        View view = inflater.inflate(R.layout.fragment_historialmed_dos, container, false);
         Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle("Historial Medico (2/2)");
