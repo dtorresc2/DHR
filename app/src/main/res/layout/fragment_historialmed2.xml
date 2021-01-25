@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/FondoSecundario"
+    tools:context=".Rutas.Fichas.HistorialMedico.HistorialMedDos">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/guardador_hm2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="65dp"
+        android:clickable="true"
+        android:elevation="10dp"
+        android:src="@drawable/ic_check"
+        app:backgroundTint="@color/AzulOscuro" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="65dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/corazon"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Corazon" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/artritris"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Artritris" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/tuberculosis"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Tuberculosis" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/fiebre"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Fiebre Reumatoide" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/presion_alta"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Presion Alta" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/presion_baja"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Presion Baja" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/diabetes"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Diabetes" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/anemia"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Anemia" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/epilepsia"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Epilepsia" />
+
+            </LinearLayout>
+
+            <!--            <CheckBox-->
+            <!--                android:id="@+id/corazon"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                android:text="Corazon" />-->
+
+            <!--            <CheckBox-->
+            <!--                android:id="@+id/artritris"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                android:text="Artritris" />-->
+
+            <!--            <CheckBox-->
+            <!--                android:id="@+id/tuberculosis"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                android:text="Tuberculosis" />-->
+
+            <!--            <CheckBox-->
+            <!--                android:id="@+id/fiebre"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                android:text="Fiebre Reumatoide" />-->
+
+            <!--            <CheckBox-->
+            <!--                android:id="@+id/presion_alta"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                android:text="Presion Alta" />-->
+
+            <!--            <CheckBox-->
+            <!--                android:id="@+id/presion_baja"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                android:text="Presion Baja" />-->
+
+            <!--            <CheckBox-->
+            <!--                android:id="@+id/diabetes"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                android:text="Diabetes" />-->
+
+            <!--            <CheckBox-->
+            <!--                android:id="@+id/anemia"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                android:text="Anemia" />-->
+
+            <!--            <CheckBox-->
+            <!--                android:id="@+id/epilepsia"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:text="Epilepsia" />-->
+
+            <EditText
+                android:id="@+id/otro_hm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Otro"
+                android:inputType="textPersonName" />
+
+
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

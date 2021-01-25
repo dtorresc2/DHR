@@ -1,52 +1,30 @@
 package com.sistemasdt.dhr.Rutas.Fichas.HistorialMedico;
 
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.sistemasdt.dhr.OpcionIngreso.Normal.HMedico2;
+import com.sistemasdt.dhr.OpcionIngreso.Normal.HOdon2;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaForm.Ficha;
-import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
 import com.sistemasdt.dhr.R;
-import com.tapadoo.alerter.Alerter;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class HistorialMed extends Fragment {
     private Toolbar toolbar;
     private CheckBox hospitalizado, alergia, medicamento, tratamiento, hemorragia;
-    private CheckBox corazon, artritris, tuberculosis, f_reuma, pres_alta, pres_baja, diabetes, anemia, epilepsia;
     private EditText desc_hos, desc_alergia, desc_medicamento, otro;
     private FloatingActionButton guardador;
-    private TextView titulo_detalle, titulo_padecimiento;
-    RequestQueue requestQueue;
-    SharedPreferences preferencias;
     private static final String TAG = "MyActivity";
 
     public HistorialMed() {
@@ -58,7 +36,6 @@ public class HistorialMed extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_historialmed, container, false);
-        requestQueue = Volley.newRequestQueue(getContext());
         Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         //Barra de Titulo
         toolbar = view.findViewById(R.id.toolbar);
@@ -67,7 +44,6 @@ public class HistorialMed extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(getActivity(), "ATRAS", Toast.LENGTH_SHORT).show();
                 Ficha ficha = new Ficha();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
                 transaction.replace(R.id.contenedor, ficha);
@@ -90,8 +66,6 @@ public class HistorialMed extends Fragment {
         desc_alergia.setTypeface(face);
         desc_medicamento = view.findViewById(R.id.desc_medi);
         desc_medicamento.setTypeface(face);
-//        titulo_detalle = view.findViewById(R.id.titulo_detalle_hm);
-//        titulo_detalle.setTypeface(face);
 
         tratamiento = view.findViewById(R.id.tratamiento);
         tratamiento.setTypeface(face);
@@ -170,6 +144,12 @@ public class HistorialMed extends Fragment {
                 escritor.putString("DESCRIPCION_MEDICAMENTO", desc_medicamento.getText().toString());
                 escritor.commit();
 
+                HistorialMedDos historialMedDos = new HistorialMedDos();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                transaction.replace(R.id.contenedor, historialMedDos);
+                transaction.commit();
+
                 /*Toast.makeText(getActivity(), "Ingresado Correctamente", Toast.LENGTH_SHORT).show();
                 escritor.putBoolean("hospi", hospitalizado.isChecked());
                 escritor.putString("deshospi", desc_hos.getText().toString());
@@ -216,7 +196,7 @@ public class HistorialMed extends Fragment {
 //
 //                if (networkInfo != null && networkInfo.isConnected()) {
 //                    insertarHMedico("http://dhr.sistemasdt.xyz/Normal/ficha.php?estado=4");
-//                    HMedico2 hMedico2 = new HMedico2();
+//                    HistorialMedDos hMedico2 = new HistorialMedDos();
 //                    FragmentTransaction transaction = getFragmentManager().beginTransaction()
 //                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
 //                    transaction.replace(R.id.contenedor, hMedico2);
@@ -242,45 +222,13 @@ public class HistorialMed extends Fragment {
 
     public void cargarDatos() {
         final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("HMED1", Context.MODE_PRIVATE);
-        hospitalizado.setChecked(sharedPreferences.getBoolean("HOSPITALIZADO",false));
-        desc_hos.setText(sharedPreferences.getString("DESCRIPCION_HOS",""));
-        alergia.setChecked(sharedPreferences.getBoolean("ALERGIA",false));
-        desc_alergia.setText(sharedPreferences.getString("DESCRIPCION_ALERGIA",""));
-        medicamento.setChecked(sharedPreferences.getBoolean("MEDICAMENTO",false));
-        desc_medicamento.setText(sharedPreferences.getString("DESCRIPCION_MEDICAMENTO",""));
-        tratamiento.setChecked(sharedPreferences.getBoolean("TRATAMIENTO_MEDICO",false));
-        hemorragia.setChecked(sharedPreferences.getBoolean("HEMORRAGIA",false));
+        hospitalizado.setChecked(sharedPreferences.getBoolean("HOSPITALIZADO", false));
+        desc_hos.setText(sharedPreferences.getString("DESCRIPCION_HOS", ""));
+        alergia.setChecked(sharedPreferences.getBoolean("ALERGIA", false));
+        desc_alergia.setText(sharedPreferences.getString("DESCRIPCION_ALERGIA", ""));
+        medicamento.setChecked(sharedPreferences.getBoolean("MEDICAMENTO", false));
+        desc_medicamento.setText(sharedPreferences.getString("DESCRIPCION_MEDICAMENTO", ""));
+        tratamiento.setChecked(sharedPreferences.getBoolean("TRATAMIENTO_MEDICO", false));
+        hemorragia.setChecked(sharedPreferences.getBoolean("HEMORRAGIA", false));
     }
-
-        public void insertarHMedico(String URL) {
-        final String[] id = new String[1];
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i(TAG, "" + error.toString());
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros = new HashMap<String, String>();
-                parametros.put("hospitalizado", String.valueOf((hospitalizado.isChecked()) ? 1 : 0));
-                parametros.put("desc_hos", desc_hos.getText().toString());
-                parametros.put("tratmed", String.valueOf((tratamiento.isChecked()) ? 1 : 0));
-                parametros.put("alergia", String.valueOf((alergia.isChecked()) ? 1 : 0));
-                parametros.put("desc_al", desc_alergia.getText().toString());
-                parametros.put("hemorragia", String.valueOf((hemorragia.isChecked()) ? 1 : 0));
-                parametros.put("medicamento", String.valueOf((medicamento.isChecked()) ? 1 : 0));
-                parametros.put("desc_med", desc_medicamento.getText().toString());
-                return parametros;
-            }
-
-        };
-        requestQueue.add(stringRequest);
-    }
-
 }

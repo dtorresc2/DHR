@@ -1,4 +1,4 @@
-package com.sistemasdt.dhr.OpcionIngreso.Normal;
+package com.sistemasdt.dhr.Rutas.Fichas.HistorialMedico;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -25,6 +25,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.sistemasdt.dhr.OpcionIngreso.Normal.HOdon2;
 import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
 import com.sistemasdt.dhr.R;
 import com.tapadoo.alerter.Alerter;
@@ -32,30 +33,31 @@ import com.tapadoo.alerter.Alerter;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HMedico2 extends Fragment {
+public class HistorialMedDos extends Fragment {
     private Toolbar toolbar;
     private CheckBox corazon, artritris, tuberculosis, f_reuma, pres_alta, pres_baja, diabetes, anemia, epilepsia;
     private EditText otro;
     RequestQueue requestQueue;
     private FloatingActionButton guardador;
     private static final String TAG = "MyActivity";
-    public HMedico2() {
+
+    public HistorialMedDos() {
         // Required empty public constructor
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-        }
-    }
+//    @Override
+//    public void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        if (getArguments() != null) {
+//
+//        }
+//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_hmedico2, container, false);
+        View view = inflater.inflate(R.layout.fragment_historialmed2, container, false);
         Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         requestQueue = Volley.newRequestQueue(getContext());
         toolbar = view.findViewById(R.id.toolbar);
@@ -64,10 +66,9 @@ public class HMedico2 extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(getActivity(), "ATRAS", Toast.LENGTH_SHORT).show();
-                MenuFichas menuFichas = new MenuFichas();
+                HistorialMed historialMed = new HistorialMed();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                transaction.replace(R.id.contenedor, menuFichas);
+                transaction.replace(R.id.contenedor, historialMed);
                 transaction.commit();
             }
         });
