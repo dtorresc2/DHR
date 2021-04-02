@@ -9,6 +9,8 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sistemasdt.dhr.Rutas.Catalogos.Servicios.ServiciosAdapter;
+
 import java.util.ArrayList;
 
 public class TablaDinamica {
@@ -21,6 +23,15 @@ public class TablaDinamica {
     private int indexR;
     private int indexC;
     private int colorFondo;
+    private OnClickListener mListener;
+
+    public interface OnClickListener {
+        void onItemClick(int position);
+    }
+
+    public void setOnItemClickListener(OnClickListener onItemClickListener) {
+        mListener = onItemClickListener;
+    }
 
     public TablaDinamica(TableLayout tableLayout, Context context) {
         this.tableLayout = tableLayout;
@@ -87,7 +98,13 @@ public class TablaDinamica {
 
             txtCell.setTag(getCount());
             txtCell.setClickable(true);
-            txtCell.setOnClickListener(tablerowOnClickListener);//add OnClickListener Here
+            txtCell.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int index = (int) v.getTag();
+                    mListener.onItemClick(index);
+                }
+            });
 
             tableRow.addView(txtCell, newTableRowParams());
         }
@@ -163,10 +180,10 @@ public class TablaDinamica {
         }
     }
 
-    private View.OnClickListener tablerowOnClickListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            int index = (int) v.getTag();
-            Toast.makeText(v.getContext(), String.valueOf(index), Toast.LENGTH_SHORT).show();
-        }
-    };
+//    private View.OnClickListener tablerowOnClickListener = new View.OnClickListener() {
+//        public void onClick(View v) {
+//            int index = (int) v.getTag();
+//            Toast.makeText(v.getContext(), String.valueOf(index), Toast.LENGTH_SHORT).show();
+//        }
+//    };
 }

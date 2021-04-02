@@ -43,6 +43,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.sistemasdt.dhr.Componentes.MenusInferiores.MenuInferior;
+import com.sistemasdt.dhr.Componentes.MenusInferiores.MenuInferiorDos;
 import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.ItemPaciente;
 import com.sistemasdt.dhr.Rutas.Catalogos.Piezas.ItemPieza;
 import com.sistemasdt.dhr.Rutas.Catalogos.Servicios.ItemServicio;
@@ -58,6 +59,7 @@ import com.sistemasdt.dhr.ServiciosAPI.QuerysServicios;
 import com.tapadoo.alerter.Alerter;
 
 import android.support.design.widget.FloatingActionButton;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -101,6 +103,8 @@ public class HistorialOdonDos extends Fragment {
     ArrayList<String> listaServicios;
     ArrayList<ItemServicio> listaServiciosGeneral;
 
+    private ArrayList<String[]> listaTratamientos = new ArrayList<>();
+
     int ID_PIEZA = 0;
     int ID_SERVICIO = 0;
 
@@ -109,7 +113,7 @@ public class HistorialOdonDos extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_historial_odon_dos, container, false);
@@ -326,6 +330,27 @@ public class HistorialOdonDos extends Fragment {
         tablaDinamica.addHeader(header);
         tablaDinamica.addData(getClients());
         tablaDinamica.fondoHeader(R.color.AzulOscuro);
+        tablaDinamica.setOnItemClickListener(new TablaDinamica.OnClickListener() {
+            @Override
+            public void onItemClick(int position) {
+//                Toast.makeText(getContext(), String.valueOf(position), Toast.LENGTH_SHORT).show();
+                MenuInferiorDos menuInferiorDos = new MenuInferiorDos();
+                menuInferiorDos.show(getFragmentManager(), "MenuInferior");
+                menuInferiorDos.recibirTitulo(tablaDinamica.getCellData(position, 1));
+                menuInferiorDos.eventoClick(new MenuInferiorDos.MenuInferiorListener() {
+                    @Override
+                    public void onButtonClicked(int opcion) {
+                        switch (opcion) {
+                            case 1:
+                                break;
+                            case 2:
+                                break;
+                        }
+//                        realizarAccion(opcion, listaCuentas.get(position).getCodigoCuenta());
+                    }
+                });
+            }
+        });
 
         final SharedPreferences.Editor escritor = preferencias.edit();
 
@@ -353,6 +378,9 @@ public class HistorialOdonDos extends Fragment {
                     desc_servicio.setText(null);
                     monto.setText(null);
                     servicio.setText("Seleccione Servicio");
+
+                    layoutMonto.setError(null);
+                    layoutServicio.setError(null);
 
                     if (tablaDinamica.getCount() > 0) {
                         for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
@@ -439,17 +467,10 @@ public class HistorialOdonDos extends Fragment {
         agregador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (!descripcionRequerida() || !montoRequerido() || !validarMonto())
-//                    return;
+
             }
         });
 
-//        String[] item = new String[]{
-//                "Muela Izq",
-//                "Limpieza",
-//                "20.00"
-//        };
-//        tablaDinamica.addItem(item);
 
         obtenerPiezas();
         obtenerServicios();
