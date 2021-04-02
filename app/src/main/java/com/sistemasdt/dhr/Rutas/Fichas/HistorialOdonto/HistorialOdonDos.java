@@ -70,33 +70,23 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public class HistorialOdonDos extends Fragment {
     private Toolbar toolbar;
-    ArrayList<String> listaDatos1, piezas;
-    Button listador, eliminador;
-    Spinner spinner;
-    CheckBox dolor, gingivitis;
-    ArrayAdapter<String> adaptadorSpinner;
-    TableLayout tableLayout;
-    RequestQueue requestQueue;
+    private Button listador;
+    private TableLayout tableLayout;
     private String[] header = {"Pieza", "Descripcion", "Costo"};
     private ArrayList<String[]> rows = new ArrayList<>();
-    private EditText tratamiento, costo, otros, desc_dolor;
     private TextView pieza, servicio;
-    private TextView titulo_detalle, titulo_diag, titulo_pres, titulo_piez, total_costo, titulo_costo, celdap, celdat, celdac;
+    private TextView titulo_diag, titulo_pres, total_costo, titulo_costo;
     private TablaDinamica tablaDinamica;
-    private int lim;
     private double total;
     private FloatingActionButton agregador;
-    private static final String TAG = "MyActivity";
     private int mOpcion = 0;
-    private SharedPreferences preferencias;
-    private int contador = 0;
-    private ImageButton selectorPieza;
-
     private TextInputEditText desc_servicio, monto;
     private TextInputLayout layoutServicio, layoutMonto;
 
@@ -124,10 +114,6 @@ public class HistorialOdonDos extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_historial_odon_dos, container, false);
         final Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-
-        requestQueue = Volley.newRequestQueue(getContext());
-
-        preferencias = getActivity().getSharedPreferences("ListadoPacientes", Context.MODE_PRIVATE);
 
         //Encabezado
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
@@ -374,14 +360,14 @@ public class HistorialOdonDos extends Fragment {
                                     public void onClick(DialogInterface dialog, int which) {
                                         tablaDinamica.removeRow(position);
                                         total = 0;
+                                        listaTratamientos.remove(position - 1);
 
                                         if (tablaDinamica.getCount() > 0) {
                                             for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
                                                 total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
                                             }
                                             total_costo.setText(String.format("%.2f", total));
-                                        }
-                                        else {
+                                        } else {
                                             total_costo.setText("0.00");
                                         }
                                     }
@@ -499,7 +485,31 @@ public class HistorialOdonDos extends Fragment {
         agregador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (listaTratamientos.size() > 0) {
+                    SharedPreferences preferences = getActivity().getSharedPreferences("HOD2", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+//                    final String TAG = "MyActivity";
+//                    Log.i(TAG, cadena);
 
+                    Set<String> set = new HashSet<>();
+
+                    for (ItemTratamiento item : listaTratamientos) {
+                        String cadena = item.getPieza() + ";" + item.getServicio() + ";" + item.getDescripcionServicio() + ";" + item.getMonto() + ";" + item.getFechaRegistro() + ";";
+                        set.add(cadena);
+                    }
+
+                    editor.putStringSet("listaTratamientos", set);
+                    editor.apply();
+                } else {
+                    Alerter.create(getActivity())
+                            .setTitle("Error")
+                            .setText("No ha agregado tratamientos")
+                            .setIcon(R.drawable.logonuevo)
+                            .setTextTypeface(face)
+                            .enableSwipeToDismiss()
+                            .setBackgroundColorRes(R.color.AzulOscuro)
+                            .show();
+                }
             }
         });
 
@@ -515,6 +525,55 @@ public class HistorialOdonDos extends Fragment {
 
     public void ObtenerOpcion(int opcion) {
         mOpcion = opcion;
+    }
+
+    public void cargarTratamientos() {
+        SharedPreferences preferences = getActivity().getSharedPreferences("HOD2", Context.MODE_PRIVATE);
+        Set<String> set = preferences.getStringSet("listaTratamientos", null);
+
+        // Reinciar Tabla
+        listaTratamientos.clear();
+        tablaDinamica.removeAll();
+        tablaDinamica.addData(getClients());
+        tablaDinamica.fondoHeader(R.color.AzulOscuro);
+
+        ArrayList<String> listaAuxiliar = new ArrayList<>(set);
+
+        for (String item : listaAuxiliar) {
+            String cadenaAuxiliar[] = item.split(";");
+
+            listaTratamientos.add(new ItemTratamiento(
+                    Integer.parseInt(cadenaAuxiliar[0]),
+                    Integer.parseInt(cadenaAuxiliar[1]),
+                    cadenaAuxiliar[2],
+                    Double.parseDouble(cadenaAuxiliar[3]),
+                    cadenaAuxiliar[4]
+            ));
+
+            String descPieza = "";
+            for (ItemPieza aux : listaPiezasGenenal) {
+                if (aux.getCodigoPieza() == Integer.parseInt(cadenaAuxiliar[0])) {
+                    descPieza = aux.getNombrePieza();
+                }
+            }
+
+            tablaDinamica.addItem(new String[]{
+                    descPieza,
+                    cadenaAuxiliar[2],
+                    String.format("%.2f", Double.parseDouble(cadenaAuxiliar[3]))
+            });
+        }
+
+        total = 0;
+
+        if (tablaDinamica.getCount() > 0) {
+            for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
+                total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
+            }
+            total_costo.setText(String.format("%.2f", total));
+        } else {
+            total_costo.setText("0.00");
+        }
     }
 
     public void obtenerPiezas() {
@@ -547,6 +606,8 @@ public class HistorialOdonDos extends Fragment {
                             listaPiezasGenenal.add(pieza);
                         }
                     }
+
+                    cargarTratamientos();
 
                 } catch (JSONException e) {
                     e.fillInStackTrace();
