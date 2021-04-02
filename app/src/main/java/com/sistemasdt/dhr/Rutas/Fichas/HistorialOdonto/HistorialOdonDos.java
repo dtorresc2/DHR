@@ -1,26 +1,35 @@
 package com.sistemasdt.dhr.Rutas.Fichas.HistorialOdonto;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TableLayout;
@@ -33,6 +42,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.ItemPaciente;
+import com.sistemasdt.dhr.Rutas.Catalogos.Piezas.ItemPieza;
 import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
 import com.sistemasdt.dhr.OpcionSeguimiento.SegPagos;
 import com.sistemasdt.dhr.OpcionSeguimiento.Seguimiento;
@@ -45,6 +56,7 @@ import android.support.design.widget.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class HistorialOdonDos extends Fragment {
     private Toolbar toolbar;
@@ -57,7 +69,8 @@ public class HistorialOdonDos extends Fragment {
     RequestQueue requestQueue;
     private String[] header = {"Pieza", "Descripcion", "Costo"};
     private ArrayList<String[]> rows = new ArrayList<>();
-    private EditText tratamiento, costo, otros, desc_dolor, pieza;
+    private EditText tratamiento, costo, otros, desc_dolor;
+    private TextView pieza;
     private TextView titulo_detalle, titulo_diag, titulo_pres, titulo_piez, total_costo, titulo_costo, celdap, celdat, celdac;
     private TablaDinamica tablaDinamica;
     private int lim;
@@ -69,6 +82,15 @@ public class HistorialOdonDos extends Fragment {
     private int contador = 0;
     private ImageButton selectorPieza;
 
+    private TextInputEditText desc_servicio, monto;
+    private TextInputLayout layoutServicio, layoutMonto;
+
+    ArrayList<String> listaPiezas;
+    ArrayList<ItemPieza> listaPiezasGenenal;
+
+    int ID_PIEZA = 0;
+    int ID_SERVICIO = 0;
+
     public HistorialOdonDos() {
         // Required empty public constructor
     }
@@ -77,16 +99,131 @@ public class HistorialOdonDos extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_historial_odon_dos, container, false);
+        final View view = inflater.inflate(R.layout.fragment_historial_odon_dos, container, false);
         final Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+
         requestQueue = Volley.newRequestQueue(getContext());
 
         preferencias = getActivity().getSharedPreferences("ListadoPacientes", Context.MODE_PRIVATE);
 
+        //Encabezado
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        toolbar.setTitle("Historial Odontodologico (2/2)");
+        toolbar.setNavigationIcon(R.drawable.ic_atras);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HistorialOdon historialOdon = new HistorialOdon();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                fragmentTransaction.replace(R.id.contenedor, historialOdon);
+                fragmentTransaction.commit();
+            }
+        });
+
+        desc_servicio = view.findViewById(R.id.desc_servicio);
+        desc_servicio.setTypeface(face);
+        desc_servicio.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                descripcionRequerida();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        monto = view.findViewById(R.id.monto);
+        monto.setTypeface(face);
+        monto.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (montoRequerido()) {
+                    validarMonto();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        layoutServicio = view.findViewById(R.id.layoutServicio);
+        layoutServicio.setTypeface(face);
+
+        layoutMonto = view.findViewById(R.id.layoutMonto);
+        layoutMonto.setTypeface(face);
+
         //spinner = view.findViewById(R.id.ing_piezas);
-//        pieza = view.findViewById(R.id.ing_pieza);
-//        pieza.setTypeface(face);
+        pieza = view.findViewById(R.id.pieza);
+        pieza.setTypeface(face);
+        pieza.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Dialog dialog = new Dialog(getContext());
+                dialog.setContentView(R.layout.dialogo_busqueda);
+                dialog.getWindow().setLayout(view.getWidth() - 50, 1000);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+
+                EditText editText = dialog.findViewById(R.id.buscador);
+                editText.setTypeface(face);
+
+                TextView textView = dialog.findViewById(R.id.tituloDialogo);
+                textView.setTypeface(face);
+
+                ListView listView = dialog.findViewById(R.id.lista_items);
+
+                final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, listaPiezas);
+                listView.setAdapter(adapter);
+
+                editText.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        adapter.getFilter().filter(s);
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
+
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        String filter = adapter.getItem(position).toLowerCase().trim();
+                        pieza.setText(adapter.getItem(position));
+
+                        for (ItemPieza item : listaPiezasGenenal) {
+                            if (item.getNombrePieza().toLowerCase().trim().contains(filter)) {
+                                ID_PIEZA = listaPiezasGenenal.get(listaPiezasGenenal.indexOf(item)).getCodigoPieza();
+                            }
+                        }
+
+                        dialog.dismiss();
+                    }
+                });
+
+            }
+        });
 
 //        listador = view.findViewById(R.id.guardador_hm);
 //        listador.setTypeface(face);
@@ -164,29 +301,6 @@ public class HistorialOdonDos extends Fragment {
         tablaDinamica.fondoHeader(R.color.AzulOscuro);
         //tablaDinamica.fondoData(R.color.FondoSecundario);
 
-        //Encabezado
-        toolbar.setTitle("Historial Odontodologico");
-        toolbar.setNavigationIcon(R.drawable.ic_atras);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (mOpcion) {
-                    case 1:
-                        MenuFichas menuFichas = new MenuFichas();
-                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                        transaction.replace(R.id.contenedor, menuFichas);
-                        transaction.commit();
-                        break;
-
-                    case 2:
-                        Seguimiento seguimiento = new Seguimiento();
-                        FragmentTransaction transaction2 = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                        transaction2.replace(R.id.contenedor, seguimiento);
-                        transaction2.commit();
-                        break;
-                }
-            }
-        });
 
         final SharedPreferences.Editor escritor = preferencias.edit();
 
@@ -288,7 +402,15 @@ public class HistorialOdonDos extends Fragment {
 //            }
 //        });
 
-        //Proceso para guardar
+        // Proceso para guardar
+        agregador.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!descripcionRequerida() || !montoRequerido() || !validarMonto())
+                    return;
+            }
+        });
+
 //        agregador.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -462,6 +584,46 @@ public class HistorialOdonDos extends Fragment {
 
         };
         requestQueue.add(stringRequest);
+    }
+
+    public void obtenerPiezas() {
+        listaPiezas.clear();
+        listaPiezasGenenal.clear();
+    }
+
+    //    VALIDACIONES
+    private boolean descripcionRequerida() {
+        String texto = desc_servicio.getText().toString().trim();
+        if (texto.isEmpty()) {
+            layoutServicio.setError("Campo Requerido");
+            return false;
+        } else {
+            layoutServicio.setError(null);
+            return true;
+        }
+    }
+
+    private boolean montoRequerido() {
+        String texto = monto.getText().toString().trim();
+        if (texto.isEmpty()) {
+            layoutMonto.setError("Campo Requerido");
+            return false;
+        } else {
+            layoutMonto.setError(null);
+            return true;
+        }
+    }
+
+    private boolean validarMonto() {
+        String texto = monto.getText().toString().trim();
+        Pattern patron = Pattern.compile("^[0-9]+(\\.[0-9]{2})$");
+        if (patron.matcher(texto).matches()) {
+            layoutMonto.setError(null);
+            return true;
+        } else {
+            layoutMonto.setError("Monto invalido, debe usar ####.##");
+            return false;
+        }
     }
 
 }
