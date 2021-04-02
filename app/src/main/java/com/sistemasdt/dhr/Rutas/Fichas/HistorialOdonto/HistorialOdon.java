@@ -41,17 +41,10 @@ public class HistorialOdon extends Fragment {
     private static final String TAG = "MyActivity";
     CheckBox dolor, gingivitis;
     private EditText otros, desc_dolor;
+
     public HistorialOdon() {
         // Required empty public constructor
     }
-
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//
-//        }
-//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

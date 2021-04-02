@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 
 import com.sistemasdt.dhr.R;
+import com.sistemasdt.dhr.Rutas.Fichas.HistorialOdonto.HistorialOdon;
 
 public class HistorialMedDos extends Fragment {
     private Toolbar toolbar;
@@ -89,6 +90,12 @@ public class HistorialMedDos extends Fragment {
                 escritor.putBoolean("EPILEPSIA", epilepsia.isChecked());
                 escritor.putString("OTROS", otro.getText().toString());
                 escritor.commit();
+
+                HistorialOdon historialOdon = new HistorialOdon();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                transaction.replace(R.id.contenedor, historialOdon);
+                transaction.commit();
             }
         });
 
