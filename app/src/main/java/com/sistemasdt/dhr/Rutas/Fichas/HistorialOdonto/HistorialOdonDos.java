@@ -145,8 +145,8 @@ public class HistorialOdonDos extends Fragment {
 //        costo = view.findViewById(R.id.costo);
 //        costo.setTypeface(face);
 
-//        titulo_diag = view.findViewById(R.id.titulo_diagnostico);
-//        titulo_diag.setTypeface(face);
+        titulo_diag = view.findViewById(R.id.titulo_diagnostico);
+        titulo_diag.setTypeface(face);
         titulo_pres = view.findViewById(R.id.titulo_presupuesto);
         titulo_pres.setTypeface(face);
 

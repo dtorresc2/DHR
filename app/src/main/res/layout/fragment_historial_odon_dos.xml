@@ -33,33 +33,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="70dp"
-            android:paddingBottom="60dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="60dp">
 
-<!--            <TextView-->
-<!--                android:id="@+id/titulo_diagnostico"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:background="@color/AzulOscuro"-->
-<!--                android:gravity="center_horizontal|center_vertical"-->
-<!--                android:text="Diagnostico:"-->
-<!--                android:textColor="@color/Blanco"-->
-<!--                android:textSize="18sp" />-->
-
-            <Button
-                android:id="@+id/guardador_hm"
+            <TextView
+                android:id="@+id/titulo_diagnostico"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/AzulOscuro"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:text="Tratamiento:"
                 android:textColor="@color/Blanco"
-                android:text="Agregar Tratamiento"
-                android:paddingLeft="10dp"
-                android:drawableLeft="@drawable/ic_add" />
-
-
-            <!--            <Space-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="10dp" />-->
+                android:textSize="18sp" />
 
             <!--            <LinearLayout-->
             <!--                android:layout_width="match_parent"-->
@@ -72,7 +59,7 @@
             <!--                    android:layout_height="match_parent"-->
             <!--                    android:layout_weight="3"-->
             <!--                    android:background="@color/AzulOscuro"-->
-            <!--                    android:src="@drawable/ic_diente"/>-->
+            <!--                    android:src="@drawable/ic_diente" />-->
 
             <!--                <Space-->
             <!--                    android:layout_width="20dp"-->
@@ -82,12 +69,12 @@
             <!--                    android:id="@+id/ing_pieza"-->
             <!--                    android:layout_width="match_parent"-->
             <!--                    android:layout_height="wrap_content"-->
-            <!--                    android:ems="10"-->
             <!--                    android:layout_weight="1"-->
-            <!--                    android:text="0"-->
+            <!--                    android:ems="10"-->
             <!--                    android:enabled="false"-->
             <!--                    android:hint="Pieza"-->
-            <!--                    android:inputType="textPersonName" />-->
+            <!--                    android:inputType="textPersonName"-->
+            <!--                    android:text="0" />-->
 
             <!--            </LinearLayout>-->
 
@@ -97,15 +84,78 @@
             <!--                android:layout_height="wrap_content"-->
             <!--                android:ems="10"-->
             <!--                android:hint="Tratamiento"-->
+            <!--                android:layout_marginTop="10dp"-->
             <!--                android:inputType="textPersonName" />-->
 
-            <!--            <EditText-->
-            <!--                android:id="@+id/costo"-->
+            <!-- Select de Pieza -->
+            <TextView
+                android:id="@+id/tituloPieza"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Pieza"
+                android:textColor="@color/Blanco"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/pieza"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:background="@color/AzulOscuro"
+                android:drawableRight="@drawable/ic_down"
+                android:gravity="center"
+                android:padding="12dp"
+                android:text="Seleccione Pieza"
+                android:textColor="@color/Blanco" />
+
+            <!-- Select de Servicios -->
+            <TextView
+                android:id="@+id/tituloServicio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Servicio"
+                android:textColor="@color/Blanco"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/servicio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:background="@color/AzulOscuro"
+                android:drawableRight="@drawable/ic_down"
+                android:gravity="center"
+                android:padding="12dp"
+                android:text="Seleccione Servicio"
+                android:textColor="@color/Blanco" />
+
+            <EditText
+                android:id="@+id/costo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:hint="Costo"
+                android:inputType="numberDecimal" />
+
+            <Button
+                android:id="@+id/guardador_hm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/AzulOscuro"
+                android:drawableLeft="@drawable/ic_add"
+                android:paddingLeft="10dp"
+                android:text="Agregar Tratamiento"
+                android:textColor="@color/Blanco" />
+
+
+            <!--            <Space-->
             <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:ems="10"-->
-            <!--                android:hint="Costo"-->
-            <!--                android:inputType="numberDecimal" />-->
+            <!--                android:layout_height="10dp" />-->
+
 
             <!--            <Space-->
             <!--                android:layout_width="match_parent"-->
@@ -147,9 +197,9 @@
                 android:layout_marginTop="15dp"
                 android:background="@color/AzulOscuro"
                 android:gravity="center_horizontal|center_vertical"
-                android:text="Presupuesto:"
                 android:paddingTop="2dp"
                 android:paddingBottom="2dp"
+                android:text="Presupuesto:"
                 android:textColor="@color/Blanco"
                 android:textSize="18sp" />
 
@@ -191,9 +241,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@color/AzulOscuro"
-                    android:textColor="@color/Blanco"
                     android:gravity="center_horizontal|center_vertical"
                     android:text="Costo:"
+                    android:textColor="@color/Blanco"
                     android:textSize="18sp" />
 
                 <TextView
