@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="70dp"
             android:orientation="vertical"
-            android:paddingBottom="60dp">
+            android:paddingBottom="200dp">
 
             <TextView
                 android:id="@+id/titulo_diagnostico"
@@ -131,14 +131,14 @@
                 android:text="Seleccione Servicio"
                 android:textColor="@color/Blanco" />
 
-<!--            <EditText-->
-<!--                android:id="@+id/costo"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="10dp"-->
-<!--                android:ems="10"-->
-<!--                android:hint="Costo"-->
-<!--                android:inputType="numberDecimal" />-->
+            <!--            <EditText-->
+            <!--                android:id="@+id/costo"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="10dp"-->
+            <!--                android:ems="10"-->
+            <!--                android:hint="Costo"-->
+            <!--                android:inputType="numberDecimal" />-->
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/layoutServicio"
@@ -160,7 +160,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/layoutCosto"
+                android:id="@+id/layoutMonto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
@@ -169,10 +169,10 @@
                 app:errorEnabled="true">
 
                 <android.support.design.widget.TextInputEditText
-                    android:id="@+id/costo"
+                    android:id="@+id/monto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Motivo"
+                    android:hint="Monto"
                     android:inputType="text"
                     android:maxLength="50"
                     android:maxLines="1" />
@@ -241,38 +241,12 @@
                 android:textColor="@color/Blanco"
                 android:textSize="18sp" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
-
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <HorizontalScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fillViewport="true">
-
-                    <TableLayout
-                        android:id="@+id/table"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center">
-
-                    </TableLayout>
-                </HorizontalScrollView>
-            </ScrollView>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:weightSum="1"
-                android:orientation="horizontal">
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:weightSum="1">
 
                 <TextView
                     android:id="@+id/titulo_costo"
@@ -281,6 +255,8 @@
                     android:layout_weight="0.6"
                     android:background="@color/AzulOscuro"
                     android:gravity="center_horizontal|center_vertical"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
                     android:text="Total:"
                     android:textColor="@color/Blanco"
                     android:textSize="18sp" />
@@ -290,12 +266,43 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.4"
-                    android:gravity="center"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
                     android:text="00.00"
                     android:textColor="@color/Blanco"
                     android:textSize="18sp" />
             </LinearLayout>
 
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fillViewport="true">
+
+                        <TableLayout
+                            android:id="@+id/table"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center">
+
+                        </TableLayout>
+                    </HorizontalScrollView>
+
+                </LinearLayout>
+
+
+            </ScrollView>
         </LinearLayout>
     </ScrollView>
 
