@@ -55,7 +55,7 @@ public class HistorialOdonDos extends Fragment {
     ArrayAdapter<String> adaptadorSpinner;
     TableLayout tableLayout;
     RequestQueue requestQueue;
-    private String[] header = {"Pieza", "Descripsion", "Costo"};
+    private String[] header = {"Pieza", "Descripcion", "Costo"};
     private ArrayList<String[]> rows = new ArrayList<>();
     private EditText tratamiento, costo, otros, desc_dolor, pieza;
     private TextView titulo_detalle, titulo_diag, titulo_pres, titulo_piez, total_costo, titulo_costo, celdap, celdat, celdac;
@@ -87,8 +87,10 @@ public class HistorialOdonDos extends Fragment {
         //spinner = view.findViewById(R.id.ing_piezas);
 //        pieza = view.findViewById(R.id.ing_pieza);
 //        pieza.setTypeface(face);
-        listador = view.findViewById(R.id.guardador_hm);
-        listador.setTypeface(face);
+
+//        listador = view.findViewById(R.id.guardador_hm);
+//        listador.setTypeface(face);
+
 //        eliminador = view.findViewById(R.id.eliminador);
 //        eliminador.setTypeface(face);
 
@@ -189,195 +191,203 @@ public class HistorialOdonDos extends Fragment {
         final SharedPreferences.Editor escritor = preferencias.edit();
 
         //Proceso para listar
-        listador.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!tratamiento.getText().toString().isEmpty() && !costo.getText().toString().isEmpty()) {
-                    total = 0;
-                    String[] item = new String[]{
-                            //spinner.getSelectedItem().toString(),
-                            pieza.getText().toString(),
-                            tratamiento.getText().toString(),
-                            costo.getText().toString()
-                    };
-                    tablaDinamica.addItem(item);
-                    tratamiento.setText(null);
-                    costo.setText(null);
-
-                    if (tablaDinamica.getCount() > 0) {
-                        for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
-                            total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
-                        }
-                        total_costo.setText(String.format("%.2f", total));
-                    }
-                }
-                else {
-                    Alerter.create(getActivity())
-                            .setTitle("Error")
-                            .setText("Hay campos vacios")
-                            .setIcon(R.drawable.logonuevo)
-                            .setTextTypeface(face)
-                            .enableSwipeToDismiss()
-                            .setBackgroundColorRes(R.color.AzulOscuro)
-                            .show();
-                }
-            }
-        });
+//        listador.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (!tratamiento.getText().toString().isEmpty() && !costo.getText().toString().isEmpty()) {
+//                    total = 0;
+//                    String[] item = new String[]{
+//                            //spinner.getSelectedItem().toString(),
+//                            pieza.getText().toString(),
+//                            tratamiento.getText().toString(),
+//                            costo.getText().toString()
+//                    };
+//                    tablaDinamica.addItem(item);
+//                    tratamiento.setText(null);
+//                    costo.setText(null);
+//
+//                    if (tablaDinamica.getCount() > 0) {
+//                        for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
+//                            total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
+//                        }
+//                        total_costo.setText(String.format("%.2f", total));
+//                    }
+//                }
+//                else {
+//                    Alerter.create(getActivity())
+//                            .setTitle("Error")
+//                            .setText("Hay campos vacios")
+//                            .setIcon(R.drawable.logonuevo)
+//                            .setTextTypeface(face)
+//                            .enableSwipeToDismiss()
+//                            .setBackgroundColorRes(R.color.AzulOscuro)
+//                            .show();
+//                }
+//            }
+//        });
 
         //Proceso para eliminar
-        eliminador.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-                if (tablaDinamica.getCount() > 0) {
-                    contador = tablaDinamica.getCount();
-                    final AlertDialog.Builder d = new AlertDialog.Builder(getContext());
-                    LayoutInflater inflater = getActivity().getLayoutInflater();
-                    View dialogView = inflater.inflate(R.layout.number_picker_dialog, null);
-                    d.setCancelable(false);
-                    d.setView(dialogView);
-                    final AlertDialog alertDialog = d.create();
-
-                    TextView textView = dialogView.findViewById(R.id.titulo_dialogo);
-                    textView.setTypeface(face2);
-
-                    Button aceptar = dialogView.findViewById(R.id.aceptar);
-                    aceptar.setTypeface(face2);
-
-                    Button cancelar = dialogView.findViewById(R.id.cancelar);
-                    cancelar.setTypeface(face2);
-
-                    final NumberPicker numberPicker = dialogView.findViewById(R.id.dialog_number_picker);
-                    numberPicker.setMinValue(1);
-                    numberPicker.setMaxValue(contador);
-
-                    aceptar.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            tablaDinamica.removeRow(numberPicker.getValue());
-                            alertDialog.dismiss();
-                            Alerter.create(getActivity())
-                                    .setTitle("Se Elimino Una Fila")
-                                    .setIcon(R.drawable.logonuevo)
-                                    .setTextTypeface(face2)
-                                    .enableSwipeToDismiss()
-                                    .setBackgroundColorRes(R.color.AzulOscuro)
-                                    .show();
-                        }
-                    });
-
-                    cancelar.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            alertDialog.dismiss();
-                        }
-                    });
-
-                    alertDialog.show();
-                } else {
-                    Alerter.create(getActivity())
-                            .setTitle("No Hay Filas En La Tabla")
-                            .setIcon(R.drawable.logonuevo)
-                            .setTextTypeface(face2)
-                            .enableSwipeToDismiss()
-                            .setBackgroundColorRes(R.color.AzulOscuro)
-                            .show();
-                }
-            }
-        });
+//        eliminador.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                final Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+//                if (tablaDinamica.getCount() > 0) {
+//                    contador = tablaDinamica.getCount();
+//                    final AlertDialog.Builder d = new AlertDialog.Builder(getContext());
+//                    LayoutInflater inflater = getActivity().getLayoutInflater();
+//                    View dialogView = inflater.inflate(R.layout.number_picker_dialog, null);
+//                    d.setCancelable(false);
+//                    d.setView(dialogView);
+//                    final AlertDialog alertDialog = d.create();
+//
+//                    TextView textView = dialogView.findViewById(R.id.titulo_dialogo);
+//                    textView.setTypeface(face2);
+//
+//                    Button aceptar = dialogView.findViewById(R.id.aceptar);
+//                    aceptar.setTypeface(face2);
+//
+//                    Button cancelar = dialogView.findViewById(R.id.cancelar);
+//                    cancelar.setTypeface(face2);
+//
+//                    final NumberPicker numberPicker = dialogView.findViewById(R.id.dialog_number_picker);
+//                    numberPicker.setMinValue(1);
+//                    numberPicker.setMaxValue(contador);
+//
+//                    aceptar.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            tablaDinamica.removeRow(numberPicker.getValue());
+//                            alertDialog.dismiss();
+//                            Alerter.create(getActivity())
+//                                    .setTitle("Se Elimino Una Fila")
+//                                    .setIcon(R.drawable.logonuevo)
+//                                    .setTextTypeface(face2)
+//                                    .enableSwipeToDismiss()
+//                                    .setBackgroundColorRes(R.color.AzulOscuro)
+//                                    .show();
+//                        }
+//                    });
+//
+//                    cancelar.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            alertDialog.dismiss();
+//                        }
+//                    });
+//
+//                    alertDialog.show();
+//                } else {
+//                    Alerter.create(getActivity())
+//                            .setTitle("No Hay Filas En La Tabla")
+//                            .setIcon(R.drawable.logonuevo)
+//                            .setTextTypeface(face2)
+//                            .enableSwipeToDismiss()
+//                            .setBackgroundColorRes(R.color.AzulOscuro)
+//                            .show();
+//                }
+//            }
+//        });
 
         //Proceso para guardar
-        agregador.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-                progressDialog.setMessage("Cargando...");
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                progressDialog.setCancelable(false);
-                progressDialog.show();
+//        agregador.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+//                progressDialog.setMessage("Cargando...");
+//                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//                progressDialog.setCancelable(false);
+//                progressDialog.show();
+//
+//                Handler handler = new Handler();
+//                handler.postDelayed(new Runnable() {
+//                    public void run() {
+//                        progressDialog.dismiss();
+//                    }
+//                }, 1000);
+//
+//                if (tablaDinamica.getCount() > 0) {
+//                    escritor.putString("totalOdon",total_costo.getText().toString());
+//                    escritor.commit();
+//                    for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
+//                        //insertarTratamiento("http://192.168.56.1:80/DHR/IngresoN/ficha.php?db=u578331993_clinc&user=root&estado=10", tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2), tablaDinamica.getCellData(i, 0));
+//
+//                        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+//                        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+//
+//                        if (networkInfo != null && networkInfo.isConnected()) {
+//                            switch (mOpcion) {
+//                                case 1:
+//                                    insertarTratamiento("http://dhr.sistemasdt.xyz/Normal/ficha.php?estado=10", tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2), tablaDinamica.getCellData(i, 0));
+//                                    break;
+//                                case 2:
+//                                    agregarTratamiento("http://dhr.sistemasdt.xyz/Normal/seguimiento.php?estado=1", tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2), tablaDinamica.getCellData(i, 0));
+//                                    break;
+//                            }
+//                        } else {
+//                            Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+//                            Alerter.create(getActivity())
+//                                    .setTitle("Error")
+//                                    .setText("Fallo en Conexion a Internet")
+//                                    .setIcon(R.drawable.logonuevo)
+//                                    .setTextTypeface(face2)
+//                                    .enableSwipeToDismiss()
+//                                    .setBackgroundColorRes(R.color.AzulOscuro)
+//                                    .show();
+//                        }
+//                    }
+//
+//                    ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+//                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+//
+//                    if (networkInfo != null && networkInfo.isConnected()) {
+//                        switch (mOpcion) {
+//                            case 1:
+//                                SegPagos segPagos = new SegPagos();
+//                                segPagos.ObtenerOpcion(1);
+//                                FragmentTransaction transaction = getFragmentManager().beginTransaction()
+//                                        .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+//                                transaction.replace(R.id.contenedor, segPagos);
+//                                transaction.commit();
+//                                break;
+//                            case 2:
+//                                Seguimiento seguimiento = new Seguimiento();
+//                                FragmentTransaction transaction2 = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+//                                transaction2.replace(R.id.contenedor, seguimiento);
+//                                transaction2.commit();
+//                                break;
+//
+//                        }
+//                    } else {
+//                        Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+//                        Alerter.create(getActivity())
+//                                .setTitle("Error")
+//                                .setText("Fallo en Conexion a Internet")
+//                                .setIcon(R.drawable.logonuevo)
+//                                .setTextTypeface(face2)
+//                                .enableSwipeToDismiss()
+//                                .setBackgroundColorRes(R.color.AzulOscuro)
+//                                .show();
+//                    }
+//                }
+//                else {
+//                    Alerter.create(getActivity())
+//                            .setTitle("No Hay Filas En La Tabla")
+//                            .setIcon(R.drawable.logonuevo)
+//                            .setTextTypeface(face)
+//                            .enableSwipeToDismiss()
+//                            .setBackgroundColorRes(R.color.AzulOscuro)
+//                            .show();
+//                }
+//            }
+//        });
 
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        progressDialog.dismiss();
-                    }
-                }, 1000);
-
-                if (tablaDinamica.getCount() > 0) {
-                    escritor.putString("totalOdon",total_costo.getText().toString());
-                    escritor.commit();
-                    for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
-                        //insertarTratamiento("http://192.168.56.1:80/DHR/IngresoN/ficha.php?db=u578331993_clinc&user=root&estado=10", tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2), tablaDinamica.getCellData(i, 0));
-
-                        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-                        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-                        if (networkInfo != null && networkInfo.isConnected()) {
-                            switch (mOpcion) {
-                                case 1:
-                                    insertarTratamiento("http://dhr.sistemasdt.xyz/Normal/ficha.php?estado=10", tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2), tablaDinamica.getCellData(i, 0));
-                                    break;
-                                case 2:
-                                    agregarTratamiento("http://dhr.sistemasdt.xyz/Normal/seguimiento.php?estado=1", tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2), tablaDinamica.getCellData(i, 0));
-                                    break;
-                            }
-                        } else {
-                            Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-                            Alerter.create(getActivity())
-                                    .setTitle("Error")
-                                    .setText("Fallo en Conexion a Internet")
-                                    .setIcon(R.drawable.logonuevo)
-                                    .setTextTypeface(face2)
-                                    .enableSwipeToDismiss()
-                                    .setBackgroundColorRes(R.color.AzulOscuro)
-                                    .show();
-                        }
-                    }
-
-                    ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-                    if (networkInfo != null && networkInfo.isConnected()) {
-                        switch (mOpcion) {
-                            case 1:
-                                SegPagos segPagos = new SegPagos();
-                                segPagos.ObtenerOpcion(1);
-                                FragmentTransaction transaction = getFragmentManager().beginTransaction()
-                                        .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                                transaction.replace(R.id.contenedor, segPagos);
-                                transaction.commit();
-                                break;
-                            case 2:
-                                Seguimiento seguimiento = new Seguimiento();
-                                FragmentTransaction transaction2 = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                                transaction2.replace(R.id.contenedor, seguimiento);
-                                transaction2.commit();
-                                break;
-
-                        }
-                    } else {
-                        Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-                        Alerter.create(getActivity())
-                                .setTitle("Error")
-                                .setText("Fallo en Conexion a Internet")
-                                .setIcon(R.drawable.logonuevo)
-                                .setTextTypeface(face2)
-                                .enableSwipeToDismiss()
-                                .setBackgroundColorRes(R.color.AzulOscuro)
-                                .show();
-                    }
-                }
-                else {
-                    Alerter.create(getActivity())
-                            .setTitle("No Hay Filas En La Tabla")
-                            .setIcon(R.drawable.logonuevo)
-                            .setTextTypeface(face)
-                            .enableSwipeToDismiss()
-                            .setBackgroundColorRes(R.color.AzulOscuro)
-                            .show();
-                }
-            }
-        });
+        String[] item = new String[]{
+                //spinner.getSelectedItem().toString(),
+                "Muela Izq",
+                "Limpieza",
+                "20.00"
+        };
+        tablaDinamica.addItem(item);
 
         return view;
     }
