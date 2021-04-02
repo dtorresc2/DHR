@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/FondoSecundario"
+    tools:context=".Rutas.Fichas.HistorialOdonto.HistorialOdonDos">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/guardador_hd2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="65dp"
+        android:clickable="true"
+        android:elevation="10dp"
+        android:src="@drawable/ic_check"
+        app:backgroundTint="@color/AzulOscuro" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="70dp"
+            android:orientation="vertical"
+            android:paddingBottom="60dp">
+
+            <TextView
+                android:id="@+id/titulo_diagnostico"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/AzulOscuro"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:text="Tratamiento:"
+                android:textColor="@color/Blanco"
+                android:textSize="18sp" />
+
+            <!--            <LinearLayout-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                android:orientation="horizontal">-->
+
+            <!--                <ImageButton-->
+            <!--                    android:id="@+id/selectorPieza"-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="match_parent"-->
+            <!--                    android:layout_weight="3"-->
+            <!--                    android:background="@color/AzulOscuro"-->
+            <!--                    android:src="@drawable/ic_diente" />-->
+
+            <!--                <Space-->
+            <!--                    android:layout_width="20dp"-->
+            <!--                    android:layout_height="match_parent" />-->
+
+            <!--                <EditText-->
+            <!--                    android:id="@+id/ing_pieza"-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:layout_weight="1"-->
+            <!--                    android:ems="10"-->
+            <!--                    android:enabled="false"-->
+            <!--                    android:hint="Pieza"-->
+            <!--                    android:inputType="textPersonName"-->
+            <!--                    android:text="0" />-->
+
+            <!--            </LinearLayout>-->
+
+            <!--            <EditText-->
+            <!--                android:id="@+id/tratamiento"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:ems="10"-->
+            <!--                android:hint="Tratamiento"-->
+            <!--                android:layout_marginTop="10dp"-->
+            <!--                android:inputType="textPersonName" />-->
+
+            <!-- Select de Pieza -->
+            <TextView
+                android:id="@+id/tituloPieza"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Pieza"
+                android:textColor="@color/Blanco"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/pieza"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:background="@color/AzulOscuro"
+                android:drawableRight="@drawable/ic_down"
+                android:gravity="center"
+                android:padding="12dp"
+                android:text="Seleccione Pieza"
+                android:textColor="@color/Blanco" />
+
+            <!-- Select de Servicios -->
+            <TextView
+                android:id="@+id/tituloServicio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Servicio"
+                android:textColor="@color/Blanco"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/servicio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:background="@color/AzulOscuro"
+                android:drawableRight="@drawable/ic_down"
+                android:gravity="center"
+                android:padding="12dp"
+                android:text="Seleccione Servicio"
+                android:textColor="@color/Blanco" />
+
+<!--            <EditText-->
+<!--                android:id="@+id/costo"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:ems="10"-->
+<!--                android:hint="Costo"-->
+<!--                android:inputType="numberDecimal" />-->
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/layoutServicio"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="50"
+                app:errorEnabled="true">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/desc_servicio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Servicio"
+                    android:inputType="text"
+                    android:maxLength="50"
+                    android:maxLines="1" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/layoutCosto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="50"
+                app:errorEnabled="true">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/costo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Motivo"
+                    android:inputType="text"
+                    android:maxLength="50"
+                    android:maxLines="1" />
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/guardador_hm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/AzulOscuro"
+                android:drawableLeft="@drawable/ic_add"
+                android:paddingLeft="10dp"
+                android:text="Agregar Tratamiento"
+                android:textColor="@color/Blanco" />
+
+
+            <!--            <Space-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="10dp" />-->
+
+
+            <!--            <Space-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="10dp" />-->
+
+            <!--            <LinearLayout-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                android:orientation="horizontal">-->
+
+            <!--                <Button-->
+            <!--                    android:id="@+id/guardador_hm"-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:layout_weight="1"-->
+            <!--                    android:background="@drawable/boton"-->
+            <!--                    android:text="Agregar"-->
+            <!--                    android:textSize="18dp"/>-->
+
+            <!--                <Space-->
+            <!--                    android:layout_width="1dp"-->
+            <!--                    android:layout_height="match_parent"-->
+            <!--                    android:layout_weight="1" />-->
+
+            <!--                <Button-->
+            <!--                    android:id="@+id/eliminador"-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:layout_weight="1"-->
+            <!--                    android:background="@drawable/boton"-->
+            <!--                    android:text="Eliminar"-->
+            <!--                    android:textSize="18sp" />-->
+            <!--            </LinearLayout>-->
+
+            <TextView
+                android:id="@+id/titulo_presupuesto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@color/AzulOscuro"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:text="Presupuesto:"
+                android:textColor="@color/Blanco"
+                android:textSize="18sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fillViewport="true">
+
+                    <TableLayout
+                        android:id="@+id/table"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center">
+
+                    </TableLayout>
+                </HorizontalScrollView>
+            </ScrollView>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:weightSum="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/titulo_costo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.6"
+                    android:background="@color/AzulOscuro"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:text="Total:"
+                    android:textColor="@color/Blanco"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tota_costo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.4"
+                    android:gravity="center"
+                    android:text="00.00"
+                    android:textColor="@color/Blanco"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</FrameLayout>

@@ -12,8 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.sistemasdt.dhr.Rutas.Fichas.HistorialOdonto.HistorialOdonDos;
 import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.ListadoPacientes;
-import com.sistemasdt.dhr.OpcionIngreso.Normal.IngHOdon;
 import com.sistemasdt.dhr.OpcionIngreso.Normal.Ing_HFoto;
 import com.sistemasdt.dhr.R;
 
@@ -72,11 +72,11 @@ public class Seguimiento extends Fragment {
                 public void onClick(View v) {
                     switch (dato) {
                         case 1:
-                            IngHOdon ingHOdon = new IngHOdon();
-                            ingHOdon.ObtenerOpcion(2);
+                            HistorialOdonDos historialOdonDos = new HistorialOdonDos();
+                            historialOdonDos.ObtenerOpcion(2);
                             FragmentTransaction transaction3 = getFragmentManager().beginTransaction()
                                     .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                            transaction3.replace(R.id.contenedor, ingHOdon);
+                            transaction3.replace(R.id.contenedor, historialOdonDos);
                             transaction3.commit();
                             break;
 

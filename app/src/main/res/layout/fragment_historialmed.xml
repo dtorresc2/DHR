@@ -32,22 +32,22 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="65dp"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/titulo_detalle_hm"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="70dp"
-                android:background="@color/AzulOscuro"
-                android:gravity="center_horizontal|center_vertical"
-                android:text="Detalle:"
-                android:textSize="18sp" />
+<!--            <TextView-->
+<!--                android:id="@+id/titulo_detalle_hm"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="70dp"-->
+<!--                android:background="@color/AzulOscuro"-->
+<!--                android:gravity="center_horizontal|center_vertical"-->
+<!--                android:text="Detalle:"-->
+<!--                android:textSize="18sp" />-->
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
                 android:orientation="horizontal"
                 android:weightSum="2">
 
@@ -64,6 +64,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.7"
                     android:ems="10"
+                    android:maxLength="60"
                     android:enabled="false"
                     android:hint="¿Porque?"
                     android:inputType="textPersonName" />
@@ -89,6 +90,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:ems="10"
+                    android:maxLength="60"
                     android:enabled="false"
                     android:hint="¿Cual?"
                     android:inputType="textPersonName" />
@@ -114,6 +116,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1.4"
                     android:ems="10"
+                    android:maxLength="10"
                     android:enabled="false"
                     android:hint="¿Cual?"
                     android:inputType="textPersonName" />

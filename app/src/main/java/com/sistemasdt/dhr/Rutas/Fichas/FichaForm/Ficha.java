@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.ItemPaciente;
+import com.sistemasdt.dhr.Rutas.Fichas.HistorialMedico.HistorialMed;
 import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysPacientes;
 import com.tapadoo.alerter.Alerter;
@@ -50,7 +51,7 @@ public class Ficha extends Fragment {
     private ImageButton calendario;
     private FloatingActionButton guardador;
     private int ID_PACIENTE = 0;
-    private TextInputLayout motivoLayout, medicoLayout, referenteLayout;
+    private TextInputLayout motivoLayout, medicoLayout, referenteLayout, fechaLayout;
     private TextView paciente;
     ArrayList<String> listaPacientes;
     ArrayList<ItemPaciente> listaPacientesGeneral;
@@ -101,6 +102,9 @@ public class Ficha extends Fragment {
 
         referenteLayout = view.findViewById(R.id.layoutReferente);
         referenteLayout.setTypeface(face);
+
+        fechaLayout = view.findViewById(R.id.fechaLayout);
+        fechaLayout.setTypeface(face);
 
         tituloPaciente = view.findViewById(R.id.tituloPaciente);
         tituloPaciente.setTypeface(face);
@@ -239,10 +243,10 @@ public class Ficha extends Fragment {
                         paciente.setText(adapter.getItem(position));
 
                         for (ItemPaciente item : listaPacientesGeneral) {
-                            if (item.getNombre().toLowerCase().equals(filter)) {
+                            if (item.getNombre().toLowerCase().trim().contains(filter)) {
                                 ID_PACIENTE = listaPacientesGeneral.get(listaPacientesGeneral.indexOf(item)).getCodigo();
-                                String codigoPaciente = String.valueOf(listaPacientesGeneral.get(listaPacientesGeneral.indexOf(item)).getCodigo());
-                                Toast.makeText(getContext(), codigoPaciente, Toast.LENGTH_LONG).show();
+//                                String codigoPaciente = String.valueOf(listaPacientesGeneral.get(listaPacientesGeneral.indexOf(item)).getCodigo());
+//                                Toast.makeText(getContext(), codigoPaciente, Toast.LENGTH_LONG).show();
                             }
                         }
 
@@ -270,9 +274,25 @@ public class Ficha extends Fragment {
                     return;
                 }
 
-                Toast.makeText(getContext(), "Hola", Toast.LENGTH_SHORT).show();
+                final SharedPreferences preferenciasFicha = getActivity().getSharedPreferences("FICHA", Context.MODE_PRIVATE);
+                final SharedPreferences.Editor escritor = preferenciasFicha.edit();
+                escritor.putString("ID_PACIENTE", String.valueOf(ID_PACIENTE));
+                escritor.putString("PACIENTE", paciente.getText().toString());
+                escritor.putString("FECHA", fecha.getText().toString());
+                escritor.putString("MEDICO", medico.getText().toString());
+                escritor.putString("MOTIVO", motivo.getText().toString());
+                escritor.putString("REFERENTE", referente.getText().toString());
+                escritor.commit();
+
+                HistorialMed historialMed = new HistorialMed();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                transaction.replace(R.id.contenedor, historialMed);
+                transaction.commit();
             }
         });
+
+        cargarDatos();
 
         return view;
     }
@@ -288,7 +308,6 @@ public class Ficha extends Fragment {
         progressDialog.show();
 
         final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
-
         QuerysPacientes querysPacientes = new QuerysPacientes(getContext());
         querysPacientes.obtenerPacientes(preferenciasUsuario.getInt("ID_USUARIO", 0), new QuerysPacientes.VolleyOnEventListener() {
             @Override
@@ -296,23 +315,25 @@ public class Ficha extends Fragment {
                 try {
                     JSONArray jsonArray = new JSONArray(object.toString());
                     for (int i = 0; i < jsonArray.length(); i++) {
-                        ItemPaciente paciente = new ItemPaciente(
-                                jsonArray.getJSONObject(i).getInt("ID_PACIENTE"),
-                                jsonArray.getJSONObject(i).getString("NOMBRE"),
-                                jsonArray.getJSONObject(i).getString("TELEFONO"),
-                                jsonArray.getJSONObject(i).getString("DPI"),
-                                jsonArray.getJSONObject(i).getInt("EDAD"),
-                                jsonArray.getJSONObject(i).getString("FECHA_NACIMIENTO"),
-                                (jsonArray.getJSONObject(i).getInt("ESTADO") > 0) ? true : false,
-                                jsonArray.getJSONObject(i).getDouble("DEBE"),
-                                jsonArray.getJSONObject(i).getDouble("HABER"),
-                                jsonArray.getJSONObject(i).getDouble("SALDO"),
-                                jsonArray.getJSONObject(i).getString("OCUPACION"),
-                                (jsonArray.getJSONObject(i).getInt("SEXO") > 0) ? true : false
-                        );
+                        if (jsonArray.getJSONObject(i).getInt("ESTADO") == 1) {
+                            ItemPaciente paciente = new ItemPaciente(
+                                    jsonArray.getJSONObject(i).getInt("ID_PACIENTE"),
+                                    jsonArray.getJSONObject(i).getString("NOMBRE"),
+                                    jsonArray.getJSONObject(i).getString("TELEFONO"),
+                                    jsonArray.getJSONObject(i).getString("DPI"),
+                                    jsonArray.getJSONObject(i).getInt("EDAD"),
+                                    jsonArray.getJSONObject(i).getString("FECHA_NACIMIENTO"),
+                                    (jsonArray.getJSONObject(i).getInt("ESTADO") > 0) ? true : false,
+                                    jsonArray.getJSONObject(i).getDouble("DEBE"),
+                                    jsonArray.getJSONObject(i).getDouble("HABER"),
+                                    jsonArray.getJSONObject(i).getDouble("SALDO"),
+                                    jsonArray.getJSONObject(i).getString("OCUPACION"),
+                                    (jsonArray.getJSONObject(i).getInt("SEXO") > 0) ? true : false
+                            );
 
-                        listaPacientes.add(paciente.getNombre());
-                        listaPacientesGeneral.add(paciente);
+                            listaPacientes.add(paciente.getNombre());
+                            listaPacientesGeneral.add(paciente);
+                        }
                     }
 
                 } catch (JSONException e) {
@@ -327,6 +348,18 @@ public class Ficha extends Fragment {
                 obtenerPacientes();
             }
         });
+    }
+
+    public void cargarDatos() {
+        final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("FICHA", Context.MODE_PRIVATE);
+        ID_PACIENTE = Integer.parseInt(sharedPreferences.getString("ID_PACIENTE", "0"));
+        paciente.setText(sharedPreferences.getString("PACIENTE", "Seleccione paciente"));
+        if (sharedPreferences.contains("FECHA")) {
+            fecha.setText(sharedPreferences.getString("FECHA", "-"));
+        }
+        medico.setText(sharedPreferences.getString("MEDICO", ""));
+        motivo.setText(sharedPreferences.getString("MOTIVO", ""));
+        referente.setText(sharedPreferences.getString("REFERENTE", ""));
     }
 
     // VALIDACIONES
