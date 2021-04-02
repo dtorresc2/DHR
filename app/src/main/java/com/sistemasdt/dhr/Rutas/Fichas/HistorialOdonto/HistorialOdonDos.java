@@ -65,7 +65,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -103,10 +105,13 @@ public class HistorialOdonDos extends Fragment {
     ArrayList<String> listaServicios;
     ArrayList<ItemServicio> listaServiciosGeneral;
 
-    private ArrayList<String[]> listaTratamientos = new ArrayList<>();
+    private ArrayList<ItemTratamiento> listaTratamientos = new ArrayList<>();
 
     int ID_PIEZA = 0;
     int ID_SERVICIO = 0;
+
+    int POSICION = 0;
+    boolean modoEdicionTratamiento = false;
 
     public HistorialOdonDos() {
         // Required empty public constructor
@@ -332,8 +337,7 @@ public class HistorialOdonDos extends Fragment {
         tablaDinamica.fondoHeader(R.color.AzulOscuro);
         tablaDinamica.setOnItemClickListener(new TablaDinamica.OnClickListener() {
             @Override
-            public void onItemClick(int position) {
-//                Toast.makeText(getContext(), String.valueOf(position), Toast.LENGTH_SHORT).show();
+            public void onItemClick(final int position) {
                 MenuInferiorDos menuInferiorDos = new MenuInferiorDos();
                 menuInferiorDos.show(getFragmentManager(), "MenuInferior");
                 menuInferiorDos.recibirTitulo(tablaDinamica.getCellData(position, 1));
@@ -342,11 +346,29 @@ public class HistorialOdonDos extends Fragment {
                     public void onButtonClicked(int opcion) {
                         switch (opcion) {
                             case 1:
+                                // Editar Tratamiento
+                                int index = position - 1;
+                                modoEdicionTratamiento = true;
+                                listador.setText("ACTUALIZAR TRATAMIENTO");
+
+                                ID_PIEZA = listaTratamientos.get(index).getPieza();
+                                ID_SERVICIO = listaTratamientos.get(index).getServicio();
+                                desc_servicio.setText(listaTratamientos.get(index).getDescripcionServicio());
+                                monto.setText(String.format("%.2f", listaTratamientos.get(index).getMonto()));
+                                servicio.setText(listaTratamientos.get(index).getDescripcionServicio());
+                                pieza.setText(tablaDinamica.getCellData(position, 0));
+
+                                for (ItemServicio item : listaServiciosGeneral) {
+                                    if (item.getCodigoServicio() == ID_SERVICIO) {
+                                        servicio.setText(listaServiciosGeneral.get(listaServiciosGeneral.indexOf(item)).getDescripcionServicio());
+                                    }
+                                }
+
                                 break;
                             case 2:
+                                // Eliminar Tratamiento
                                 break;
                         }
-//                        realizarAccion(opcion, listaCuentas.get(position).getCodigoCuenta());
                     }
                 });
             }
@@ -372,7 +394,47 @@ public class HistorialOdonDos extends Fragment {
                             monto.getText().toString()
                     };
 
-                    tablaDinamica.addItem(item);
+                    String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+
+                    if (!modoEdicionTratamiento) {
+                        tablaDinamica.addItem(item);
+                        listaTratamientos.add(new ItemTratamiento(
+                                ID_PIEZA,
+                                ID_SERVICIO,
+                                desc_servicio.getText().toString(),
+                                Double.parseDouble(monto.getText().toString()),
+                                date
+                        ));
+                    } else {
+                        listaTratamientos.set(POSICION, new ItemTratamiento(
+                                ID_PIEZA,
+                                ID_SERVICIO,
+                                desc_servicio.getText().toString(),
+                                Double.parseDouble(monto.getText().toString()),
+                                date
+                        ));
+
+                        tablaDinamica.removeAll();
+
+                        for (ItemTratamiento tratamiento : listaTratamientos) {
+                            String descPieza = "";
+
+                            for (ItemPieza PIEZA : listaPiezasGenenal) {
+                                if (tratamiento.getPieza() == PIEZA.getCodigoPieza()) {
+                                    descPieza = PIEZA.getNombrePieza();
+                                }
+                            }
+
+                            tablaDinamica.addItem(new String[]{
+                                    descPieza,
+                                    tratamiento.getDescripcionServicio(),
+                                    String.format("%.2f", tratamiento.getMonto())
+                            });
+                        }
+
+                        modoEdicionTratamiento = false;
+                        listador.setText("AGREGAR TRATAMIENTO");
+                    }
 
                     ID_SERVICIO = 0;
                     desc_servicio.setText(null);
