@@ -1,8 +1,10 @@
 package com.sistemasdt.dhr.Rutas.Fichas.HistorialOdonto;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -15,7 +17,6 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -313,10 +314,6 @@ public class HistorialOdonDos extends Fragment {
             }
         });
 
-
-//        eliminador = view.findViewById(R.id.eliminador);
-//        eliminador.setTypeface(face);
-
         tableLayout = view.findViewById(R.id.table);
 
         titulo_diag = view.findViewById(R.id.titulo_diagnostico);
@@ -344,10 +341,10 @@ public class HistorialOdonDos extends Fragment {
                 menuInferiorDos.eventoClick(new MenuInferiorDos.MenuInferiorListener() {
                     @Override
                     public void onButtonClicked(int opcion) {
+                        int index = position - 1;
                         switch (opcion) {
                             case 1:
                                 // Editar Tratamiento
-                                int index = position - 1;
                                 modoEdicionTratamiento = true;
                                 listador.setText("ACTUALIZAR TRATAMIENTO");
 
@@ -364,17 +361,47 @@ public class HistorialOdonDos extends Fragment {
                                     }
                                 }
 
+                                POSICION = index;
                                 break;
                             case 2:
                                 // Eliminar Tratamiento
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
+                                builder.setIcon(R.drawable.logonuevo);
+                                builder.setTitle("Historial Odontodologico");
+                                builder.setMessage("¿Desea eliminar el tratamiento?");
+                                builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        tablaDinamica.removeRow(position);
+                                        total = 0;
+
+                                        if (tablaDinamica.getCount() > 0) {
+                                            for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
+                                                total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
+                                            }
+                                            total_costo.setText(String.format("%.2f", total));
+                                        }
+                                        else {
+                                            total_costo.setText("0.00");
+                                        }
+                                    }
+                                });
+
+                                builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                    }
+                                });
+
+                                AlertDialog dialog = builder.create();
+                                dialog.show();
                                 break;
                         }
                     }
                 });
             }
         });
-
-        final SharedPreferences.Editor escritor = preferencias.edit();
 
         //Proceso para listar
         listador = view.findViewById(R.id.guardador_hm);
@@ -414,7 +441,11 @@ public class HistorialOdonDos extends Fragment {
                                 date
                         ));
 
+                        // Reinciar Tabla
                         tablaDinamica.removeAll();
+                        tablaDinamica.addHeader(header);
+                        tablaDinamica.addData(getClients());
+                        tablaDinamica.fondoHeader(R.color.AzulOscuro);
 
                         for (ItemTratamiento tratamiento : listaTratamientos) {
                             String descPieza = "";
@@ -433,6 +464,7 @@ public class HistorialOdonDos extends Fragment {
                         }
 
                         modoEdicionTratamiento = false;
+                        POSICION = 0;
                         listador.setText("AGREGAR TRATAMIENTO");
                     }
 
@@ -463,68 +495,6 @@ public class HistorialOdonDos extends Fragment {
             }
         });
 
-        //Proceso para eliminar
-//        eliminador.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                final Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-//                if (tablaDinamica.getCount() > 0) {
-//                    contador = tablaDinamica.getCount();
-//                    final AlertDialog.Builder d = new AlertDialog.Builder(getContext());
-//                    LayoutInflater inflater = getActivity().getLayoutInflater();
-//                    View dialogView = inflater.inflate(R.layout.number_picker_dialog, null);
-//                    d.setCancelable(false);
-//                    d.setView(dialogView);
-//                    final AlertDialog alertDialog = d.create();
-//
-//                    TextView textView = dialogView.findViewById(R.id.titulo_dialogo);
-//                    textView.setTypeface(face2);
-//
-//                    Button aceptar = dialogView.findViewById(R.id.aceptar);
-//                    aceptar.setTypeface(face2);
-//
-//                    Button cancelar = dialogView.findViewById(R.id.cancelar);
-//                    cancelar.setTypeface(face2);
-//
-//                    final NumberPicker numberPicker = dialogView.findViewById(R.id.dialog_number_picker);
-//                    numberPicker.setMinValue(1);
-//                    numberPicker.setMaxValue(contador);
-//
-//                    aceptar.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            tablaDinamica.removeRow(numberPicker.getValue());
-//                            alertDialog.dismiss();
-//                            Alerter.create(getActivity())
-//                                    .setTitle("Se Elimino Una Fila")
-//                                    .setIcon(R.drawable.logonuevo)
-//                                    .setTextTypeface(face2)
-//                                    .enableSwipeToDismiss()
-//                                    .setBackgroundColorRes(R.color.AzulOscuro)
-//                                    .show();
-//                        }
-//                    });
-//
-//                    cancelar.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            alertDialog.dismiss();
-//                        }
-//                    });
-//
-//                    alertDialog.show();
-//                } else {
-//                    Alerter.create(getActivity())
-//                            .setTitle("No Hay Filas En La Tabla")
-//                            .setIcon(R.drawable.logonuevo)
-//                            .setTextTypeface(face2)
-//                            .enableSwipeToDismiss()
-//                            .setBackgroundColorRes(R.color.AzulOscuro)
-//                            .show();
-//                }
-//            }
-//        });
-
         // Proceso para guardar
         agregador.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -532,7 +502,6 @@ public class HistorialOdonDos extends Fragment {
 
             }
         });
-
 
         obtenerPiezas();
         obtenerServicios();
@@ -591,7 +560,6 @@ public class HistorialOdonDos extends Fragment {
                 obtenerPiezas();
             }
         });
-
     }
 
     private void obtenerServicios() {
@@ -638,7 +606,6 @@ public class HistorialOdonDos extends Fragment {
                 obtenerServicios();
             }
         });
-
     }
 
     //    VALIDACIONES
@@ -675,5 +642,4 @@ public class HistorialOdonDos extends Fragment {
             return false;
         }
     }
-
 }

@@ -2,6 +2,7 @@ package com.sistemasdt.dhr.Componentes.Tabla;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TableLayout;
@@ -174,16 +175,8 @@ public class TablaDinamica {
 
     public void removeAll() {
         if (data.size() > 0) {
-            for (int i = 1; i < data.size() + 1; i++) {
-                tableLayout.removeViewAt(i);
-            }
+            tableLayout.removeAllViews();
+            data.clear();
         }
     }
-
-//    private View.OnClickListener tablerowOnClickListener = new View.OnClickListener() {
-//        public void onClick(View v) {
-//            int index = (int) v.getTag();
-//            Toast.makeText(v.getContext(), String.valueOf(index), Toast.LENGTH_SHORT).show();
-//        }
-//    };
 }
