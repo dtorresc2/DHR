@@ -166,7 +166,7 @@ public class HistorialOdonDos extends Fragment {
 
         //Encabezado
         toolbar.setTitle("Historial Odontodologico");
-        toolbar.setNavigationIcon(R.drawable.ic_cerrar);
+        toolbar.setNavigationIcon(R.drawable.ic_atras);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

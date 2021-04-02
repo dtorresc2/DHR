@@ -3,9 +3,11 @@ package com.sistemasdt.dhr.Componentes.Tabla;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -82,6 +84,11 @@ public class TablaDinamica {
             newCell();
             info = (indexC < item.length) ? item[indexC++] : "";
             txtCell.setText(info);
+
+            txtCell.setTag(getCount());
+            txtCell.setClickable(true);
+            txtCell.setOnClickListener(tablerowOnClickListener);//add OnClickListener Here
+
             tableRow.addView(txtCell, newTableRowParams());
         }
         tableLayout.addView(tableRow, data.size(), newTableRowParams());
@@ -132,27 +139,34 @@ public class TablaDinamica {
         return params;
     }
 
-    public int getCount(){
+    public int getCount() {
         return data.size();
     }
 
-    public String getCellData(int rowIndex, int colIndex){
+    public String getCellData(int rowIndex, int colIndex) {
         tableRow = getRow(rowIndex);
         aux = (TextView) tableRow.getChildAt(colIndex);
         return aux.getText().toString();
     }
 
-    public void removeRow(int rowIndex){
+    public void removeRow(int rowIndex) {
         tableLayout.removeViewAt(rowIndex);
         data.remove(rowIndex - 1);
         //repintarTabla();
     }
 
-    public void removeAll(){
-        if (data.size() > 0){
-            for (int i = 1; i < data.size() + 1; i++){
+    public void removeAll() {
+        if (data.size() > 0) {
+            for (int i = 1; i < data.size() + 1; i++) {
                 tableLayout.removeViewAt(i);
             }
         }
     }
+
+    private View.OnClickListener tablerowOnClickListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            int index = (int) v.getTag();
+            Toast.makeText(v.getContext(), String.valueOf(index), Toast.LENGTH_SHORT).show();
+        }
+    };
 }
