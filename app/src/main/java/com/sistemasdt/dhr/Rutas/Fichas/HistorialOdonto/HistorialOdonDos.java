@@ -77,7 +77,7 @@ public class HistorialOdonDos extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_ing_historial_odon_dos, container, false);
+        View view = inflater.inflate(R.layout.fragment_historial_odon_dos, container, false);
         final Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         requestQueue = Volley.newRequestQueue(getContext());
 
@@ -85,70 +85,69 @@ public class HistorialOdonDos extends Fragment {
 
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         //spinner = view.findViewById(R.id.ing_piezas);
-        pieza = view.findViewById(R.id.ing_pieza);
-        pieza.setTypeface(face);
+//        pieza = view.findViewById(R.id.ing_pieza);
+//        pieza.setTypeface(face);
         listador = view.findViewById(R.id.guardador_hm);
         listador.setTypeface(face);
-        eliminador = view.findViewById(R.id.eliminador);
-        eliminador.setTypeface(face);
+//        eliminador = view.findViewById(R.id.eliminador);
+//        eliminador.setTypeface(face);
 
-        selectorPieza = view.findViewById(R.id.selectorPieza);
-        selectorPieza.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-                final AlertDialog.Builder d = new AlertDialog.Builder(getContext());
-                LayoutInflater inflater = getActivity().getLayoutInflater();
-                View dialogView = inflater.inflate(R.layout.number_picker_dialog, null);
-                d.setCancelable(false);
-                d.setView(dialogView);
-                final AlertDialog alertDialog = d.create();
-
-                TextView textView = dialogView.findViewById(R.id.titulo_dialogo);
-                textView.setTypeface(face2);
-
-                Button aceptar = dialogView.findViewById(R.id.aceptar);
-                aceptar.setTypeface(face2);
-
-                Button cancelar = dialogView.findViewById(R.id.cancelar);
-                cancelar.setTypeface(face2);
-
-                final NumberPicker numberPicker = dialogView.findViewById(R.id.dialog_number_picker);
-                numberPicker.setMinValue(1);
-                numberPicker.setMaxValue(32);
-
-                aceptar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        pieza.setText(String.valueOf(numberPicker.getValue()));
-                        alertDialog.dismiss();
-                    }
-                });
-
-                cancelar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        alertDialog.dismiss();
-                    }
-                });
-
-                alertDialog.show();
-            }
-        });
+//        selectorPieza = view.findViewById(R.id.selectorPieza);
+//        selectorPieza.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                final Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+//                final AlertDialog.Builder d = new AlertDialog.Builder(getContext());
+//                LayoutInflater inflater = getActivity().getLayoutInflater();
+//                View dialogView = inflater.inflate(R.layout.number_picker_dialog, null);
+//                d.setCancelable(false);
+//                d.setView(dialogView);
+//                final AlertDialog alertDialog = d.create();
+//
+//                TextView textView = dialogView.findViewById(R.id.titulo_dialogo);
+//                textView.setTypeface(face2);
+//
+//                Button aceptar = dialogView.findViewById(R.id.aceptar);
+//                aceptar.setTypeface(face2);
+//
+//                Button cancelar = dialogView.findViewById(R.id.cancelar);
+//                cancelar.setTypeface(face2);
+//
+//                final NumberPicker numberPicker = dialogView.findViewById(R.id.dialog_number_picker);
+//                numberPicker.setMinValue(1);
+//                numberPicker.setMaxValue(32);
+//
+//                aceptar.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        pieza.setText(String.valueOf(numberPicker.getValue()));
+//                        alertDialog.dismiss();
+//                    }
+//                });
+//
+//                cancelar.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        alertDialog.dismiss();
+//                    }
+//                });
+//
+//                alertDialog.show();
+//            }
+//        });
 
         tableLayout = view.findViewById(R.id.table);
 
-        tratamiento = view.findViewById(R.id.tratamiento);
-        tratamiento.setTypeface(face);
-        costo = view.findViewById(R.id.costo);
-        costo.setTypeface(face);
+//        tratamiento = view.findViewById(R.id.tratamiento);
+//        tratamiento.setTypeface(face);
+//        costo = view.findViewById(R.id.costo);
+//        costo.setTypeface(face);
 
-        titulo_diag = view.findViewById(R.id.titulo_diagnostico);
-        titulo_diag.setTypeface(face);
+//        titulo_diag = view.findViewById(R.id.titulo_diagnostico);
+//        titulo_diag.setTypeface(face);
         titulo_pres = view.findViewById(R.id.titulo_presupuesto);
         titulo_pres.setTypeface(face);
-        //titulo_piez = view.findViewById(R.id.titulo_pieza);
-        //titulo_piez.setTypeface(face);
+
         total_costo = view.findViewById(R.id.tota_costo);
         total_costo.setTypeface(face);
         titulo_costo = view.findViewById(R.id.titulo_costo);
@@ -187,26 +186,6 @@ public class HistorialOdonDos extends Fragment {
             }
         });
 
-        //Recuperacion de Datos
-        /*SharedPreferences preferencias = getActivity().getSharedPreferences("datosdentales", Context.MODE_PRIVATE);
-        dolor.setChecked(preferencias.getBoolean("dolor", false));
-        gingivitis.setChecked(preferencias.getBoolean("gingi", false));
-        desc_dolor.setText(preferencias.getString("descdolor", ""));
-        otros.setText(preferencias.getString("otro", ""));
-        lim = preferencias.getInt("lim", 0);
-
-
-
-        if (lim > 0) {
-            for (int i = 0; i < lim; i++) {
-                String[] item = new String[]{
-                        preferencias.getString("pieza" + i, ""),
-                        preferencias.getString("trat" + i, ""),
-                        preferencias.getString("cost" + i, "")
-                };
-                tablaDinamica.addItem(item);
-            }
-        }*/
         final SharedPreferences.Editor escritor = preferencias.edit();
 
         //Proceso para listar
@@ -401,20 +380,6 @@ public class HistorialOdonDos extends Fragment {
         });
 
         return view;
-        /*escritor.putBoolean("dolor", dolor.isChecked());
-                escritor.putString("descdolor", desc_dolor.getText().toString());
-                escritor.putBoolean("gingi", gingivitis.isChecked());
-                escritor.putString("otros", otros.getText().toString());
-                escritor.putInt("lim", tablaDinamica.getCount());
-
-                if (tablaDinamica.getCount() > 0) {
-                    for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
-                        escritor.putString("pieza" + (i - 1), tablaDinamica.getCellData(i, 0));
-                        escritor.putString("trat" + (i - 1), tablaDinamica.getCellData(i, 1));
-                        escritor.putString("cost" + (i - 1), tablaDinamica.getCellData(i, 2));
-                    }
-                }
-        escritor.commit();*/
     }
 
     public void llenarPiezas() {
