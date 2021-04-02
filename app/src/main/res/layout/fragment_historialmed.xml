@@ -64,6 +64,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.7"
                     android:ems="10"
+                    android:maxLength="60"
                     android:enabled="false"
                     android:hint="¿Porque?"
                     android:inputType="textPersonName" />
@@ -89,6 +90,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:ems="10"
+                    android:maxLength="60"
                     android:enabled="false"
                     android:hint="¿Cual?"
                     android:inputType="textPersonName" />
@@ -114,6 +116,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1.4"
                     android:ems="10"
+                    android:maxLength="10"
                     android:enabled="false"
                     android:hint="¿Cual?"
                     android:inputType="textPersonName" />

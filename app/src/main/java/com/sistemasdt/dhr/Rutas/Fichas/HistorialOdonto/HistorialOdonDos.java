@@ -1,4 +1,4 @@
-package com.sistemasdt.dhr.OpcionIngreso.Normal;
+package com.sistemasdt.dhr.Rutas.Fichas.HistorialOdonto;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -46,7 +46,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class IngHOdon extends Fragment {
+public class HistorialOdonDos extends Fragment {
     private Toolbar toolbar;
     ArrayList<String> listaDatos1, piezas;
     Button listador, eliminador;
@@ -69,7 +69,7 @@ public class IngHOdon extends Fragment {
     private int contador = 0;
     private ImageButton selectorPieza;
 
-    public IngHOdon() {
+    public HistorialOdonDos() {
         // Required empty public constructor
     }
 
@@ -77,7 +77,7 @@ public class IngHOdon extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_ing_hodon, container, false);
+        View view = inflater.inflate(R.layout.fragment_ing_historial_odon_dos, container, false);
         final Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         requestQueue = Volley.newRequestQueue(getContext());
 
