@@ -49,9 +49,14 @@ import com.sistemasdt.dhr.OpcionSeguimiento.SegPagos;
 import com.sistemasdt.dhr.OpcionSeguimiento.Seguimiento;
 import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.Componentes.Tabla.TablaDinamica;
+import com.sistemasdt.dhr.ServiciosAPI.QuerysPacientes;
+import com.sistemasdt.dhr.ServiciosAPI.QuerysPiezas;
 import com.tapadoo.alerter.Alerter;
 
 import android.support.design.widget.FloatingActionButton;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,7 +75,7 @@ public class HistorialOdonDos extends Fragment {
     private String[] header = {"Pieza", "Descripcion", "Costo"};
     private ArrayList<String[]> rows = new ArrayList<>();
     private EditText tratamiento, costo, otros, desc_dolor;
-    private TextView pieza;
+    private TextView pieza, servicio;
     private TextView titulo_detalle, titulo_diag, titulo_pres, titulo_piez, total_costo, titulo_costo, celdap, celdat, celdac;
     private TablaDinamica tablaDinamica;
     private int lim;
@@ -166,7 +171,9 @@ public class HistorialOdonDos extends Fragment {
         layoutMonto = view.findViewById(R.id.layoutMonto);
         layoutMonto.setTypeface(face);
 
-        //spinner = view.findViewById(R.id.ing_piezas);
+        listaPiezas = new ArrayList<>();
+        listaPiezasGenenal = new ArrayList<>();
+
         pieza = view.findViewById(R.id.pieza);
         pieza.setTypeface(face);
         pieza.setOnClickListener(new View.OnClickListener() {
@@ -183,6 +190,7 @@ public class HistorialOdonDos extends Fragment {
 
                 TextView textView = dialog.findViewById(R.id.tituloDialogo);
                 textView.setTypeface(face);
+                textView.setText("Seleccione una pieza");
 
                 ListView listView = dialog.findViewById(R.id.lista_items);
 
@@ -221,6 +229,15 @@ public class HistorialOdonDos extends Fragment {
                         dialog.dismiss();
                     }
                 });
+
+            }
+        });
+
+        servicio = view.findViewById(R.id.servicio);
+        servicio.setTypeface(face);
+        servicio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
             }
         });
@@ -277,11 +294,6 @@ public class HistorialOdonDos extends Fragment {
 
         tableLayout = view.findViewById(R.id.table);
 
-//        tratamiento = view.findViewById(R.id.tratamiento);
-//        tratamiento.setTypeface(face);
-//        costo = view.findViewById(R.id.costo);
-//        costo.setTypeface(face);
-
         titulo_diag = view.findViewById(R.id.titulo_diagnostico);
         titulo_diag.setTypeface(face);
         titulo_pres = view.findViewById(R.id.titulo_presupuesto);
@@ -294,13 +306,10 @@ public class HistorialOdonDos extends Fragment {
         agregador = view.findViewById(R.id.guardador_hd2);
 
         //Instancias
-        //llenarPiezas();
         tablaDinamica = new TablaDinamica(tableLayout, getContext());
         tablaDinamica.addHeader(header);
         tablaDinamica.addData(getClients());
         tablaDinamica.fondoHeader(R.color.AzulOscuro);
-        //tablaDinamica.fondoData(R.color.FondoSecundario);
-
 
         final SharedPreferences.Editor escritor = preferencias.edit();
 
@@ -411,184 +420,69 @@ public class HistorialOdonDos extends Fragment {
             }
         });
 
-//        agregador.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-//                progressDialog.setMessage("Cargando...");
-//                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-//                progressDialog.setCancelable(false);
-//                progressDialog.show();
-//
-//                Handler handler = new Handler();
-//                handler.postDelayed(new Runnable() {
-//                    public void run() {
-//                        progressDialog.dismiss();
-//                    }
-//                }, 1000);
-//
-//                if (tablaDinamica.getCount() > 0) {
-//                    escritor.putString("totalOdon",total_costo.getText().toString());
-//                    escritor.commit();
-//                    for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
-//                        //insertarTratamiento("http://192.168.56.1:80/DHR/IngresoN/ficha.php?db=u578331993_clinc&user=root&estado=10", tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2), tablaDinamica.getCellData(i, 0));
-//
-//                        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-//                        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-//
-//                        if (networkInfo != null && networkInfo.isConnected()) {
-//                            switch (mOpcion) {
-//                                case 1:
-//                                    insertarTratamiento("http://dhr.sistemasdt.xyz/Normal/ficha.php?estado=10", tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2), tablaDinamica.getCellData(i, 0));
-//                                    break;
-//                                case 2:
-//                                    agregarTratamiento("http://dhr.sistemasdt.xyz/Normal/seguimiento.php?estado=1", tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2), tablaDinamica.getCellData(i, 0));
-//                                    break;
-//                            }
-//                        } else {
-//                            Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-//                            Alerter.create(getActivity())
-//                                    .setTitle("Error")
-//                                    .setText("Fallo en Conexion a Internet")
-//                                    .setIcon(R.drawable.logonuevo)
-//                                    .setTextTypeface(face2)
-//                                    .enableSwipeToDismiss()
-//                                    .setBackgroundColorRes(R.color.AzulOscuro)
-//                                    .show();
-//                        }
-//                    }
-//
-//                    ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-//                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-//
-//                    if (networkInfo != null && networkInfo.isConnected()) {
-//                        switch (mOpcion) {
-//                            case 1:
-//                                SegPagos segPagos = new SegPagos();
-//                                segPagos.ObtenerOpcion(1);
-//                                FragmentTransaction transaction = getFragmentManager().beginTransaction()
-//                                        .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-//                                transaction.replace(R.id.contenedor, segPagos);
-//                                transaction.commit();
-//                                break;
-//                            case 2:
-//                                Seguimiento seguimiento = new Seguimiento();
-//                                FragmentTransaction transaction2 = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-//                                transaction2.replace(R.id.contenedor, seguimiento);
-//                                transaction2.commit();
-//                                break;
-//
-//                        }
-//                    } else {
-//                        Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-//                        Alerter.create(getActivity())
-//                                .setTitle("Error")
-//                                .setText("Fallo en Conexion a Internet")
-//                                .setIcon(R.drawable.logonuevo)
-//                                .setTextTypeface(face2)
-//                                .enableSwipeToDismiss()
-//                                .setBackgroundColorRes(R.color.AzulOscuro)
-//                                .show();
-//                    }
-//                }
-//                else {
-//                    Alerter.create(getActivity())
-//                            .setTitle("No Hay Filas En La Tabla")
-//                            .setIcon(R.drawable.logonuevo)
-//                            .setTextTypeface(face)
-//                            .enableSwipeToDismiss()
-//                            .setBackgroundColorRes(R.color.AzulOscuro)
-//                            .show();
-//                }
-//            }
-//        });
-
         String[] item = new String[]{
-                //spinner.getSelectedItem().toString(),
                 "Muela Izq",
                 "Limpieza",
                 "20.00"
         };
         tablaDinamica.addItem(item);
 
+        obtenerPiezas();
         return view;
-    }
-
-    public void llenarPiezas() {
-        piezas = new ArrayList<String>();
-        for (int i = 0; i < 20; i++) {
-            piezas.add(String.valueOf(i));
-        }
-        adaptadorSpinner = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, piezas);
-        spinner.setAdapter(adaptadorSpinner);
     }
 
     private ArrayList<String[]> getClients() {
         return rows;
     }
 
-    //Insertar Ficha y Obtener ID Ficha ------------------------------------------------------------
-    public void insertarTratamiento(String URL, final String aux1, final String aux2, final String aux3) {
-        final String[] id = new String[1];
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i(TAG, "" + error.toString());
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros = new HashMap<String, String>();
-                parametros.put("plan", aux1);
-                parametros.put("costo", aux2);
-                parametros.put("pieza", aux3);
-                return parametros;
-            }
-
-        };
-        requestQueue.add(stringRequest);
-    }
-
     public void ObtenerOpcion(int opcion) {
         mOpcion = opcion;
-    }
-
-    //Insertar Ficha y Obtener ID Ficha ------------------------------------------------------------
-    public void agregarTratamiento(String URL, final String aux1, final String aux2, final String aux3) {
-        final String[] id = new String[1];
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i(TAG, "" + error.toString());
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros = new HashMap<String, String>();
-                parametros.put("plan", aux1);
-                parametros.put("costo", aux2);
-                parametros.put("pieza", aux3);
-                parametros.put("id", preferencias.getString("idficha", ""));
-                return parametros;
-            }
-
-        };
-        requestQueue.add(stringRequest);
     }
 
     public void obtenerPiezas() {
         listaPiezas.clear();
         listaPiezasGenenal.clear();
+
+        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+        progressDialog.setMessage("Cargando...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+        QuerysPiezas querysPiezas = new QuerysPiezas(getContext());
+        querysPiezas.obtenerListadoPiezas(preferenciasUsuario.getInt("ID_USUARIO", 0), new QuerysPiezas.VolleyOnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                try {
+                    JSONArray jsonArray = new JSONArray(object.toString());
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        if (jsonArray.getJSONObject(i).getInt("ESTADO") == 1) {
+                            ItemPieza pieza = new ItemPieza(
+                                    jsonArray.getJSONObject(i).getInt("ID_PIEZA"),
+                                    jsonArray.getJSONObject(i).getInt("NUMERO"),
+                                    jsonArray.getJSONObject(i).getString("NOMBRE"),
+                                    (jsonArray.getJSONObject(i).getInt("ESTADO") > 0) ? true : false
+                            );
+
+                            listaPiezas.add(pieza.getNombrePieza());
+                            listaPiezasGenenal.add(pieza);
+                        }
+                    }
+
+                } catch (JSONException e) {
+                    e.fillInStackTrace();
+                }
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                progressDialog.dismiss();
+                obtenerPiezas();
+            }
+        });
+
     }
 
     //    VALIDACIONES
