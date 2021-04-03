@@ -34,6 +34,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.sistemasdt.dhr.Rutas.Fichas.HistorialOdonto.HistorialOdonDos;
 import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
 import com.sistemasdt.dhr.OpcionSeguimiento.Seguimiento;
@@ -78,16 +79,12 @@ public class HistorialFotografico extends Fragment {
     private String path;
     File fileImagen;
     Bitmap bitmap;
-    private int widht;
-    private int height;
-    private int seleccionado;
-    private int fotos_guardadas;
+
     private Toolbar toolbar;
-    private ImageView galeria;
-    private TextView tactual, tsep, ttotal;
+
     private FloatingActionButton camara, fototeca, eliminador, agregador;
+    private FloatingActionsMenu menuOpciones;
     private ArrayList<Bitmap> lista_fotos = new ArrayList<Bitmap>();
-    private ImageButton atras, adelante;
     private static final String TAG = "MyActivity";
     RequestQueue requestQueue;
     private int mOpcion = 0;
@@ -112,52 +109,9 @@ public class HistorialFotografico extends Fragment {
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         toolbar.setTitle("Historial Fotografico");
         toolbar.setNavigationIcon(R.drawable.ic_atras);
-        requestQueue = Volley.newRequestQueue(getContext());
-
-        preferencias = getActivity().getSharedPreferences("ListadoPacientes", Context.MODE_PRIVATE);
-
-//        galeria = view.findViewById(R.id.visor);
-//        galeria.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mostrarMenu();
-//            }
-//        });
-
-//        tactual = view.findViewById(R.id.actual);
-//        tactual.setTypeface(face);
-//        ttotal = view.findViewById(R.id.total);
-//        ttotal.setTypeface(face);
-//        tsep = view.findViewById(R.id.separador);
-//        tsep.setTypeface(face);
-
-        camara = view.findViewById(R.id.tomar_hf);
-        fototeca = view.findViewById(R.id.seleccionar_hf);
-        eliminador = view.findViewById(R.id.borrar_hf);
-        agregador = view.findViewById(R.id.registrar_hf);
-
-//        atras = view.findViewById(R.id.atras);
-//        adelante = view.findViewById(R.id.adelante);
-        seleccionado = 0;
-
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                switch (mOpcion){
-//                    case 1:
-//                        MenuFichas menuFichas = new MenuFichas();
-//                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-//                        transaction.replace(R.id.contenedor, menuFichas);
-//                        transaction.commit();
-//                        break;
-//
-//                    case 2:
-//                        Seguimiento seguimiento = new Seguimiento();
-//                        FragmentTransaction transaction2 = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-//                        transaction2.replace(R.id.contenedor, seguimiento);
-//                        transaction2.commit();
-//                        break;
-//                }
                 HistorialOdonDos historialOdonDos = new HistorialOdonDos();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction()
                         .setCustomAnimations(R.anim.left_in, R.anim.left_out);
@@ -166,46 +120,16 @@ public class HistorialFotografico extends Fragment {
             }
         });
 
-        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-        StrictMode.setVmPolicy(builder.build());
+        menuOpciones = view.findViewById(R.id.menuDP);
+        camara = view.findViewById(R.id.tomar_hf);
+        fototeca = view.findViewById(R.id.seleccionar_hf);
+        eliminador = view.findViewById(R.id.borrar_hf);
+        agregador = view.findViewById(R.id.registrar_hf);
 
         rv = view.findViewById(R.id.rv);
 
-//        staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-//        rv.setLayoutManager(staggeredGridLayoutManager);
-//        List<String> imageList = new ArrayList<>();
-//        imageList.add("https://dhr-sanjose.s3.amazonaws.com/imagen-1.jpg");
-//        imageList.add("https://dhr-sanjose.s3.amazonaws.com/imagen-1.jpg");
-//        imageList.add("https://dhr-sanjose.s3.amazonaws.com/imagen-1.jpg");
-//        imageList.add("https://dhr-sanjose.s3.amazonaws.com/imagen-1.jpg");
-//        imageList.add("https://dhr-sanjose.s3.amazonaws.com/imagen-1.jpg");
-//        imageList.add("https://dhr-sanjose.s3.amazonaws.com/imagen-1.jpg");
-//        imageList.add("https://dhr-sanjose.s3.amazonaws.com/imagen-1.jpg");
-//        List<Bitmap> imageList = new ArrayList<>();
-//        imageList.add()
-//        fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
-//        rv.setAdapter(fotoAdapter);
-
-        //Cargar Datos
-        /*final SharedPreferences preferencias = getActivity().getSharedPreferences("datosfotos", Context.MODE_PRIVATE);
-
-        fotos_guardadas = preferencias.getInt("fotos", 0);
-
-        if (fotos_guardadas > 0) {
-            for (int i = 0; i < fotos_guardadas; i++) {
-                String codigo_foto = preferencias.getString("foto" + i, "");
-
-                if (!codigo_foto.equalsIgnoreCase("")) {
-                    byte[] b = Base64.decode(codigo_foto, Base64.DEFAULT);
-                    Bitmap imagen_codificada = BitmapFactory.decodeByteArray(b, 0, b.length);
-                    lista_fotos.add(imagen_codificada);
-                }
-            }
-            galeria.setImageBitmap(lista_fotos.get(0));
-            seleccionado = 0;
-            tactual.setText(String.valueOf(seleccionado + 1));
-            ttotal.setText(String.valueOf(lista_fotos.size()));
-        }*/
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
 
         //Abir camara
         camara.setOnClickListener(new View.OnClickListener() {
@@ -218,6 +142,7 @@ public class HistorialFotografico extends Fragment {
                     //Nuestra app no tiene permiso, entonces debo solicitar el mismo
                     solicitarPermiso();
                 }
+                menuOpciones.collapse();
             }
         });
 
@@ -235,189 +160,54 @@ public class HistorialFotografico extends Fragment {
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(Intent.createChooser(intent, "Seleccione"), COD_SELECCIONA_MULTIPLE);
+                menuOpciones.collapse();
             }
         });
 
-        //Galeria - Flecha izquierda
-//        atras.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (lista_fotos.size() > 0) {
-//                    if (seleccionado < 1) {
-//                        seleccionado = lista_fotos.size() - 1;
-//                    } else {
-//                        seleccionado--;
-//                    }
-//                    galeria.setImageBitmap(lista_fotos.get(seleccionado));
-//                }
-//                tactual.setText(String.valueOf(seleccionado + 1));
-//            }
-//        });
-
-        //Galeria - Flecha derecha
-//        adelante.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //Toast.makeText(getActivity(),"Entre " + lista_fotos.size() ,Toast.LENGTH_LONG);
-//                if (lista_fotos.size() > 0) {
-//                    if (seleccionado >= lista_fotos.size() - 1) {
-//                        seleccionado = 0;
-//                    } else {
-//                        seleccionado++;
-//                    }
-//                    galeria.setImageBitmap(lista_fotos.get(seleccionado));
-//                }
-//                tactual.setText(String.valueOf(seleccionado + 1));
-//            }
-//        });
 
         //Eliminar fotografia
         eliminador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (lista_fotos.size() > 1) {
-                    lista_fotos.remove(seleccionado);
-
-                    if (seleccionado == 0) {
-                        seleccionado = 1;
-                        tactual.setText(String.valueOf(seleccionado));
-                    } else {
-                        seleccionado--;
-                        tactual.setText(String.valueOf(seleccionado + 1));
-                    }
-
-                    if (lista_fotos.size() == 1) {
-                        galeria.setImageBitmap(lista_fotos.get(0));
-                    } else {
-                        galeria.setImageBitmap(lista_fotos.get(seleccionado));
-                    }
-
-                    ttotal.setText(String.valueOf(lista_fotos.size()));
-                } else if (lista_fotos.size() == 1) {
-                    lista_fotos.remove(0);
-                    galeria.setImageResource(R.drawable.error);
-                    seleccionado--;
-                    tactual.setText(String.valueOf(seleccionado));
-                    ttotal.setText(String.valueOf(lista_fotos.size()));
-                } else {
-                    galeria.setImageResource(R.drawable.error);
-                    Toast.makeText(getActivity(), "Galeria Vacia", Toast.LENGTH_LONG).show();
-                }
+//                if (lista_fotos.size() > 1) {
+//                    lista_fotos.remove(seleccionado);
+//
+//                    if (seleccionado == 0) {
+//                        seleccionado = 1;
+//                        tactual.setText(String.valueOf(seleccionado));
+//                    } else {
+//                        seleccionado--;
+//                        tactual.setText(String.valueOf(seleccionado + 1));
+//                    }
+//
+//                    if (lista_fotos.size() == 1) {
+//                        galeria.setImageBitmap(lista_fotos.get(0));
+//                    } else {
+//                        galeria.setImageBitmap(lista_fotos.get(seleccionado));
+//                    }
+//
+//                    ttotal.setText(String.valueOf(lista_fotos.size()));
+//                } else if (lista_fotos.size() == 1) {
+//                    lista_fotos.remove(0);
+//                    galeria.setImageResource(R.drawable.error);
+//                    seleccionado--;
+//                    tactual.setText(String.valueOf(seleccionado));
+//                    ttotal.setText(String.valueOf(lista_fotos.size()));
+//                } else {
+//                    galeria.setImageResource(R.drawable.error);
+//                    Toast.makeText(getActivity(), "Galeria Vacia", Toast.LENGTH_LONG).show();
+//                }
             }
         });
 
-        //MenuFichas para insertar en BD
         agregador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //SharedPreferences.Editor escritor = preferencias.edit();
-                //escritor.putInt("fotos", lista_fotos.size());
 
-                final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-                progressDialog.setMessage("Cargando...");
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                progressDialog.setCancelable(false);
-                progressDialog.show();
-
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        progressDialog.dismiss();
-                    }
-                }, 2000);
-
-                if (lista_fotos.size() > 0) {
-                    for (int i = 0; i < lista_fotos.size(); i++) {
-                        Bitmap bitmap_aux = lista_fotos.get(i);
-                        ByteArrayOutputStream salida = new ByteArrayOutputStream();
-                        bitmap_aux.compress(Bitmap.CompressFormat.PNG, 100, salida);
-                        byte[] b = salida.toByteArray();
-
-                        String codigoFoto = Base64.encodeToString(b, Base64.DEFAULT);
-
-                        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-                        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-                        if (networkInfo != null && networkInfo.isConnected()) {
-                            switch (mOpcion) {
-                                case 1:
-                                    insertarHFoto("http://dhr.sistemasdt.xyz/Normal/ficha.php?estado=13", codigoFoto);
-                                    break;
-
-                                case 2:
-                                    agregarFoto("http://dhr.sistemasdt.xyz/Normal/seguimiento.php?estado=4", codigoFoto);
-                                    break;
-                            }
-                        } else {
-                            Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-                            Alerter.create(getActivity())
-                                    .setTitle("Error")
-                                    .setText("Fallo en Conexion a Internet")
-                                    .setIcon(R.drawable.logonuevo)
-                                    .setTextTypeface(face2)
-                                    .enableSwipeToDismiss()
-                                    .setBackgroundColorRes(R.color.AzulOscuro)
-                                    .show();
-                        }
-                    }
-                }
-                //escritor.commit();
-                lista_fotos.clear();
-                galeria.setImageResource(R.drawable.error);
-                seleccionado = 0;
-                tactual.setText("0");
-                ttotal.setText("0");
-
-                switch (mOpcion) {
-                    case 1:
-                        MenuFichas menuFichas = new MenuFichas();
-                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                        transaction.replace(R.id.contenedor, menuFichas);
-                        transaction.commit();
-                        break;
-
-                    case 2:
-                        Seguimiento seguimiento = new Seguimiento();
-                        FragmentTransaction transaction2 = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                        transaction2.replace(R.id.contenedor, seguimiento);
-                        transaction2.commit();
-                        break;
-                }
             }
         });
 
         return view;
-    }
-
-    public void mostrarMenu() {
-        final CharSequence[] opciones = {"Tomar Fotografia", "Elegir de la Galeria", "Cancelar"};
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Elige una Opcion");
-        builder.setItems(opciones, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (opciones[which].equals("Tomar Fotografia")) {
-                    //Metodo para tomar fotografia
-                    if (checkearPermiso()) {
-                        //Nuestra app tiene permiso
-                        abrirCamara();
-                    } else {
-                        //Nuestra app no tiene permiso, entonces debo solicitar el mismo
-                        solicitarPermiso();
-                    }
-                } else {
-                    if (opciones[which].equals("Elegir de la Galeria")) {
-                        //Metodo para tomar fotografia
-                        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        intent.setType("image/");
-                        startActivityForResult(intent.createChooser(intent, "Seleccione"), COD_SELECCIONA);
-                    } else {
-                        dialog.dismiss();
-                    }
-                }
-            }
-        });
-        builder.show();
     }
 
     @Override
@@ -435,31 +225,7 @@ public class HistorialFotografico extends Fragment {
                         Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
                         parcelFileDescriptor.close();
 
-                        widht = image.getWidth();
-                        height = image.getHeight();
 
-//                        if (widht > 250 || height > 250) {
-//                            float escalaAncho = ((float) 250) / widht;
-//                            float escalaAlto = ((float) 250) / height;
-//                            Matrix matrix = new Matrix();
-//                            matrix.postScale(escalaAncho, escalaAlto);
-//                            image = Bitmap.createBitmap(image, 0, 0, widht, height, matrix, false);
-//                        }
-
-//                        if (widht > 600 || height > 800) {
-//                            float escalaAncho = ((float) 600) / widht;
-//                            float escalaAlto = ((float) 800) / height;
-//                            Matrix matrix = new Matrix();
-//                            matrix.postScale(escalaAncho, escalaAlto);
-//                            image = Bitmap.createBitmap(image, 0, 0, widht, height, matrix, false);
-//                        }
-
-                        //matrix.postRotate(90);
-                        //Bitmap scaledBitmap = Bitmap.createScaledBitmap(image, widht, height, true);
-                        //Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBitmap, 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
-
-                        //galeria.setImageBitmap(rotatedBitmap);
-                        //lista_fotos.add(rotatedBitmap);
 
                         staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
                         rv.setLayoutManager(staggeredGridLayoutManager);
@@ -467,17 +233,13 @@ public class HistorialFotografico extends Fragment {
                         fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
                         rv.setAdapter(fotoAdapter);
 
-//                        galeria.setImageBitmap(lista_fotos.get(lista_fotos.size() - 1));
-//                        seleccionado = lista_fotos.size() - 1;
-//                        tactual.setText(String.valueOf(seleccionado + 1));
-//                        ttotal.setText(String.valueOf(lista_fotos.size()));
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 } else {
-                    galeria.setImageResource(R.drawable.error);
+//                    galeria.setImageResource(R.drawable.error);
                 }
                 break;
 
@@ -492,20 +254,12 @@ public class HistorialFotografico extends Fragment {
 
                 bitmap = BitmapFactory.decodeFile(path);
 
-                widht = bitmap.getWidth();
-                height = bitmap.getHeight();
+//                widht = bitmap.getWidth();
+//                height = bitmap.getHeight();
 
 //                if (widht > 600 || height > 800) {
 //                    float escalaAncho = ((float) 600) / widht;
 //                    float escalaAlto = ((float) 800) / height;
-//                    Matrix matrix = new Matrix();
-//                    matrix.postScale(escalaAncho, escalaAlto);
-//                    bitmap = Bitmap.createBitmap(bitmap, 0, 0, widht, height, matrix, true);
-//                }
-
-//                if (widht > 250 || height > 250) {
-//                    float escalaAncho = ((float) 250) / widht;
-//                    float escalaAlto = ((float) 250) / height;
 //                    Matrix matrix = new Matrix();
 //                    matrix.postScale(escalaAncho, escalaAlto);
 //                    bitmap = Bitmap.createBitmap(bitmap, 0, 0, widht, height, matrix, true);
@@ -516,12 +270,6 @@ public class HistorialFotografico extends Fragment {
                 lista_fotos.add(bitmap);
                 fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
                 rv.setAdapter(fotoAdapter);
-
-                //galeria.setImageBitmap(bitmap);
-//                galeria.setImageBitmap(lista_fotos.get(lista_fotos.size() - 1));
-//                seleccionado = lista_fotos.size() - 1;
-//                tactual.setText(String.valueOf(seleccionado + 1));
-//                ttotal.setText(String.valueOf(lista_fotos.size()));
                 break;
 
             case COD_SELECCIONA_MULTIPLE:
@@ -629,74 +377,7 @@ public class HistorialFotografico extends Fragment {
         }
     }
 
-    //Insertar Ficha y Obtener ID Ficha ------------------------------------------------------------
-    public void insertarHFoto(String URL, final String fotoo) {
-        final String[] id = new String[1];
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i(TAG, "" + error.toString());
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros = new HashMap<String, String>();
-                parametros.put("foto", fotoo);
-                parametros.put("desc", "HistorialF");
-                Long consecutivo = System.currentTimeMillis() / 1000;
-                parametros.put("nom", "DHR_" + consecutivo.toString());
-                return parametros;
-            }
-
-        };
-        requestQueue.add(stringRequest);
-    }
-
     public void ObtenerOpcion(int opcion) {
         mOpcion = opcion;
     }
-
-    //Insertar Ficha y Obtener ID Ficha ------------------------------------------------------------
-    public void agregarFoto(String URL, final String fotoo) {
-        final String[] id = new String[1];
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i(TAG, "" + error.toString());
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros = new HashMap<String, String>();
-                parametros.put("foto", fotoo);
-                parametros.put("desc", "HistorialF");
-                Long consecutivo = System.currentTimeMillis() / 1000;
-                parametros.put("nom", "DHR_" + consecutivo.toString());
-                parametros.put("id", preferencias.getString("idficha", ""));
-                return parametros;
-            }
-
-        };
-        requestQueue.add(stringRequest);
-    }
-
 }
-
-/*
-    if (Intent.ACTION_SEND_MULTIPLE.equals(action)) && Intent.hasExtra(Intent.EXTRA_STREAM)) {
-        ArrayList<Parcelable> list = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
-        for (Parcelable parcel : list) {
-        Uri uri = (Uri) parcel;
-        /// do things here. }
-        }
-*/

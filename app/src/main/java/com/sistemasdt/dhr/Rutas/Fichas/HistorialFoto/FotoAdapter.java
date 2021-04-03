@@ -63,14 +63,6 @@ public class FotoAdapter extends RecyclerView.Adapter<FotoAdapter.ViewHolderCons
         }
 
         viewHolderConsulta.siv.setImageBitmap(image);
-
-//        viewHolderConsulta.siv.setImageBitmap(imageList.get(i));
-
-//        viewHolderConsulta.siv.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//            }
-//        });
     }
 
     @Override
