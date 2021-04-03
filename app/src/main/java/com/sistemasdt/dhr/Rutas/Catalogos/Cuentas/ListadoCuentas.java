@@ -19,7 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sistemasdt.dhr.Componentes.Dialogos.Bitacora.FuncionesBitacora;
-import com.sistemasdt.dhr.Componentes.MenusInferiores.MenuInferiorCuentas;
+import com.sistemasdt.dhr.Componentes.MenusInferiores.MenuInferiorDos;
 import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.Rutas.Catalogos.Catalogos;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysCuentas;
@@ -164,10 +164,10 @@ public class ListadoCuentas extends Fragment {
                     mAdapter.setOnItemClickListener(new CuentasAdapter.OnClickListener() {
                         @Override
                         public void onItemClick(final int position) {
-                            MenuInferiorCuentas menuInferiorCuentas = new MenuInferiorCuentas();
-                            menuInferiorCuentas.show(getFragmentManager(), "MenuInferior");
-                            menuInferiorCuentas.recibirTitulo(listaCuentas.get(position).getUsuarioCuenta());
-                            menuInferiorCuentas.eventoClick(new MenuInferiorCuentas.MenuInferiorListener() {
+                            MenuInferiorDos menuInferiorDos = new MenuInferiorDos();
+                            menuInferiorDos.show(getFragmentManager(), "MenuInferior");
+                            menuInferiorDos.recibirTitulo(listaCuentas.get(position).getUsuarioCuenta());
+                            menuInferiorDos.eventoClick(new MenuInferiorDos.MenuInferiorListener() {
                                 @Override
                                 public void onButtonClicked(int opcion) {
                                     realizarAccion(opcion, listaCuentas.get(position).getCodigoCuenta());

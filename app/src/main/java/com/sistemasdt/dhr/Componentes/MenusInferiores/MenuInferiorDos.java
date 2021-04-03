@@ -13,12 +13,12 @@ import android.widget.TextView;
 
 import com.sistemasdt.dhr.R;
 
-public class MenuInferiorCuentas extends BottomSheetDialogFragment {
-    private MenuInferiorCuentas.MenuInferiorListener mMenuInferiorListener;
+public class MenuInferiorDos extends BottomSheetDialogFragment {
+    private MenuInferiorDos.MenuInferiorListener mMenuInferiorListener;
     private int ID = 1;
     private String titulo = "Titulo #";
 
-    public void eventoClick(MenuInferiorCuentas.MenuInferiorListener menuInferiorListener){
+    public void eventoClick(MenuInferiorDos.MenuInferiorListener menuInferiorListener){
         mMenuInferiorListener = menuInferiorListener;
     }
 

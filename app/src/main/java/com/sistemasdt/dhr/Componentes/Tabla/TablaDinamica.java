@@ -2,12 +2,15 @@ package com.sistemasdt.dhr.Componentes.Tabla;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.sistemasdt.dhr.Rutas.Catalogos.Servicios.ServiciosAdapter;
 
 import java.util.ArrayList;
 
@@ -21,6 +24,15 @@ public class TablaDinamica {
     private int indexR;
     private int indexC;
     private int colorFondo;
+    private OnClickListener mListener;
+
+    public interface OnClickListener {
+        void onItemClick(int position);
+    }
+
+    public void setOnItemClickListener(OnClickListener onItemClickListener) {
+        mListener = onItemClickListener;
+    }
 
     public TablaDinamica(TableLayout tableLayout, Context context) {
         this.tableLayout = tableLayout;
@@ -87,7 +99,13 @@ public class TablaDinamica {
 
             txtCell.setTag(getCount());
             txtCell.setClickable(true);
-            txtCell.setOnClickListener(tablerowOnClickListener);//add OnClickListener Here
+            txtCell.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int index = (int) v.getTag();
+                    mListener.onItemClick(index);
+                }
+            });
 
             tableRow.addView(txtCell, newTableRowParams());
         }
@@ -157,16 +175,8 @@ public class TablaDinamica {
 
     public void removeAll() {
         if (data.size() > 0) {
-            for (int i = 1; i < data.size() + 1; i++) {
-                tableLayout.removeViewAt(i);
-            }
+            tableLayout.removeAllViews();
+            data.clear();
         }
     }
-
-    private View.OnClickListener tablerowOnClickListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            int index = (int) v.getTag();
-            Toast.makeText(v.getContext(), String.valueOf(index), Toast.LENGTH_SHORT).show();
-        }
-    };
 }
