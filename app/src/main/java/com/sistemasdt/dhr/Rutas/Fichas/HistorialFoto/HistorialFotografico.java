@@ -1,4 +1,4 @@
-package com.sistemasdt.dhr.OpcionIngreso.Normal;
+package com.sistemasdt.dhr.Rutas.Fichas.HistorialFoto;
 
 
 import android.Manifest;
@@ -61,7 +61,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Ing_HFoto extends Fragment {
+public class HistorialFotografico extends Fragment {
     private static final int COD_SELECCIONA = 10;
     private static final int COD_FOTO = 20;
     private static final int CODIGO_SOLICITUD_PERMISO = 123;
@@ -86,7 +86,7 @@ public class Ing_HFoto extends Fragment {
     private int mOpcion = 0;
     private SharedPreferences preferencias;
 
-    public Ing_HFoto() {
+    public HistorialFotografico() {
         // Required empty public constructor
     }
 
@@ -95,7 +95,7 @@ public class Ing_HFoto extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_ing__hfoto, container, false);
+        View view = inflater.inflate(R.layout.fragment_historialfoto, container, false);
         Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         toolbar.setTitle("Historial Fotografico");
@@ -131,8 +131,6 @@ public class Ing_HFoto extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(getActivity(), "ATRAS", Toast.LENGTH_SHORT).show();
-
                 switch (mOpcion){
                     case 1:
                         MenuFichas menuFichas = new MenuFichas();

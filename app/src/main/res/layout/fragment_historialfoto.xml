@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".OpcionIngreso.Normal.Ing_HFoto"
+    tools:context=".Rutas.Fichas.HistorialFoto.HistorialFotografico"
     android:background="@color/FondoTerciario">
 
     <android.support.constraint.ConstraintLayout

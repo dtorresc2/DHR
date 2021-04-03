@@ -29,7 +29,7 @@ import com.sistemasdt.dhr.Rutas.Fichas.HistorialOdonto.HistorialOdonDos;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaForm.Ficha;
 import com.sistemasdt.dhr.Rutas.Fichas.HistorialMedico.HistorialMed;
 import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.Pacientes;
-import com.sistemasdt.dhr.OpcionIngreso.Normal.Ing_HFoto;
+import com.sistemasdt.dhr.Rutas.Fichas.HistorialFoto.HistorialFotografico;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -235,10 +235,10 @@ public class IngresoNormal extends Fragment {
                             break;
 
                         case 5:
-                            Ing_HFoto ing_hFoto = new Ing_HFoto();
+                            HistorialFotografico historialFotografico = new HistorialFotografico();
                             FragmentTransaction transaction5 = getFragmentManager().beginTransaction()
                                     .setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                            transaction5.replace(R.id.contenedor, ing_hFoto);
+                            transaction5.replace(R.id.contenedor, historialFotografico);
                             transaction5.commit();
                             break;
 
