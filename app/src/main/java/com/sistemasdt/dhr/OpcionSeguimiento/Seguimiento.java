@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.sistemasdt.dhr.Rutas.Fichas.HistorialOdonto.HistorialOdonDos;
 import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.ListadoPacientes;
-import com.sistemasdt.dhr.OpcionIngreso.Normal.Ing_HFoto;
+import com.sistemasdt.dhr.Rutas.Fichas.HistorialFoto.HistorialFotografico;
 import com.sistemasdt.dhr.R;
 
 public class Seguimiento extends Fragment {
@@ -90,7 +90,7 @@ public class Seguimiento extends Fragment {
                             break;
 
                         case 3:
-                            Ing_HFoto ingHFoto = new Ing_HFoto();
+                            HistorialFotografico ingHFoto = new HistorialFotografico();
                             ingHFoto.ObtenerOpcion(2);
                             FragmentTransaction transaction = getFragmentManager().beginTransaction()
                                     .setCustomAnimations(R.anim.left_in, R.anim.left_out);

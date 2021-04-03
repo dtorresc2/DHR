@@ -32,7 +32,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
-import com.sistemasdt.dhr.OpcionIngreso.Normal.Ing_HFoto;
+import com.sistemasdt.dhr.Rutas.Fichas.HistorialFoto.HistorialFotografico;
 import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.Componentes.Tabla.TablaDinamica;
 import com.tapadoo.alerter.Alerter;
@@ -311,7 +311,7 @@ public class SegPagos extends Fragment {
 
                             switch (mOpcion) {
                                 case 1:
-                                    Ing_HFoto ingHFoto = new Ing_HFoto();
+                                    HistorialFotografico ingHFoto = new HistorialFotografico();
                                     ingHFoto.ObtenerOpcion(1);
                                     FragmentTransaction transaction = getFragmentManager().beginTransaction()
                                             .setCustomAnimations(R.anim.left_in, R.anim.left_out);

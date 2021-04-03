@@ -49,6 +49,7 @@ import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.ItemPaciente;
 import com.sistemasdt.dhr.Rutas.Catalogos.Piezas.ItemPieza;
 import com.sistemasdt.dhr.Rutas.Catalogos.Servicios.ItemServicio;
 import com.sistemasdt.dhr.Rutas.Catalogos.Servicios.ServiciosAdapter;
+import com.sistemasdt.dhr.Rutas.Fichas.HistorialFoto.HistorialFotografico;
 import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
 import com.sistemasdt.dhr.OpcionSeguimiento.SegPagos;
 import com.sistemasdt.dhr.OpcionSeguimiento.Seguimiento;
@@ -500,6 +501,13 @@ public class HistorialOdonDos extends Fragment {
 
                     editor.putStringSet("listaTratamientos", set);
                     editor.apply();
+
+                    HistorialFotografico historialFotografico = new HistorialFotografico();
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                    transaction.replace(R.id.contenedor, historialFotografico);
+                    transaction.commit();
+
                 } else {
                     Alerter.create(getActivity())
                             .setTitle("Error")
