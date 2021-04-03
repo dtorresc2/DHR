@@ -224,9 +224,7 @@ public class HistorialFotografico extends Fragment {
                         FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
                         Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
                         parcelFileDescriptor.close();
-
-
-
+                        
                         staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
                         rv.setLayoutManager(staggeredGridLayoutManager);
                         lista_fotos.add(image);
