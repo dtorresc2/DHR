@@ -4,6 +4,7 @@ package com.sistemasdt.dhr.Rutas.Fichas.HistorialFoto;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -68,6 +69,8 @@ import java.util.Map;
 public class HistorialFotografico extends Fragment {
     private static final int COD_SELECCIONA = 10;
     private static final int COD_FOTO = 20;
+    private static final int COD_SELECCIONA_MULTIPLE = 30;
+
     private static final int CODIGO_SOLICITUD_PERMISO = 123;
     private static final String CARPETA_PRINCIPAL = "misImagenesApp/"; //Directorio Principal
     private static final String CARPETA_IMAGEN = "DHR"; //Carpeta donde se guardan las fotos en la galeria
@@ -90,6 +93,10 @@ public class HistorialFotografico extends Fragment {
     private int mOpcion = 0;
     private SharedPreferences preferencias;
 
+    private RecyclerView rv;
+    private FotoAdapter fotoAdapter;
+    private StaggeredGridLayoutManager staggeredGridLayoutManager;
+
     public HistorialFotografico() {
         // Required empty public constructor
     }
@@ -104,7 +111,7 @@ public class HistorialFotografico extends Fragment {
 
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         toolbar.setTitle("Historial Fotografico");
-        toolbar.setNavigationIcon(R.drawable.ic_cerrar);
+        toolbar.setNavigationIcon(R.drawable.ic_atras);
         requestQueue = Volley.newRequestQueue(getContext());
 
         preferencias = getActivity().getSharedPreferences("ListadoPacientes", Context.MODE_PRIVATE);
@@ -162,20 +169,22 @@ public class HistorialFotografico extends Fragment {
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
 
-        RecyclerView rv = view.findViewById(R.id.rv);
+        rv = view.findViewById(R.id.rv);
 
-        StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        rv.setLayoutManager(sglm);
-        List<String> imageList = new ArrayList<>();
-        imageList.add("https://dhr-sanjose.s3.amazonaws.com/imagen-1.jpg");
-        imageList.add("https://dhr-sanjose.s3.amazonaws.com/imagen-1.jpg");
-        imageList.add("https://dhr-sanjose.s3.amazonaws.com/imagen-1.jpg");
-        imageList.add("https://dhr-sanjose.s3.amazonaws.com/imagen-1.jpg");
-        imageList.add("https://dhr-sanjose.s3.amazonaws.com/imagen-1.jpg");
-        imageList.add("https://dhr-sanjose.s3.amazonaws.com/imagen-1.jpg");
-        imageList.add("https://dhr-sanjose.s3.amazonaws.com/imagen-1.jpg");
-        FotoAdapter fotoAdapter = new FotoAdapter(getActivity(), imageList);
-        rv.setAdapter(fotoAdapter);
+//        staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+//        rv.setLayoutManager(staggeredGridLayoutManager);
+//        List<String> imageList = new ArrayList<>();
+//        imageList.add("https://dhr-sanjose.s3.amazonaws.com/imagen-1.jpg");
+//        imageList.add("https://dhr-sanjose.s3.amazonaws.com/imagen-1.jpg");
+//        imageList.add("https://dhr-sanjose.s3.amazonaws.com/imagen-1.jpg");
+//        imageList.add("https://dhr-sanjose.s3.amazonaws.com/imagen-1.jpg");
+//        imageList.add("https://dhr-sanjose.s3.amazonaws.com/imagen-1.jpg");
+//        imageList.add("https://dhr-sanjose.s3.amazonaws.com/imagen-1.jpg");
+//        imageList.add("https://dhr-sanjose.s3.amazonaws.com/imagen-1.jpg");
+//        List<Bitmap> imageList = new ArrayList<>();
+//        imageList.add()
+//        fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
+//        rv.setAdapter(fotoAdapter);
 
         //Cargar Datos
         /*final SharedPreferences preferencias = getActivity().getSharedPreferences("datosfotos", Context.MODE_PRIVATE);
@@ -216,9 +225,16 @@ public class HistorialFotografico extends Fragment {
         fototeca.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                intent.setType("image/");
-                startActivityForResult(intent.createChooser(intent, "Seleccione"), COD_SELECCIONA);
+//                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                intent.setType("image/");
+//                startActivityForResult(intent.createChooser(intent, "Seleccione"), COD_SELECCIONA);
+
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(Intent.createChooser(intent, "Seleccione"), COD_SELECCIONA_MULTIPLE);
             }
         });
 
@@ -422,13 +438,21 @@ public class HistorialFotografico extends Fragment {
                         widht = image.getWidth();
                         height = image.getHeight();
 
-                        if (widht > 600 || height > 800) {
-                            float escalaAncho = ((float) 600) / widht;
-                            float escalaAlto = ((float) 800) / height;
-                            Matrix matrix = new Matrix();
-                            matrix.postScale(escalaAncho, escalaAlto);
-                            image = Bitmap.createBitmap(image, 0, 0, widht, height, matrix, false);
-                        }
+//                        if (widht > 250 || height > 250) {
+//                            float escalaAncho = ((float) 250) / widht;
+//                            float escalaAlto = ((float) 250) / height;
+//                            Matrix matrix = new Matrix();
+//                            matrix.postScale(escalaAncho, escalaAlto);
+//                            image = Bitmap.createBitmap(image, 0, 0, widht, height, matrix, false);
+//                        }
+
+//                        if (widht > 600 || height > 800) {
+//                            float escalaAncho = ((float) 600) / widht;
+//                            float escalaAlto = ((float) 800) / height;
+//                            Matrix matrix = new Matrix();
+//                            matrix.postScale(escalaAncho, escalaAlto);
+//                            image = Bitmap.createBitmap(image, 0, 0, widht, height, matrix, false);
+//                        }
 
                         //matrix.postRotate(90);
                         //Bitmap scaledBitmap = Bitmap.createScaledBitmap(image, widht, height, true);
@@ -436,11 +460,17 @@ public class HistorialFotografico extends Fragment {
 
                         //galeria.setImageBitmap(rotatedBitmap);
                         //lista_fotos.add(rotatedBitmap);
+
+                        staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+                        rv.setLayoutManager(staggeredGridLayoutManager);
                         lista_fotos.add(image);
-                        galeria.setImageBitmap(lista_fotos.get(lista_fotos.size() - 1));
-                        seleccionado = lista_fotos.size() - 1;
-                        tactual.setText(String.valueOf(seleccionado + 1));
-                        ttotal.setText(String.valueOf(lista_fotos.size()));
+                        fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
+                        rv.setAdapter(fotoAdapter);
+
+//                        galeria.setImageBitmap(lista_fotos.get(lista_fotos.size() - 1));
+//                        seleccionado = lista_fotos.size() - 1;
+//                        tactual.setText(String.valueOf(seleccionado + 1));
+//                        ttotal.setText(String.valueOf(lista_fotos.size()));
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
@@ -465,20 +495,63 @@ public class HistorialFotografico extends Fragment {
                 widht = bitmap.getWidth();
                 height = bitmap.getHeight();
 
-                if (widht > 600 || height > 800) {
-                    float escalaAncho = ((float) 600) / widht;
-                    float escalaAlto = ((float) 800) / height;
-                    Matrix matrix = new Matrix();
-                    matrix.postScale(escalaAncho, escalaAlto);
-                    bitmap = Bitmap.createBitmap(bitmap, 0, 0, widht, height, matrix, true);
+//                if (widht > 600 || height > 800) {
+//                    float escalaAncho = ((float) 600) / widht;
+//                    float escalaAlto = ((float) 800) / height;
+//                    Matrix matrix = new Matrix();
+//                    matrix.postScale(escalaAncho, escalaAlto);
+//                    bitmap = Bitmap.createBitmap(bitmap, 0, 0, widht, height, matrix, true);
+//                }
+
+//                if (widht > 250 || height > 250) {
+//                    float escalaAncho = ((float) 250) / widht;
+//                    float escalaAlto = ((float) 250) / height;
+//                    Matrix matrix = new Matrix();
+//                    matrix.postScale(escalaAncho, escalaAlto);
+//                    bitmap = Bitmap.createBitmap(bitmap, 0, 0, widht, height, matrix, true);
+//                }
+
+                staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+                rv.setLayoutManager(staggeredGridLayoutManager);
+                lista_fotos.add(bitmap);
+                fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
+                rv.setAdapter(fotoAdapter);
+
+                //galeria.setImageBitmap(bitmap);
+//                galeria.setImageBitmap(lista_fotos.get(lista_fotos.size() - 1));
+//                seleccionado = lista_fotos.size() - 1;
+//                tactual.setText(String.valueOf(seleccionado + 1));
+//                ttotal.setText(String.valueOf(lista_fotos.size()));
+                break;
+
+            case COD_SELECCIONA_MULTIPLE:
+                ClipData clipData = data.getClipData();
+                if (clipData != null) {
+                    for (int i = 0; i < clipData.getItemCount(); i++) {
+                        Uri imageUri = clipData.getItemAt(i).getUri();
+                        // your code for multiple image selection
+                        try {
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), imageUri);
+                            lista_fotos.add(bitmap);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } else {
+                    Uri uri = data.getData();
+                    // your codefor single image selection
+                    try {
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
+                        lista_fotos.add(bitmap);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
 
-                lista_fotos.add(bitmap);
-                //galeria.setImageBitmap(bitmap);
-                galeria.setImageBitmap(lista_fotos.get(lista_fotos.size() - 1));
-                seleccionado = lista_fotos.size() - 1;
-                tactual.setText(String.valueOf(seleccionado + 1));
-                ttotal.setText(String.valueOf(lista_fotos.size()));
+                staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+                rv.setLayoutManager(staggeredGridLayoutManager);
+                fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
+                rv.setAdapter(fotoAdapter);
                 break;
         }
     }
