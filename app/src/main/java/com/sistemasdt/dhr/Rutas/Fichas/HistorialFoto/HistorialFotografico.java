@@ -33,6 +33,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.sistemasdt.dhr.Rutas.Fichas.HistorialOdonto.HistorialOdonDos;
 import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
 import com.sistemasdt.dhr.OpcionSeguimiento.Seguimiento;
 import com.sistemasdt.dhr.R;
@@ -41,6 +42,8 @@ import com.tapadoo.alerter.Alerter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
@@ -59,6 +62,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class HistorialFotografico extends Fragment {
@@ -90,13 +94,14 @@ public class HistorialFotografico extends Fragment {
         // Required empty public constructor
     }
 
-
+    //    https://dhr-sanjose.s3.amazonaws.com/imagen-1.jpg
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_historialfoto, container, false);
         Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         toolbar.setTitle("Historial Fotografico");
         toolbar.setNavigationIcon(R.drawable.ic_cerrar);
@@ -104,53 +109,73 @@ public class HistorialFotografico extends Fragment {
 
         preferencias = getActivity().getSharedPreferences("ListadoPacientes", Context.MODE_PRIVATE);
 
-        galeria = view.findViewById(R.id.visor);
-        galeria.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mostrarMenu();
-            }
-        });
+//        galeria = view.findViewById(R.id.visor);
+//        galeria.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mostrarMenu();
+//            }
+//        });
 
-        tactual = view.findViewById(R.id.actual);
-        tactual.setTypeface(face);
-        ttotal = view.findViewById(R.id.total);
-        ttotal.setTypeface(face);
-        tsep = view.findViewById(R.id.separador);
-        tsep.setTypeface(face);
+//        tactual = view.findViewById(R.id.actual);
+//        tactual.setTypeface(face);
+//        ttotal = view.findViewById(R.id.total);
+//        ttotal.setTypeface(face);
+//        tsep = view.findViewById(R.id.separador);
+//        tsep.setTypeface(face);
 
         camara = view.findViewById(R.id.tomar_hf);
         fototeca = view.findViewById(R.id.seleccionar_hf);
         eliminador = view.findViewById(R.id.borrar_hf);
         agregador = view.findViewById(R.id.registrar_hf);
 
-        atras = view.findViewById(R.id.atras);
-        adelante = view.findViewById(R.id.adelante);
+//        atras = view.findViewById(R.id.atras);
+//        adelante = view.findViewById(R.id.adelante);
         seleccionado = 0;
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch (mOpcion){
-                    case 1:
-                        MenuFichas menuFichas = new MenuFichas();
-                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                        transaction.replace(R.id.contenedor, menuFichas);
-                        transaction.commit();
-                        break;
-
-                    case 2:
-                        Seguimiento seguimiento = new Seguimiento();
-                        FragmentTransaction transaction2 = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                        transaction2.replace(R.id.contenedor, seguimiento);
-                        transaction2.commit();
-                        break;
-                }
+//                switch (mOpcion){
+//                    case 1:
+//                        MenuFichas menuFichas = new MenuFichas();
+//                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+//                        transaction.replace(R.id.contenedor, menuFichas);
+//                        transaction.commit();
+//                        break;
+//
+//                    case 2:
+//                        Seguimiento seguimiento = new Seguimiento();
+//                        FragmentTransaction transaction2 = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+//                        transaction2.replace(R.id.contenedor, seguimiento);
+//                        transaction2.commit();
+//                        break;
+//                }
+                HistorialOdonDos historialOdonDos = new HistorialOdonDos();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                transaction.replace(R.id.contenedor, historialOdonDos);
+                transaction.commit();
             }
         });
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
+
+        RecyclerView rv = view.findViewById(R.id.rv);
+
+        StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        rv.setLayoutManager(sglm);
+        List<String> imageList = new ArrayList<>();
+        imageList.add("https://dhr-sanjose.s3.amazonaws.com/imagen-1.jpg");
+        imageList.add("https://dhr-sanjose.s3.amazonaws.com/imagen-1.jpg");
+        imageList.add("https://dhr-sanjose.s3.amazonaws.com/imagen-1.jpg");
+        imageList.add("https://dhr-sanjose.s3.amazonaws.com/imagen-1.jpg");
+        imageList.add("https://dhr-sanjose.s3.amazonaws.com/imagen-1.jpg");
+        imageList.add("https://dhr-sanjose.s3.amazonaws.com/imagen-1.jpg");
+        imageList.add("https://dhr-sanjose.s3.amazonaws.com/imagen-1.jpg");
+        FotoAdapter fotoAdapter = new FotoAdapter(getActivity(), imageList);
+        rv.setAdapter(fotoAdapter);
 
         //Cargar Datos
         /*final SharedPreferences preferencias = getActivity().getSharedPreferences("datosfotos", Context.MODE_PRIVATE);
@@ -198,37 +223,37 @@ public class HistorialFotografico extends Fragment {
         });
 
         //Galeria - Flecha izquierda
-        atras.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (lista_fotos.size() > 0) {
-                    if (seleccionado < 1) {
-                        seleccionado = lista_fotos.size() - 1;
-                    } else {
-                        seleccionado--;
-                    }
-                    galeria.setImageBitmap(lista_fotos.get(seleccionado));
-                }
-                tactual.setText(String.valueOf(seleccionado + 1));
-            }
-        });
+//        atras.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (lista_fotos.size() > 0) {
+//                    if (seleccionado < 1) {
+//                        seleccionado = lista_fotos.size() - 1;
+//                    } else {
+//                        seleccionado--;
+//                    }
+//                    galeria.setImageBitmap(lista_fotos.get(seleccionado));
+//                }
+//                tactual.setText(String.valueOf(seleccionado + 1));
+//            }
+//        });
 
         //Galeria - Flecha derecha
-        adelante.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Toast.makeText(getActivity(),"Entre " + lista_fotos.size() ,Toast.LENGTH_LONG);
-                if (lista_fotos.size() > 0) {
-                    if (seleccionado >= lista_fotos.size() - 1) {
-                        seleccionado = 0;
-                    } else {
-                        seleccionado++;
-                    }
-                    galeria.setImageBitmap(lista_fotos.get(seleccionado));
-                }
-                tactual.setText(String.valueOf(seleccionado + 1));
-            }
-        });
+//        adelante.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //Toast.makeText(getActivity(),"Entre " + lista_fotos.size() ,Toast.LENGTH_LONG);
+//                if (lista_fotos.size() > 0) {
+//                    if (seleccionado >= lista_fotos.size() - 1) {
+//                        seleccionado = 0;
+//                    } else {
+//                        seleccionado++;
+//                    }
+//                    galeria.setImageBitmap(lista_fotos.get(seleccionado));
+//                }
+//                tactual.setText(String.valueOf(seleccionado + 1));
+//            }
+//        });
 
         //Eliminar fotografia
         eliminador.setOnClickListener(new View.OnClickListener() {

@@ -3,10 +3,12 @@ package com.sistemasdt.dhr.Rutas.Fichas.HistorialFoto;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.sistemasdt.dhr.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -14,8 +16,9 @@ public class FotoAdapter extends RecyclerView.Adapter<FotoAdapter.ViewHolderCons
     private List<String> imageList;
     private Context c;
 
-    public static class ViewHolderConsulta extends RecyclerView.ViewHolder{
+    public static class ViewHolderConsulta extends RecyclerView.ViewHolder {
         SquareImageView siv;
+
         public ViewHolderConsulta(@NonNull View itemView) {
             super(itemView);
             siv = itemView.findViewById(R.id.siv);
@@ -30,16 +33,33 @@ public class FotoAdapter extends RecyclerView.Adapter<FotoAdapter.ViewHolderCons
     @NonNull
     @Override
     public ViewHolderConsulta onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        return null;
+        View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_foto, viewGroup, false);
+        return new ViewHolderConsulta(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolderConsulta viewHolderConsulta, int i) {
+        final String path = imageList.get(i);
 
+        Picasso.with(c)
+                .load(path)
+                .resize(250, 250)
+                .centerCrop()
+                .into(viewHolderConsulta.siv);
+//        viewHolderConsulta.siv.setImageBitmap();
+
+
+
+        viewHolderConsulta.siv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //handle click event on image
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return imageList.size();
     }
 }
