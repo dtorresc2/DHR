@@ -1,5 +1,6 @@
 package com.sistemasdt.dhr.Rutas.Fichas.HistorialFoto;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -8,23 +9,34 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.sistemasdt.dhr.R;
-import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FotoAdapter extends RecyclerView.Adapter<FotoAdapter.ViewHolderConsulta> {
-    //    private List<String> imageList;
-    private List<Bitmap> imageList;
+    private List<ItemFoto> imageList;
     private Context c;
+    private FotoAdapter.OnClickListener mListener;
+
+    public interface OnClickListener {
+        void onItemClick(int position);
+    }
+
+    public void setOnItemClickListener(FotoAdapter.OnClickListener onItemClickListener) {
+        mListener = onItemClickListener;
+    }
 
     public static class ViewHolderConsulta extends RecyclerView.ViewHolder {
         SquareImageView siv;
+        ImageView ivSelected;
 
         public ViewHolderConsulta(@NonNull View itemView) {
             super(itemView);
             siv = itemView.findViewById(R.id.siv);
+            ivSelected = itemView.findViewById(R.id.checkFoto);
         }
     }
 
@@ -41,7 +53,11 @@ public class FotoAdapter extends RecyclerView.Adapter<FotoAdapter.ViewHolderCons
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolderConsulta viewHolderConsulta, int i) {
+    public void onBindViewHolder(@NonNull final ViewHolderConsulta viewHolderConsulta, int i) {
+        final ItemFoto itemFoto = imageList.get(i);
+        final FotoAdapter.OnClickListener listener = this.mListener;
+//        @SuppressLint("RecyclerView") final int i
+
 //        final String path = imageList.get(i);=
 //        Picasso.with(c)
 //                .load(path)
@@ -49,7 +65,8 @@ public class FotoAdapter extends RecyclerView.Adapter<FotoAdapter.ViewHolderCons
 //                .centerCrop()
 //                .into(viewHolderConsulta.siv);
 
-        Bitmap image = imageList.get(i);
+        Bitmap image = itemFoto.getFoto();
+//        Bitmap image = imageList.get(i).getFoto();
         int width = image.getWidth();
         int height = image.getHeight();
 
@@ -63,6 +80,26 @@ public class FotoAdapter extends RecyclerView.Adapter<FotoAdapter.ViewHolderCons
         }
 
         viewHolderConsulta.siv.setImageBitmap(image);
+        viewHolderConsulta.ivSelected.setVisibility(itemFoto.isSelected() ? View.VISIBLE : View.GONE);
+        viewHolderConsulta.siv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                itemFoto.setSelected(!itemFoto.isSelected());
+                viewHolderConsulta.ivSelected.setVisibility(itemFoto.isSelected() ? View.VISIBLE : View.GONE);
+
+                int contador = 0;
+
+                for (ItemFoto aux : imageList) {
+                    if (aux.isSelected()) {
+                        contador++;
+                    }
+                }
+
+                if (listener != null) {
+                    listener.onItemClick(contador);
+                }
+            }
+        });
     }
 
     @Override

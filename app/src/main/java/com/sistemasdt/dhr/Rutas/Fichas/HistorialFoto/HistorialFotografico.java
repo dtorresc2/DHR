@@ -2,54 +2,46 @@ package com.sistemasdt.dhr.Rutas.Fichas.HistorialFoto;
 
 
 import android.Manifest;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
+import android.media.ExifInterface;
 import android.media.MediaScannerConnection;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.os.ParcelFileDescriptor;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
+
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
+
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.sistemasdt.dhr.Rutas.Fichas.HistorialOdonto.HistorialOdonDos;
-import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
-import com.sistemasdt.dhr.OpcionSeguimiento.Seguimiento;
+
 import com.sistemasdt.dhr.R;
 import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.tapadoo.alerter.Alerter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -57,15 +49,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class HistorialFotografico extends Fragment {
     private static final int COD_SELECCIONA = 10;
@@ -84,7 +74,7 @@ public class HistorialFotografico extends Fragment {
 
     private FloatingActionButton camara, fototeca, eliminador, agregador;
     private FloatingActionsMenu menuOpciones;
-    private ArrayList<Bitmap> lista_fotos = new ArrayList<Bitmap>();
+    private ArrayList<ItemFoto> lista_fotos = new ArrayList<ItemFoto>();
     private static final String TAG = "MyActivity";
     RequestQueue requestQueue;
     private int mOpcion = 0;
@@ -106,7 +96,7 @@ public class HistorialFotografico extends Fragment {
         View view = inflater.inflate(R.layout.fragment_historialfoto, container, false);
         Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
 
-        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle("Historial Fotografico");
         toolbar.setNavigationIcon(R.drawable.ic_atras);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -120,10 +110,26 @@ public class HistorialFotografico extends Fragment {
             }
         });
 
+        toolbar.inflateMenu(R.menu.opciones_toolbar_fotos);
+        toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(false);
+
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.action_eliminar:
+                        return true;
+
+                    default:
+                        return false;
+                }
+            }
+        });
+
         menuOpciones = view.findViewById(R.id.menuDP);
         camara = view.findViewById(R.id.tomar_hf);
         fototeca = view.findViewById(R.id.seleccionar_hf);
-        eliminador = view.findViewById(R.id.borrar_hf);
+//        eliminador = view.findViewById(R.id.borrar_hf);
         agregador = view.findViewById(R.id.registrar_hf);
 
         rv = view.findViewById(R.id.rv);
@@ -166,39 +172,11 @@ public class HistorialFotografico extends Fragment {
 
 
         //Eliminar fotografia
-        eliminador.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                if (lista_fotos.size() > 1) {
-//                    lista_fotos.remove(seleccionado);
-//
-//                    if (seleccionado == 0) {
-//                        seleccionado = 1;
-//                        tactual.setText(String.valueOf(seleccionado));
-//                    } else {
-//                        seleccionado--;
-//                        tactual.setText(String.valueOf(seleccionado + 1));
-//                    }
-//
-//                    if (lista_fotos.size() == 1) {
-//                        galeria.setImageBitmap(lista_fotos.get(0));
-//                    } else {
-//                        galeria.setImageBitmap(lista_fotos.get(seleccionado));
-//                    }
-//
-//                    ttotal.setText(String.valueOf(lista_fotos.size()));
-//                } else if (lista_fotos.size() == 1) {
-//                    lista_fotos.remove(0);
-//                    galeria.setImageResource(R.drawable.error);
-//                    seleccionado--;
-//                    tactual.setText(String.valueOf(seleccionado));
-//                    ttotal.setText(String.valueOf(lista_fotos.size()));
-//                } else {
-//                    galeria.setImageResource(R.drawable.error);
-//                    Toast.makeText(getActivity(), "Galeria Vacia", Toast.LENGTH_LONG).show();
-//                }
-            }
-        });
+//        eliminador.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//            }
+//        });
 
         agregador.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -224,10 +202,10 @@ public class HistorialFotografico extends Fragment {
                         FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
                         Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
                         parcelFileDescriptor.close();
-                        
+
                         staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
                         rv.setLayoutManager(staggeredGridLayoutManager);
-                        lista_fotos.add(image);
+                        lista_fotos.add(new ItemFoto(image, false));
                         fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
                         rv.setAdapter(fotoAdapter);
 
@@ -236,68 +214,86 @@ public class HistorialFotografico extends Fragment {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                } else {
-//                    galeria.setImageResource(R.drawable.error);
                 }
                 break;
 
             case COD_FOTO:
-                MediaScannerConnection.scanFile(getContext(), new String[]{path}, null,
-                        new MediaScannerConnection.OnScanCompletedListener() {
-                            @Override
-                            public void onScanCompleted(String path, Uri uri) {
-                                Log.i("Path", "" + path);
+                if (resultCode == Activity.RESULT_OK) {
+                    MediaScannerConnection.scanFile(getContext(), new String[]{path}, null,
+                            new MediaScannerConnection.OnScanCompletedListener() {
+                                @Override
+                                public void onScanCompleted(String path, Uri uri) {
+                                    Log.i("Path", "" + path);
+                                    Log.i("Path", "" + uri);
+                                }
+                            });
+
+                    bitmap = BitmapFactory.decodeFile(path);
+
+                    staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+                    rv.setLayoutManager(staggeredGridLayoutManager);
+                    lista_fotos.add(new ItemFoto(bitmap, false));
+                    fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
+                    rv.setAdapter(fotoAdapter);
+                    fotoAdapter.setOnItemClickListener(new FotoAdapter.OnClickListener() {
+                        @Override
+                        public void onItemClick(int position) {
+                            if (position > 0) {
+                                menuOpciones.setVisibility(View.GONE);
+                                toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(true);
+                            } else {
+                                menuOpciones.setVisibility(View.VISIBLE);
+                                toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(false);
                             }
-                        });
-
-                bitmap = BitmapFactory.decodeFile(path);
-
-//                widht = bitmap.getWidth();
-//                height = bitmap.getHeight();
-
-//                if (widht > 600 || height > 800) {
-//                    float escalaAncho = ((float) 600) / widht;
-//                    float escalaAlto = ((float) 800) / height;
-//                    Matrix matrix = new Matrix();
-//                    matrix.postScale(escalaAncho, escalaAlto);
-//                    bitmap = Bitmap.createBitmap(bitmap, 0, 0, widht, height, matrix, true);
-//                }
-
-                staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-                rv.setLayoutManager(staggeredGridLayoutManager);
-                lista_fotos.add(bitmap);
-                fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
-                rv.setAdapter(fotoAdapter);
+                        }
+                    });
+                }
                 break;
 
             case COD_SELECCIONA_MULTIPLE:
-                ClipData clipData = data.getClipData();
-                if (clipData != null) {
-                    for (int i = 0; i < clipData.getItemCount(); i++) {
-                        Uri imageUri = clipData.getItemAt(i).getUri();
-                        // your code for multiple image selection
+                if (data != null) {
+                    ClipData clipData = data.getClipData();
+                    if (clipData != null) {
+                        for (int i = 0; i < clipData.getItemCount(); i++) {
+                            Uri imageUri = clipData.getItemAt(i).getUri();
+                            // your code for multiple image selection
+                            try {
+                                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), imageUri);
+                                bitmap = testImagen(bitmap, imageUri, getContext());
+                                lista_fotos.add(new ItemFoto(bitmap, false));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    } else {
+                        Uri uri = data.getData();
+                        // your codefor single image selection
                         try {
-                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), imageUri);
-                            lista_fotos.add(bitmap);
+                            Bitmap bitmapAx = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
+                            bitmapAx = testImagen(bitmapAx, uri, getContext());
+                            lista_fotos.add(new ItemFoto(bitmapAx, false));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
-                } else {
-                    Uri uri = data.getData();
-                    // your codefor single image selection
-                    try {
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
-                        lista_fotos.add(bitmap);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
 
-                staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-                rv.setLayoutManager(staggeredGridLayoutManager);
-                fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
-                rv.setAdapter(fotoAdapter);
+                    staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+                    rv.setLayoutManager(staggeredGridLayoutManager);
+                    fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
+                    rv.setAdapter(fotoAdapter);
+                    fotoAdapter.setOnItemClickListener(new FotoAdapter.OnClickListener() {
+                        @Override
+                        public void onItemClick(int position) {
+                            if (position > 0) {
+                                menuOpciones.setVisibility(View.GONE);
+                                toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(true);
+                            } else {
+                                menuOpciones.setVisibility(View.VISIBLE);
+                                toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(false);
+                            }
+                        }
+                    });
+                }
                 break;
         }
     }
@@ -377,5 +373,63 @@ public class HistorialFotografico extends Fragment {
 
     public void ObtenerOpcion(int opcion) {
         mOpcion = opcion;
+    }
+
+    public String getRealPathFromURI(Context context, Uri contentUri) {
+        Cursor cursor = context.getContentResolver().query(contentUri, null, null, null, null);
+        cursor.moveToFirst();
+        String document_id = cursor.getString(0);
+        document_id = document_id.substring(document_id.lastIndexOf(":") + 1);
+        cursor.close();
+
+        cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null
+                , MediaStore.Images.Media._ID + " = ? ", new String[]{document_id}, null);
+        cursor.moveToFirst();
+        String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+        cursor.close();
+
+//        https://gist.github.com/akexorcist/4a01eec6e5210a779ec2
+        return path;
+    }
+
+    public static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                matrix, true);
+    }
+
+    public Bitmap testImagen(Bitmap mBitmap, Uri uri, Context context) {
+        Bitmap bitmapAux = null;
+        ExifInterface exif = null;
+        try {
+            exif = new ExifInterface(getRealPathFromURI(context, uri));
+            exif.getAttribute(ExifInterface.TAG_ORIENTATION);
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    bitmapAux = rotateImage(mBitmap, 90);
+                    break;
+
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    bitmapAux = rotateImage(mBitmap, 180);
+                    break;
+
+                case ExifInterface.ORIENTATION_ROTATE_270:
+
+                case ExifInterface.ORIENTATION_UNDEFINED:
+                    bitmapAux = rotateImage(mBitmap, 270);
+                    break;
+
+                case ExifInterface.ORIENTATION_NORMAL:
+                default:
+                    bitmapAux = mBitmap;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return bitmapAux;
     }
 }
