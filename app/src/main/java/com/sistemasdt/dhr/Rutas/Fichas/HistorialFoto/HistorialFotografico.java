@@ -84,7 +84,7 @@ public class HistorialFotografico extends Fragment {
 
     private FloatingActionButton camara, fototeca, eliminador, agregador;
     private FloatingActionsMenu menuOpciones;
-    private ArrayList<Bitmap> lista_fotos = new ArrayList<Bitmap>();
+    private ArrayList<ItemFoto> lista_fotos = new ArrayList<ItemFoto>();
     private static final String TAG = "MyActivity";
     RequestQueue requestQueue;
     private int mOpcion = 0;
@@ -227,7 +227,8 @@ public class HistorialFotografico extends Fragment {
                         
                         staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
                         rv.setLayoutManager(staggeredGridLayoutManager);
-                        lista_fotos.add(image);
+//                        lista_fotos.add(image);
+                        lista_fotos.add(new ItemFoto(image,false));
                         fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
                         rv.setAdapter(fotoAdapter);
 
@@ -265,7 +266,8 @@ public class HistorialFotografico extends Fragment {
 
                 staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
                 rv.setLayoutManager(staggeredGridLayoutManager);
-                lista_fotos.add(bitmap);
+                lista_fotos.add(new ItemFoto(bitmap,false));
+//                lista_fotos.add(bitmap);
                 fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
                 rv.setAdapter(fotoAdapter);
                 break;
@@ -278,7 +280,7 @@ public class HistorialFotografico extends Fragment {
                         // your code for multiple image selection
                         try {
                             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), imageUri);
-                            lista_fotos.add(bitmap);
+                            lista_fotos.add(new ItemFoto(bitmap,false));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -288,7 +290,8 @@ public class HistorialFotografico extends Fragment {
                     // your codefor single image selection
                     try {
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
-                        lista_fotos.add(bitmap);
+//                        lista_fotos.add(bitmap);
+                        lista_fotos.add(new ItemFoto(bitmap,false));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
