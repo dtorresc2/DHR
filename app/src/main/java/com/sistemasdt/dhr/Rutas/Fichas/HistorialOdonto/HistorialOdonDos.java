@@ -489,8 +489,6 @@ public class HistorialOdonDos extends Fragment {
                 if (listaTratamientos.size() > 0) {
                     SharedPreferences preferences = getActivity().getSharedPreferences("HOD2", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = preferences.edit();
-//                    final String TAG = "MyActivity";
-//                    Log.i(TAG, cadena);
 
                     Set<String> set = new HashSet<>();
 
