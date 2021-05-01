@@ -224,11 +224,11 @@ public class HistorialFotografico extends Fragment {
                         FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
                         Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
                         parcelFileDescriptor.close();
-                        
+
                         staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
                         rv.setLayoutManager(staggeredGridLayoutManager);
 //                        lista_fotos.add(image);
-                        lista_fotos.add(new ItemFoto(image,false));
+                        lista_fotos.add(new ItemFoto(image, false));
                         fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
                         rv.setAdapter(fotoAdapter);
 
@@ -252,24 +252,23 @@ public class HistorialFotografico extends Fragment {
                         });
 
                 bitmap = BitmapFactory.decodeFile(path);
-
-//                widht = bitmap.getWidth();
-//                height = bitmap.getHeight();
-
-//                if (widht > 600 || height > 800) {
-//                    float escalaAncho = ((float) 600) / widht;
-//                    float escalaAlto = ((float) 800) / height;
-//                    Matrix matrix = new Matrix();
-//                    matrix.postScale(escalaAncho, escalaAlto);
-//                    bitmap = Bitmap.createBitmap(bitmap, 0, 0, widht, height, matrix, true);
-//                }
-
+                
                 staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
                 rv.setLayoutManager(staggeredGridLayoutManager);
-                lista_fotos.add(new ItemFoto(bitmap,false));
-//                lista_fotos.add(bitmap);
+                lista_fotos.add(new ItemFoto(bitmap, false));
                 fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
                 rv.setAdapter(fotoAdapter);
+                fotoAdapter.setOnItemClickListener(new FotoAdapter.OnClickListener() {
+                    @Override
+                    public void onItemClick(int position) {
+//                        Toast.makeText(getContext(), String.valueOf(position), Toast.LENGTH_LONG).show();
+                        if (position > 0) {
+                            menuOpciones.setVisibility(View.GONE);
+                        } else {
+                            menuOpciones.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
                 break;
 
             case COD_SELECCIONA_MULTIPLE:
@@ -280,7 +279,7 @@ public class HistorialFotografico extends Fragment {
                         // your code for multiple image selection
                         try {
                             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), imageUri);
-                            lista_fotos.add(new ItemFoto(bitmap,false));
+                            lista_fotos.add(new ItemFoto(bitmap, false));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -291,7 +290,7 @@ public class HistorialFotografico extends Fragment {
                     try {
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
 //                        lista_fotos.add(bitmap);
-                        lista_fotos.add(new ItemFoto(bitmap,false));
+                        lista_fotos.add(new ItemFoto(bitmap, false));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -301,6 +300,17 @@ public class HistorialFotografico extends Fragment {
                 rv.setLayoutManager(staggeredGridLayoutManager);
                 fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
                 rv.setAdapter(fotoAdapter);
+                fotoAdapter.setOnItemClickListener(new FotoAdapter.OnClickListener() {
+                    @Override
+                    public void onItemClick(int position) {
+//                        Toast.makeText(getContext(), String.valueOf(position), Toast.LENGTH_LONG).show();
+                        if (position > 0) {
+                            menuOpciones.setVisibility(View.GONE);
+                        } else {
+                            menuOpciones.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
                 break;
         }
     }
