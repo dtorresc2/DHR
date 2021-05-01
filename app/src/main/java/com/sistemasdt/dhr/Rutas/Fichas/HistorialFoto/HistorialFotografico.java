@@ -2,6 +2,7 @@ package com.sistemasdt.dhr.Rutas.Fichas.HistorialFoto;
 
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
@@ -204,7 +205,6 @@ public class HistorialFotografico extends Fragment {
 
                         staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
                         rv.setLayoutManager(staggeredGridLayoutManager);
-//                        lista_fotos.add(image);
                         lista_fotos.add(new ItemFoto(image, false));
                         fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
                         rv.setAdapter(fotoAdapter);
@@ -214,83 +214,86 @@ public class HistorialFotografico extends Fragment {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                } else {
-//                    galeria.setImageResource(R.drawable.error);
                 }
                 break;
 
             case COD_FOTO:
-                MediaScannerConnection.scanFile(getContext(), new String[]{path}, null,
-                        new MediaScannerConnection.OnScanCompletedListener() {
-                            @Override
-                            public void onScanCompleted(String path, Uri uri) {
-                                Log.i("Path", "" + path);
+                if (resultCode == Activity.RESULT_OK) {
+                    MediaScannerConnection.scanFile(getContext(), new String[]{path}, null,
+                            new MediaScannerConnection.OnScanCompletedListener() {
+                                @Override
+                                public void onScanCompleted(String path, Uri uri) {
+                                    Log.i("Path", "" + path);
+                                    Log.i("Path", "" + uri);
+                                }
+                            });
+
+                    bitmap = BitmapFactory.decodeFile(path);
+
+                    staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+                    rv.setLayoutManager(staggeredGridLayoutManager);
+                    lista_fotos.add(new ItemFoto(bitmap, false));
+                    fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
+                    rv.setAdapter(fotoAdapter);
+                    fotoAdapter.setOnItemClickListener(new FotoAdapter.OnClickListener() {
+                        @Override
+                        public void onItemClick(int position) {
+                            if (position > 0) {
+                                menuOpciones.setVisibility(View.GONE);
+                                toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(true);
+                            } else {
+                                menuOpciones.setVisibility(View.VISIBLE);
+                                toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(false);
                             }
-                        });
-
-                bitmap = BitmapFactory.decodeFile(path);
-
-                staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-                rv.setLayoutManager(staggeredGridLayoutManager);
-                lista_fotos.add(new ItemFoto(bitmap, false));
-                fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
-                rv.setAdapter(fotoAdapter);
-                fotoAdapter.setOnItemClickListener(new FotoAdapter.OnClickListener() {
-                    @Override
-                    public void onItemClick(int position) {
-                        if (position > 0) {
-                            menuOpciones.setVisibility(View.GONE);
-                            toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(true);
-                        } else {
-                            menuOpciones.setVisibility(View.VISIBLE);
-                            toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(false);
                         }
-                    }
-                });
+                    });
+                }
                 break;
 
             case COD_SELECCIONA_MULTIPLE:
-                ClipData clipData = data.getClipData();
-                if (clipData != null) {
-                    for (int i = 0; i < clipData.getItemCount(); i++) {
-                        Uri imageUri = clipData.getItemAt(i).getUri();
-                        // your code for multiple image selection
+                if (data != null) {
+                    ClipData clipData = data.getClipData();
+                    if (clipData != null) {
+                        for (int i = 0; i < clipData.getItemCount(); i++) {
+                            Uri imageUri = clipData.getItemAt(i).getUri();
+                            // your code for multiple image selection
+                            try {
+                                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), imageUri);
+                                bitmap = testImagen(bitmap, imageUri, getContext());
+                                lista_fotos.add(new ItemFoto(bitmap, false));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    } else {
+                        Uri uri = data.getData();
+                        // your codefor single image selection
                         try {
-                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), imageUri);
-                            bitmap = testImagen(bitmap, imageUri, getContext());
-                            lista_fotos.add(new ItemFoto(bitmap, false));
+                            Bitmap bitmapAx = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
+                            bitmapAx = testImagen(bitmapAx, uri, getContext());
+                            lista_fotos.add(new ItemFoto(bitmapAx, false));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
-                } else {
-                    Uri uri = data.getData();
-                    // your codefor single image selection
-                    try {
-                        Bitmap bitmapAx = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
-                        bitmapAx = testImagen(bitmapAx, uri, getContext());
-                        lista_fotos.add(new ItemFoto(bitmapAx, false));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
 
-                staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-                rv.setLayoutManager(staggeredGridLayoutManager);
-                fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
-                rv.setAdapter(fotoAdapter);
-                fotoAdapter.setOnItemClickListener(new FotoAdapter.OnClickListener() {
-                    @Override
-                    public void onItemClick(int position) {
-                        if (position > 0) {
-                            menuOpciones.setVisibility(View.GONE);
-                            toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(true);
-                        } else {
-                            menuOpciones.setVisibility(View.VISIBLE);
-                            toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(false);
+                    staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+                    rv.setLayoutManager(staggeredGridLayoutManager);
+                    fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
+                    rv.setAdapter(fotoAdapter);
+                    fotoAdapter.setOnItemClickListener(new FotoAdapter.OnClickListener() {
+                        @Override
+                        public void onItemClick(int position) {
+                            if (position > 0) {
+                                menuOpciones.setVisibility(View.GONE);
+                                toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(true);
+                            } else {
+                                menuOpciones.setVisibility(View.VISIBLE);
+                                toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(false);
+                            }
                         }
-                    }
-                });
+                    });
+                }
                 break;
         }
     }
