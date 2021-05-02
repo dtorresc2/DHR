@@ -230,7 +230,6 @@ public class HistorialFotografico extends Fragment {
                     String codigoFoto = "";
 
                     for (int i = 0; i < lista_fotos.size(); i++) {
-//                        for (ItemFoto item : lista_fotos) {
                         Bitmap bitmap_aux = lista_fotos.get(i).getFoto();
                         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                         bitmap_aux.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
@@ -523,12 +522,6 @@ public class HistorialFotografico extends Fragment {
         if (set != null) {
             ArrayList<String> listaAuxiliar = new ArrayList<>(set);
             lista_fotos.clear();
-
-//            for (String item : listaAuxiliar) {
-//                byte[] decodedString = Base64.decode(item, Base64.DEFAULT);
-//                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-//                lista_fotos.add(new ItemFoto(decodedByte, false));
-//            }
 
             for (int i = 0; i < listaAuxiliar.size(); i++) {
                 byte[] decodedString = Base64.decode(listaAuxiliar.get(i), Base64.DEFAULT);

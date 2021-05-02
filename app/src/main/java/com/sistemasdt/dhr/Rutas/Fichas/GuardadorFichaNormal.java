@@ -1,11 +1,14 @@
 package com.sistemasdt.dhr.Rutas.Fichas;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -18,10 +21,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sistemasdt.dhr.Componentes.Dialogos.Bitacora.FuncionesBitacora;
 import com.sistemasdt.dhr.R;
+import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.ListadoPacientes;
 import com.sistemasdt.dhr.Rutas.Fichas.HistorialFoto.FotoAdapter;
 import com.sistemasdt.dhr.Rutas.Fichas.HistorialFoto.ItemFoto;
 import com.sistemasdt.dhr.Rutas.Fichas.HistorialOdonto.HistorialOdonDos;
+import com.sistemasdt.dhr.ServiciosAPI.QuerysFichas;
+import com.sistemasdt.dhr.ServiciosAPI.QuerysPacientes;
+import com.tapadoo.alerter.Alerter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -122,11 +130,6 @@ public class GuardadorFichaNormal extends Fragment {
                 builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         guardarFicha();
-//                        MenuFichas menuFichas = new MenuFichas();
-//                        FragmentTransaction transaction = getFragmentManager().beginTransaction()
-//                                .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-//                        transaction.replace(R.id.contenedor, menuFichas);
-//                        transaction.commit();
                     }
                 });
 
@@ -153,46 +156,19 @@ public class GuardadorFichaNormal extends Fragment {
 
     public void guardarFicha() {
         final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+        final Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
 
         //FICHA GENERAL
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("FICHA", Context.MODE_PRIVATE);
-//        sharedPreferences.getString("ID_PACIENTE", "");
-//        sharedPreferences.getString("PACIENTE", "");
-//        sharedPreferences.getString("FECHA", "");
-//        sharedPreferences.getString("MEDICO", "");
-//        sharedPreferences.getString("MOTIVO", "");
-//        sharedPreferences.getString("REFERENTE", "");
+        final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("FICHA", Context.MODE_PRIVATE);
 
         // HISTORIAL MEDICO 1
         SharedPreferences sharedPreferences1 = getActivity().getSharedPreferences("HMED1", Context.MODE_PRIVATE);
-//        sharedPreferences1.getBoolean("HOSPITALIZADO", false);
-//        sharedPreferences1.getString("DESCRIPCION_HOS", " ");
-//        sharedPreferences1.getBoolean("TRATAMIENTO_MEDICO", false);
-//        sharedPreferences1.getBoolean("ALERGIA", false);
-//        sharedPreferences1.getString("DESCRIPCION_ALERGIA", " ");
-//        sharedPreferences1.getBoolean("HEMORRAGIA", false);
-//        sharedPreferences1.getBoolean("MEDICAMENTO", false);
-//        sharedPreferences1.getString("DESCRIPCION_MEDICAMENTO", " ");
 
         // HISTORIAL MEDICO 2
         SharedPreferences sharedPreferences2 = getActivity().getSharedPreferences("HMED2", Context.MODE_PRIVATE);
-//        sharedPreferences2.getBoolean("CORAZON", false);
-//        sharedPreferences2.getBoolean("ARTRITIS", false);
-//        sharedPreferences2.getBoolean("TUBERCULOSIS", false);
-//        sharedPreferences2.getBoolean("FIEBREREU", false);
-//        sharedPreferences2.getBoolean("PRESION_ALTA", false);
-//        sharedPreferences2.getBoolean("PRESION_BAJA", false);
-//        sharedPreferences2.getBoolean("DIABETES", false);
-//        sharedPreferences2.getBoolean("ANEMIA", false);
-//        sharedPreferences2.getBoolean("EPILEPSIA", false);
-//        sharedPreferences2.getString("OTROS", " ");
 
         // HISTORIAL ODONTO 1
         SharedPreferences sharedPreferences3 = getActivity().getSharedPreferences("HOD1", Context.MODE_PRIVATE);
-//        sharedPreferences3.getBoolean("DOLOR", false);
-//        sharedPreferences3.getString("DESC_DOLOR", " ");
-//        sharedPreferences3.getBoolean("GINGIVITIS", false);
-//        sharedPreferences3.getString("OTROS", " ");
 
         // HISTORIAL ODONTO 2
         SharedPreferences sharedPreferences4 = getActivity().getSharedPreferences("HOD2", Context.MODE_PRIVATE);
@@ -248,7 +224,7 @@ public class GuardadorFichaNormal extends Fragment {
             // HISTORIAL ODONTODOLOGICO
             JSONObject jsonHO = new JSONObject();
             jsonHO.put("DOLOR", (sharedPreferences2.getBoolean("DOLOR", false)) ? 1 : 0);
-            jsonHO.put("DESC_DOLOR", sharedPreferences3.getString("DESC_DOLOR", " "));
+            jsonHO.put("DESCRIPCION_DOLOR", sharedPreferences3.getString("DESC_DOLOR", " "));
             jsonHO.put("GINGIVITIS", (sharedPreferences2.getBoolean("GINGIVITIS", false)) ? 1 : 0);
             jsonHO.put("OTROS", sharedPreferences3.getString("OTROS", " "));
             jsonHO.put("ID_FICHA", 0);
@@ -318,7 +294,78 @@ public class GuardadorFichaNormal extends Fragment {
             jsonObject.put("HISTORIAL_FOTOS", jsonArrayFotos);
             jsonObject.put("PAGOS", jsonArrayPagos);
 
-            Toast.makeText(getContext(), jsonObject.toString(), Toast.LENGTH_LONG).show();
+//            Toast.makeText(getContext(), jsonObject.toString(), Toast.LENGTH_LONG).show();
+            final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+            progressDialog.setMessage("Cargando...");
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+
+            QuerysFichas querysFichas = new QuerysFichas(getContext());
+            querysFichas.registrarFicha(jsonObject, new QuerysFichas.VolleyOnEventListener() {
+                @Override
+                public void onSuccess(Object object) {
+                    Alerter.create(getActivity())
+                            .setTitle("Ficha")
+                            .setText("Registrada correctamente")
+                            .setIcon(R.drawable.logonuevo)
+                            .setTextTypeface(face)
+                            .enableSwipeToDismiss()
+                            .setBackgroundColorRes(R.color.FondoSecundario)
+                            .show();
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressDialog.dismiss();
+
+                            // HISTORIAL MEDICO 1
+                            SharedPreferences sharedPreferences1 = getActivity().getSharedPreferences("HMED1", Context.MODE_PRIVATE);
+
+                            // HISTORIAL MEDICO 2
+                            SharedPreferences sharedPreferences2 = getActivity().getSharedPreferences("HMED2", Context.MODE_PRIVATE);
+
+                            // HISTORIAL ODONTO 1
+                            SharedPreferences sharedPreferences3 = getActivity().getSharedPreferences("HOD1", Context.MODE_PRIVATE);
+
+                            // HISTORIAL ODONTO 2
+                            SharedPreferences sharedPreferences4 = getActivity().getSharedPreferences("HOD2", Context.MODE_PRIVATE);
+
+                            // HISTORIAL FOTOGRAFICO
+                            SharedPreferences sharedPreferences5 = getActivity().getSharedPreferences("HFOTO", Context.MODE_PRIVATE);
+
+                            // Limpieza de Datos
+                            SharedPreferences.Editor editor = sharedPreferences1.edit().clear();
+                            editor.commit();
+                            SharedPreferences.Editor editor1 = sharedPreferences2.edit().clear();
+                            editor1.commit();
+                            SharedPreferences.Editor editor2 = sharedPreferences3.edit().clear();
+                            editor2.commit();
+                            SharedPreferences.Editor editor3 = sharedPreferences4.edit().clear();
+                            editor3.commit();
+                            SharedPreferences.Editor editor4 = sharedPreferences5.edit().clear();
+                            editor4.commit();
+
+                            MenuFichas menuFichas = new MenuFichas();
+                            FragmentTransaction transaction = getFragmentManager().beginTransaction()
+                                    .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                            transaction.replace(R.id.contenedor, menuFichas);
+                            transaction.commit();
+                        }
+                    }, 1000);
+                }
+
+                @Override
+                public void onSuccessBitmap(Bitmap object) {
+
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    progressDialog.dismiss();
+                    Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
+                }
+            });
 
         } catch (JSONException e) {
             e.printStackTrace();
