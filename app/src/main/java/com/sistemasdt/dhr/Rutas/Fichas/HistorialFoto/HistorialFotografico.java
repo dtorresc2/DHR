@@ -133,9 +133,25 @@ public class HistorialFotografico extends Fragment {
                                     lista_fotos.remove(aux);
                                 }
 
+                                lista_eliminada.clear();
+
                                 // Actualizar recyleview
+                                staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+                                rv.setLayoutManager(staggeredGridLayoutManager);
                                 fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
                                 rv.setAdapter(fotoAdapter);
+                                fotoAdapter.setOnItemClickListener(new FotoAdapter.OnClickListener() {
+                                    @Override
+                                    public void onItemClick(int position) {
+                                        if (position > 0) {
+                                            menuOpciones.setVisibility(View.GONE);
+                                            toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(true);
+                                        } else {
+                                            menuOpciones.setVisibility(View.VISIBLE);
+                                            toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(false);
+                                        }
+                                    }
+                                });
 
                                 // Reestablecer menu
                                 menuOpciones.setVisibility(View.VISIBLE);
@@ -212,8 +228,9 @@ public class HistorialFotografico extends Fragment {
                     Set<String> set = new HashSet<>();
                     String codigoFoto = "";
 
-                    for (ItemFoto item : lista_fotos) {
-                        Bitmap bitmap_aux = item.getFoto();
+                    for (int i = 0; i < lista_fotos.size(); i++) {
+//                        for (ItemFoto item : lista_fotos) {
+                        Bitmap bitmap_aux = lista_fotos.get(i).getFoto();
                         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                         bitmap_aux.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
                         byte[] b = byteArrayOutputStream.toByteArray();
@@ -497,30 +514,38 @@ public class HistorialFotografico extends Fragment {
         SharedPreferences preferences = getActivity().getSharedPreferences("HFOTO", Context.MODE_PRIVATE);
         Set<String> set = preferences.getStringSet("listaFotos", null);
 
-        ArrayList<String> listaAuxiliar = new ArrayList<>(set);
-        lista_fotos.clear();
+        if (set != null) {
+            ArrayList<String> listaAuxiliar = new ArrayList<>(set);
+            lista_fotos.clear();
 
-        for (String item : listaAuxiliar) {
-            byte[] decodedString = Base64.decode(item, Base64.DEFAULT);
-            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            lista_fotos.add(new ItemFoto(decodedByte, false));
-        }
-
-//        staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-//        rv.setLayoutManager(staggeredGridLayoutManager);
-//        fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
-//        rv.setAdapter(fotoAdapter);
-//        fotoAdapter.setOnItemClickListener(new FotoAdapter.OnClickListener() {
-//            @Override
-//            public void onItemClick(int position) {
-//                if (position > 0) {
-//                    menuOpciones.setVisibility(View.GONE);
-//                    toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(true);
-//                } else {
-//                    menuOpciones.setVisibility(View.VISIBLE);
-//                    toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(false);
-//                }
+//            for (String item : listaAuxiliar) {
+//                byte[] decodedString = Base64.decode(item, Base64.DEFAULT);
+//                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+//                lista_fotos.add(new ItemFoto(decodedByte, false));
 //            }
-//        });
+
+            for (int i = 0; i < listaAuxiliar.size(); i++) {
+                byte[] decodedString = Base64.decode(listaAuxiliar.get(i), Base64.DEFAULT);
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                lista_fotos.add(new ItemFoto(decodedByte, false));
+            }
+
+            staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+            rv.setLayoutManager(staggeredGridLayoutManager);
+            fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
+            rv.setAdapter(fotoAdapter);
+            fotoAdapter.setOnItemClickListener(new FotoAdapter.OnClickListener() {
+                @Override
+                public void onItemClick(int position) {
+                    if (position > 0) {
+                        menuOpciones.setVisibility(View.GONE);
+                        toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(true);
+                    } else {
+                        menuOpciones.setVisibility(View.VISIBLE);
+                        toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(false);
+                    }
+                }
+            });
+        }
     }
 }

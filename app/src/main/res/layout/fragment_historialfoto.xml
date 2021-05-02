@@ -60,7 +60,6 @@
             app:fab_colorPressed="@color/AzulOscuro"
             app:fab_icon="@drawable/ic_check"
             app:fab_title="Registrar" />
-
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
     <android.support.v7.widget.RecyclerView
@@ -69,6 +68,5 @@
         android:layout_height="match_parent"
         android:layout_marginTop="60dp"
         android:layout_marginBottom="60dp">
-
     </android.support.v7.widget.RecyclerView>
 </FrameLayout>

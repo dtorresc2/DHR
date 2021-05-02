@@ -55,15 +55,13 @@ public class MenuFichas extends Fragment {
         botonNuevoEspecial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ListadoPacientes listadoPacientes = new ListadoPacientes();
-                listadoPacientes.ObtenerOpcion(3);
-                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                transaction.replace(R.id.contenedor, listadoPacientes);
-                transaction.commit();
-
+//                ListadoPacientes listadoPacientes = new ListadoPacientes();
+//                listadoPacientes.ObtenerOpcion(3);
+//                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
+//                transaction.replace(R.id.contenedor, listadoPacientes);
+//                transaction.commit();
             }
         });
-
         return view;
     }
 }
