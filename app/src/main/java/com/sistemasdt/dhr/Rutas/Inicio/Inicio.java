@@ -289,7 +289,7 @@ public class Inicio extends Fragment {
         nombrePerfilAux.setText(sharedPreferences.getString("EMPRESA", "-"));
 
         imagenPerfilAux = viewCuadro.findViewById(R.id.imagenPerfilAux);
-        ImageRequest imageRequest = new ImageRequest(  sharedPreferences.getString("URL", getContext().getResources().getString(R.string.S3) + "not.jpg"),
+        ImageRequest imageRequest = new ImageRequest(sharedPreferences.getString("URL", getContext().getResources().getString(R.string.S3) + "not.jpg"),
                 new BitmapListener(imagenPerfilAux), 0, 0, null, null,
                 new MyErrorListener(imagenPerfilAux));
         requestQueue.add(imageRequest);

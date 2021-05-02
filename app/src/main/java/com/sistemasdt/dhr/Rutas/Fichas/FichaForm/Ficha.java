@@ -41,6 +41,7 @@ import com.tapadoo.alerter.Alerter;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -283,6 +284,11 @@ public class Ficha extends Fragment {
                 escritor.putString("MOTIVO", motivo.getText().toString());
                 escritor.putString("REFERENTE", referente.getText().toString());
                 escritor.commit();
+
+                final SharedPreferences preferenciasFicha2 = getActivity().getSharedPreferences("RESUMEN_FN", Context.MODE_PRIVATE);
+                final SharedPreferences.Editor escritor2 = preferenciasFicha2.edit();
+                escritor2.putString("PACIENTE", paciente.getText().toString());
+                escritor2.commit();
 
                 HistorialMed historialMed = new HistorialMed();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction()

@@ -1,10 +1,11 @@
 package com.sistemasdt.dhr.Rutas.Fichas.HistorialFoto;
 
-
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -24,14 +25,15 @@ import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 
-
-import com.android.volley.RequestQueue;
-
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.sistemasdt.dhr.Rutas.Fichas.GuardadorFichaNormal;
 import com.sistemasdt.dhr.Rutas.Fichas.HistorialOdonto.HistorialOdonDos;
 
 import com.sistemasdt.dhr.R;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.sistemasdt.dhr.Rutas.Fichas.HistorialOdonto.ItemTratamiento;
+import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
+import com.tapadoo.alerter.Alerter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -39,23 +41,22 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class HistorialFotografico extends Fragment {
     private static final int COD_SELECCIONA = 10;
@@ -72,13 +73,11 @@ public class HistorialFotografico extends Fragment {
 
     private Toolbar toolbar;
 
-    private FloatingActionButton camara, fototeca, eliminador, agregador;
+    private FloatingActionButton camara, fototeca, agregador;
     private FloatingActionsMenu menuOpciones;
-    private ArrayList<ItemFoto> lista_fotos = new ArrayList<ItemFoto>();
-    private static final String TAG = "MyActivity";
-    RequestQueue requestQueue;
+    private ArrayList<ItemFoto> lista_fotos = new ArrayList<>();
+    private ArrayList<ItemFoto> lista_eliminada = new ArrayList<>();
     private int mOpcion = 0;
-    private SharedPreferences preferencias;
 
     private RecyclerView rv;
     private FotoAdapter fotoAdapter;
@@ -94,7 +93,7 @@ public class HistorialFotografico extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_historialfoto, container, false);
-        Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+        final Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
 
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle("Historial Fotografico");
@@ -118,6 +117,57 @@ public class HistorialFotografico extends Fragment {
             public boolean onMenuItemClick(MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.action_eliminar:
+                        for (ItemFoto aux : lista_fotos) {
+                            if (aux.isSelected()) {
+                                lista_eliminada.add(aux);
+                            }
+                        }
+
+                        // Eliminar lista
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
+                        builder.setIcon(R.drawable.logonuevo);
+                        builder.setTitle("Historial Fotografico");
+                        builder.setMessage("¿Desea eliminar los elementos seleccionados?");
+                        builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                for (ItemFoto aux : lista_eliminada) {
+                                    lista_fotos.remove(aux);
+                                }
+
+                                lista_eliminada.clear();
+
+                                // Actualizar recyleview
+                                staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+                                rv.setLayoutManager(staggeredGridLayoutManager);
+                                fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
+                                rv.setAdapter(fotoAdapter);
+                                fotoAdapter.setOnItemClickListener(new FotoAdapter.OnClickListener() {
+                                    @Override
+                                    public void onItemClick(int position) {
+                                        if (position > 0) {
+                                            menuOpciones.setVisibility(View.GONE);
+                                            toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(true);
+                                        } else {
+                                            menuOpciones.setVisibility(View.VISIBLE);
+                                            toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(false);
+                                        }
+                                    }
+                                });
+
+                                // Reestablecer menu
+                                menuOpciones.setVisibility(View.VISIBLE);
+                                toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(false);
+                            }
+                        });
+
+                        builder.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // User cancelled the dialog
+                            }
+                        });
+
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
                         return true;
 
                     default:
@@ -129,7 +179,6 @@ public class HistorialFotografico extends Fragment {
         menuOpciones = view.findViewById(R.id.menuDP);
         camara = view.findViewById(R.id.tomar_hf);
         fototeca = view.findViewById(R.id.seleccionar_hf);
-//        eliminador = view.findViewById(R.id.borrar_hf);
         agregador = view.findViewById(R.id.registrar_hf);
 
         rv = view.findViewById(R.id.rv);
@@ -170,20 +219,55 @@ public class HistorialFotografico extends Fragment {
             }
         });
 
-
-        //Eliminar fotografia
-//        eliminador.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//            }
-//        });
-
         agregador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (lista_fotos.size() > 0) {
+                    SharedPreferences preferences = getActivity().getSharedPreferences("HFOTO", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
 
+                    Set<String> set = new HashSet<>();
+                    String codigoFoto = "";
+
+                    for (int i = 0; i < lista_fotos.size(); i++) {
+//                        for (ItemFoto item : lista_fotos) {
+                        Bitmap bitmap_aux = lista_fotos.get(i).getFoto();
+                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                        bitmap_aux.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+                        byte[] b = byteArrayOutputStream.toByteArray();
+                        codigoFoto = Base64.encodeToString(b, Base64.DEFAULT);
+
+                        String cadena = codigoFoto;
+                        set.add(cadena);
+                    }
+
+                    editor.putStringSet("listaFotos", set);
+                    editor.apply();
+
+                    final SharedPreferences preferenciasFicha2 = getActivity().getSharedPreferences("RESUMEN_FN", Context.MODE_PRIVATE);
+                    final SharedPreferences.Editor escritor2 = preferenciasFicha2.edit();
+                    escritor2.putString("NO_FOTOS", String.valueOf(lista_fotos.size()));
+                    escritor2.commit();
+
+                    GuardadorFichaNormal guardadorFichaNormal = new GuardadorFichaNormal();
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                    transaction.replace(R.id.contenedor, guardadorFichaNormal);
+                    transaction.commit();
+                } else {
+                    Alerter.create(getActivity())
+                            .setTitle("Error")
+                            .setText("No ha agregado fotos")
+                            .setIcon(R.drawable.logonuevo)
+                            .setTextTypeface(face)
+                            .enableSwipeToDismiss()
+                            .setBackgroundColorRes(R.color.AzulOscuro)
+                            .show();
+                }
             }
         });
+
+        obtenerFotos();
 
         return view;
     }
@@ -387,7 +471,6 @@ public class HistorialFotografico extends Fragment {
         cursor.moveToFirst();
         String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
         cursor.close();
-
 //        https://gist.github.com/akexorcist/4a01eec6e5210a779ec2
         return path;
     }
@@ -431,5 +514,44 @@ public class HistorialFotografico extends Fragment {
         }
 
         return bitmapAux;
+    }
+
+    public void obtenerFotos() {
+        SharedPreferences preferences = getActivity().getSharedPreferences("HFOTO", Context.MODE_PRIVATE);
+        Set<String> set = preferences.getStringSet("listaFotos", null);
+
+        if (set != null) {
+            ArrayList<String> listaAuxiliar = new ArrayList<>(set);
+            lista_fotos.clear();
+
+//            for (String item : listaAuxiliar) {
+//                byte[] decodedString = Base64.decode(item, Base64.DEFAULT);
+//                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+//                lista_fotos.add(new ItemFoto(decodedByte, false));
+//            }
+
+            for (int i = 0; i < listaAuxiliar.size(); i++) {
+                byte[] decodedString = Base64.decode(listaAuxiliar.get(i), Base64.DEFAULT);
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                lista_fotos.add(new ItemFoto(decodedByte, false));
+            }
+
+            staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+            rv.setLayoutManager(staggeredGridLayoutManager);
+            fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
+            rv.setAdapter(fotoAdapter);
+            fotoAdapter.setOnItemClickListener(new FotoAdapter.OnClickListener() {
+                @Override
+                public void onItemClick(int position) {
+                    if (position > 0) {
+                        menuOpciones.setVisibility(View.GONE);
+                        toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(true);
+                    } else {
+                        menuOpciones.setVisibility(View.VISIBLE);
+                        toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(false);
+                    }
+                }
+            });
+        }
     }
 }
