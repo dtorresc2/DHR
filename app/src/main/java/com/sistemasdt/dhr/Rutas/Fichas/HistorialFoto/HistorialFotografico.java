@@ -26,6 +26,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.sistemasdt.dhr.Rutas.Fichas.GuardadorFichaNormal;
 import com.sistemasdt.dhr.Rutas.Fichas.HistorialOdonto.HistorialOdonDos;
 
 import com.sistemasdt.dhr.R;
@@ -243,10 +244,10 @@ public class HistorialFotografico extends Fragment {
                     editor.putStringSet("listaFotos", set);
                     editor.apply();
 
-                    MenuFichas menuFichas = new MenuFichas();
+                    GuardadorFichaNormal guardadorFichaNormal = new GuardadorFichaNormal();
                     FragmentTransaction transaction = getFragmentManager().beginTransaction()
                             .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                    transaction.replace(R.id.contenedor, menuFichas);
+                    transaction.replace(R.id.contenedor, guardadorFichaNormal);
                     transaction.commit();
                 } else {
                     Alerter.create(getActivity())
