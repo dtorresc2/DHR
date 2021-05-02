@@ -500,6 +500,12 @@ public class HistorialOdonDos extends Fragment {
                     editor.putStringSet("listaTratamientos", set);
                     editor.apply();
 
+                    final SharedPreferences preferenciasFicha2 = getActivity().getSharedPreferences("RESUMEN_FN", Context.MODE_PRIVATE);
+                    final SharedPreferences.Editor escritor2 = preferenciasFicha2.edit();
+                    escritor2.putString("NO_TRATAMIENTOS", String.valueOf(listaTratamientos.size()));
+                    escritor2.putString("NO_PAGOS", String.valueOf(0));
+                    escritor2.commit();
+
                     HistorialFotografico historialFotografico = new HistorialFotografico();
                     FragmentTransaction transaction = getFragmentManager().beginTransaction()
                             .setCustomAnimations(R.anim.left_in, R.anim.left_out);

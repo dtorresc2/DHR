@@ -244,6 +244,11 @@ public class HistorialFotografico extends Fragment {
                     editor.putStringSet("listaFotos", set);
                     editor.apply();
 
+                    final SharedPreferences preferenciasFicha2 = getActivity().getSharedPreferences("RESUMEN_FN", Context.MODE_PRIVATE);
+                    final SharedPreferences.Editor escritor2 = preferenciasFicha2.edit();
+                    escritor2.putString("NO_FOTOS", String.valueOf(lista_fotos.size()));
+                    escritor2.commit();
+
                     GuardadorFichaNormal guardadorFichaNormal = new GuardadorFichaNormal();
                     FragmentTransaction transaction = getFragmentManager().beginTransaction()
                             .setCustomAnimations(R.anim.left_in, R.anim.left_out);
