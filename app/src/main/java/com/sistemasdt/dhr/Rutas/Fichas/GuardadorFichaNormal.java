@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +23,12 @@ import com.sistemasdt.dhr.Rutas.Fichas.HistorialFoto.FotoAdapter;
 import com.sistemasdt.dhr.Rutas.Fichas.HistorialFoto.ItemFoto;
 import com.sistemasdt.dhr.Rutas.Fichas.HistorialOdonto.HistorialOdonDos;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Set;
 
 public class GuardadorFichaNormal extends Fragment {
     private Toolbar toolbar;
@@ -151,44 +156,55 @@ public class GuardadorFichaNormal extends Fragment {
 
         //FICHA GENERAL
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("FICHA", Context.MODE_PRIVATE);
-        sharedPreferences.getString("ID_PACIENTE", "");
+//        sharedPreferences.getString("ID_PACIENTE", "");
 //        sharedPreferences.getString("PACIENTE", "");
-        sharedPreferences.getString("FECHA", "");
-        sharedPreferences.getString("MEDICO", "");
-        sharedPreferences.getString("MOTIVO", "");
-        sharedPreferences.getString("REFERENTE", "");
+//        sharedPreferences.getString("FECHA", "");
+//        sharedPreferences.getString("MEDICO", "");
+//        sharedPreferences.getString("MOTIVO", "");
+//        sharedPreferences.getString("REFERENTE", "");
 
         // HISTORIAL MEDICO 1
         SharedPreferences sharedPreferences1 = getActivity().getSharedPreferences("HMED1", Context.MODE_PRIVATE);
-        sharedPreferences1.getBoolean("HOSPITALIZADO", false);
-        sharedPreferences1.getString("DESCRIPCION_HOS", " ");
-        sharedPreferences1.getBoolean("TRATAMIENTO_MEDICO", false);
-        sharedPreferences1.getBoolean("ALERGIA", false);
-        sharedPreferences1.getString("DESCRIPCION_ALERGIA", " ");
-        sharedPreferences1.getBoolean("HEMORRAGIA", false);
-        sharedPreferences1.getBoolean("MEDICAMENTO", false);
-        sharedPreferences1.getString("DESCRIPCION_MEDICAMENTO", " ");
+//        sharedPreferences1.getBoolean("HOSPITALIZADO", false);
+//        sharedPreferences1.getString("DESCRIPCION_HOS", " ");
+//        sharedPreferences1.getBoolean("TRATAMIENTO_MEDICO", false);
+//        sharedPreferences1.getBoolean("ALERGIA", false);
+//        sharedPreferences1.getString("DESCRIPCION_ALERGIA", " ");
+//        sharedPreferences1.getBoolean("HEMORRAGIA", false);
+//        sharedPreferences1.getBoolean("MEDICAMENTO", false);
+//        sharedPreferences1.getString("DESCRIPCION_MEDICAMENTO", " ");
 
         // HISTORIAL MEDICO 2
         SharedPreferences sharedPreferences2 = getActivity().getSharedPreferences("HMED2", Context.MODE_PRIVATE);
-        sharedPreferences2.getBoolean("CORAZON", false);
-        sharedPreferences2.getBoolean("ARTRITIS", false);
-        sharedPreferences2.getBoolean("TUBERCULOSIS", false);
-        sharedPreferences2.getBoolean("FIEBREREU", false);
-        sharedPreferences2.getBoolean("PRESION_ALTA", false);
-        sharedPreferences2.getBoolean("PRESION_BAJA", false);
-        sharedPreferences2.getBoolean("DIABETES", false);
-        sharedPreferences2.getBoolean("ANEMIA", false);
-        sharedPreferences2.getBoolean("EPILEPSIA", false);
-        sharedPreferences2.getString("OTROS", " ");
+//        sharedPreferences2.getBoolean("CORAZON", false);
+//        sharedPreferences2.getBoolean("ARTRITIS", false);
+//        sharedPreferences2.getBoolean("TUBERCULOSIS", false);
+//        sharedPreferences2.getBoolean("FIEBREREU", false);
+//        sharedPreferences2.getBoolean("PRESION_ALTA", false);
+//        sharedPreferences2.getBoolean("PRESION_BAJA", false);
+//        sharedPreferences2.getBoolean("DIABETES", false);
+//        sharedPreferences2.getBoolean("ANEMIA", false);
+//        sharedPreferences2.getBoolean("EPILEPSIA", false);
+//        sharedPreferences2.getString("OTROS", " ");
 
         // HISTORIAL ODONTO 1
         SharedPreferences sharedPreferences3 = getActivity().getSharedPreferences("HOD1", Context.MODE_PRIVATE);
-        sharedPreferences3.getBoolean("DOLOR", false);
-        sharedPreferences3.getString("DESC_DOLOR", " ");
-        sharedPreferences3.getBoolean("GINGIVITIS", false);
-        sharedPreferences3.getString("OTROS", " ");
+//        sharedPreferences3.getBoolean("DOLOR", false);
+//        sharedPreferences3.getString("DESC_DOLOR", " ");
+//        sharedPreferences3.getBoolean("GINGIVITIS", false);
+//        sharedPreferences3.getString("OTROS", " ");
 
+        // HISTORIAL ODONTO 2
+        SharedPreferences sharedPreferences4 = getActivity().getSharedPreferences("HOD2", Context.MODE_PRIVATE);
+        Set<String> set = sharedPreferences4.getStringSet("listaTratamientos", null);
+        ArrayList<String> listaAuxiliar = new ArrayList<>(set);
+
+        // HISTORIAL FOTOGRAFICO
+        SharedPreferences sharedPreferences5 = getActivity().getSharedPreferences("HFOTO", Context.MODE_PRIVATE);
+        Set<String> arregloFotos = sharedPreferences5.getStringSet("listaFotos", null);
+        ArrayList<String> listadoFotos = new ArrayList<>(arregloFotos);
+
+        // JSON PARA REGISTRAR FICHA
         JSONObject jsonObject = new JSONObject();
         try {
             // FICHA
@@ -237,115 +253,75 @@ public class GuardadorFichaNormal extends Fragment {
             jsonHO.put("OTROS", sharedPreferences3.getString("OTROS", " "));
             jsonHO.put("ID_FICHA", 0);
 
+            // HISTORIAL ODONTODOLOGICO - TRATAMIENTOS
+            JSONArray jsonArray = new JSONArray();
+            for (String item : listaAuxiliar) {
+                try {
+                    String cadenaAuxiliar[] = item.split(";");
+
+                    JSONObject rowJSON = new JSONObject();
+                    rowJSON.put("PLAN", cadenaAuxiliar[2]);
+                    rowJSON.put("COSTO", Double.parseDouble(cadenaAuxiliar[3]));
+                    rowJSON.put("FECHA", cadenaAuxiliar[4]);
+                    rowJSON.put("ID_PIEZA", Integer.parseInt(cadenaAuxiliar[0]));
+                    rowJSON.put("ID_SERVICIO", Integer.parseInt(cadenaAuxiliar[1]));
+                    rowJSON.put("ID_HISTORIAL_ODONTO", 0);
+
+                    jsonArray.put(rowJSON);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            jsonHO.put("TRATAMIENTOS", jsonArray);
+
+            // HISTORIAL FOTOGRAFICO
+            JSONArray jsonArrayFotos = new JSONArray();
+            for (int i = 0; i < listadoFotos.size(); i++) {
+                try {
+                    byte[] decodedString = Base64.decode(listadoFotos.get(i), Base64.DEFAULT);
+                    String codigoFoto = Base64.encodeToString(decodedString, Base64.DEFAULT);
+
+                    JSONObject rowJSON = new JSONObject();
+                    rowJSON.put("FOTO", codigoFoto);
+                    rowJSON.put("URL", " ");
+                    rowJSON.put("DESCRIPCION", " ");
+                    rowJSON.put("NOMBRE", " ");
+                    rowJSON.put("ID_FICHA", 0);
+
+                    jsonArrayFotos.put(rowJSON);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // PAGOS
+            JSONArray jsonArrayPagos = new JSONArray();
+            for (int i = 0; i < 2; i++) {
+                try {
+                    JSONObject rowJSON = new JSONObject();
+                    rowJSON.put("PAGO", 55.25);
+                    rowJSON.put("DESCRIPCION", "Pago ficha 1");
+                    rowJSON.put("FECHA", "2020/12/01");
+                    rowJSON.put("ID_FICHA", 0);
+
+                    jsonArrayPagos.put(rowJSON);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
             // DATOS A REGISTRAR
             jsonObject.put("FICHA", jsonFicha);
             jsonObject.put("HISTORIAL_MEDICO", jsonHM);
-            jsonObject.put("HISTORIAL_ODONTO", jsonHM);
+            jsonObject.put("HISTORIAL_ODONTO", jsonHO);
+            jsonObject.put("HISTORIAL_FOTOS", jsonArrayFotos);
+            jsonObject.put("PAGOS", jsonArrayPagos);
 
             Toast.makeText(getContext(), jsonObject.toString(), Toast.LENGTH_LONG).show();
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-//        {
-//            "FICHA":{
-//                    "CODIGO_INTERNO":1,
-//                    "FECHA":"2020/11/28",
-//                    "MEDICO":"LUCY",
-//                    "MOTIVO":"Ficha de prueba",
-//                    "REFERENTE":"-",
-//                    "ID_PACIENTE":1,
-//                    "ID_USUARIO":1
-//        },
-//            "HISTORIAL_MEDICO":{
-//                    "HOSPITALIZADO":1,
-//                    "DESCRIPCION_HOS":"Desc_hos",
-//                    "TRATAMIENTO_MEDICO":0,
-//                    "ALERGIA":1,
-//                    "DESCRIPCION_ALERGIA":"Desc_alergia",
-//                    "HEMORRAGIA":0,
-//                    "MEDICAMENTO":1,
-//                    "DESCRIPCION_MEDICAMENTO":"Desc_medicamento",
-//                    "ID_FICHA":0,
-//                    "PADECIMIENTOS":{
-//                        "CORAZON":1,
-//                        "ARTRITIS":1,
-//                        "TUBERCULOSIS":1,
-//                        "PRESION_ALTA":1,
-//                        "PRESION_BAJA":1,
-//                        "FIEBREREU":1,
-//                        "ANEMIA":1,
-//                        "EPILEPSIA":1,
-//                        "DIABETES":1,
-//                        "OTROS":"Otros",
-//                        "ID_HISTORIAL_MEDICO":0
-//            }
-//        },
-//            "HISTORIAL_ODONTO":{
-//                    "DOLOR":1,
-//                    "DESCRIPCION_DOLOR":"DESCRIPCION_DOLOR",
-//                    "GINGIVITIS":1,
-//                    "OTROS":"OTROS",
-//                    "ID_FICHA":0,
-//                    "TRATAMIENTOS": [
-        //            {
-        //                   "PLAN":"Consulta",
-        //                    "COSTO":100.50,
-        //                    "FECHA":"2020/12/04",
-        //                    "ID_PIEZA":1,
-        //                    "ID_SERVICIO":1,
-        //                    "ID_HISTORIAL_ODONTO":0
-        //            },
-        //            {
-        //                    "PLAN":"Consulta",
-        //                    "COSTO":100.50,
-        //                    "FECHA":"2020/12/04",
-        //                    "ID_PIEZA":1,
-        //                    "ID_SERVICIO":1,
-        //                    "ID_HISTORIAL_ODONTO":0
-        //            },
-        //            {
-        //                    "PLAN":"Consulta",
-        //                    "COSTO":100.50,
-        //                    "FECHA":"2020/12/04",
-        //                    "ID_PIEZA":1,
-        //                    "ID_SERVICIO":1,
-        //                    "ID_HISTORIAL_ODONTO":0
-        //            }
-        //        ]
-//        },
-//            "HISTORIAL_FOTOS": [
-//            {
-//                "FOTO":"2J3HK1J23HK12J3H",
-//                    "URL":"URL",
-//                    "DESCRIPCION":"FOTO 1",
-//                    "NOMBRE":"",
-//                    "ID_FICHA":0
-//            },
-//            {
-//                "FOTO":"2J3HK1J23HK12J3H",
-//                    "URL":"URL",
-//                    "DESCRIPCION":"FOTO 1",
-//                    "NOMBRE":"",
-//                    "ID_FICHA":0
-//            }
-//    ],
-//            "PAGOS": [
-//            {
-//                "PAGO":55.25,
-//                    "DESCRIPCION":"Pago ficha 1",
-//                    "FECHA":"2020/12/01",
-//                    "ID_FICHA":0
-//            },
-//            {
-//                "PAGO":55.25,
-//                    "DESCRIPCION":"Pago ficha 1",
-//                    "FECHA":"2020/12/01",
-//                    "ID_FICHA":0
-//            }
-//    ]
-//        }
-
     }
 }
