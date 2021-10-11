@@ -1,11 +1,10 @@
 package com.sistemasdt.dhr.Rutas.Fichas.HistorialFoto;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,6 @@ import android.widget.ImageView;
 
 import com.sistemasdt.dhr.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class FotoAdapter extends RecyclerView.Adapter<FotoAdapter.ViewHolderConsulta> {

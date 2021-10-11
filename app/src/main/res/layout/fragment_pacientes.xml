@@ -48,7 +48,7 @@
 
     <!--    </com.getbase.floatingactionbutton.FloatingActionsMenu>-->
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/grabarPaciente"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -72,7 +72,7 @@
             android:layout_marginTop="65dp"
             android:orientation="vertical">
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/nombreLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -80,7 +80,7 @@
                 app:counterMaxLength="100"
                 app:errorEnabled="true">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/primerNombre"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -88,9 +88,9 @@
                     android:inputType="textPersonName"
                     android:maxLength="100"
                     android:maxLines="1" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/telefonoLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -98,7 +98,7 @@
                 app:counterMaxLength="10"
                 app:errorEnabled="true">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/telefono"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -106,9 +106,9 @@
                     android:inputType="phone"
                     android:maxLength="10"
                     android:maxLines="1" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/ocupacionLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -116,7 +116,7 @@
                 app:counterMaxLength="30"
                 app:errorEnabled="true">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/ocupacion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -124,9 +124,9 @@
                     android:inputType="textPersonName"
                     android:maxLength="30"
                     android:maxLines="1" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/edadLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -134,7 +134,7 @@
                 app:counterMaxLength="3"
                 app:errorEnabled="true">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edad"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -142,9 +142,9 @@
                     android:inputType="number"
                     android:maxLength="3"
                     android:maxLines="1" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/dpiLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -152,7 +152,7 @@
                 app:counterMaxLength="30"
                 app:errorEnabled="true">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/dpi"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -160,7 +160,7 @@
                     android:inputType="number"
                     android:maxLength="30"
                     android:maxLines="1" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -178,21 +178,21 @@
                     android:background="@color/AzulOscuro"
                     android:src="@drawable/icono_citas" />
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/fechaLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="0.3">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/fecha_persona"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:editable="false"
                         android:hint="Fecha Nacimiento"
                         tools:ignore="Deprecated" />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
             <TextView
