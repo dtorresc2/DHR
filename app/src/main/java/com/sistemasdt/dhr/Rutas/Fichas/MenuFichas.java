@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sistemasdt.dhr.R;
-import com.sistemasdt.dhr.Rutas.Fichas.FichaForm.Ficha;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.Ficha;
 
 
 public class MenuFichas extends Fragment {

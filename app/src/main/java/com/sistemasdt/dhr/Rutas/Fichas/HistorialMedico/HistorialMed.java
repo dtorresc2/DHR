@@ -16,7 +16,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 
-import com.sistemasdt.dhr.Rutas.Fichas.FichaForm.Ficha;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.Ficha;
 import com.sistemasdt.dhr.R;
 
 public class HistorialMed extends Fragment {

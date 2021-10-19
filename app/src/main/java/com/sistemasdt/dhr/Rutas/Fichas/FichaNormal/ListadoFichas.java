@@ -1,4 +1,4 @@
-package com.sistemasdt.dhr.OpcionConsulta.Normal;
+package com.sistemasdt.dhr.Rutas.Fichas.FichaNormal;
 
 
 import android.annotation.SuppressLint;
@@ -30,6 +30,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.sistemasdt.dhr.OpcionConsulta.Especial.FichasEspeciales;
 import com.sistemasdt.dhr.OpcionConsulta.Normal.Adaptadores.AdaptadorConsultaFicha;
+import com.sistemasdt.dhr.OpcionConsulta.Normal.Historiales;
+import com.sistemasdt.dhr.OpcionConsulta.Normal.ItemsFichas;
 import com.sistemasdt.dhr.OpcionSeguimiento.Seguimiento;
 import com.sistemasdt.dhr.OpcionSeguimiento.SeguimientoEspecial;
 import com.sistemasdt.dhr.R;
@@ -43,7 +45,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @SuppressLint("ValidFragment")
-public class consultarFichas extends Fragment {
+public class ListadoFichas extends Fragment {
     private RecyclerView listafichas;
     private EditText nombre;
     private Toolbar toolbar;
@@ -57,7 +59,7 @@ public class consultarFichas extends Fragment {
     private int mOpcion = 0;
 
     @SuppressLint("ValidFragment")
-    public consultarFichas(String id, int opcion) {
+    public ListadoFichas(String id, int opcion) {
         // Required empty public constructor
         idPaciente = id;
         mOpcion = opcion;
@@ -67,7 +69,7 @@ public class consultarFichas extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_consultar_fichas, container, false);
+        View view = inflater.inflate(R.layout.fragment_listado_fichas, container, false);
         Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         requestQueue = Volley.newRequestQueue(getContext());
         toolbar = view.findViewById(R.id.toolbar);

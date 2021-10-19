@@ -26,7 +26,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.sistemasdt.dhr.Rutas.Fichas.HistorialOdonto.HistorialOdonDos;
-import com.sistemasdt.dhr.Rutas.Fichas.FichaForm.Ficha;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.Ficha;
 import com.sistemasdt.dhr.Rutas.Fichas.HistorialMedico.HistorialMed;
 import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.Pacientes;
 import com.sistemasdt.dhr.Rutas.Fichas.HistorialFoto.HistorialFotografico;

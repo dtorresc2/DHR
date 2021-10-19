@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/FondoSecundario"
-    tools:context=".Rutas.Fichas.FichaForm.Ficha">
+    tools:context=".Rutas.Fichas.FichaNormal.Ficha">
 
     <include
         android:id="@+id/toolbar"

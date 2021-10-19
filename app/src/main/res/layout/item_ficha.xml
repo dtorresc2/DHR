@@ -82,6 +82,7 @@
 
 <!--</android.support.v7.widget.CardView>-->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/FondoSecundario2">
@@ -215,7 +216,8 @@
                 android:background="@color/FondoSecundario2"
                 android:src="@drawable/ic_opciones"
                 android:text="Limpiar"
-                android:textColor="@color/Blanco" />
+                android:textColor="@color/Blanco"
+                tools:ignore="SpeakableTextPresentCheck" />
         </LinearLayout>
 
         <View
