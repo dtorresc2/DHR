@@ -1,4 +1,4 @@
-package com.sistemasdt.dhr.Rutas.Fichas.HistorialFoto;
+package com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialFoto;
 
 import android.graphics.Bitmap;
 

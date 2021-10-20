@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <com.sistemasdt.dhr.Rutas.Fichas.HistorialFoto.SquareImageView
+    <com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialFoto.SquareImageView
         android:id="@+id/siv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

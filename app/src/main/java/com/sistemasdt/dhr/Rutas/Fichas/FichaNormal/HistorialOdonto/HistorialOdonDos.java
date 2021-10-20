@@ -1,4 +1,4 @@
-package com.sistemasdt.dhr.Rutas.Fichas.HistorialOdonto;
+package com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialOdonto;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -32,7 +32,7 @@ import android.widget.TextView;
 import com.sistemasdt.dhr.Componentes.MenusInferiores.MenuInferiorDos;
 import com.sistemasdt.dhr.Rutas.Catalogos.Piezas.ItemPieza;
 import com.sistemasdt.dhr.Rutas.Catalogos.Servicios.ItemServicio;
-import com.sistemasdt.dhr.Rutas.Fichas.HistorialFoto.HistorialFotografico;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialFoto.HistorialFotografico;
 import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.Componentes.Tabla.TablaDinamica;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysPiezas;

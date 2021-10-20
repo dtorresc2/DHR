@@ -1,4 +1,4 @@
-package com.sistemasdt.dhr.Rutas.Fichas.HistorialFoto;
+package com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialFoto;
 
 import android.Manifest;
 import android.app.Activity;
@@ -27,7 +27,7 @@ import androidx.annotation.NonNull;
 
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.sistemasdt.dhr.Rutas.Fichas.GuardadorFichaNormal;
-import com.sistemasdt.dhr.Rutas.Fichas.HistorialOdonto.HistorialOdonDos;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialOdonto.HistorialOdonDos;
 
 import com.sistemasdt.dhr.R;
 import com.getbase.floatingactionbutton.FloatingActionButton;

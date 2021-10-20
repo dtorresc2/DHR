@@ -1,4 +1,4 @@
-package com.sistemasdt.dhr.Rutas.Fichas.HistorialMedico;
+package com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialMedico;
 
 
 import android.content.Context;

@@ -32,7 +32,7 @@ import android.widget.TextView;
 
 import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.ItemPaciente;
-import com.sistemasdt.dhr.Rutas.Fichas.HistorialMedico.HistorialMed;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialMedico.HistorialMed;
 import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysPacientes;
 import com.tapadoo.alerter.Alerter;

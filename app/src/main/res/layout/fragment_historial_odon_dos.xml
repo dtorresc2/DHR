@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/FondoSecundario"
-    tools:context=".Rutas.Fichas.HistorialOdonto.HistorialOdonDos">
+    tools:context=".Rutas.Fichas.FichaNormal.HistorialOdonto.HistorialOdonDos">
 
     <include
         android:id="@+id/toolbar"

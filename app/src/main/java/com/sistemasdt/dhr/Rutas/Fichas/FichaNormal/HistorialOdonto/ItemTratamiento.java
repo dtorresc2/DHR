@@ -1,4 +1,4 @@
-package com.sistemasdt.dhr.Rutas.Fichas.HistorialOdonto;
+package com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialOdonto;
 
 public class ItemTratamiento {
     private int pieza;

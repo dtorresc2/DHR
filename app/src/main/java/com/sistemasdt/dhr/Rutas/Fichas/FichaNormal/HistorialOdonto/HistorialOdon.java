@@ -1,4 +1,4 @@
-package com.sistemasdt.dhr.Rutas.Fichas.HistorialOdonto;
+package com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialOdonto;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
-import com.sistemasdt.dhr.Rutas.Fichas.HistorialMedico.HistorialMedDos;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialMedico.HistorialMedDos;
 import com.sistemasdt.dhr.R;
 
 public class HistorialOdon extends Fragment {

@@ -1,4 +1,4 @@
-package com.sistemasdt.dhr.Rutas.Fichas.HistorialMedico;
+package com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialMedico;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 
 import com.sistemasdt.dhr.R;
-import com.sistemasdt.dhr.Rutas.Fichas.HistorialOdonto.HistorialOdon;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialOdonto.HistorialOdon;
 
 public class HistorialMedDos extends Fragment {
     private Toolbar toolbar;
