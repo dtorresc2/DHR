@@ -163,49 +163,49 @@
                         android:textSize="14sp" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:orientation="horizontal"
-                    android:weightSum="3">
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="4dp"-->
+<!--                    android:orientation="horizontal"-->
+<!--                    android:weightSum="3">-->
 
-                    <TextView
-                        android:id="@+id/debePaciente"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="left"
-                        android:paddingLeft="10dp"
-                        android:paddingTop="3dp"
-                        android:text="15.25"
-                        android:textColor="@color/Blanco"
-                        android:textSize="15sp" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/debePaciente"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:gravity="left"-->
+<!--                        android:paddingLeft="10dp"-->
+<!--                        android:paddingTop="3dp"-->
+<!--                        android:text="15.25"-->
+<!--                        android:textColor="@color/Blanco"-->
+<!--                        android:textSize="15sp" />-->
 
-                    <TextView
-                        android:id="@+id/haberPaciente"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="left"
-                        android:paddingLeft="10dp"
-                        android:paddingTop="3dp"
-                        android:text="15.25"
-                        android:textColor="@color/Blanco"
-                        android:textSize="15sp" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/haberPaciente"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:gravity="left"-->
+<!--                        android:paddingLeft="10dp"-->
+<!--                        android:paddingTop="3dp"-->
+<!--                        android:text="15.25"-->
+<!--                        android:textColor="@color/Blanco"-->
+<!--                        android:textSize="15sp" />-->
 
-                    <TextView
-                        android:id="@+id/saldoPaciente"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="left"
-                        android:paddingLeft="10dp"
-                        android:paddingTop="3dp"
-                        android:text="15.25"
-                        android:textColor="@color/Blanco"
-                        android:textSize="15sp" />
-                </LinearLayout>
+<!--                    <TextView-->
+<!--                        android:id="@+id/saldoPaciente"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:gravity="left"-->
+<!--                        android:paddingLeft="10dp"-->
+<!--                        android:paddingTop="3dp"-->
+<!--                        android:text="15.25"-->
+<!--                        android:textColor="@color/Blanco"-->
+<!--                        android:textSize="15sp" />-->
+<!--                </LinearLayout>-->
             </LinearLayout>
 
             <ImageButton
@@ -214,19 +214,16 @@
                 android:layout_height="match_parent"
                 android:layout_weight="10"
                 android:background="@color/FondoSecundario2"
-                android:src="@drawable/ic_opciones"
+                android:src="@drawable/ic_adelante"
                 android:text="Limpiar"
                 android:textColor="@color/Blanco"
                 tools:ignore="SpeakableTextPresentCheck" />
         </LinearLayout>
 
         <View
-            android:id="@+id/separadorPaciente"
+            android:id="@+id/separadorPieza"
             android:layout_width="wrap_content"
             android:layout_height="4dp"
             android:background="@color/FondoSecundario" />
-
     </LinearLayout>
-
-
 </FrameLayout>

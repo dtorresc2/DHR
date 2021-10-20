@@ -1,4 +1,4 @@
-package com.sistemasdt.dhr;
+package com.sistemasdt.dhr.Rutas.Fichas;
 
 
 import android.content.Context;
@@ -25,6 +25,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.Rutas.Fichas.HistorialOdonto.HistorialOdonDos;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.Ficha;
 import com.sistemasdt.dhr.Rutas.Fichas.HistorialMedico.HistorialMed;
@@ -38,7 +39,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class IngresoNormal extends Fragment {
+public class MenuFichaNormal extends Fragment {
     private Toolbar toolbar;
     private GridLayout menu;
     private int edad, lim_od, fotos_guardadas;
@@ -69,7 +70,7 @@ public class IngresoNormal extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_ingreso_normal, container, false);
+        View view = inflater.inflate(R.layout.fragment_menu_ficha_normal, container, false);
         requestQueue = Volley.newRequestQueue(getContext());
         almacen = getActivity().getSharedPreferences("ids", Context.MODE_PRIVATE);
         //Typeface face = Typeface.createFromAsset(getActivity().getAssets(),"fonts/bahnschrift.ttf");
@@ -77,7 +78,7 @@ public class IngresoNormal extends Fragment {
         toolbar.setTitle("Ingreso de Pacientes");
         menu = (GridLayout) view.findViewById(R.id.menuingeso);
         setSingleEvent(menu);
-        guardador = view.findViewById(R.id.guardarBD);
+//        guardador = view.findViewById(R.id.guardarBD);
         guardador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

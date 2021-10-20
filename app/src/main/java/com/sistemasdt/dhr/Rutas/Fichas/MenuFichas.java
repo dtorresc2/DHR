@@ -26,7 +26,7 @@ public class MenuFichas extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_agregar, container, false);
+        View view = inflater.inflate(R.layout.fragment_menu_ficha, container, false);
         Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
 
         botonNuevo = view.findViewById(R.id.fnueva);
