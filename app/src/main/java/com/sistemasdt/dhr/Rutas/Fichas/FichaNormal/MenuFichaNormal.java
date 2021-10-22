@@ -1,4 +1,4 @@
-package com.sistemasdt.dhr.Rutas.Fichas;
+package com.sistemasdt.dhr.Rutas.Fichas.FichaNormal;
 
 
 import android.content.Context;

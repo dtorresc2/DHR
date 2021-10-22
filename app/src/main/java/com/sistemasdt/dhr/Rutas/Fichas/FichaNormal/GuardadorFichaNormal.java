@@ -1,4 +1,4 @@
-package com.sistemasdt.dhr.Rutas.Fichas;
+package com.sistemasdt.dhr.Rutas.Fichas.FichaNormal;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sistemasdt.dhr.R;
+import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysFichas;
 import com.tapadoo.alerter.Alerter;
 
