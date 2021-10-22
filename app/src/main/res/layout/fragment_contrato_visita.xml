@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/FondoTerciario"
+    android:background="@color/FondoSecundario"
     tools:context=".Rutas.Fichas.FichaEspecial.ContratoVisita">
 
     <include
@@ -21,22 +21,20 @@
         android:clickable="true"
         android:elevation="10dp"
         android:src="@drawable/ic_check"
-        app:backgroundTint="@color/AzulOscuro" />
+        app:backgroundTint="@color/AzulOscuro"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="70dp"
             android:orientation="vertical">
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="70dp" />
 
             <TextView
                 android:id="@+id/tituloContrato"
@@ -48,113 +46,79 @@
                 android:textColor="@color/Blanco"
                 android:textSize="18sp" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="15dp" />
-
             <TextView
                 android:id="@+id/parrafo1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textColor="@color/Blanco"
-                android:text="@string/parrafo1" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="15dp" />
+                android:layout_marginTop="15dp"
+                android:text="@string/parrafo1"
+                android:textColor="@color/Blanco" />
 
             <TextView
                 android:id="@+id/parrafo2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textColor="@color/Blanco"
-                android:text="@string/parrafo2" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="15dp" />
+                android:layout_marginTop="15dp"
+                android:text="@string/parrafo2"
+                android:textColor="@color/Blanco" />
 
             <TextView
                 android:id="@+id/parrafo3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textColor="@color/Blanco"
-                android:text="@string/parrafo3" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="15dp" />
+                android:layout_marginTop="15dp"
+                android:text="@string/parrafo3"
+                android:textColor="@color/Blanco" />
 
             <TextView
                 android:id="@+id/parrafo4"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textColor="@color/Blanco"
-                android:text="@string/parrafo4" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="15dp" />
+                android:layout_marginTop="15dp"
+                android:text="@string/parrafo4"
+                android:textColor="@color/Blanco" />
 
             <TextView
                 android:id="@+id/parrafo5"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textColor="@color/Blanco"
-                android:text="@string/parrafo5" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="15dp" />
+                android:layout_marginTop="15dp"
+                android:text="@string/parrafo5"
+                android:textColor="@color/Blanco" />
 
             <TextView
                 android:id="@+id/parrafo6"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textColor="@color/Blanco"
-                android:text="@string/parrafo6" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="15dp" />
+                android:layout_marginTop="15dp"
+                android:text="@string/parrafo6"
+                android:textColor="@color/Blanco" />
 
             <TextView
                 android:id="@+id/parrafo7"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textColor="@color/Blanco"
-                android:text="@string/parrafo7" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="15dp" />
+                android:layout_marginTop="15dp"
+                android:text="@string/parrafo7"
+                android:textColor="@color/Blanco" />
 
             <TextView
                 android:id="@+id/parrafo8"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="15dp"
                 android:background="@color/AzulOscuro"
                 android:gravity="center_vertical|center_horizontal"
-                android:textColor="@color/Blanco"
-                android:text="Firma" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="15dp" />
+                android:text="Firma"
+                android:textColor="@color/Blanco" />
 
             <ImageView
                 android:id="@+id/firma"
                 android:layout_width="300dp"
                 android:layout_height="135dp"
-                android:src="@color/Blanco"
-                android:layout_gravity="center_horizontal|center_vertical"/>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="70dp" />
-
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:layout_marginTop="15dp"
+                android:src="@color/Blanco" />
         </LinearLayout>
     </ScrollView>
-
-
 </FrameLayout>

@@ -44,7 +44,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-public class IngresoPagosVisitas extends Fragment {
+public class PagosVisitas extends Fragment {
     EditText descripcion, fecha, pagos;
     Toolbar toolbar;
     ImageButton selectorFecha;
@@ -64,7 +64,7 @@ public class IngresoPagosVisitas extends Fragment {
     private double total;
     private static final String TAG = "MyActivity";
 
-    public IngresoPagosVisitas() {
+    public PagosVisitas() {
         // Required empty public constructor
     }
 
@@ -128,8 +128,8 @@ public class IngresoPagosVisitas extends Fragment {
         selectorFecha = view.findViewById(R.id.obtenerFecha);
         agregar = view.findViewById(R.id.agregarPago);
         agregar.setTypeface(face);
-        quitar = view.findViewById(R.id.quitarPago);
-        quitar.setTypeface(face);
+//        quitar = view.findViewById(R.id.quitarPago);
+//        quitar.setTypeface(face);
         siguiente = view.findViewById(R.id.siguiente);
 
         tableLayout = view.findViewById(R.id.tablaPagos);

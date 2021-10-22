@@ -106,10 +106,10 @@ public class FichaEvaluacion extends Fragment {
 
                     if (networkInfo != null && networkInfo.isConnected()) {
                         crearFicha("http://dhr.sistemasdt.xyz/Especial/ingresoE.php?estado=1");
-                        IngresoVisitas ingresoVisitas = new IngresoVisitas();
-                        ingresoVisitas.ObtenerOpcion(1);
+                        Visitas visitas = new Visitas();
+                        visitas.ObtenerOpcion(1);
                         FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                        transaction.replace(R.id.contenedor, ingresoVisitas);
+                        transaction.replace(R.id.contenedor, visitas);
                         transaction.commit();
 
                     } else {

@@ -34,7 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class IngEvaluacion extends Fragment {
+public class Evaluacion extends Fragment {
     Toolbar toolbar;
     TextView titulo1, titulo2, titulo3, titulo4, titulo5, titulo6, titulo7, titulo8, titulo9, titulo10, titulo11, titulo12;
     CheckBox ad1, ad2, ad3, ad4, ad5;
@@ -53,7 +53,7 @@ public class IngEvaluacion extends Fragment {
     private static final String TAG = "MyActivity";
     RequestQueue requestQueue;
 
-    public IngEvaluacion() {
+    public Evaluacion() {
         // Required empty public constructor
     }
 
@@ -61,7 +61,7 @@ public class IngEvaluacion extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_ing_evaluacion, container, false);
+        View view = inflater.inflate(R.layout.fragment_evaluacion, container, false);
         Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         requestQueue = Volley.newRequestQueue(getContext());
         toolbar = view.findViewById(R.id.toolbar);

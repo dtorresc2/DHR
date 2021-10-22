@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/FondoTerciario"
-    tools:context=".Rutas.Fichas.FichaEspecial.IngEvaluacion">
+    android:background="@color/FondoSecundario"
+    tools:context=".Rutas.Fichas.FichaEspecial.Evaluacion">
 
     <include
         android:id="@+id/toolbar"
@@ -21,7 +21,8 @@
         android:clickable="true"
         android:elevation="10dp"
         android:src="@drawable/ic_check"
-        app:backgroundTint="@color/AzulOscuro" />
+        app:backgroundTint="@color/AzulOscuro"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -30,11 +31,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="70dp"
+            android:layout_marginRight="10dp"
             android:orientation="vertical">
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="70dp" />
 
             <TextView
                 android:id="@+id/titulo1"
@@ -46,490 +46,479 @@
                 android:textColor="@color/Blanco"
                 android:textSize="18sp" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
-
             <CheckBox
                 android:id="@+id/ad1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Buena Alineacion Dental"/>
+                android:layout_marginTop="10dp"
+                android:text="Buena Alineacion Dental"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <CheckBox
                 android:id="@+id/ad2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Apiñamiento en Maxiliar"/>
+                android:text="Apiñamiento en Maxiliar"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <CheckBox
                 android:id="@+id/ad3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Apiñamiento en la Mandibula"/>
+                android:text="Apiñamiento en la Mandibula"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <CheckBox
                 android:id="@+id/ad4"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Linea Media Correcta"/>
+                android:text="Linea Media Correcta"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <CheckBox
                 android:id="@+id/ad5"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Discrepancia de Linea Media "/>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
+                android:text="Discrepancia de Linea Media "
+                tools:ignore="TouchTargetSizeCheck" />
 
             <TextView
                 android:id="@+id/titulo2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:background="@color/AzulOscuro"
                 android:gravity="center_horizontal|center_vertical"
                 android:text="Forma del Arco Superior"
                 android:textColor="@color/Blanco"
                 android:textSize="18sp" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
 
             <CheckBox
                 android:id="@+id/fas1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:width="1dp"
-                android:text="Normal"/>
+                android:layout_marginTop="10dp"
+                android:text="Normal"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <CheckBox
                 android:id="@+id/fas2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:width="4dp"
-                android:text="Estrecha"/>
+                android:text="Estrecha"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <CheckBox
                 android:id="@+id/fas3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:width="2dp"
-                android:text="Aplanado"/>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
+                android:text="Aplanado"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <TextView
                 android:id="@+id/titulo3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:background="@color/AzulOscuro"
                 android:gravity="center_horizontal|center_vertical"
                 android:text="Forma del Arco Inferior"
                 android:textColor="@color/Blanco"
                 android:textSize="18sp" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
-
             <CheckBox
                 android:id="@+id/fai1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Normal"/>
+                android:layout_marginTop="10dp"
+                android:text="Normal"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <CheckBox
                 android:id="@+id/fai2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Estrecha"/>
+                android:text="Estrecha"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <CheckBox
                 android:id="@+id/fai3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Aplanado"/>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
+                android:text="Aplanado"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <TextView
                 android:id="@+id/titulo4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:background="@color/AzulOscuro"
                 android:gravity="center_horizontal|center_vertical"
                 android:text="Oclucion"
                 android:textColor="@color/Blanco"
                 android:textSize="18sp" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
-
             <CheckBox
                 android:id="@+id/oc1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Relacion Correcta de Mordida"/>
+                android:layout_marginTop="10dp"
+                android:text="Relacion Correcta de Mordida"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <CheckBox
                 android:id="@+id/oc2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Sobre Mordida"/>
+                android:text="Sobre Mordida"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <CheckBox
                 android:id="@+id/oc3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Resalte Dental"/>
+                android:text="Resalte Dental"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <CheckBox
                 android:id="@+id/oc4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Linea Media Correcta"/>
+                android:text="Linea Media Correcta"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <CheckBox
                 android:id="@+id/oc5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Discrepancia de Linea Media"/>
+                android:text="Discrepancia de Linea Media"
+                tools:ignore="TouchTargetSizeCheck" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
 
             <TextView
                 android:id="@+id/titulo5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:background="@color/AzulOscuro"
                 android:gravity="center_horizontal|center_vertical"
                 android:text="Desarrollo Facial"
                 android:textColor="@color/Blanco"
                 android:textSize="18sp" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
-
             <CheckBox
                 android:id="@+id/df1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Desarrollo Facial Bueno"/>
+                android:layout_marginTop="10dp"
+                android:text="Desarrollo Facial Bueno"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <CheckBox
                 android:id="@+id/df2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Deficiencia en el Tercio Medio de la Cara"/>
+                android:text="Deficiencia en el Tercio Medio de la Cara"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <CheckBox
                 android:id="@+id/df3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Deficiencia en el Tercio Inferior de la Cara"/>
+                android:text="Deficiencia en el Tercio Inferior de la Cara"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <CheckBox
                 android:id="@+id/df4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Crecimiento Vertical Excesivo"/>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
+                android:text="Crecimiento Vertical Excesivo"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <TextView
                 android:id="@+id/titulo6"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:background="@color/AzulOscuro"
                 android:gravity="center_horizontal|center_vertical"
                 android:text="Respiracion y Postura"
                 android:textColor="@color/Blanco"
                 android:textSize="18sp" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
-
             <CheckBox
                 android:id="@+id/rp1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Respiracion Nasal Leve"/>
+                android:layout_marginTop="10dp"
+                android:text="Respiracion Nasal Leve"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <CheckBox
                 android:id="@+id/rp2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Respiracion Nasal Fuerte"/>
+                android:text="Respiracion Nasal Fuerte"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <CheckBox
                 android:id="@+id/rp3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Respiracion Bucal"/>
+                android:text="Respiracion Bucal"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <CheckBox
                 android:id="@+id/rp4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Buena Postura"/>
+                android:text="Buena Postura"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <CheckBox
                 android:id="@+id/rp5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Postura Incorrecta"/>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
+                android:text="Postura Incorrecta"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <TextView
                 android:id="@+id/titulo7"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:background="@color/AzulOscuro"
                 android:gravity="center_horizontal|center_vertical"
                 android:text="Lengua"
                 android:textColor="@color/Blanco"
                 android:textSize="18sp" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
-
             <CheckBox
                 android:id="@+id/len1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Correcta Posicion de la Lengua en Reposo"/>
+                android:layout_marginTop="10dp"
+                android:text="Correcta Posicion de la Lengua en Reposo"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <CheckBox
                 android:id="@+id/len2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Incorrecta Posicion de la Lengua en Reposo"/>
+                android:text="Incorrecta Posicion de la Lengua en Reposo"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <CheckBox
                 android:id="@+id/len3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Insercion el Frenillo Lingual"/>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
+                android:text="Insercion el Frenillo Lingual"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <TextView
                 android:id="@+id/titulo8"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:background="@color/AzulOscuro"
                 android:gravity="center_horizontal|center_vertical"
                 android:text="Deglucion"
                 android:textColor="@color/Blanco"
                 android:textSize="18sp" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
-
             <CheckBox
                 android:id="@+id/de1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Buena Postura"/>
+                android:layout_marginTop="10dp"
+                android:text="Buena Postura"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <CheckBox
                 android:id="@+id/de2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Postura Incorrecta"/>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
+                android:text="Postura Incorrecta"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <TextView
                 android:id="@+id/titulo9"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:background="@color/AzulOscuro"
                 android:gravity="center_horizontal|center_vertical"
                 android:text="Labios y Mejillas"
                 android:textColor="@color/Blanco"
                 android:textSize="18sp" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
-
             <CheckBox
                 android:id="@+id/lm1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Correcta Postura de los Labios en Reposo"/>
+                android:layout_marginTop="10dp"
+                android:text="Correcta Postura de los Labios en Reposo"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <CheckBox
                 android:id="@+id/lm2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Incorrecta Postura de los Labios en Reposo"/>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
+                android:text="Incorrecta Postura de los Labios en Reposo"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <TextView
                 android:id="@+id/titulo10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:background="@color/AzulOscuro"
                 android:gravity="center_horizontal|center_vertical"
                 android:text="Habitos"
                 android:textColor="@color/Blanco"
                 android:textSize="18sp" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
-
             <CheckBox
                 android:id="@+id/h1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Bruxismo"/>
+                android:layout_marginTop="10dp"
+                android:text="Bruxismo"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <CheckBox
                 android:id="@+id/h2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Succion de Dedos"/>
+                android:text="Succion de Dedos"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <CheckBox
                 android:id="@+id/h3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Chupete"/>
+                android:text="Chupete"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <CheckBox
                 android:id="@+id/h4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Biberon"/>
+                android:text="Biberon"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <CheckBox
                 android:id="@+id/h5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Ronca"/>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
+                android:text="Ronca"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <TextView
                 android:id="@+id/titulo11"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:background="@color/AzulOscuro"
                 android:gravity="center_horizontal|center_vertical"
                 android:text="TMJ"
                 android:textColor="@color/Blanco"
                 android:textSize="18sp" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
-
             <CheckBox
                 android:id="@+id/tmj1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Temporal"/>
+                android:layout_marginTop="10dp"
+                android:text="Temporal"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <CheckBox
                 android:id="@+id/tmj2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Pterigoideo"/>
+                android:text="Pterigoideo"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <CheckBox
                 android:id="@+id/tmj3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Maseteros"/>
+                android:text="Maseteros"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <CheckBox
                 android:id="@+id/tmj4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Cervical Posterior"/>
+                android:text="Cervical Posterior"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <CheckBox
                 android:id="@+id/tmj5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Trapecio"/>
+                android:text="Trapecio"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <CheckBox
                 android:id="@+id/tmj6"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TMJ Click"/>
+                android:text="TMJ Click"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <CheckBox
                 android:id="@+id/tmj7"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TMJ Dolor"/>
+                android:text="TMJ Dolor"
+                tools:ignore="TouchTargetSizeCheck" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
 
             <TextView
                 android:id="@+id/titulo12"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:background="@color/AzulOscuro"
                 android:gravity="center_horizontal|center_vertical"
                 android:text="Otros"
                 android:textColor="@color/Blanco"
                 android:textSize="18sp" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
+            <!--            <com.google.android.material.textfield.TextInputLayout-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                android:layout_marginTop="10dp">-->
+
+            <!--                <com.google.android.material.textfield.TextInputEditText-->
+            <!--                    android:id="@+id/otrosEvaluacion"-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:hint="Descripcion" />-->
+            <!--            </com.google.android.material.textfield.TextInputLayout>-->
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/otrosEvaluacionLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="60"
+                app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/otrosEvaluacion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Descripcion" />
+                    android:hint="Otros"
+                    android:inputType="text"
+                    android:maxLength="60"
+                    tools:ignore="TouchTargetSizeCheck" />
             </com.google.android.material.textfield.TextInputLayout>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="70dp" />
-
         </LinearLayout>
     </ScrollView>
 </FrameLayout>

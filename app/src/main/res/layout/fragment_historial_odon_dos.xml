@@ -21,7 +21,8 @@
         android:clickable="true"
         android:elevation="10dp"
         android:src="@drawable/ic_check"
-        app:backgroundTint="@color/AzulOscuro" />
+        app:backgroundTint="@color/AzulOscuro"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -156,7 +157,8 @@
                     android:hint="Servicio"
                     android:inputType="text"
                     android:maxLength="50"
-                    android:maxLines="1" />
+                    android:maxLines="1"
+                    tools:ignore="TouchTargetSizeCheck" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -175,7 +177,8 @@
                     android:hint="Monto"
                     android:inputType="text"
                     android:maxLength="50"
-                    android:maxLines="1" />
+                    android:maxLines="1"
+                    tools:ignore="TouchTargetSizeCheck" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button

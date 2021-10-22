@@ -21,7 +21,8 @@
         android:clickable="true"
         android:elevation="10dp"
         android:src="@drawable/ic_check"
-        app:backgroundTint="@color/AzulOscuro" />
+        app:backgroundTint="@color/AzulOscuro"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -44,7 +45,8 @@
                     android:id="@+id/corazon"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Corazon" />
+                    android:text="Corazon"
+                    tools:ignore="TouchTargetSizeCheck" />
 
             </LinearLayout>
 
@@ -58,7 +60,8 @@
                     android:id="@+id/artritris"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Artritris" />
+                    android:text="Artritris"
+                    tools:ignore="TouchTargetSizeCheck" />
 
             </LinearLayout>
 
@@ -72,7 +75,8 @@
                     android:id="@+id/tuberculosis"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Tuberculosis" />
+                    android:text="Tuberculosis"
+                    tools:ignore="TouchTargetSizeCheck" />
 
             </LinearLayout>
 
@@ -86,7 +90,8 @@
                     android:id="@+id/fiebre"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Fiebre Reumatoide" />
+                    android:text="Fiebre Reumatoide"
+                    tools:ignore="TouchTargetSizeCheck" />
 
             </LinearLayout>
 
@@ -100,7 +105,8 @@
                     android:id="@+id/presion_alta"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Presion Alta" />
+                    android:text="Presion Alta"
+                    tools:ignore="TouchTargetSizeCheck" />
 
             </LinearLayout>
 
@@ -114,7 +120,8 @@
                     android:id="@+id/presion_baja"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Presion Baja" />
+                    android:text="Presion Baja"
+                    tools:ignore="TouchTargetSizeCheck" />
 
             </LinearLayout>
 
@@ -128,7 +135,8 @@
                     android:id="@+id/diabetes"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Diabetes" />
+                    android:text="Diabetes"
+                    tools:ignore="TouchTargetSizeCheck" />
 
             </LinearLayout>
 
@@ -142,7 +150,8 @@
                     android:id="@+id/anemia"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Anemia" />
+                    android:text="Anemia"
+                    tools:ignore="TouchTargetSizeCheck" />
 
             </LinearLayout>
 
@@ -156,7 +165,8 @@
                     android:id="@+id/epilepsia"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Epilepsia" />
+                    android:text="Epilepsia"
+                    tools:ignore="TouchTargetSizeCheck" />
 
             </LinearLayout>
 
@@ -176,7 +186,8 @@
                     android:hint="Otros"
                     android:inputType="text"
                     android:maxLength="60"
-                    android:maxLines="1" />
+                    android:maxLines="1"
+                    tools:ignore="TouchTargetSizeCheck" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
     </ScrollView>

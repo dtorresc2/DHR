@@ -210,9 +210,9 @@ public class ContratoVisita extends Fragment {
 
                 if (networkInfo != null && networkInfo.isConnected()) {
                     agregarFirma("http://dhr.sistemasdt.xyz/Especial/ingresoE.php?estado=5", codigoFoto);
-                    IngEvaluacion ingEvaluacion = new IngEvaluacion();
+                    Evaluacion evaluacion = new Evaluacion();
                     FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                    transaction.replace(R.id.contenedor, ingEvaluacion);
+                    transaction.replace(R.id.contenedor, evaluacion);
                     transaction.commit();
 
                 } else {

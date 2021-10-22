@@ -44,7 +44,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-public class IngresoVisitas extends Fragment {
+public class Visitas extends Fragment {
     EditText descripcion, fecha;
     Toolbar toolbar;
     ImageButton selectorFecha;
@@ -66,7 +66,7 @@ public class IngresoVisitas extends Fragment {
     private int mOpcion = 0;
     private double total;
 
-    public IngresoVisitas() {
+    public Visitas() {
         // Required empty public constructor
     }
 
@@ -75,7 +75,7 @@ public class IngresoVisitas extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_ingreso_visitas, container, false);
+        View view = inflater.inflate(R.layout.fragment_visitas, container, false);
         final Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         requestQueue = Volley.newRequestQueue(getContext());
         toolbar = view.findViewById(R.id.toolbar);
@@ -128,8 +128,8 @@ public class IngresoVisitas extends Fragment {
         selectorFecha = view.findViewById(R.id.obtenerFecha);
         agregar = view.findViewById(R.id.agregarVisita);
         agregar.setTypeface(face);
-        quitar = view.findViewById(R.id.quitarVisita);
-        quitar.setTypeface(face);
+//        quitar = view.findViewById(R.id.quitarVisita);
+//        quitar.setTypeface(face);
         siguiente = view.findViewById(R.id.siguiente);
 
         tableLayout = view.findViewById(R.id.tablaVisitas);
@@ -295,10 +295,10 @@ public class IngresoVisitas extends Fragment {
 
                         switch (mOpcion){
                             case 1:
-                                IngresoPagosVisitas ingresoPagosVisitas1 = new IngresoPagosVisitas();
-                                ingresoPagosVisitas1.ObtenerOpcion(1);
+                                PagosVisitas pagosVisitas1 = new PagosVisitas();
+                                pagosVisitas1.ObtenerOpcion(1);
                                 FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                                transaction.replace(R.id.contenedor, ingresoPagosVisitas1);
+                                transaction.replace(R.id.contenedor, pagosVisitas1);
                                 transaction.commit();
                                 break;
 

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/FondoTerciario"
-    tools:context=".Rutas.Fichas.FichaEspecial.IngresoVisitas">
+    android:background="@color/FondoSecundario"
+    tools:context=".Rutas.Fichas.FichaEspecial.Visitas">
 
     <include
         android:id="@+id/toolbar"
@@ -21,37 +21,50 @@
         android:clickable="true"
         android:elevation="10dp"
         android:src="@drawable/ic_check"
-        app:backgroundTint="@color/AzulOscuro" />
+        app:backgroundTint="@color/AzulOscuro"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="70dp"
             android:orientation="vertical">
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="70dp" />
+            <!--            <com.google.android.material.textfield.TextInputLayout-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent">-->
+
+            <!--                <com.google.android.material.textfield.TextInputEditText-->
+            <!--                    android:id="@+id/descEspecial"-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:hint="Descripcion" />-->
+            <!--            </com.google.android.material.textfield.TextInputLayout>-->
+
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutDescEspecial"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                app:counterEnabled="true"
+                app:counterMaxLength="80"
+                app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/descEspecial"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Descripcion" />
+                    android:hint="Descripcion"
+                    android:inputType="text"
+                    android:maxLength="80"
+                    tools:ignore="TouchTargetSizeCheck" />
             </com.google.android.material.textfield.TextInputLayout>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -64,11 +77,12 @@
                     android:layout_height="match_parent"
                     android:layout_weight="6"
                     android:background="@color/AzulOscuro"
-                    android:src="@drawable/icono_citas" />
+                    android:src="@drawable/icono_citas"
+                    tools:ignore="SpeakableTextPresentCheck" />
 
                 <Space
                     android:layout_width="15dp"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="match_parent" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
@@ -81,64 +95,66 @@
                         android:layout_height="match_parent"
                         android:editable="false"
                         android:hint="Fecha"
-                        tools:ignore="Deprecated" />
+                        tools:ignore="Deprecated,TouchTargetSizeCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
-            <Space
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:orientation="horizontal">-->
+
+<!--                <Button-->
+<!--                    android:id="@+id/agregarVisita"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:background="@drawable/boton"-->
+<!--                    android:text="Agregar"-->
+<!--                    android:textSize="18sp" />-->
+
+<!--                <Space-->
+<!--                    android:layout_width="15dp"-->
+<!--                    android:layout_height="wrap_content" />-->
+
+<!--                <Button-->
+<!--                    android:id="@+id/quitarVisita"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:background="@drawable/boton"-->
+<!--                    android:text="Quitar"-->
+<!--                    android:textSize="18sp" />-->
+<!--            </LinearLayout>-->
+
+            <Button
+                android:id="@+id/agregarVisita"
                 android:layout_width="match_parent"
-                android:layout_height="10dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/agregarVisita"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/boton"
-                    android:text="Agregar"
-                    android:textSize="18sp" />
-
-                <Space
-                    android:layout_width="15dp"
-                    android:layout_height="wrap_content" />
-
-                <Button
-                    android:id="@+id/quitarVisita"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/boton"
-                    android:text="Quitar"
-                    android:textSize="18sp" />
-
-            </LinearLayout>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/AzulOscuro"
+                android:drawableLeft="@drawable/ic_add"
+                android:paddingLeft="10dp"
+                android:text="Agregar Visita"
+                android:textColor="@color/Blanco" />
 
             <TextView
                 android:id="@+id/tituloVisitas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:background="@color/AzulOscuro"
                 android:gravity="center_horizontal|center_vertical"
                 android:text="Visitas:"
                 android:textColor="@color/Blanco"
                 android:textSize="24sp" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
-
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
@@ -155,35 +171,33 @@
                 </HorizontalScrollView>
             </ScrollView>
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/tituloGasto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="0.7"
                     android:background="@color/AzulOscuro"
                     android:gravity="center_horizontal|center_vertical"
-                    android:text="Costos:"
+                    android:text="Total:"
                     android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/totalGasto"
                     android:layout_width="wrap_content"
                     android:layout_height="24dp"
-                    android:layout_weight="1"
+                    android:layout_weight="1.3"
                     android:gravity="center"
+                    android:textStyle="bold"
                     android:text="00.00"
+                    android:textColor="@color/Blanco"
                     android:textSize="18sp" />
             </LinearLayout>
-
         </LinearLayout>
     </ScrollView>
 </FrameLayout>
