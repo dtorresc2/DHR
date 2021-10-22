@@ -1,4 +1,4 @@
-package com.sistemasdt.dhr.OpcionIngreso.Especial;
+package com.sistemasdt.dhr.Rutas.Fichas.FichaEspecial;
 
 
 import android.app.ProgressDialog;
@@ -34,7 +34,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-public class IngCostos extends Fragment {
+public class FichaEvaluacion extends Fragment {
     EditText enganche, costo, terapia;
     FloatingActionButton agregar;
     Toolbar toolbar;
@@ -44,14 +44,14 @@ public class IngCostos extends Fragment {
     private String idUsuario;
 
 
-    public IngCostos() {
+    public FichaEvaluacion() {
         // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_ing_costos, container, false);
+        View view = inflater.inflate(R.layout.fragment_ficha_evaluacion, container, false);
         final Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         requestQueue = Volley.newRequestQueue(getContext());
         toolbar = view.findViewById(R.id.toolbar);

@@ -21,7 +21,8 @@
         android:clickable="true"
         android:elevation="10dp"
         android:src="@drawable/ic_check"
-        app:backgroundTint="@color/AzulOscuro" />
+        app:backgroundTint="@color/AzulOscuro"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -41,7 +42,8 @@
                 android:layout_height="wrap_content"
                 android:text="Paciente"
                 android:textColor="@color/Blanco"
-                android:textSize="14dp" />
+                android:textSize="14dp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/paciente"
@@ -59,8 +61,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="12dp"
-                android:visibility="gone"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 android:weightSum="2">
 
                 <ImageButton
@@ -104,7 +106,8 @@
                     android:hint="Motivo"
                     android:inputType="text"
                     android:maxLength="50"
-                    android:maxLines="1" />
+                    android:maxLines="1"
+                    tools:ignore="TouchTargetSizeCheck" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -122,7 +125,8 @@
                     android:hint="Medico"
                     android:inputType="textPersonName"
                     android:maxLength="70"
-                    android:maxLines="1" />
+                    android:maxLines="1"
+                    tools:ignore="TouchTargetSizeCheck" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -140,7 +144,8 @@
                     android:hint="Referente"
                     android:inputType="textPersonName"
                     android:maxLength="70"
-                    android:maxLines="1" />
+                    android:maxLines="1"
+                    tools:ignore="TouchTargetSizeCheck" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
     </ScrollView>

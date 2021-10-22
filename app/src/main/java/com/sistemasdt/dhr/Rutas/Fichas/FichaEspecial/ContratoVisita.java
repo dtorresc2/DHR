@@ -1,4 +1,4 @@
-package com.sistemasdt.dhr.OpcionIngreso.Especial;
+package com.sistemasdt.dhr.Rutas.Fichas.FichaEspecial;
 
 import android.Manifest;
 import android.app.AlertDialog;
