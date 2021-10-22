@@ -1,4 +1,4 @@
-package com.sistemasdt.dhr.OpcionCitas.Adaptador;
+package com.sistemasdt.dhr.Rutas.Citas.Adaptador;
 
 import android.graphics.Typeface;
 import androidx.annotation.NonNull;
@@ -11,7 +11,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.sistemasdt.dhr.OpcionCitas.ItemCita;
+import com.sistemasdt.dhr.Rutas.Citas.ItemCita;
 import com.sistemasdt.dhr.R;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.sistemasdt.dhr.OpcionCitas;
+package com.sistemasdt.dhr.Rutas.Citas;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;

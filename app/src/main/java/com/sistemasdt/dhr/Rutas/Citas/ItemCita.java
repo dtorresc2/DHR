@@ -1,4 +1,4 @@
-package com.sistemasdt.dhr.OpcionCitas;
+package com.sistemasdt.dhr.Rutas.Citas;
 
 public class ItemCita {
     private String midCitas;

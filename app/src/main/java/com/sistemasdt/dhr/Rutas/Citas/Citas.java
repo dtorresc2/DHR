@@ -1,4 +1,4 @@
-package com.sistemasdt.dhr.OpcionCitas;
+package com.sistemasdt.dhr.Rutas.Citas;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
@@ -33,7 +33,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.sistemasdt.dhr.OpcionCitas.Adaptador.AdaptadorCita;
+import com.sistemasdt.dhr.Rutas.Citas.Adaptador.AdaptadorCita;
 import com.sistemasdt.dhr.R;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.tapadoo.alerter.Alerter;
@@ -89,18 +89,18 @@ public class Citas extends Fragment {
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle("Citas");
 
-        fecha = view.findViewById(R.id.etiquetaFecha);
-        fecha.setTypeface(face);
-        hora = view.findViewById(R.id.etiquetaHora);
-        hora.setTypeface(face);
-        realizado = view.findViewById(R.id.etiquetaR);
-        realizado.setTypeface(face);
-        pendiente = view.findViewById(R.id.etiquetaP);
-        pendiente.setTypeface(face);
-
-        ckbHora = view.findViewById(R.id.chb_hora);
-        ckbRealizado = view.findViewById(R.id.chb_realizado);
-        ckbPendiente = view.findViewById(R.id.chb_pendiente);
+//        fecha = view.findViewById(R.id.etiquetaFecha);
+//        fecha.setTypeface(face);
+//        hora = view.findViewById(R.id.etiquetaHora);
+//        hora.setTypeface(face);
+//        realizado = view.findViewById(R.id.etiquetaR);
+//        realizado.setTypeface(face);
+//        pendiente = view.findViewById(R.id.etiquetaP);
+//        pendiente.setTypeface(face);
+//
+//        ckbHora = view.findViewById(R.id.chb_hora);
+//        ckbRealizado = view.findViewById(R.id.chb_realizado);
+//        ckbPendiente = view.findViewById(R.id.chb_pendiente);
 
         if (meridiano == 0) {
             ampm = " AM";
@@ -181,7 +181,7 @@ public class Citas extends Fragment {
             }
         });
 
-        BtnFecha = view.findViewById(R.id.iconoFecha);
+//        BtnFecha = view.findViewById(R.id.iconoFecha);
         BtnFecha.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -189,7 +189,7 @@ public class Citas extends Fragment {
             }
         });
 
-        BtnHora = view.findViewById(R.id.iconoHora);
+//        BtnHora = view.findViewById(R.id.iconoHora);
         BtnHora.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

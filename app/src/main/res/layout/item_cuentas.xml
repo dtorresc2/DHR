@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/FondoSecundario2">
@@ -16,12 +17,13 @@
             android:paddingLeft="3dp"
             android:paddingTop="3dp"
             android:paddingRight="3dp"
-            android:paddingBottom="3dp">
+            android:paddingBottom="3dp"
+            android:weightSum="2">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.5"
+                android:layout_weight="0.3"
                 android:orientation="vertical">
 
                 <TextView
@@ -31,22 +33,23 @@
                     android:breakStrategy="simple"
                     android:gravity="left"
                     android:paddingLeft="10dp"
-                    android:text="admin"
-                    android:background="@color/AzulOscuro"
                     android:paddingBottom="2dp"
+                    android:text="admin"
                     android:textColor="@color/Blanco"
-                    android:textSize="22sp" />
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <ImageButton
                 android:id="@+id/accionesCuenta"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="10"
+                android:layout_weight="1.7"
                 android:background="@color/FondoSecundario2"
                 android:src="@drawable/ic_adelante"
                 android:text="Limpiar"
-                android:textColor="@color/Blanco" />
+                android:textColor="@color/Blanco"
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
         </LinearLayout>
 
@@ -57,5 +60,4 @@
             android:background="@color/FondoSecundario" />
 
     </LinearLayout>
-
 </FrameLayout>
