@@ -16,7 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import com.sistemasdt.dhr.Rutas.Citas.Citas;
+import com.sistemasdt.dhr.Rutas.Citas.ListadoCitas;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.Ficha;
 import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
 import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.ListadoPacientes;
@@ -67,7 +67,7 @@ public class Principal extends AppCompatActivity implements BottomNavigationView
     }
 
     MenuFichas menuFichasFragment = new MenuFichas();
-    Citas citasFragment = new Citas();
+    ListadoCitas listadoCitasFragment = new ListadoCitas();
     ListadoPacientes listadoPacientesFragment = new ListadoPacientes();
     ListadoPacientes listadoPacientesFragment2 = new ListadoPacientes();
     Inicio inicioFragment = new Inicio();
@@ -82,7 +82,7 @@ public class Principal extends AppCompatActivity implements BottomNavigationView
                 getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.contenedor, menuFichasFragment).commit();
                 return true;
             case R.id.navigation_citas:
-                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.contenedor, citasFragment).commit();
+                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.contenedor, listadoCitasFragment).commit();
                 return true;
             case R.id.navigation_finanzas:
 //                listadoPacientesFragment.ObtenerOpcion(1);
