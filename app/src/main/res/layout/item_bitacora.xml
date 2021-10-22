@@ -33,40 +33,32 @@
                     android:paddingLeft="10dp"
                     android:text="Registro de Ficha Orinaria"
                     android:textColor="@color/Blanco"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/fecha_accion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
+                    android:gravity="left"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="3dp"
+                    android:text="20/10/2020 1:35 PM"
+                    android:textColor="@color/Blanco"
+                    android:textSize="15sp" />
 
-                    <TextView
-                        android:id="@+id/fecha_accion"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.8"
-                        android:gravity="left"
-                        android:paddingLeft="10dp"
-                        android:paddingTop="3dp"
-                        android:text="20/10/2020 1:35 PM"
-                        android:textColor="@color/Blanco"
-                        android:textSize="15sp" />
-
-                    <TextView
-                        android:id="@+id/cuenta"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1.2"
-                        android:background="@color/AzulOscuro"
-                        android:gravity="center_horizontal|center_vertical"
-                        android:paddingLeft="2dp"
-                        android:paddingRight="2dp"
-                        android:text="diegot"
-                        android:textColor="@color/Blanco"
-                        android:textSize="14sp" />
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/cuenta"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@color/AzulOscuro"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="2dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="2dp"
+                    android:text="diegot"
+                    android:textColor="@color/Blanco"
+                    android:textSize="14sp" />
             </LinearLayout>
         </LinearLayout>
 
