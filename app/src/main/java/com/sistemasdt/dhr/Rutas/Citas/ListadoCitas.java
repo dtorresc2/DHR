@@ -111,8 +111,8 @@ public class ListadoCitas extends Fragment {
         String mesFormateado = (mes < 10) ? "0" + mes : String.valueOf(mes);
         String minutoFormateado = (minutos < 10) ? "0" + minutos : String.valueOf(minutos);
 
-        fecha.setText(dia + "/" + mesFormateado + "/" + anio);
-        hora.setText(horas + ":" + minutoFormateado + ampm);
+//        fecha.setText(dia + "/" + mesFormateado + "/" + anio);
+//        hora.setText(horas + ":" + minutoFormateado + ampm);
 
         lista_pacientes = view.findViewById(R.id.listaCitas);
 
@@ -182,66 +182,66 @@ public class ListadoCitas extends Fragment {
         });
 
 //        BtnFecha = view.findViewById(R.id.iconoFecha);
-        BtnFecha.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                obtenerFecha();
-            }
-        });
+//        BtnFecha.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                obtenerFecha();
+//            }
+//        });
 
 //        BtnHora = view.findViewById(R.id.iconoHora);
-        BtnHora.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                obtenerHora();
-            }
-        });
-
-        fecha.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                obtenerFecha();
-            }
-        });
-        hora.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                obtenerHora();
-            }
-        });
-
-        ckbHora.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ckbHora.isChecked()) {
-                    hora.setBackgroundColor(getResources().getColor(R.color.AzulOscuro));
-                } else {
-                    hora.setBackgroundColor(getResources().getColor(R.color.FondoTerciario));
-                }
-            }
-        });
-
-        ckbRealizado.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ckbRealizado.isChecked()) {
-                    realizado.setBackgroundColor(getResources().getColor(R.color.AzulOscuro));
-                } else {
-                    realizado.setBackgroundColor(getResources().getColor(R.color.FondoTerciario));
-                }
-            }
-        });
-
-        ckbPendiente.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ckbPendiente.isChecked()) {
-                    pendiente.setBackgroundColor(getResources().getColor(R.color.AzulOscuro));
-                } else {
-                    pendiente.setBackgroundColor(getResources().getColor(R.color.FondoTerciario));
-                }
-            }
-        });
+//        BtnHora.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                obtenerHora();
+//            }
+//        });
+//
+//        fecha.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                obtenerFecha();
+//            }
+//        });
+//        hora.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                obtenerHora();
+//            }
+//        });
+//
+//        ckbHora.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (ckbHora.isChecked()) {
+//                    hora.setBackgroundColor(getResources().getColor(R.color.AzulOscuro));
+//                } else {
+//                    hora.setBackgroundColor(getResources().getColor(R.color.FondoTerciario));
+//                }
+//            }
+//        });
+//
+//        ckbRealizado.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (ckbRealizado.isChecked()) {
+//                    realizado.setBackgroundColor(getResources().getColor(R.color.AzulOscuro));
+//                } else {
+//                    realizado.setBackgroundColor(getResources().getColor(R.color.FondoTerciario));
+//                }
+//            }
+//        });
+//
+//        ckbPendiente.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (ckbPendiente.isChecked()) {
+//                    pendiente.setBackgroundColor(getResources().getColor(R.color.AzulOscuro));
+//                } else {
+//                    pendiente.setBackgroundColor(getResources().getColor(R.color.FondoTerciario));
+//                }
+//            }
+//        });
 
         final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
         progressDialog.setMessage("Cargando...");

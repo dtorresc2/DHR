@@ -39,7 +39,7 @@ public class AdaptadorCita extends RecyclerView.Adapter<AdaptadorCita.ViewHolder
 
         public ViewHolderCita(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
-            mhora = itemView.findViewById(R.id.horaCita);
+//            mhora = itemView.findViewById(R.id.horaCita);
             mfecha = itemView.findViewById(R.id.fechaCita);
             mnombre = itemView.findViewById(R.id.nombrePaciente);
             mdescripcion = itemView.findViewById(R.id.descCita);

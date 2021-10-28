@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.Ficha;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.ListadoFichasNormales.ListadoFichas;
 
 
 public class MenuFichas extends Fragment {
@@ -43,9 +44,10 @@ public class MenuFichas extends Fragment {
         botonNuevo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Ficha ficha = new Ficha();
+                ListadoFichas listadoFichas = new ListadoFichas();
+//                Ficha ficha = new Ficha();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                transaction.replace(R.id.contenedor, ficha);
+                transaction.replace(R.id.contenedor, listadoFichas);
                 transaction.commit();
             }
         });

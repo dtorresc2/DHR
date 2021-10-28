@@ -21,19 +21,19 @@ public class AdaptadorConsultaFicha extends RecyclerView.Adapter<AdaptadorConsul
     private int lastPosition = -1;
     private OnItemClickListener mlistener;
 
-    public AdaptadorConsultaFicha (ArrayList<ItemsFichas> lista){
+    public AdaptadorConsultaFicha(ArrayList<ItemsFichas> lista) {
         mLista = lista;
     }
 
-    public interface OnItemClickListener{
+    public interface OnItemClickListener {
         void onItemClick(int position);
     }
 
-    public void setOnItemClickListener (OnItemClickListener listener){
+    public void setOnItemClickListener(OnItemClickListener listener) {
         mlistener = listener;
     }
 
-    public static class ViewHolderConsultaFicha extends RecyclerView.ViewHolder{
+    public static class ViewHolderConsultaFicha extends RecyclerView.ViewHolder {
         public TextView id;
         public TextView motivo;
         public TextView medico;
@@ -49,9 +49,9 @@ public class AdaptadorConsultaFicha extends RecyclerView.Adapter<AdaptadorConsul
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (listener != null){
+                    if (listener != null) {
                         int posicion = getAdapterPosition();
-                        if (posicion != RecyclerView.NO_POSITION){
+                        if (posicion != RecyclerView.NO_POSITION) {
                             listener.onItemClick(posicion);
                         }
                     }

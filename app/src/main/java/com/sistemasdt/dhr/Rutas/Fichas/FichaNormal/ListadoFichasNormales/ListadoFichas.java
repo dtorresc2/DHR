@@ -1,4 +1,4 @@
-package com.sistemasdt.dhr.Rutas.Fichas.FichaNormal;
+package com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.ListadoFichasNormales;
 
 
 import android.annotation.SuppressLint;
@@ -59,10 +59,10 @@ public class ListadoFichas extends Fragment {
     private int mOpcion = 0;
 
     @SuppressLint("ValidFragment")
-    public ListadoFichas(String id, int opcion) {
+    public ListadoFichas() {
         // Required empty public constructor
-        idPaciente = id;
-        mOpcion = opcion;
+        idPaciente = "1";
+        mOpcion = 1;
     }
 
     @Override
@@ -76,10 +76,10 @@ public class ListadoFichas extends Fragment {
         toolbar.setTitle("Fichas");
         preferencias = getActivity().getSharedPreferences("ListadoPacientes", Context.MODE_PRIVATE);
 
-        nombre = view.findViewById(R.id.nombre_con);
-        nombre.setTypeface(face);
-        nombre.setEnabled(false);
-        nombre.setText(preferencias.getString("nombre", ""));
+//        nombre = view.findViewById(R.id.nombre_con);
+//        nombre.setTypeface(face);
+//        nombre.setEnabled(false);
+//        nombre.setText(preferencias.getString("nombre", ""));
         listafichas = view.findViewById(R.id.lista_fichas);
 
         final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
