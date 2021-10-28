@@ -87,7 +87,7 @@ public class ListadoCitas extends Fragment {
         Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         requestQueue = Volley.newRequestQueue(getContext());
         toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setTitle("ListadoCitas");
+        toolbar.setTitle("Listado de Citas");
 
 //        fecha = view.findViewById(R.id.etiquetaFecha);
 //        fecha.setTypeface(face);

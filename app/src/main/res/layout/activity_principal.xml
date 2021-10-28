@@ -7,7 +7,8 @@
     android:background="@color/FondoSecundario"
     tools:context=".Principal">
 
-    <FrameLayout
+    <!--    https://stackoverflow.com/questions/13005961/fragmenttransaction-animation-to-slide-in-over-top-->
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/contenedor"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -16,7 +17,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.499"/>
+        app:layout_constraintVertical_bias="0.499" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/menuinferior"
@@ -24,14 +25,14 @@
         android:layout_height="wrap_content"
         android:background="@color/AzulOscuro"
         android:elevation="20dp"
+        app:itemIconTint="@drawable/item_selected"
+        app:itemTextColor="@drawable/item_selected"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/contenedor"
         app:layout_constraintVertical_bias="1.0"
-        app:menu="@menu/botton_navigation_menu"
-        app:itemIconTint="@drawable/item_selected"
-        app:itemTextColor="@drawable/item_selected">
+        app:menu="@menu/botton_navigation_menu">
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
 

@@ -41,7 +41,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/edadPaciente"
+                    android:id="@+id/motivo"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1.1"
@@ -51,10 +51,10 @@
                     android:paddingBottom="2dp"
                     android:text="Consulta General"
                     android:textColor="@color/Blanco"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
 
                 <TextView
-                    android:id="@+id/fechaNacimientoPaciente"
+                    android:id="@+id/fechaFicha"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -73,7 +73,7 @@
                     android:weightSum="3">
 
                     <TextView
-                        android:id="@+id/debePaciente"
+                        android:id="@+id/debeFicha"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -87,7 +87,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/haberPaciente"
+                        android:id="@+id/haberFicha"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -101,7 +101,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/saldoPaciente"
+                        android:id="@+id/saldoFicha"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -116,7 +116,7 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/estadoPaciente"
+                    android:id="@+id/estadoFicha"
                     android:layout_width="25mm"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="9dp"
@@ -129,11 +129,11 @@
                     android:paddingBottom="1dp"
                     android:text="Habilitado"
                     android:textColor="@color/Blanco"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <ImageButton
-                android:id="@+id/accionesPaciente"
+                android:id="@+id/accionesFicha"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1.7"
@@ -145,7 +145,7 @@
         </LinearLayout>
 
         <View
-            android:id="@+id/separadorPaciente"
+            android:id="@+id/separadorFicha"
             android:layout_width="wrap_content"
             android:layout_height="4dp"
             android:background="@color/FondoSecundario" />

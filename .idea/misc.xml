@@ -31,9 +31,10 @@
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/drawable/ic_estrella64.xml" value="0.26342592592592595" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/drawable/ic_file.xml" value="0.26342592592592595" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/drawable/ic_finance.xml" value="0.26342592592592595" />
+        <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/drawable/item_selected.xml" value="0.2439814814814815" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/layout/activity_inicio_sesion.xml" value="0.32592592592592595" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/layout/activity_main.xml" value="0.32592592592592595" />
-        <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/layout/activity_principal.xml" value="0.32592592592592595" />
+        <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/layout/activity_principal.xml" value="0.2741477272727273" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/layout/dialogo_bitacora.xml" value="0.32592592592592595" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/layout/dialogo_busqueda.xml" value="0.32592592592592595" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/layout/dialogo_citasnuevas.xml" value="0.1" />
@@ -83,7 +84,7 @@
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/layout/item_bitacora.xml" value="0.32592592592592595" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/layout/item_citas.xml" value="0.25" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/layout/item_cuentas.xml" value="0.2490740740740741" />
-        <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/layout/item_ficha.xml" value="0.5" />
+        <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/layout/item_ficha.xml" value="0.4676524953789279" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/layout/item_pieza.xml" value="0.33" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/layout/item_servicio.xml" value="0.24768518518518517" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/layout/items.xml" value="0.32592592592592595" />
@@ -91,6 +92,7 @@
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/layout/menu_inferior_cuentas.xml" value="0.32592592592592595" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/layout/number_picker_dialog.xml" value="0.32592592592592595" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/layout/toolbar.xml" value="0.32592592592592595" />
+        <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/menu/botton_navigation_menu.xml" value="0.22962962962962963" />
       </map>
     </option>
   </component>
