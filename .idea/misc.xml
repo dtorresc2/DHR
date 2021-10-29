@@ -18,6 +18,7 @@
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/drawable/ic_add.xml" value="0.26342592592592595" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/drawable/ic_check.xml" value="0.26342592592592595" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/drawable/ic_check_circle.xml" value="0.26342592592592595" />
+        <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/drawable/ic_clipboard.xml" value="0.2361111111111111" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/drawable/ic_code_user.xml" value="0.26342592592592595" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/drawable/ic_compartir.xml" value="0.26342592592592595" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/drawable/ic_configurar.xml" value="0.26342592592592595" />
@@ -75,6 +76,7 @@
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/layout/fragment_listado_servicios.xml" value="0.32592592592592595" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/layout/fragment_menu_ficha_normal.xml" value="0.32592592592592595" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/layout/fragment_pacientes.xml" value="0.32592592592592595" />
+        <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/layout/fragment_pagos.xml" value="0.25" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/layout/fragment_piezas.xml" value="0.32592592592592595" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/layout/fragment_seg_pagos.xml" value="0.32592592592592595" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/layout/fragment_seguimiento.xml" value="0.32592592592592595" />

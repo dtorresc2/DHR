@@ -2,8 +2,10 @@ package com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.ListadoFichasNormales;
 
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -26,10 +28,13 @@ import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 
+import com.sistemasdt.dhr.Componentes.MenusInferiores.MenuInferior;
 import com.sistemasdt.dhr.R;
 
+import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.Pacientes;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.Adaptadores.AdaptadorConsultaFicha;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.Items.ItemsFichas;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.MenuFichaNormal;
 import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysFichas;
 
@@ -51,6 +56,8 @@ public class ListadoFichas extends Fragment {
     private static final String TAG = "MyActivity";
     private String idPaciente;
     ArrayList<ItemsFichas> lista;
+    private boolean estadoFicha = false;
+
 
     private int mOpcion = 0;
 
@@ -107,7 +114,7 @@ public class ListadoFichas extends Fragment {
 
     public void obtenerFichas() {
         lista.clear();
-//        estadoPaciente = false;
+        estadoFicha = false;
 
         final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
         progressDialog.setMessage("Cargando...");
@@ -144,7 +151,16 @@ public class ListadoFichas extends Fragment {
                     adapter.setOnItemClickListener(new AdaptadorConsultaFicha.OnItemClickListener() {
                         @Override
                         public void onItemClick(int position) {
-
+                            MenuInferior menuInferior = new MenuInferior();
+                            menuInferior.show(getFragmentManager(), "MenuInferior");
+                            menuInferior.recibirTitulo(lista.get(position).getMotivo());
+                            menuInferior.eventoClick(new MenuInferior.MenuInferiorListener() {
+                                @Override
+                                public void onButtonClicked(int opcion) {
+                                    estadoFicha = lista.get(position).getEstado();
+                                    realizarAccion(opcion, lista.get(position).getId(), position);
+                                }
+                            });
                         }
                     });
 
@@ -166,5 +182,40 @@ public class ListadoFichas extends Fragment {
                 obtenerFichas();
             }
         });
+    }
+
+    public void realizarAccion(int opcion, int ID, final int posicion) {
+        switch (opcion) {
+            case 1:
+                MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                transaction.replace(R.id.contenedor, menuFichaNormal);
+                transaction.commit();
+                break;
+            case 2:
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
+                builder.setIcon(R.drawable.logonuevo);
+                builder.setTitle("Listado de Pacientes");
+                builder.setMessage("¿Desea deshabilitar al paciente?");
+                builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+//                        actualizarEstado(posicion);
+                    }
+                });
+                builder.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+                break;
+            case 3:
+                break;
+            default:
+                return;
+        }
     }
 }

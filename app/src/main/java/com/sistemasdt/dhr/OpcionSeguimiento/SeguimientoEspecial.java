@@ -54,8 +54,8 @@ public class SeguimientoEspecial extends Fragment {
         visitas = view.findViewById(R.id.segVisitas);
         visitas.setTypeface(face);
 
-        pagos = view.findViewById(R.id.segPagos);
-        pagos.setTypeface(face);
+//        pagos = view.findViewById(R.id.segPagos);
+//        pagos.setTypeface(face);
 
         menu = view.findViewById(R.id.menuSeguimiento);
         setSingleEvent(menu);

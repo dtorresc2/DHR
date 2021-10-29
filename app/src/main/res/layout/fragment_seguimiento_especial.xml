@@ -95,7 +95,7 @@
                             android:src="@drawable/ic_dinero" />
 
                         <TextView
-                            android:id="@+id/segPagos"
+                            android:id="@+id/pagos"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="12dp"

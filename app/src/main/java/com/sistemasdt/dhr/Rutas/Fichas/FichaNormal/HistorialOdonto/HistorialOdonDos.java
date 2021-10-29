@@ -13,9 +13,11 @@ import android.os.Bundle;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.widget.Toolbar;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -502,6 +504,7 @@ public class HistorialOdonDos extends Fragment {
 
         obtenerPiezas();
         obtenerServicios();
+        cargarTratamientos();
 
         return view;
     }
@@ -524,42 +527,44 @@ public class HistorialOdonDos extends Fragment {
         tablaDinamica.addData(getClients());
         tablaDinamica.fondoHeader(R.color.AzulOscuro);
 
-        ArrayList<String> listaAuxiliar = new ArrayList<>(set);
+        if (set != null) {
+            ArrayList<String> listaAuxiliar = new ArrayList<>(set);
 
-        for (String item : listaAuxiliar) {
-            String cadenaAuxiliar[] = item.split(";");
+            for (String item : listaAuxiliar) {
+                String cadenaAuxiliar[] = item.split(";");
 
-            listaTratamientos.add(new ItemTratamiento(
-                    Integer.parseInt(cadenaAuxiliar[0]),
-                    Integer.parseInt(cadenaAuxiliar[1]),
-                    cadenaAuxiliar[2],
-                    Double.parseDouble(cadenaAuxiliar[3]),
-                    cadenaAuxiliar[4]
-            ));
+                listaTratamientos.add(new ItemTratamiento(
+                        Integer.parseInt(cadenaAuxiliar[0]),
+                        Integer.parseInt(cadenaAuxiliar[1]),
+                        cadenaAuxiliar[2],
+                        Double.parseDouble(cadenaAuxiliar[3]),
+                        cadenaAuxiliar[4]
+                ));
 
-            String descPieza = "";
-            for (ItemPieza aux : listaPiezasGenenal) {
-                if (aux.getCodigoPieza() == Integer.parseInt(cadenaAuxiliar[0])) {
-                    descPieza = aux.getNombrePieza();
+                String descPieza = "";
+                for (ItemPieza aux : listaPiezasGenenal) {
+                    if (aux.getCodigoPieza() == Integer.parseInt(cadenaAuxiliar[0])) {
+                        descPieza = aux.getNombrePieza();
+                    }
                 }
+
+                tablaDinamica.addItem(new String[]{
+                        descPieza,
+                        cadenaAuxiliar[2],
+                        String.format("%.2f", Double.parseDouble(cadenaAuxiliar[3]))
+                });
             }
 
-            tablaDinamica.addItem(new String[]{
-                    descPieza,
-                    cadenaAuxiliar[2],
-                    String.format("%.2f", Double.parseDouble(cadenaAuxiliar[3]))
-            });
-        }
+            total = 0;
 
-        total = 0;
-
-        if (tablaDinamica.getCount() > 0) {
-            for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
-                total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
+            if (tablaDinamica.getCount() > 0) {
+                for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
+                    total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
+                }
+                total_costo.setText(String.format("%.2f", total));
+            } else {
+                total_costo.setText("0.00");
             }
-            total_costo.setText(String.format("%.2f", total));
-        } else {
-            total_costo.setText("0.00");
         }
     }
 
@@ -594,7 +599,7 @@ public class HistorialOdonDos extends Fragment {
                         }
                     }
 
-                    cargarTratamientos();
+//                    cargarTratamientos();
 
                 } catch (JSONException e) {
                     e.fillInStackTrace();

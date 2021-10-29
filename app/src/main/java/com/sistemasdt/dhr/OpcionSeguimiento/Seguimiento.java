@@ -16,6 +16,7 @@ import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialOdonto.HistorialOdon
 import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.ListadoPacientes;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialFoto.HistorialFotografico;
 import com.sistemasdt.dhr.R;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialOdonto.Pagos;
 
 public class Seguimiento extends Fragment {
     private Toolbar toolbar;
@@ -49,7 +50,7 @@ public class Seguimiento extends Fragment {
         tratamiento = view.findViewById(R.id.segTratamiento);
         tratamiento.setTypeface(face);
 
-        pagos = view.findViewById(R.id.segPagos);
+//        pagos = view.findViewById(R.id.segPagos);
         pagos.setTypeface(face);
 
         fotografias = view.findViewById(R.id.segFotografias);
@@ -81,11 +82,11 @@ public class Seguimiento extends Fragment {
                             break;
 
                         case 2:
-                            SegPagos segPagos = new SegPagos();
-                            segPagos.ObtenerOpcion(2);
+                            Pagos pagos = new Pagos();
+                            pagos.ObtenerOpcion(2);
                             FragmentTransaction transaction2 = getFragmentManager().beginTransaction()
                                     .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                            transaction2.replace(R.id.contenedor, segPagos);
+                            transaction2.replace(R.id.contenedor, pagos);
                             transaction2.commit();
                             break;
 

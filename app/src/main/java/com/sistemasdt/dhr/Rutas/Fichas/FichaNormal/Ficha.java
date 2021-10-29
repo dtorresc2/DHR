@@ -54,6 +54,7 @@ public class Ficha extends Fragment {
     private TextView paciente;
     ArrayList<String> listaPacientes;
     ArrayList<ItemPaciente> listaPacientesGeneral;
+    private boolean MODO_EDICION = false;
 
     public Ficha() {
         // Required empty public constructor

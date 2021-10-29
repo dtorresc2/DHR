@@ -25,6 +25,7 @@ public class HistorialMed extends Fragment {
     private EditText desc_hos, desc_alergia, desc_medicamento, otro;
     private FloatingActionButton guardador;
     private static final String TAG = "MyActivity";
+    private boolean MODO_EDICION = false;
 
     public HistorialMed() {
         // Required empty public constructor
