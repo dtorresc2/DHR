@@ -16,7 +16,7 @@ import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialOdonto.HistorialOdon
 import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.ListadoPacientes;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialFoto.HistorialFotografico;
 import com.sistemasdt.dhr.R;
-import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialOdonto.Pagos;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.PagosFicha.Pagos;
 
 public class Seguimiento extends Fragment {
     private Toolbar toolbar;
