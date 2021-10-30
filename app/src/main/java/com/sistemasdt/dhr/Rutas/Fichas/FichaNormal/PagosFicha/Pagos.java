@@ -259,7 +259,6 @@ public class Pagos extends Fragment {
                                 AlertDialog dialog = builder.create();
                                 dialog.show();
                                 break;
-
                         }
                     }
                 });
@@ -289,27 +288,23 @@ public class Pagos extends Fragment {
                             date
                     ));
                 } else {
-                    listaPagos.set(POSICION, new ItemPago(
-                            descripcionPago.getText().toString(),
-                            Double.parseDouble(cantidadPago.getText().toString()),
-                            date
-                    ));
+                    if (listaPagos.size() > 0) {
+                        listaPagos.set(POSICION, new ItemPago(
+                                descripcionPago.getText().toString(),
+                                Double.parseDouble(cantidadPago.getText().toString()),
+                                date
+                        ));
 
-//                    tablaDinamica.addItem(new String[]{
-//                            descripcionPago.getText().toString(),
-//                            cantidadPago.getText().toString()
-//                    });
+                        // Reinciar Tabla
+                        tablaDinamica.removeAll();
+                        tablaDinamica.addHeader(header);
+                        tablaDinamica.addData(getClients());
+                        tablaDinamica.fondoHeader(R.color.AzulOscuro);
 
-                    // Reinciar Tabla
-                    tablaDinamica.removeAll();
-                    tablaDinamica.addHeader(header);
-                    tablaDinamica.addData(getClients());
-                    tablaDinamica.fondoHeader(R.color.AzulOscuro);
-
-
-                    modoEdicionPago = false;
-                    POSICION = 0;
-                    listador.setText("AGREGAR TRATAMIENTO");
+                        modoEdicionPago = false;
+                        POSICION = 0;
+                        listador.setText("AGREGAR TRATAMIENTO");
+                    }
                 }
 
                 descripcionPago.setText(null);

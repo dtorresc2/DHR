@@ -397,54 +397,56 @@ public class HistorialOdonDos extends Fragment {
                                 date
                         ));
                     } else {
-                        listaTratamientos.set(POSICION, new ItemTratamiento(
-                                ID_PIEZA,
-                                ID_SERVICIO,
-                                desc_servicio.getText().toString(),
-                                Double.parseDouble(monto.getText().toString()),
-                                date
-                        ));
+                        if (listaTratamientos.size() > 0) {
+                            listaTratamientos.set(POSICION, new ItemTratamiento(
+                                    ID_PIEZA,
+                                    ID_SERVICIO,
+                                    desc_servicio.getText().toString(),
+                                    Double.parseDouble(monto.getText().toString()),
+                                    date
+                            ));
 
-                        // Reinciar Tabla
-                        tablaDinamica.removeAll();
-                        tablaDinamica.addHeader(header);
-                        tablaDinamica.addData(getClients());
-                        tablaDinamica.fondoHeader(R.color.AzulOscuro);
+                            // Reinciar Tabla
+                            tablaDinamica.removeAll();
+                            tablaDinamica.addHeader(header);
+//                        tablaDinamica.addData(getClients());
+                            tablaDinamica.fondoHeader(R.color.AzulOscuro);
 
-                        for (ItemTratamiento tratamiento : listaTratamientos) {
-                            String descPieza = "";
+                            for (ItemTratamiento tratamiento : listaTratamientos) {
+                                String descPieza = "";
 
-                            for (ItemPieza PIEZA : listaPiezasGenenal) {
-                                if (tratamiento.getPieza() == PIEZA.getCodigoPieza()) {
-                                    descPieza = PIEZA.getNombrePieza();
+                                for (ItemPieza PIEZA : listaPiezasGenenal) {
+                                    if (tratamiento.getPieza() == PIEZA.getCodigoPieza()) {
+                                        descPieza = PIEZA.getNombrePieza();
+                                    }
                                 }
+
+                                tablaDinamica.addItem(new String[]{
+                                        descPieza,
+                                        tratamiento.getDescripcionServicio(),
+                                        String.format("%.2f", tratamiento.getMonto())
+                                });
                             }
 
-                            tablaDinamica.addItem(new String[]{
-                                    descPieza,
-                                    tratamiento.getDescripcionServicio(),
-                                    String.format("%.2f", tratamiento.getMonto())
-                            });
+                            modoEdicionTratamiento = false;
+                            POSICION = 0;
+                            listador.setText("AGREGAR TRATAMIENTO");
                         }
 
-                        modoEdicionTratamiento = false;
-                        POSICION = 0;
-                        listador.setText("AGREGAR TRATAMIENTO");
-                    }
+                        ID_SERVICIO = 0;
+                        desc_servicio.setText(null);
+                        monto.setText(null);
+                        servicio.setText("Seleccione Servicio");
 
-                    ID_SERVICIO = 0;
-                    desc_servicio.setText(null);
-                    monto.setText(null);
-                    servicio.setText("Seleccione Servicio");
+                        layoutMonto.setError(null);
+                        layoutServicio.setError(null);
 
-                    layoutMonto.setError(null);
-                    layoutServicio.setError(null);
-
-                    if (tablaDinamica.getCount() > 0) {
-                        for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
-                            total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
+                        if (tablaDinamica.getCount() > 0) {
+                            for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
+                                total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
+                            }
+                            total_costo.setText(String.format("%.2f", total));
                         }
-                        total_costo.setText(String.format("%.2f", total));
                     }
                 } else {
                     Alerter.create(getActivity())
@@ -504,12 +506,13 @@ public class HistorialOdonDos extends Fragment {
 
         obtenerPiezas();
         obtenerServicios();
-        cargarTratamientos();
+//        cargarTratamientos();
 
         return view;
     }
 
     private ArrayList<String[]> getClients() {
+
         return rows;
     }
 
@@ -524,7 +527,7 @@ public class HistorialOdonDos extends Fragment {
         // Reinciar Tabla
         listaTratamientos.clear();
         tablaDinamica.removeAll();
-        tablaDinamica.addData(getClients());
+//        tablaDinamica.addData(getClients());
         tablaDinamica.fondoHeader(R.color.AzulOscuro);
 
         if (set != null) {
@@ -599,7 +602,7 @@ public class HistorialOdonDos extends Fragment {
                         }
                     }
 
-//                    cargarTratamientos();
+                    cargarTratamientos();
 
                 } catch (JSONException e) {
                     e.fillInStackTrace();

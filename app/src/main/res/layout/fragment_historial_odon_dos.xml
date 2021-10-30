@@ -132,15 +132,6 @@
                 android:text="Seleccione Servicio"
                 android:textColor="@color/Blanco" />
 
-            <!--            <EditText-->
-            <!--                android:id="@+id/costo"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_marginTop="10dp"-->
-            <!--                android:ems="10"-->
-            <!--                android:hint="Costo"-->
-            <!--                android:inputType="numberDecimal" />-->
-
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layoutServicio"
                 android:layout_width="match_parent"
@@ -191,45 +182,6 @@
                 android:paddingLeft="10dp"
                 android:text="Agregar Tratamiento"
                 android:textColor="@color/Blanco" />
-
-
-            <!--            <Space-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="10dp" />-->
-
-
-            <!--            <Space-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="10dp" />-->
-
-            <!--            <LinearLayout-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="match_parent"-->
-            <!--                android:orientation="horizontal">-->
-
-            <!--                <Button-->
-            <!--                    android:id="@+id/guardador_hm"-->
-            <!--                    android:layout_width="wrap_content"-->
-            <!--                    android:layout_height="wrap_content"-->
-            <!--                    android:layout_weight="1"-->
-            <!--                    android:background="@drawable/boton"-->
-            <!--                    android:text="Agregar"-->
-            <!--                    android:textSize="18dp"/>-->
-
-            <!--                <Space-->
-            <!--                    android:layout_width="1dp"-->
-            <!--                    android:layout_height="match_parent"-->
-            <!--                    android:layout_weight="1" />-->
-
-            <!--                <Button-->
-            <!--                    android:id="@+id/eliminador"-->
-            <!--                    android:layout_width="wrap_content"-->
-            <!--                    android:layout_height="wrap_content"-->
-            <!--                    android:layout_weight="1"-->
-            <!--                    android:background="@drawable/boton"-->
-            <!--                    android:text="Eliminar"-->
-            <!--                    android:textSize="18sp" />-->
-            <!--            </LinearLayout>-->
 
             <TextView
                 android:id="@+id/titulo_presupuesto"
@@ -298,16 +250,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_gravity="center">
-
                         </TableLayout>
                     </HorizontalScrollView>
-
                 </LinearLayout>
-
-
             </ScrollView>
         </LinearLayout>
     </ScrollView>
-
-
 </FrameLayout>
