@@ -41,6 +41,8 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.sistemasdt.dhr.Componentes.MenusInferiores.MenuInferiorDos;
 import com.sistemasdt.dhr.OpcionSeguimiento.Seguimiento;
+import com.sistemasdt.dhr.Rutas.Catalogos.Piezas.ItemPieza;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialOdonto.HistorialOdonDos;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialOdonto.ItemTratamiento;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.ListadoFichasNormales.ListadoFichas;
 import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
@@ -53,7 +55,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public class Pagos extends Fragment {
@@ -62,10 +66,7 @@ public class Pagos extends Fragment {
     private Button listador, eliminador;
     private String[] header = {"Descripcion", "Pago"};
     private ArrayList<String[]> rows = new ArrayList<>();
-    private EditText descripsion, pagos, otros, desc_dolor;
-    private TextView titulo_detalle, titulo_diag, titulo_pres, titulo_piez, total_costo, titulo_costo, celdap, celdat, celdac;
     private TablaDinamica tablaDinamica;
-    private int lim, mOpcion = 0;
     private double total;
     private FloatingActionButton agregador;
     private static final String TAG = "MyActivity";
@@ -97,7 +98,7 @@ public class Pagos extends Fragment {
 
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle("Pagos");
-        toolbar.setNavigationIcon(R.drawable.ic_cerrar);
+        toolbar.setNavigationIcon(R.drawable.ic_atras);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,9 +118,10 @@ public class Pagos extends Fragment {
 //                        transaction2.commit();
 //                        break;
 //                }
-                ListadoFichas listadoFichas = new ListadoFichas();
+//                ListadoFichas listadoFichas = new ListadoFichas();
+                HistorialOdonDos historialOdonDos = new HistorialOdonDos();
                 FragmentTransaction transaction2 = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                transaction2.replace(R.id.contenedor, listadoFichas);
+                transaction2.replace(R.id.contenedor, historialOdonDos);
                 transaction2.commit();
             }
         });
@@ -190,6 +192,8 @@ public class Pagos extends Fragment {
 
         tituloTotalPagos = view.findViewById(R.id.tituloAbono);
         tituloTotalPagos.setTypeface(face);
+
+        agregador = view.findViewById(R.id.guardadorPagos);
 
         tablaDinamica = new TablaDinamica(tableLayout, getContext());
         tablaDinamica.addHeader(header);
@@ -322,7 +326,79 @@ public class Pagos extends Fragment {
             }
         });
 
+        agregador.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences preferences = getActivity().getSharedPreferences("PAGOS", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+
+                Set<String> set = new HashSet<>();
+
+                for (ItemPago item : listaPagos) {
+                    String cadena = item.getDescripcionPago() + ";" + item.getMonto() + ";" + item.getFecha() + ";";
+                    set.add(cadena);
+                }
+
+                editor.putStringSet("listaPagos", set);
+                editor.apply();
+
+                final SharedPreferences preferenciasFicha2 = getActivity().getSharedPreferences("RESUMEN_FN", Context.MODE_PRIVATE);
+                final SharedPreferences.Editor escritor2 = preferenciasFicha2.edit();
+                escritor2.putString("NO_PAGOS", String.valueOf(listaPagos.size()));
+                escritor2.commit();
+
+                HistorialFotografico historialFotografico = new HistorialFotografico();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                transaction.replace(R.id.contenedor, historialFotografico);
+                transaction.commit();
+            }
+        });
+
+        cargarPagos();
         return view;
+    }
+
+    public void cargarPagos() {
+        SharedPreferences preferences = getActivity().getSharedPreferences("PAGOS", Context.MODE_PRIVATE);
+        Set<String> set = preferences.getStringSet("listaPagos", null);
+
+        // Reinciar Tabla
+        listaPagos.clear();
+        tablaDinamica.removeAll();
+//        tablaDinamica.addData(getClients());
+        tablaDinamica.fondoHeader(R.color.AzulOscuro);
+
+        if (set != null) {
+            ArrayList<String> listaAuxiliar = new ArrayList<>(set);
+
+            for (String item : listaAuxiliar) {
+                String cadenaAuxiliar[] = item.split(";");
+
+                listaPagos.add(new ItemPago(
+                        cadenaAuxiliar[0],
+                        Double.parseDouble(cadenaAuxiliar[1]),
+                        cadenaAuxiliar[2]
+                ));
+
+                tablaDinamica.addItem(new String[]{
+                        cadenaAuxiliar[0],
+                        String.format("%.2f", Double.parseDouble(cadenaAuxiliar[1]))
+                });
+            }
+
+            total = 0;
+//            tablaDinamica.addData(getClients());
+
+            if (tablaDinamica.getCount() > 0) {
+                for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
+                    total += Double.parseDouble(tablaDinamica.getCellData(i, 1));
+                }
+                totalPagos.setText(String.format("%.2f", total));
+            } else {
+                totalPagos.setText("0.00");
+            }
+        }
     }
 
     private ArrayList<String[]> getClients() {
@@ -337,7 +413,6 @@ public class Pagos extends Fragment {
     }
 
     public void ObtenerOpcion(int opcion) {
-        mOpcion = opcion;
     }
 
     //    VALIDACIONES

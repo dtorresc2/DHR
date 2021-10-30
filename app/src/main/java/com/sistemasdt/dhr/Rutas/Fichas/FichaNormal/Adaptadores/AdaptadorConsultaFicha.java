@@ -6,25 +6,30 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sistemasdt.dhr.R;
+import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.ItemPaciente;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.Items.ItemsFichas;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class AdaptadorConsultaFicha extends RecyclerView.Adapter<AdaptadorConsultaFicha.ViewHolderConsultaFicha> {
+public class AdaptadorConsultaFicha extends RecyclerView.Adapter<AdaptadorConsultaFicha.ViewHolderConsultaFicha> implements Filterable {
     private ArrayList<ItemsFichas> mLista;
+    private ArrayList<ItemsFichas> mListaFull;
     private int lastPosition = -1;
     private OnItemClickListener mlistener;
     private ViewGroup mViewGroup;
 
-
     public AdaptadorConsultaFicha(ArrayList<ItemsFichas> lista) {
         mLista = lista;
+        mListaFull = new ArrayList<>(lista);
     }
 
     public interface OnItemClickListener {
@@ -129,4 +134,37 @@ public class AdaptadorConsultaFicha extends RecyclerView.Adapter<AdaptadorConsul
         }
     }
 
+    @Override
+    public Filter getFilter() {
+        return filtroFicha;
+    }
+
+    private Filter filtroFicha = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            ArrayList<ItemsFichas> listaFiltrada = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                listaFiltrada.addAll(mListaFull);
+            } else {
+                String filter = constraint.toString().toLowerCase().trim();
+                for (ItemsFichas item : mListaFull) {
+                    if (item.getNombre().toLowerCase().contains(filter)) {
+                        listaFiltrada.add(item);
+                    }
+                }
+            }
+
+            FilterResults filterResults = new FilterResults();
+            filterResults.values = listaFiltrada;
+            return filterResults;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            mLista.clear();
+            mLista.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
 }

@@ -23,6 +23,7 @@ import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.os.StrictMode;
 import android.provider.MediaStore;
+
 import androidx.annotation.NonNull;
 
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -31,6 +32,7 @@ import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialOdonto.HistorialOdon
 
 import com.sistemasdt.dhr.R;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.PagosFicha.Pagos;
 import com.tapadoo.alerter.Alerter;
 
 import androidx.fragment.app.Fragment;
@@ -39,6 +41,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -99,10 +102,11 @@ public class HistorialFotografico extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HistorialOdonDos historialOdonDos = new HistorialOdonDos();
+//                HistorialOdonDos historialOdonDos = new HistorialOdonDos();
+                Pagos pagos = new Pagos();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction()
                         .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                transaction.replace(R.id.contenedor, historialOdonDos);
+                transaction.replace(R.id.contenedor, pagos);
                 transaction.commit();
             }
         });

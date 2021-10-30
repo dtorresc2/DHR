@@ -37,6 +37,7 @@ import com.sistemasdt.dhr.Rutas.Catalogos.Servicios.ItemServicio;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialFoto.HistorialFotografico;
 import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.Componentes.Tabla.TablaDinamica;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.PagosFicha.Pagos;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysPiezas;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysServicios;
 import com.tapadoo.alerter.Alerter;
@@ -482,13 +483,13 @@ public class HistorialOdonDos extends Fragment {
                     final SharedPreferences preferenciasFicha2 = getActivity().getSharedPreferences("RESUMEN_FN", Context.MODE_PRIVATE);
                     final SharedPreferences.Editor escritor2 = preferenciasFicha2.edit();
                     escritor2.putString("NO_TRATAMIENTOS", String.valueOf(listaTratamientos.size()));
-                    escritor2.putString("NO_PAGOS", String.valueOf(0));
+//                    escritor2.putString("NO_PAGOS", String.valueOf(0));
                     escritor2.commit();
 
-                    HistorialFotografico historialFotografico = new HistorialFotografico();
+                    Pagos pagos = new Pagos();
                     FragmentTransaction transaction = getFragmentManager().beginTransaction()
                             .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                    transaction.replace(R.id.contenedor, historialFotografico);
+                    transaction.replace(R.id.contenedor, pagos);
                     transaction.commit();
 
                 } else {

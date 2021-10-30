@@ -14,6 +14,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,6 +23,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -33,6 +35,7 @@ import com.sistemasdt.dhr.R;
 
 import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.Pacientes;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.Adaptadores.AdaptadorConsultaFicha;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.Ficha;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.Items.ItemsFichas;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.MenuFichaNormal;
 import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
@@ -83,6 +86,46 @@ public class ListadoFichas extends Fragment {
             FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
             transaction.replace(R.id.contenedor, menuFichas);
             transaction.commit();
+        });
+
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.opcion_nuevo:
+                        Ficha ficha = new Ficha();
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                        transaction.replace(R.id.contenedor, ficha);
+                        transaction.commit();
+                        return true;
+
+                    case R.id.opcion_filtrar:
+                        MenuItem searchItem = item;
+                        SearchView searchView = (SearchView) searchItem.getActionView();
+
+                        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                            @Override
+                            public boolean onQueryTextSubmit(String query) {
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onQueryTextChange(String newText) {
+                                adapter.getFilter().filter(newText);
+                                return false;
+                            }
+                        });
+                        return true;
+
+                    case R.id.opcion_actualizar:
+                        obtenerFichas();
+                        return true;
+
+                    default:
+                        return false;
+
+                }
+            }
         });
 
         lista = new ArrayList<>();
