@@ -79,6 +79,7 @@ public class Pagos extends Fragment {
     private TextInputEditText descripcionPago, cantidadPago;
     private TextInputLayout descripcionPagoLayout, cantidadPagoLayout;
     private ArrayList<ItemPago> listaPagos = new ArrayList<>();
+    double totalTratamientos = 0;
 
     private boolean MODO_EDICION = false;
     private boolean modoEdicionPago = false;
@@ -220,14 +221,14 @@ public class Pagos extends Fragment {
 
                                 POSICION = index;
 
-                                if (tablaDinamica.getCount() > 0) {
-                                    for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
-                                        total += Double.parseDouble(tablaDinamica.getCellData(i, 1));
-                                    }
-                                    totalPagos.setText(String.format("%.2f", total));
-                                } else {
-                                    totalPagos.setText("0.00");
-                                }
+//                                if (tablaDinamica.getCount() > 0) {
+//                                    for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
+//                                        total += Double.parseDouble(tablaDinamica.getCellData(i, 1));
+//                                    }
+//                                    totalPagos.setText(String.format("%.2f", total));
+//                                } else {
+//                                    totalPagos.setText("0.00");
+//                                }
                                 break;
                             case 2:
                                 // Eliminar Tratamiento
@@ -329,33 +330,47 @@ public class Pagos extends Fragment {
         agregador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences preferences = getActivity().getSharedPreferences("PAGOS", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = preferences.edit();
+                if (totalTratamientos >= total) {
 
-                Set<String> set = new HashSet<>();
 
-                for (ItemPago item : listaPagos) {
-                    String cadena = item.getDescripcionPago() + ";" + item.getMonto() + ";" + item.getFecha() + ";";
-                    set.add(cadena);
+                    SharedPreferences preferences = getActivity().getSharedPreferences("PAGOS", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+
+                    Set<String> set = new HashSet<>();
+
+                    for (ItemPago item : listaPagos) {
+                        String cadena = item.getDescripcionPago() + ";" + item.getMonto() + ";" + item.getFecha() + ";";
+                        set.add(cadena);
+                    }
+
+                    editor.putStringSet("listaPagos", set);
+                    editor.apply();
+
+                    final SharedPreferences preferenciasFicha2 = getActivity().getSharedPreferences("RESUMEN_FN", Context.MODE_PRIVATE);
+                    final SharedPreferences.Editor escritor2 = preferenciasFicha2.edit();
+                    escritor2.putString("NO_PAGOS", String.valueOf(listaPagos.size()));
+                    escritor2.commit();
+
+                    HistorialFotografico historialFotografico = new HistorialFotografico();
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                    transaction.replace(R.id.contenedor, historialFotografico);
+                    transaction.commit();
+                } else {
+                    Alerter.create(getActivity())
+                            .setTitle("Error")
+                            .setText("El pago no puede ser mayor a la deuda")
+                            .setIcon(R.drawable.logonuevo)
+                            .setTextTypeface(face)
+                            .enableSwipeToDismiss()
+                            .setBackgroundColorRes(R.color.AzulOscuro)
+                            .show();
                 }
-
-                editor.putStringSet("listaPagos", set);
-                editor.apply();
-
-                final SharedPreferences preferenciasFicha2 = getActivity().getSharedPreferences("RESUMEN_FN", Context.MODE_PRIVATE);
-                final SharedPreferences.Editor escritor2 = preferenciasFicha2.edit();
-                escritor2.putString("NO_PAGOS", String.valueOf(listaPagos.size()));
-                escritor2.commit();
-
-                HistorialFotografico historialFotografico = new HistorialFotografico();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                transaction.replace(R.id.contenedor, historialFotografico);
-                transaction.commit();
             }
         });
 
         cargarPagos();
+        cargarTotalTratamientos();
         return view;
     }
 
@@ -388,7 +403,6 @@ public class Pagos extends Fragment {
             }
 
             total = 0;
-//            tablaDinamica.addData(getClients());
 
             if (tablaDinamica.getCount() > 0) {
                 for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
@@ -399,6 +413,27 @@ public class Pagos extends Fragment {
                 totalPagos.setText("0.00");
             }
         }
+    }
+
+    private void cargarTotalTratamientos() {
+        ArrayList<String> listaTratramientos;
+        totalTratamientos = 0;
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("HOD2", Context.MODE_PRIVATE);
+        Set<String> set = sharedPreferences.getStringSet("listaTratamientos", null);
+
+        if (set == null) {
+            listaTratramientos = new ArrayList<>();
+        } else {
+            listaTratramientos = new ArrayList<>(set);
+        }
+
+        for (String item : listaTratramientos) {
+            String cadenaAuxiliar[] = item.split(";");
+            totalTratamientos += Double.parseDouble(cadenaAuxiliar[3]);
+        }
+
+        totalGastos.setText(String.format("%.2f", totalTratamientos));
     }
 
     private ArrayList<String[]> getClients() {

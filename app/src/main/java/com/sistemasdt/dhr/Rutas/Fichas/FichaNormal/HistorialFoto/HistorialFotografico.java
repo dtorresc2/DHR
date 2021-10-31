@@ -35,6 +35,8 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.PagosFicha.Pagos;
 import com.tapadoo.alerter.Alerter;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -54,10 +56,20 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 
 public class HistorialFotografico extends Fragment {
     private static final int COD_SELECCIONA = 10;
@@ -83,12 +95,175 @@ public class HistorialFotografico extends Fragment {
     private RecyclerView rv;
     private FotoAdapter fotoAdapter;
     private StaggeredGridLayoutManager staggeredGridLayoutManager;
+    ActivityResultLauncher<Intent> lanzadorCamara;
+    ActivityResultLauncher<String> lanzadorPermisos;
+    ActivityResultLauncher<Intent> lanzadorGaleria;
 
     public HistorialFotografico() {
-        // Required empty public constructor
+        // INICIALIZADOR DE ACTIVIDAD PARA PERMISOS
+        lanzadorPermisos = registerForActivityResult(
+                new ActivityResultContracts.RequestPermission(),
+                (ActivityResultCallback<Boolean>) result -> {
+                    if (result) {
+                        abrirCamara();
+                    }
+                });
+
+        // INICIALIZADOR DE ACTIVIDAD PARA CAMARA
+        lanzadorCamara = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        Bundle bundle = result.getData().getExtras();
+                        bitmap = (Bitmap) bundle.get("data");
+
+                        // Almacenar en el Telefono las Imagenes
+                        try {
+//                            File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+//                                    Environment.DIRECTORY_PICTURES), "DHR");
+//                            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+//                            File archivoImagen = new File(mediaStorageDir.getPath() + File.separator +
+//                                    "IMG_" + timeStamp + ".jpg");
+
+                            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                            File archivoImagen = new File(getContext().getCacheDir(),
+                                    "IMG_" + timeStamp + ".jpg");
+
+                            //Convert bitmap to byte array
+                            Bitmap bitmapAUX = bitmap;
+                            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                            bitmapAUX.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
+                            byte[] bitmapdata = bos.toByteArray();
+
+                            archivoImagen.createNewFile();
+
+                            FileOutputStream fos = new FileOutputStream(archivoImagen);
+                            fos.write(bitmapdata);
+                            fos.flush();
+                            fos.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+                        rv.setLayoutManager(staggeredGridLayoutManager);
+                        lista_fotos.add(new ItemFoto(bitmap, false));
+                        fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
+                        rv.setAdapter(fotoAdapter);
+                        fotoAdapter.setOnItemClickListener(new FotoAdapter.OnClickListener() {
+                            @Override
+                            public void onItemClick(int position) {
+                                if (position > 0) {
+                                    menuOpciones.setVisibility(View.GONE);
+                                    toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(true);
+                                } else {
+                                    menuOpciones.setVisibility(View.VISIBLE);
+                                    toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(false);
+                                }
+                            }
+                        });
+                    }
+                });
+
+        // INICIALIZADOR DE ACTIVIDAD PARA GALERIA
+        lanzadorGaleria = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), (ActivityResultCallback<ActivityResult>) result -> {
+            if (result.getResultCode() == Activity.RESULT_OK) {
+                try {
+                    if (result.getData() != null) {
+                        Uri selectedImageUri = result.getData().getData();
+                        Bitmap bitmapAux = BitmapFactory.decodeStream(getContext().getContentResolver().openInputStream(selectedImageUri));
+//                        bitmap = testImagen(bitmapAux, selectedImageUri, getContext());
+                        lista_fotos.add(new ItemFoto(bitmapAux, false));
+
+                        staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+                        rv.setLayoutManager(staggeredGridLayoutManager);
+                        fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
+                        rv.setAdapter(fotoAdapter);
+                        fotoAdapter.setOnItemClickListener(new FotoAdapter.OnClickListener() {
+                            @Override
+                            public void onItemClick(int position) {
+                                if (position > 0) {
+                                    menuOpciones.setVisibility(View.GONE);
+                                    toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(true);
+                                } else {
+                                    menuOpciones.setVisibility(View.VISIBLE);
+                                    toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(false);
+                                }
+                            }
+                        });
+                    }
+                } catch (Exception exception) {
+                    Log.d("TAG", "" + exception.getLocalizedMessage());
+                }
+            }
+        });
+
+//        lanzadorGaleria = registerForActivityResult(new ActivityResultContracts.GetMultipleContents(),
+//                 new ActivityResultCallback<List<Uri>>() {
+//                    @Override
+//                    public void onActivityResult(List<Uri> result) {
+//                        Toast.makeText(getContext(), String.valueOf(result), Toast.LENGTH_LONG).show();
+//                        if (data != null) {
+//                            ClipData clipData = data.getClipData();
+//                            if (clipData != null) {
+//                                for (int i = 0; i < clipData.getItemCount(); i++) {
+//                                    Uri imageUri = clipData.getItemAt(i).getUri();
+//                                    // your code for multiple image selection
+//                                    try {
+//                                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), imageUri);
+//                                        bitmap = testImagen(bitmap, imageUri, getContext());
+//                                        lista_fotos.add(new ItemFoto(bitmap, false));
+//                                    } catch (IOException e) {
+//                                        e.printStackTrace();
+//                                    }
+//                                }
+//                            } else {
+//                                Uri uri = data.getData();
+//                                // your codefor single image selection
+//                                try {
+//                                    Bitmap bitmapAx = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
+//                                    bitmapAx = testImagen(bitmapAx, uri, getContext());
+//                                    lista_fotos.add(new ItemFoto(bitmapAx, false));
+//                                } catch (IOException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//
+//                        if (result.size() > 0) {
+//                            for (int i = 0; i < result.size(); i++) {
+//                                Uri imageUri = result.get(i);
+//                                try {
+//                                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), imageUri);
+//                                    bitmap = testImagen(bitmap, imageUri, getContext());
+//                                    lista_fotos.add(new ItemFoto(bitmap, false));
+//                                } catch (IOException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        }
+//
+//                        staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+//                        rv.setLayoutManager(staggeredGridLayoutManager);
+//                        fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
+//                        rv.setAdapter(fotoAdapter);
+//                        fotoAdapter.setOnItemClickListener(new FotoAdapter.OnClickListener() {
+//                            @Override
+//                            public void onItemClick(int position) {
+//                                if (position > 0) {
+//                                    menuOpciones.setVisibility(View.GONE);
+//                                    toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(true);
+//                                } else {
+//                                    menuOpciones.setVisibility(View.VISIBLE);
+//                                    toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(false);
+//                                }
+//                            }
+//                        });
+//                    }
+//                }
+//                });
+
     }
 
-    //    https://dhr-sanjose.s3.amazonaws.com/imagen-1.jpg
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -102,7 +277,6 @@ public class HistorialFotografico extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                HistorialOdonDos historialOdonDos = new HistorialOdonDos();
                 Pagos pagos = new Pagos();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction()
                         .setCustomAnimations(R.anim.left_in, R.anim.left_out);
@@ -192,12 +366,12 @@ public class HistorialFotografico extends Fragment {
         camara.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (checkearPermiso()) {
-                    //Nuestra app tiene permiso
+                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                     abrirCamara();
+//                } else if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+//                    Toast.makeText(getActivity(), "Los permisos de almacenamiento externo fueron denegados 2", Toast.LENGTH_SHORT).show();
                 } else {
-                    //Nuestra app no tiene permiso, entonces debo solicitar el mismo
-                    solicitarPermiso();
+                    lanzadorPermisos.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 }
                 menuOpciones.collapse();
             }
@@ -211,12 +385,23 @@ public class HistorialFotografico extends Fragment {
 //                intent.setType("image/");
 //                startActivityForResult(intent.createChooser(intent, "Seleccione"), COD_SELECCIONA);
 
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(Intent.createChooser(intent, "Seleccione"), COD_SELECCIONA_MULTIPLE);
+//                Intent intent = new Intent();
+//                intent.setType("image/*");
+//                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+//                intent.setAction(Intent.ACTION_GET_CONTENT);
+//                intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                startActivityForResult(Intent.createChooser(intent, "Seleccione"), COD_SELECCIONA_MULTIPLE);
+
+//                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//                intent.setType("image/*");
+//                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+//                intent.setAction(Intent.ACTION_GET_CONTENT);
+//                lanzadorGaleria.launch(Intent.createChooser(intent, "Seleccione: "));
+
+//                lanzadorGaleria.launch("image/*");
+
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                lanzadorGaleria.launch(intent);
                 menuOpciones.collapse();
             }
         });
@@ -384,75 +569,18 @@ public class HistorialFotografico extends Fragment {
     }
 
     private void abrirCamara() {
-        File miFile = new File(Environment.getExternalStorageDirectory(), DIRECTORIO_IMAGEN);
-        boolean isCreada = miFile.exists();
+//        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+//                Environment.DIRECTORY_PICTURES), "MyCameraApp");
+//
+//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+//        File fileImagen = new File(mediaStorageDir.getPath() + File.separator +
+//                "IMG_"+ timeStamp + ".jpg");
 
-        if (isCreada == false) {
-            isCreada = miFile.mkdirs();
-        }
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(fileImagen));
 
-        if (isCreada == true) {
-            Long consecutivo = System.currentTimeMillis() / 1000;
-            String nombre = "DHR_" + consecutivo.toString() + ".png";
-
-            path = Environment.getExternalStorageDirectory() + File.separator + DIRECTORIO_IMAGEN + File.separator + nombre; //Ruta de Almacenamiento
-            fileImagen = new File(path);
-
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(fileImagen));
-            startActivityForResult(intent, COD_FOTO);
-        } else {
-            Toast.makeText(getContext(), "Fallo al crear carpeta", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private boolean checkearPermiso() {
-        //Array de permisos
-        String[] permisos = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-
-        for (String perms : permisos) {
-            int res = getActivity().checkCallingOrSelfPermission(perms);
-            if (!(res == PackageManager.PERMISSION_GRANTED)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private void solicitarPermiso() {
-        String[] permisos = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {         //Verificamos si la version de android del dispositivo es mayor
-            requestPermissions(permisos, CODIGO_SOLICITUD_PERMISO);  //o igual a MarshMallow
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        boolean autorizado = true;   //Si el permiso fue autorizado
-        switch (requestCode) {
-            case CODIGO_SOLICITUD_PERMISO:
-                for (int res : grantResults) {
-                    //si el usuario concedió todos los permisos
-                    autorizado = autorizado && (res == PackageManager.PERMISSION_GRANTED);
-                }
-                break;
-
-            default:
-                //Si el usuario autorizó los permisos
-                autorizado = false;
-                break;
-        }
-
-        if (autorizado) {
-            //Si el usuario autorizó todos los permisos podemos ejecutar nuestra tarea
-            abrirCamara();
-        } else {
-            //Se debe alertar al usuario que los permisos no han sido concedidos
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    Toast.makeText(getActivity(), "Los permisos de almacenamiento externo fueron denegados", Toast.LENGTH_SHORT).show();
-                }
-            }
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+            lanzadorCamara.launch(intent);
         }
     }
 

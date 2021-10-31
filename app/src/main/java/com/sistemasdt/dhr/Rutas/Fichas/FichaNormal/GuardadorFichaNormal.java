@@ -174,6 +174,11 @@ public class GuardadorFichaNormal extends Fragment {
         Set<String> arregloFotos = sharedPreferences5.getStringSet("listaFotos", null);
         ArrayList<String> listadoFotos = new ArrayList<>(arregloFotos);
 
+        // PAGOS
+        SharedPreferences sharedPreferences6 = getActivity().getSharedPreferences("PAGOS", Context.MODE_PRIVATE);
+        Set<String> arregloPagos = sharedPreferences6.getStringSet("listaPagos", null);
+        ArrayList<String> listadoPagos = new ArrayList<>(arregloPagos);
+
         // JSON PARA REGISTRAR FICHA
         JSONObject jsonObject = new JSONObject();
         try {
@@ -267,12 +272,14 @@ public class GuardadorFichaNormal extends Fragment {
 
             // PAGOS
             JSONArray jsonArrayPagos = new JSONArray();
-            for (int i = 0; i < 2; i++) {
+            for (String item : listadoPagos) {
                 try {
+                    String cadenaAuxiliar[] = item.split(";");
+
                     JSONObject rowJSON = new JSONObject();
-                    rowJSON.put("PAGO", 55.25);
-                    rowJSON.put("DESCRIPCION", "Pago ficha 1");
-                    rowJSON.put("FECHA", "2020/12/01");
+                    rowJSON.put("PAGO", Double.parseDouble(cadenaAuxiliar[1]));
+                    rowJSON.put("DESCRIPCION", cadenaAuxiliar[0]);
+                    rowJSON.put("FECHA", cadenaAuxiliar[2]);
                     rowJSON.put("ID_FICHA", 0);
 
                     jsonArrayPagos.put(rowJSON);
@@ -288,7 +295,6 @@ public class GuardadorFichaNormal extends Fragment {
             jsonObject.put("HISTORIAL_FOTOS", jsonArrayFotos);
             jsonObject.put("PAGOS", jsonArrayPagos);
 
-//            Toast.makeText(getContext(), jsonObject.toString(), Toast.LENGTH_LONG).show();
             final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
             progressDialog.setMessage("Cargando...");
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);

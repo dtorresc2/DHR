@@ -81,6 +81,16 @@ public class TablaDinamica {
                 String[] row = data.get(indexR - 1);
                 info = (indexC < row.length) ? row[indexC] : "";
                 txtCell.setText(info);
+                txtCell.setTag(getCount());
+                txtCell.setClickable(true);
+                txtCell.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int index = (int) v.getTag();
+                        mListener.onItemClick(index);
+                    }
+                });
+
                 tableRow.addView(txtCell, newTableRowParams());
             }
             tableLayout.addView(tableRow);
