@@ -4,18 +4,23 @@ package com.sistemasdt.dhr.Rutas.Fichas.FichaNormal;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.app.job.JobInfo;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.widget.Toolbar;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -29,19 +34,26 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.itextpdf.text.pdf.parser.TextRenderInfo;
 import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.ItemPaciente;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialMedico.HistorialMed;
 import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
+import com.sistemasdt.dhr.ServiciosAPI.QuerysFichas;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysPacientes;
 import com.tapadoo.alerter.Alerter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class Ficha extends Fragment {
     private Toolbar toolbar;
@@ -55,9 +67,16 @@ public class Ficha extends Fragment {
     ArrayList<String> listaPacientes;
     ArrayList<ItemPaciente> listaPacientesGeneral;
     private boolean MODO_EDICION = false;
+    private int ID_FICHA = 0;
 
     public Ficha() {
         // Required empty public constructor
+        MODO_EDICION = false;
+    }
+
+    public void activarModoEdicion(int id) {
+        MODO_EDICION = true;
+        ID_FICHA = id;
     }
 
     @Override
@@ -136,7 +155,9 @@ public class Ficha extends Fragment {
         String diaAux = (dia > 9) ? String.valueOf(dia) : "0" + dia;
 
         final String dat = diaAux + "/" + mesAux + "/" + a;
-        fecha.setText(dat);
+
+        if (!MODO_EDICION)
+            fecha.setText(dat);
 
         //Obtener Calendario
         calendario.setOnClickListener(new View.OnClickListener() {
@@ -274,30 +295,88 @@ public class Ficha extends Fragment {
                     return;
                 }
 
-                final SharedPreferences preferenciasFicha = getActivity().getSharedPreferences("FICHA", Context.MODE_PRIVATE);
-                final SharedPreferences.Editor escritor = preferenciasFicha.edit();
-                escritor.putString("ID_PACIENTE", String.valueOf(ID_PACIENTE));
-                escritor.putString("PACIENTE", paciente.getText().toString());
-                escritor.putString("FECHA", fecha.getText().toString());
-                escritor.putString("MEDICO", medico.getText().toString());
-                escritor.putString("MOTIVO", motivo.getText().toString());
-                escritor.putString("REFERENTE", referente.getText().toString());
-                escritor.commit();
+                if (!MODO_EDICION) {
+                    final SharedPreferences preferenciasFicha = getActivity().getSharedPreferences("FICHA", Context.MODE_PRIVATE);
+                    final SharedPreferences.Editor escritor = preferenciasFicha.edit();
+                    escritor.putString("ID_PACIENTE", String.valueOf(ID_PACIENTE));
+                    escritor.putString("PACIENTE", paciente.getText().toString());
+                    escritor.putString("FECHA", fecha.getText().toString());
+                    escritor.putString("MEDICO", medico.getText().toString());
+                    escritor.putString("MOTIVO", motivo.getText().toString());
+                    escritor.putString("REFERENTE", referente.getText().toString());
+                    escritor.commit();
 
-                final SharedPreferences preferenciasFicha2 = getActivity().getSharedPreferences("RESUMEN_FN", Context.MODE_PRIVATE);
-                final SharedPreferences.Editor escritor2 = preferenciasFicha2.edit();
-                escritor2.putString("PACIENTE", paciente.getText().toString());
-                escritor2.commit();
+                    final SharedPreferences preferenciasFicha2 = getActivity().getSharedPreferences("RESUMEN_FN", Context.MODE_PRIVATE);
+                    final SharedPreferences.Editor escritor2 = preferenciasFicha2.edit();
+                    escritor2.putString("PACIENTE", paciente.getText().toString());
+                    escritor2.commit();
 
-                HistorialMed historialMed = new HistorialMed();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                transaction.replace(R.id.contenedor, historialMed);
-                transaction.commit();
+                    HistorialMed historialMed = new HistorialMed();
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                    transaction.replace(R.id.contenedor, historialMed);
+                    transaction.commit();
+                } else {
+                    try {
+                        Date initDate = new SimpleDateFormat("dd/MM/yyyy").parse(fecha.getText().toString());
+                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                        String fechaMYSQL = formatter.format(initDate);
+
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("ID_PACIENTE", ID_PACIENTE);
+                        jsonObject.put("FECHA", fechaMYSQL);
+                        jsonObject.put("MEDICO", medico.getText().toString());
+                        jsonObject.put("MOTIVO", motivo.getText().toString());
+                        jsonObject.put("REFERENTE", referente.getText().toString());
+
+                        QuerysFichas querysFichas = new QuerysFichas(getContext());
+                        querysFichas.actualizarFicha(ID_FICHA, jsonObject, new QuerysFichas.VolleyOnEventListener() {
+                            @Override
+                            public void onSuccess(Object object) {
+                                Alerter.create(getActivity())
+                                        .setTitle("Ficha")
+                                        .setText("Actualizada correctamente")
+                                        .setIcon(R.drawable.logonuevo)
+                                        .setTextTypeface(face)
+                                        .enableSwipeToDismiss()
+                                        .setBackgroundColorRes(R.color.FondoSecundario)
+                                        .show();
+
+                                MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
+                                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+                                        .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                                transaction.replace(R.id.contenedor, menuFichaNormal);
+                                transaction.commit();
+                            }
+
+                            @Override
+                            public void onSuccessBitmap(Bitmap object) {
+
+                            }
+
+                            @Override
+                            public void onFailure(Exception e) {
+                                Alerter.create(getActivity())
+                                        .setTitle("Error")
+                                        .setText("Fallo al actualizar la ficha")
+                                        .setIcon(R.drawable.logonuevo)
+                                        .setTextTypeface(face)
+                                        .enableSwipeToDismiss()
+                                        .setBackgroundColorRes(R.color.AzulOscuro)
+                                        .show();
+                            }
+                        });
+
+
+                    } catch (ParseException | JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
             }
         });
 
-        cargarDatos();
+//        cargarDatos();
 
         return view;
     }
@@ -341,6 +420,8 @@ public class Ficha extends Fragment {
                         }
                     }
 
+                    cargarDatos();
+
                 } catch (JSONException e) {
                     e.fillInStackTrace();
                 }
@@ -356,15 +437,52 @@ public class Ficha extends Fragment {
     }
 
     public void cargarDatos() {
-        final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("FICHA", Context.MODE_PRIVATE);
-        ID_PACIENTE = Integer.parseInt(sharedPreferences.getString("ID_PACIENTE", "0"));
-        paciente.setText(sharedPreferences.getString("PACIENTE", "Seleccione paciente"));
-        if (sharedPreferences.contains("FECHA")) {
-            fecha.setText(sharedPreferences.getString("FECHA", "-"));
+        if (!MODO_EDICION) {
+            final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("FICHA", Context.MODE_PRIVATE);
+            ID_PACIENTE = Integer.parseInt(sharedPreferences.getString("ID_PACIENTE", "0"));
+            paciente.setText(sharedPreferences.getString("PACIENTE", "Seleccione paciente"));
+            if (sharedPreferences.contains("FECHA")) {
+                fecha.setText(sharedPreferences.getString("FECHA", "-"));
+            }
+            medico.setText(sharedPreferences.getString("MEDICO", ""));
+            motivo.setText(sharedPreferences.getString("MOTIVO", ""));
+            referente.setText(sharedPreferences.getString("REFERENTE", ""));
+        } else {
+            QuerysFichas querysFichas = new QuerysFichas(getContext());
+            querysFichas.obtenerFichaEspecifica(ID_FICHA, new QuerysFichas.VolleyOnEventListener() {
+                @Override
+                public void onSuccess(Object object) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(object.toString());
+                        fecha.setText(jsonObject.getString("FECHA"));
+                        medico.setText(jsonObject.getString("MEDICO"));
+                        motivo.setText(jsonObject.getString("MOTIVO"));
+                        referente.setText(jsonObject.getString("REFERENTE"));
+                        ID_PACIENTE = jsonObject.getInt("ID_PACIENTE");
+
+                        for (ItemPaciente item : listaPacientesGeneral) {
+                            if (item.getCodigo() == ID_PACIENTE) {
+                                paciente.setText(listaPacientesGeneral.get(listaPacientesGeneral.indexOf(item)).getNombre());
+                            }
+                        }
+
+                    } catch (JSONException e) {
+                        Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onSuccessBitmap(Bitmap object) {
+
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+
+                }
+            });
         }
-        medico.setText(sharedPreferences.getString("MEDICO", ""));
-        motivo.setText(sharedPreferences.getString("MOTIVO", ""));
-        referente.setText(sharedPreferences.getString("REFERENTE", ""));
     }
 
     // VALIDACIONES

@@ -166,6 +166,9 @@ public class HistorialFotografico extends Fragment {
                 });
 
         // INICIALIZADOR DE ACTIVIDAD PARA GALERIA
+//        https://stackoverflow.com/questions/67156608/how-get-image-from-gallery-in-fragmentjetpack-navigation-component
+//        https://www.youtube.com/watch?v=qO3FFuBrT2E&ab_channel=CodingDemos
+//        https://stackoverflow.com/questions/64431993/how-to-get-specific-number-of-images-with-activity-results-api
         lanzadorGaleria = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), (ActivityResultCallback<ActivityResult>) result -> {
             if (result.getResultCode() == Activity.RESULT_OK) {
                 try {

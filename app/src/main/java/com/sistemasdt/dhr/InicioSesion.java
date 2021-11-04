@@ -100,7 +100,7 @@ public class InicioSesion extends AppCompatActivity {
                                 public void onSuccess(Object object) {
                                     try {
                                         JSONObject jsonObject = new JSONObject(object.toString());
-                                        if (jsonObject.getInt("MOVIL") != 1) {
+                                        if (jsonObject.getInt("APP") != 1) {
                                             Alerter.create(InicioSesion.this)
                                                     .setTitle("Error")
                                                     .setText("No tienene acceso")

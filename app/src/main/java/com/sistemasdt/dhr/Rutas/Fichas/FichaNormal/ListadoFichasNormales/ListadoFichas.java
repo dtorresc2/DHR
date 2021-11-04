@@ -83,10 +83,11 @@ public class ListadoFichas extends Fragment {
 
         toolbar.setNavigationOnClickListener(view1 -> {
             MenuFichas menuFichas = new MenuFichas();
-            FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
             transaction.replace(R.id.contenedor, menuFichas);
             transaction.commit();
         });
+
 
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -94,7 +95,7 @@ public class ListadoFichas extends Fragment {
                 switch (item.getItemId()) {
                     case R.id.opcion_nuevo:
                         Ficha ficha = new Ficha();
-                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
                         transaction.replace(R.id.contenedor, ficha);
                         transaction.commit();
                         return true;
@@ -195,7 +196,7 @@ public class ListadoFichas extends Fragment {
                         @Override
                         public void onItemClick(int position) {
                             MenuInferior menuInferior = new MenuInferior();
-                            menuInferior.show(getFragmentManager(), "MenuInferior");
+                            menuInferior.show(getActivity().getSupportFragmentManager(), "MenuInferior");
                             menuInferior.recibirTitulo(lista.get(position).getMotivo());
                             menuInferior.eventoClick(new MenuInferior.MenuInferiorListener() {
                                 @Override
@@ -230,16 +231,21 @@ public class ListadoFichas extends Fragment {
     public void realizarAccion(int opcion, int ID, final int posicion) {
         switch (opcion) {
             case 1:
+                final SharedPreferences preferenciasFicha = getActivity().getSharedPreferences("FICHA", Context.MODE_PRIVATE);
+                final SharedPreferences.Editor escritor = preferenciasFicha.edit();
+                escritor.putInt("ID_FICHA", ID);
+                escritor.commit();
+
                 MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
                 transaction.replace(R.id.contenedor, menuFichaNormal);
                 transaction.commit();
                 break;
             case 2:
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
                 builder.setIcon(R.drawable.logonuevo);
-                builder.setTitle("Listado de Pacientes");
-                builder.setMessage("¿Desea deshabilitar al paciente?");
+                builder.setTitle("Listado de Fichas");
+                builder.setMessage("¿Desea deshabilitar la ficha?");
                 builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // User cancelled the dialog
