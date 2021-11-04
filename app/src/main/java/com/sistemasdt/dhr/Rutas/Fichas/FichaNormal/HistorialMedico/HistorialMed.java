@@ -43,7 +43,6 @@ public class HistorialMed extends Fragment {
     private int ID_HISTORIAL_MEDICO = 0;
 
     public HistorialMed() {
-        // Required empty public constructor
         MODO_EDICION = false;
     }
 
@@ -61,12 +60,13 @@ public class HistorialMed extends Fragment {
 
         //Barra de Titulo
         toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setTitle("Historial Medico (1/2)");
 
         if (!MODO_EDICION) {
             toolbar.setNavigationIcon(R.drawable.ic_atras);
+            toolbar.setTitle("Historial Medico (1/2)");
         } else {
             toolbar.setNavigationIcon(R.drawable.ic_cerrar);
+            toolbar.setTitle("Historial Medico");
         }
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {

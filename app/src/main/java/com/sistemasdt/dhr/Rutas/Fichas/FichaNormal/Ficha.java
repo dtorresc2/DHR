@@ -94,10 +94,18 @@ public class Ficha extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MenuFichas menuFichas = new MenuFichas();
-                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                transaction.replace(R.id.contenedor, menuFichas);
-                transaction.commit();
+                if(!MODO_EDICION) {
+                    MenuFichas menuFichas = new MenuFichas();
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                    transaction.replace(R.id.contenedor, menuFichas);
+                    transaction.commit();
+                }
+                else{
+                    MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                    transaction.replace(R.id.contenedor, menuFichaNormal);
+                    transaction.commit();
+                }
             }
         });
 

@@ -25,6 +25,7 @@
                 android:id="@+id/menuingeso"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="70dp"
                 app:alignmentMode="alignMargins"
                 app:columnCount="2"
                 app:columnOrderPreserved="false"
@@ -71,7 +72,6 @@
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-
                 <androidx.cardview.widget.CardView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -110,8 +110,40 @@
                             android:text="H. Medico"
                             android:textColor="@color/Blanco"
                             android:textSize="20sp" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
 
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="12dp"
+                    android:backgroundTint="@color/AzulOscuro"
+                    android:padding="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="6dp"
+                    app:layout_columnWeight="1"
+                    app:layout_rowWeight="1">
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:src="@drawable/ic_add" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="14dp"
+                            android:gravity="center"
+                            android:text="Padecimientos"
+                            android:textColor="@color/Blanco"
+                            android:textSize="20sp" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 

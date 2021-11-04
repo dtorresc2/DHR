@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sistemasdt.dhr.R;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialMedico.HistorialMedDos;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialOdonto.HistorialOdon;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialOdonto.HistorialOdonDos;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialMedico.HistorialMed;
@@ -81,41 +82,48 @@ public class MenuFichaNormal extends Fragment {
                         case 2:
                             HistorialMed historialMed = new HistorialMed();
                             historialMed.activarModoEdicion(sharedPreferences.getInt("ID_FICHA", 0));
-                            FragmentTransaction transaction3 = getFragmentManager().beginTransaction()
+                            FragmentTransaction transaction3 = getActivity().getSupportFragmentManager().beginTransaction()
                                     .setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
                             transaction3.replace(R.id.contenedor, historialMed);
                             transaction3.commit();
-
                             break;
 
                         case 3:
+                            HistorialMedDos historialMedDos = new HistorialMedDos();
+                            historialMedDos.activarModoEdicion(sharedPreferences.getInt("ID_FICHA", 0));
+                            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction()
+                                    .setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                            fragmentTransaction.replace(R.id.contenedor, historialMedDos);
+                            fragmentTransaction.commit();
+                            break;
+
+                        case 4:
                             HistorialOdon historialOdon = new HistorialOdon();
-                            FragmentTransaction transaction = getFragmentManager().beginTransaction()
+                            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
                                     .setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
                             transaction.replace(R.id.contenedor, historialOdon);
                             transaction.commit();
                             break;
 
-                        case 4:
+                        case 5:
                             HistorialOdonDos historialOdonDos = new HistorialOdonDos();
-                            FragmentTransaction transaction4 = getFragmentManager().beginTransaction()
+                            FragmentTransaction transaction4 = getActivity().getSupportFragmentManager().beginTransaction()
                                     .setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
                             transaction4.replace(R.id.contenedor, historialOdonDos);
                             transaction4.commit();
                             break;
 
-                        case 5:
+                        case 6:
                             Pagos pagos = new Pagos();
-                            FragmentTransaction transaction6 = getFragmentManager().beginTransaction()
+                            FragmentTransaction transaction6 = getActivity().getSupportFragmentManager().beginTransaction()
                                     .setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
                             transaction6.replace(R.id.contenedor, pagos);
                             transaction6.commit();
-
                             break;
 
-                        case 6:
+                        case 7:
                             HistorialFotografico historialFotografico = new HistorialFotografico();
-                            FragmentTransaction transaction5 = getFragmentManager().beginTransaction()
+                            FragmentTransaction transaction5 = getActivity().getSupportFragmentManager().beginTransaction()
                                     .setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
                             transaction5.replace(R.id.contenedor, historialFotografico);
                             transaction5.commit();
