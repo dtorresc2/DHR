@@ -99,6 +99,7 @@ public class MenuFichaNormal extends Fragment {
 
                         case 4:
                             HistorialOdon historialOdon = new HistorialOdon();
+                            historialOdon.activarModoEdicion(sharedPreferences.getInt("ID_FICHA", 0));
                             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
                                     .setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
                             transaction.replace(R.id.contenedor, historialOdon);
