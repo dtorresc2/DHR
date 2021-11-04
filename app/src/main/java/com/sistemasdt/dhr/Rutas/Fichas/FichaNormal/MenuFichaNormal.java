@@ -56,8 +56,6 @@ public class MenuFichaNormal extends Fragment {
         menu = view.findViewById(R.id.menuingeso);
         setSingleEvent(menu);
 
-
-
         return view;
     }
 
@@ -68,10 +66,10 @@ public class MenuFichaNormal extends Fragment {
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("FICHA", Context.MODE_PRIVATE);
+
                     switch (dato) {
                         case 1:
-                            final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("FICHA", Context.MODE_PRIVATE);
-
                             Ficha ficha = new Ficha();
                             ficha.activarModoEdicion(sharedPreferences.getInt("ID_FICHA", 0));
                             FragmentTransaction transaction2 = getActivity().getSupportFragmentManager().beginTransaction()
@@ -82,6 +80,7 @@ public class MenuFichaNormal extends Fragment {
 
                         case 2:
                             HistorialMed historialMed = new HistorialMed();
+                            historialMed.activarModoEdicion(sharedPreferences.getInt("ID_FICHA", 0));
                             FragmentTransaction transaction3 = getFragmentManager().beginTransaction()
                                     .setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
                             transaction3.replace(R.id.contenedor, historialMed);

@@ -95,7 +95,7 @@ public class Ficha extends Fragment {
             @Override
             public void onClick(View v) {
                 MenuFichas menuFichas = new MenuFichas();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
                 transaction.replace(R.id.contenedor, menuFichas);
                 transaction.commit();
             }
@@ -317,6 +317,12 @@ public class Ficha extends Fragment {
                     transaction.replace(R.id.contenedor, historialMed);
                     transaction.commit();
                 } else {
+                    final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+                    progressDialog.setMessage("Cargando...");
+                    progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                    progressDialog.setCancelable(false);
+                    progressDialog.show();
+
                     try {
                         Date initDate = new SimpleDateFormat("dd/MM/yyyy").parse(fecha.getText().toString());
                         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -333,6 +339,8 @@ public class Ficha extends Fragment {
                         querysFichas.actualizarFicha(ID_FICHA, jsonObject, new QuerysFichas.VolleyOnEventListener() {
                             @Override
                             public void onSuccess(Object object) {
+                                progressDialog.dismiss();
+
                                 Alerter.create(getActivity())
                                         .setTitle("Ficha")
                                         .setText("Actualizada correctamente")
@@ -356,6 +364,8 @@ public class Ficha extends Fragment {
 
                             @Override
                             public void onFailure(Exception e) {
+                                progressDialog.dismiss();
+
                                 Alerter.create(getActivity())
                                         .setTitle("Error")
                                         .setText("Fallo al actualizar la ficha")
@@ -479,7 +489,7 @@ public class Ficha extends Fragment {
 
                 @Override
                 public void onFailure(Exception e) {
-
+                    cargarDatos();
                 }
             });
         }

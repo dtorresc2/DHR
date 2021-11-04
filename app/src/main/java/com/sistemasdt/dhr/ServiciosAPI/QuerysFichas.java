@@ -21,7 +21,6 @@ import java.io.UnsupportedEncodingException;
 
 
 public class QuerysFichas {
-
     Context mContext;
     private QuerysFichas.VolleyOnEventListener<String> mCallBack;
 
@@ -144,6 +143,66 @@ public class QuerysFichas {
         mCallBack = callback;
 
         StringRequest stringRequest = new StringRequest(Request.Method.PUT, mContext.getResources().getString(R.string.API) + "fichas/" + id, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                mCallBack.onSuccess(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mCallBack.onFailure(error);
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    final String mRequestBody = jsonBody.toString();
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        requestQueue.add(stringRequest);
+    }
+
+    //    ============== HISTORIAL MEDICO =========================
+    public void obtenerHistorialMedico(int id, QuerysFichas.VolleyOnEventListener callback) {
+        mCallBack = callback;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, mContext.getResources().getString(R.string.API) + "historial-medico/" + id, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                mCallBack.onSuccess(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mCallBack.onFailure(error);
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        requestQueue.add(stringRequest);
+    }
+
+    public void actualizarHistorialMedico(int id, final JSONObject jsonBody, QuerysFichas.VolleyOnEventListener callback) {
+        mCallBack = callback;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.PUT, mContext.getResources().getString(R.string.API) + "historial-medico/" + id, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 mCallBack.onSuccess(response);
