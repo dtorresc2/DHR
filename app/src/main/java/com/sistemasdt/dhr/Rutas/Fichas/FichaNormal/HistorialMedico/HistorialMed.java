@@ -78,9 +78,9 @@ public class HistorialMed extends Fragment {
                     transaction.replace(R.id.contenedor, ficha);
                     transaction.commit();
                 } else {
-                    MenuFichas menuFichas = new MenuFichas();
+                    MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                    transaction.replace(R.id.contenedor, menuFichas);
+                    transaction.replace(R.id.contenedor, menuFichaNormal);
                     transaction.commit();
                 }
             }
