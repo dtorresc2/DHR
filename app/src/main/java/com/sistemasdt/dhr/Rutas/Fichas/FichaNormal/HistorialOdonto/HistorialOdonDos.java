@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -30,6 +31,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sistemasdt.dhr.Componentes.MenusInferiores.MenuInferiorDos;
 import com.sistemasdt.dhr.Rutas.Catalogos.Piezas.ItemPieza;
@@ -37,7 +39,9 @@ import com.sistemasdt.dhr.Rutas.Catalogos.Servicios.ItemServicio;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialFoto.HistorialFotografico;
 import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.Componentes.Tabla.TablaDinamica;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.MenuFichaNormal;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.PagosFicha.Pagos;
+import com.sistemasdt.dhr.ServiciosAPI.QuerysFichas;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysPiezas;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysServicios;
 import com.tapadoo.alerter.Alerter;
@@ -46,6 +50,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -83,8 +88,17 @@ public class HistorialOdonDos extends Fragment {
     int POSICION = 0;
     boolean modoEdicionTratamiento = false;
 
+    private boolean MODO_EDICION = false;
+    private int ID_FICHA = 0;
+    private int ID_ODONTO = 0;
+
     public HistorialOdonDos() {
         // Required empty public constructor
+    }
+
+    public void activarModoEdicion(int id) {
+        MODO_EDICION = true;
+        ID_FICHA = id;
     }
 
     @Override
@@ -93,18 +107,31 @@ public class HistorialOdonDos extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_historial_odon_dos, container, false);
         final Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+        toolbar = view.findViewById(R.id.toolbar);
 
         //Encabezado
-        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        toolbar.setTitle("Historial Odontodologico (2/2)");
-        toolbar.setNavigationIcon(R.drawable.ic_atras);
+        if (!MODO_EDICION) {
+            toolbar.setTitle("Historial Odontodologico (2/2)");
+            toolbar.setNavigationIcon(R.drawable.ic_atras);
+        } else {
+            toolbar.setTitle("Tratamientos");
+            toolbar.setNavigationIcon(R.drawable.ic_cerrar);
+        }
+
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HistorialOdon historialOdon = new HistorialOdon();
-                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                fragmentTransaction.replace(R.id.contenedor, historialOdon);
-                fragmentTransaction.commit();
+                if (!MODO_EDICION) {
+                    HistorialOdon historialOdon = new HistorialOdon();
+                    FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                    fragmentTransaction.replace(R.id.contenedor, historialOdon);
+                    fragmentTransaction.commit();
+                } else {
+                    MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                    transaction.replace(R.id.contenedor, menuFichaNormal);
+                    transaction.commit();
+                }
             }
         });
 
@@ -301,7 +328,7 @@ public class HistorialOdonDos extends Fragment {
             @Override
             public void onItemClick(final int position) {
                 MenuInferiorDos menuInferiorDos = new MenuInferiorDos();
-                menuInferiorDos.show(getFragmentManager(), "MenuInferior");
+                menuInferiorDos.show(getActivity().getSupportFragmentManager(), "MenuInferior");
                 menuInferiorDos.recibirTitulo(tablaDinamica.getCellData(position, 1));
                 menuInferiorDos.eventoClick(new MenuInferiorDos.MenuInferiorListener() {
                     @Override
@@ -467,31 +494,100 @@ public class HistorialOdonDos extends Fragment {
             @Override
             public void onClick(View v) {
                 if (listaTratamientos.size() > 0) {
-                    SharedPreferences preferences = getActivity().getSharedPreferences("HOD2", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = preferences.edit();
+                    if (!MODO_EDICION) {
+                        SharedPreferences preferences = getActivity().getSharedPreferences("HOD2", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = preferences.edit();
 
-                    Set<String> set = new HashSet<>();
+                        Set<String> set = new HashSet<>();
 
-                    for (ItemTratamiento item : listaTratamientos) {
-                        String cadena = item.getPieza() + ";" + item.getServicio() + ";" + item.getDescripcionServicio() + ";" + item.getMonto() + ";" + item.getFechaRegistro() + ";";
-                        set.add(cadena);
+                        for (ItemTratamiento item : listaTratamientos) {
+                            String cadena = item.getPieza() + ";" + item.getServicio() + ";" + item.getDescripcionServicio() + ";" + item.getMonto() + ";" + item.getFechaRegistro() + ";";
+                            set.add(cadena);
+                        }
+
+                        editor.putStringSet("listaTratamientos", set);
+                        editor.apply();
+
+                        final SharedPreferences preferenciasFicha2 = getActivity().getSharedPreferences("RESUMEN_FN", Context.MODE_PRIVATE);
+                        final SharedPreferences.Editor escritor2 = preferenciasFicha2.edit();
+                        escritor2.putString("NO_TRATAMIENTOS", String.valueOf(listaTratamientos.size()));
+                        escritor2.commit();
+
+                        Pagos pagos = new Pagos();
+                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+                                .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                        transaction.replace(R.id.contenedor, pagos);
+                        transaction.commit();
+                    } else {
+                        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+                        progressDialog.setMessage("Cargando...");
+                        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                        progressDialog.setCancelable(false);
+                        progressDialog.show();
+
+                        try {
+                            JSONArray jsonArray = new JSONArray();
+                            for (ItemTratamiento item : listaTratamientos) {
+                                JSONObject rowJSON = new JSONObject();
+                                rowJSON.put("PLAN", item.getDescripcionServicio());
+                                rowJSON.put("COSTO", item.getMonto());
+                                rowJSON.put("FECHA", item.getFechaRegistro());
+                                rowJSON.put("ID_PIEZA", item.getPieza());
+                                rowJSON.put("ID_SERVICIO", item.getServicio());
+                                rowJSON.put("ID_HISTORIAL_ODONTO", ID_ODONTO);
+
+                                jsonArray.put(rowJSON);
+                            }
+
+                            JSONObject jsonObject = new JSONObject();
+                            jsonObject.put("TRATAMIENTOS", jsonArray);
+
+                            QuerysFichas querysFichas = new QuerysFichas(getContext());
+                            querysFichas.actualizarTratamientos(ID_ODONTO, jsonObject, new QuerysFichas.VolleyOnEventListener() {
+                                @Override
+                                public void onSuccess(Object object) {
+                                    progressDialog.dismiss();
+
+                                    Alerter.create(getActivity())
+                                            .setTitle("Tratamientos")
+                                            .setText("Actualizados correctamente")
+                                            .setIcon(R.drawable.logonuevo)
+                                            .setTextTypeface(face)
+                                            .enableSwipeToDismiss()
+                                            .setBackgroundColorRes(R.color.FondoSecundario)
+                                            .show();
+
+                                    MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
+                                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+                                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                                    transaction.replace(R.id.contenedor, menuFichaNormal);
+                                    transaction.commit();
+                                }
+
+                                @Override
+                                public void onSuccessBitmap(Bitmap object) {
+
+                                }
+
+                                @Override
+                                public void onFailure(Exception e) {
+                                    progressDialog.dismiss();
+
+                                    Alerter.create(getActivity())
+                                            .setTitle("Error")
+                                            .setText("Fallo al actualizar los tratamientos")
+                                            .setIcon(R.drawable.logonuevo)
+                                            .setTextTypeface(face)
+                                            .enableSwipeToDismiss()
+                                            .setBackgroundColorRes(R.color.AzulOscuro)
+                                            .show();
+                                }
+                            });
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
-
-                    editor.putStringSet("listaTratamientos", set);
-                    editor.apply();
-
-                    final SharedPreferences preferenciasFicha2 = getActivity().getSharedPreferences("RESUMEN_FN", Context.MODE_PRIVATE);
-                    final SharedPreferences.Editor escritor2 = preferenciasFicha2.edit();
-                    escritor2.putString("NO_TRATAMIENTOS", String.valueOf(listaTratamientos.size()));
-//                    escritor2.putString("NO_PAGOS", String.valueOf(0));
-                    escritor2.commit();
-
-                    Pagos pagos = new Pagos();
-                    FragmentTransaction transaction = getFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                    transaction.replace(R.id.contenedor, pagos);
-                    transaction.commit();
-
                 } else {
                     Alerter.create(getActivity())
                             .setTitle("Error")
@@ -507,7 +603,6 @@ public class HistorialOdonDos extends Fragment {
 
         obtenerPiezas();
         obtenerServicios();
-//        cargarTratamientos();
 
         return view;
     }
@@ -522,54 +617,137 @@ public class HistorialOdonDos extends Fragment {
     }
 
     public void cargarTratamientos() {
-        SharedPreferences preferences = getActivity().getSharedPreferences("HOD2", Context.MODE_PRIVATE);
-        Set<String> set = preferences.getStringSet("listaTratamientos", null);
-
         // Reinciar Tabla
         listaTratamientos.clear();
         tablaDinamica.removeAll();
-//        tablaDinamica.addData(getClients());
         tablaDinamica.fondoHeader(R.color.AzulOscuro);
 
-        if (set != null) {
-            ArrayList<String> listaAuxiliar = new ArrayList<>(set);
+        if (!MODO_EDICION) {
+            SharedPreferences preferences = getActivity().getSharedPreferences("HOD2", Context.MODE_PRIVATE);
+            Set<String> set = preferences.getStringSet("listaTratamientos", null);
 
-            for (String item : listaAuxiliar) {
-                String cadenaAuxiliar[] = item.split(";");
+            if (set != null) {
+                ArrayList<String> listaAuxiliar = new ArrayList<>(set);
 
-                listaTratamientos.add(new ItemTratamiento(
-                        Integer.parseInt(cadenaAuxiliar[0]),
-                        Integer.parseInt(cadenaAuxiliar[1]),
-                        cadenaAuxiliar[2],
-                        Double.parseDouble(cadenaAuxiliar[3]),
-                        cadenaAuxiliar[4]
-                ));
+                for (String item : listaAuxiliar) {
+                    String cadenaAuxiliar[] = item.split(";");
 
-                String descPieza = "";
-                for (ItemPieza aux : listaPiezasGenenal) {
-                    if (aux.getCodigoPieza() == Integer.parseInt(cadenaAuxiliar[0])) {
-                        descPieza = aux.getNombrePieza();
+                    listaTratamientos.add(new ItemTratamiento(
+                            Integer.parseInt(cadenaAuxiliar[0]),
+                            Integer.parseInt(cadenaAuxiliar[1]),
+                            cadenaAuxiliar[2],
+                            Double.parseDouble(cadenaAuxiliar[3]),
+                            cadenaAuxiliar[4]
+                    ));
+
+                    String descPieza = "";
+                    for (ItemPieza aux : listaPiezasGenenal) {
+                        if (aux.getCodigoPieza() == Integer.parseInt(cadenaAuxiliar[0])) {
+                            descPieza = aux.getNombrePieza();
+                        }
+                    }
+
+                    tablaDinamica.addItem(new String[]{
+                            descPieza,
+                            cadenaAuxiliar[2],
+                            String.format("%.2f", Double.parseDouble(cadenaAuxiliar[3]))
+                    });
+                }
+
+                total = 0;
+
+                if (tablaDinamica.getCount() > 0) {
+                    for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
+                        total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
+                    }
+                    total_costo.setText(String.format("%.2f", total));
+                } else {
+                    total_costo.setText("0.00");
+                }
+            }
+        } else {
+            final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+            progressDialog.setMessage("Cargando...");
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+
+            QuerysFichas querysFichas = new QuerysFichas(getContext());
+            querysFichas.obtenerHistorialOdontodologico(ID_FICHA, new QuerysFichas.VolleyOnEventListener() {
+                @Override
+                public void onSuccess(Object object) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(object.toString());
+                        ID_ODONTO = jsonObject.getInt("ID_HISTORIAL_ODONTO");
+
+                        QuerysFichas querysFichas1 = new QuerysFichas(getContext());
+                        querysFichas1.obtenerTratamientos(ID_ODONTO, new QuerysFichas.VolleyOnEventListener() {
+                            @Override
+                            public void onSuccess(Object object) {
+                                try {
+                                    JSONArray jsonArray = new JSONArray(object.toString());
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        listaTratamientos.add(new ItemTratamiento(
+                                                jsonArray.getJSONObject(i).getInt("ID_PIEZA"),
+                                                jsonArray.getJSONObject(i).getInt("ID_SERVICIO"),
+                                                jsonArray.getJSONObject(i).getString("PLAN"),
+                                                jsonArray.getJSONObject(i).getDouble("COSTO"),
+                                                jsonArray.getJSONObject(i).getString("FECHA")
+                                        ));
+
+                                        tablaDinamica.addItem(new String[]{
+                                                jsonArray.getJSONObject(i).getString("NOMBRE_PIEZA"),
+                                                jsonArray.getJSONObject(i).getString("PLAN"),
+                                                String.format("%.2f", jsonArray.getJSONObject(i).getDouble("COSTO"))
+                                        });
+                                    }
+
+                                    total = 0;
+
+                                    if (tablaDinamica.getCount() > 0) {
+                                        for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
+                                            total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
+                                        }
+                                        total_costo.setText(String.format("%.2f", total));
+                                    } else {
+                                        total_costo.setText("0.00");
+                                    }
+
+                                    progressDialog.dismiss();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            @Override
+                            public void onSuccessBitmap(Bitmap object) {
+
+                            }
+
+                            @Override
+                            public void onFailure(Exception e) {
+                                progressDialog.dismiss();
+                                cargarTratamientos();
+                            }
+                        });
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
                 }
 
-                tablaDinamica.addItem(new String[]{
-                        descPieza,
-                        cadenaAuxiliar[2],
-                        String.format("%.2f", Double.parseDouble(cadenaAuxiliar[3]))
-                });
-            }
+                @Override
+                public void onSuccessBitmap(Bitmap object) {
 
-            total = 0;
-
-            if (tablaDinamica.getCount() > 0) {
-                for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
-                    total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
                 }
-                total_costo.setText(String.format("%.2f", total));
-            } else {
-                total_costo.setText("0.00");
-            }
+
+                @Override
+                public void onFailure(Exception e) {
+
+                }
+            });
         }
+
     }
 
     public void obtenerPiezas() {

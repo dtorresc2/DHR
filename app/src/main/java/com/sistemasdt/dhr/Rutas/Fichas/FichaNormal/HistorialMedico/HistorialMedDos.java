@@ -166,7 +166,6 @@ public class HistorialMedDos extends Fragment {
                                         .setBackgroundColorRes(R.color.FondoSecundario)
                                         .show();
 
-
                                 MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
                                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
                                         .setCustomAnimations(R.anim.left_in, R.anim.left_out);
