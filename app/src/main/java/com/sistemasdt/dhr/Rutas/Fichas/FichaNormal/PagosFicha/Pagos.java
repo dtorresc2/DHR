@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -45,11 +46,17 @@ import com.sistemasdt.dhr.Rutas.Catalogos.Piezas.ItemPieza;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialOdonto.HistorialOdonDos;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialOdonto.ItemTratamiento;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.ListadoFichasNormales.ListadoFichas;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.MenuFichaNormal;
 import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialFoto.HistorialFotografico;
 import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.Componentes.Tabla.TablaDinamica;
+import com.sistemasdt.dhr.ServiciosAPI.QuerysFichas;
 import com.tapadoo.alerter.Alerter;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -63,17 +70,13 @@ import java.util.regex.Pattern;
 public class Pagos extends Fragment {
     private TableLayout tableLayout;
     RequestQueue requestQueue;
-    private Button listador, eliminador;
+    private Button listador;
     private String[] header = {"Descripcion", "Pago"};
     private ArrayList<String[]> rows = new ArrayList<>();
     private TablaDinamica tablaDinamica;
     private double total;
     private FloatingActionButton agregador;
-    private static final String TAG = "MyActivity";
     private Toolbar toolbar;
-    private SharedPreferences preferencias;
-    private int contador = 0;
-    private TextView tituloGasto, totalGasto;
 
     private TextView tituloTotalGatos, totalGastos, tituloPagos, totalPagos, tituloTotalPagos;
     private TextInputEditText descripcionPago, cantidadPago;
@@ -81,12 +84,19 @@ public class Pagos extends Fragment {
     private ArrayList<ItemPago> listaPagos = new ArrayList<>();
     double totalTratamientos = 0;
 
-    private boolean MODO_EDICION = false;
     private boolean modoEdicionPago = false;
     int POSICION = 0;
 
+    private boolean MODO_EDICION = false;
+    private int ID_FICHA = 0;
+
     public Pagos() {
-        // Required empty public constructor
+        MODO_EDICION = false;
+    }
+
+    public void activarModoEdicion(int id) {
+        MODO_EDICION = true;
+        ID_FICHA = id;
     }
 
     @Override
@@ -99,34 +109,29 @@ public class Pagos extends Fragment {
 
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle("Pagos");
-        toolbar.setNavigationIcon(R.drawable.ic_atras);
+
+        if (!MODO_EDICION) {
+            toolbar.setNavigationIcon(R.drawable.ic_atras);
+        } else {
+            toolbar.setNavigationIcon(R.drawable.ic_cerrar);
+        }
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                switch (mOpcion) {
-//                    case 1:
-//                        MenuFichas menuFichas = new MenuFichas();
-//                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-//                        transaction.replace(R.id.contenedor, menuFichas);
-//                        transaction.commit();
-//                        break;
-//
-//                    case 2:
-//                        Seguimiento seguimiento = new Seguimiento();
-//                        FragmentTransaction transaction2 = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-//                        transaction2.replace(R.id.contenedor, seguimiento);
-//                        transaction2.commit();
-//                        break;
-//                }
-//                ListadoFichas listadoFichas = new ListadoFichas();
-                HistorialOdonDos historialOdonDos = new HistorialOdonDos();
-                FragmentTransaction transaction2 = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                transaction2.replace(R.id.contenedor, historialOdonDos);
-                transaction2.commit();
+                if (!MODO_EDICION) {
+                    HistorialOdonDos historialOdonDos = new HistorialOdonDos();
+                    FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                    fragmentTransaction.replace(R.id.contenedor, historialOdonDos);
+                    fragmentTransaction.commit();
+                } else {
+                    MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                    transaction.replace(R.id.contenedor, menuFichaNormal);
+                    transaction.commit();
+                }
             }
         });
-
 
         listador = view.findViewById(R.id.agregarPago);
         listador.setTypeface(face);
@@ -204,7 +209,7 @@ public class Pagos extends Fragment {
             @Override
             public void onItemClick(int position) {
                 MenuInferiorDos menuInferiorDos = new MenuInferiorDos();
-                menuInferiorDos.show(getFragmentManager(), "MenuInferior");
+                menuInferiorDos.show(getActivity().getSupportFragmentManager(), "MenuInferior");
                 menuInferiorDos.recibirTitulo(tablaDinamica.getCellData(position, 0));
                 menuInferiorDos.eventoClick(new MenuInferiorDos.MenuInferiorListener() {
                     @Override
@@ -220,15 +225,6 @@ public class Pagos extends Fragment {
                                 cantidadPago.setText(String.format("%.2f", listaPagos.get(index).getMonto()));
 
                                 POSICION = index;
-
-//                                if (tablaDinamica.getCount() > 0) {
-//                                    for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
-//                                        total += Double.parseDouble(tablaDinamica.getCellData(i, 1));
-//                                    }
-//                                    totalPagos.setText(String.format("%.2f", total));
-//                                } else {
-//                                    totalPagos.setText("0.00");
-//                                }
                                 break;
                             case 2:
                                 // Eliminar Tratamiento
@@ -303,8 +299,23 @@ public class Pagos extends Fragment {
                         // Reinciar Tabla
                         tablaDinamica.removeAll();
                         tablaDinamica.addHeader(header);
-                        tablaDinamica.addData(getClients());
+//                        tablaDinamica.addData(getClients());
                         tablaDinamica.fondoHeader(R.color.AzulOscuro);
+
+                        for (ItemPago itemPago : listaPagos) {
+
+                            tablaDinamica.addItem(new String[]{
+                                    itemPago.getDescripcionPago(),
+                                    String.format("%.2f", itemPago.getMonto())
+                            });
+//                            JSONObject rowJSON = new JSONObject();
+//                            rowJSON.put("PAGO", item.getMonto());
+//                            rowJSON.put("DESCRIPCION", item.getDescripcionPago());
+//                            rowJSON.put("FECHA", item.getFecha());
+//                            rowJSON.put("ID_FICHA", ID_FICHA);
+//
+//                            jsonArray.put(rowJSON);
+                        }
 
                         modoEdicionPago = false;
                         POSICION = 0;
@@ -331,31 +342,98 @@ public class Pagos extends Fragment {
             @Override
             public void onClick(View v) {
                 if (totalTratamientos >= total) {
+                    if (!MODO_EDICION) {
+                        SharedPreferences preferences = getActivity().getSharedPreferences("PAGOS", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = preferences.edit();
 
+                        Set<String> set = new HashSet<>();
 
-                    SharedPreferences preferences = getActivity().getSharedPreferences("PAGOS", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = preferences.edit();
+                        for (ItemPago item : listaPagos) {
+                            String cadena = item.getDescripcionPago() + ";" + item.getMonto() + ";" + item.getFecha() + ";";
+                            set.add(cadena);
+                        }
 
-                    Set<String> set = new HashSet<>();
+                        editor.putStringSet("listaPagos", set);
+                        editor.apply();
 
-                    for (ItemPago item : listaPagos) {
-                        String cadena = item.getDescripcionPago() + ";" + item.getMonto() + ";" + item.getFecha() + ";";
-                        set.add(cadena);
+                        final SharedPreferences preferenciasFicha2 = getActivity().getSharedPreferences("RESUMEN_FN", Context.MODE_PRIVATE);
+                        final SharedPreferences.Editor escritor2 = preferenciasFicha2.edit();
+                        escritor2.putString("NO_PAGOS", String.valueOf(listaPagos.size()));
+                        escritor2.commit();
+
+                        HistorialFotografico historialFotografico = new HistorialFotografico();
+                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+                                .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                        transaction.replace(R.id.contenedor, historialFotografico);
+                        transaction.commit();
+                    } else {
+                        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+                        progressDialog.setMessage("Cargando...");
+                        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                        progressDialog.setCancelable(false);
+                        progressDialog.show();
+
+                        try {
+                            JSONArray jsonArray = new JSONArray();
+                            for (ItemPago item : listaPagos) {
+                                JSONObject rowJSON = new JSONObject();
+                                rowJSON.put("PAGO", item.getMonto());
+                                rowJSON.put("DESCRIPCION", item.getDescripcionPago());
+                                rowJSON.put("FECHA", item.getFecha());
+                                rowJSON.put("ID_FICHA", ID_FICHA);
+
+                                jsonArray.put(rowJSON);
+                            }
+
+                            JSONObject jsonObject = new JSONObject();
+                            jsonObject.put("PAGOS", jsonArray);
+
+                            QuerysFichas querysFichas = new QuerysFichas(getContext());
+                            querysFichas.actualizarPagos(ID_FICHA, jsonObject, new QuerysFichas.VolleyOnEventListener() {
+                                @Override
+                                public void onSuccess(Object object) {
+                                    progressDialog.dismiss();
+
+                                    Alerter.create(getActivity())
+                                            .setTitle("Pagos")
+                                            .setText("Actualizados correctamente")
+                                            .setIcon(R.drawable.logonuevo)
+                                            .setTextTypeface(face)
+                                            .enableSwipeToDismiss()
+                                            .setBackgroundColorRes(R.color.FondoSecundario)
+                                            .show();
+
+                                    MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
+                                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+                                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                                    transaction.replace(R.id.contenedor, menuFichaNormal);
+                                    transaction.commit();
+                                }
+
+                                @Override
+                                public void onSuccessBitmap(Bitmap object) {
+
+                                }
+
+                                @Override
+                                public void onFailure(Exception e) {
+                                    progressDialog.dismiss();
+
+                                    Alerter.create(getActivity())
+                                            .setTitle("Error")
+                                            .setText("Fallo al actualizar los PAGOS")
+                                            .setIcon(R.drawable.logonuevo)
+                                            .setTextTypeface(face)
+                                            .enableSwipeToDismiss()
+                                            .setBackgroundColorRes(R.color.AzulOscuro)
+                                            .show();
+                                }
+                            });
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
-
-                    editor.putStringSet("listaPagos", set);
-                    editor.apply();
-
-                    final SharedPreferences preferenciasFicha2 = getActivity().getSharedPreferences("RESUMEN_FN", Context.MODE_PRIVATE);
-                    final SharedPreferences.Editor escritor2 = preferenciasFicha2.edit();
-                    escritor2.putString("NO_PAGOS", String.valueOf(listaPagos.size()));
-                    escritor2.commit();
-
-                    HistorialFotografico historialFotografico = new HistorialFotografico();
-                    FragmentTransaction transaction = getFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                    transaction.replace(R.id.contenedor, historialFotografico);
-                    transaction.commit();
                 } else {
                     Alerter.create(getActivity())
                             .setTitle("Error")
@@ -370,48 +448,105 @@ public class Pagos extends Fragment {
         });
 
         cargarPagos();
-        cargarTotalTratamientos();
+//        cargarTotalTratamientos();
         return view;
     }
 
     public void cargarPagos() {
-        SharedPreferences preferences = getActivity().getSharedPreferences("PAGOS", Context.MODE_PRIVATE);
-        Set<String> set = preferences.getStringSet("listaPagos", null);
-
         // Reinciar Tabla
         listaPagos.clear();
         tablaDinamica.removeAll();
 //        tablaDinamica.addData(getClients());
         tablaDinamica.fondoHeader(R.color.AzulOscuro);
 
-        if (set != null) {
-            ArrayList<String> listaAuxiliar = new ArrayList<>(set);
+        if (!MODO_EDICION) {
+            SharedPreferences preferences = getActivity().getSharedPreferences("PAGOS", Context.MODE_PRIVATE);
+            Set<String> set = preferences.getStringSet("listaPagos", null);
 
-            for (String item : listaAuxiliar) {
-                String cadenaAuxiliar[] = item.split(";");
+            if (set != null) {
+                ArrayList<String> listaAuxiliar = new ArrayList<>(set);
 
-                listaPagos.add(new ItemPago(
-                        cadenaAuxiliar[0],
-                        Double.parseDouble(cadenaAuxiliar[1]),
-                        cadenaAuxiliar[2]
-                ));
+                for (String item : listaAuxiliar) {
+                    String cadenaAuxiliar[] = item.split(";");
 
-                tablaDinamica.addItem(new String[]{
-                        cadenaAuxiliar[0],
-                        String.format("%.2f", Double.parseDouble(cadenaAuxiliar[1]))
-                });
-            }
+                    listaPagos.add(new ItemPago(
+                            cadenaAuxiliar[0],
+                            Double.parseDouble(cadenaAuxiliar[1]),
+                            cadenaAuxiliar[2]
+                    ));
 
-            total = 0;
-
-            if (tablaDinamica.getCount() > 0) {
-                for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
-                    total += Double.parseDouble(tablaDinamica.getCellData(i, 1));
+                    tablaDinamica.addItem(new String[]{
+                            cadenaAuxiliar[0],
+                            String.format("%.2f", Double.parseDouble(cadenaAuxiliar[1]))
+                    });
                 }
-                totalPagos.setText(String.format("%.2f", total));
-            } else {
-                totalPagos.setText("0.00");
+
+                total = 0;
+
+                if (tablaDinamica.getCount() > 0) {
+                    for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
+                        total += Double.parseDouble(tablaDinamica.getCellData(i, 1));
+                    }
+                    totalPagos.setText(String.format("%.2f", total));
+                } else {
+                    totalPagos.setText("0.00");
+                }
             }
+        } else {
+            final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+            progressDialog.setMessage("Cargando...");
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+
+            QuerysFichas querysFichas = new QuerysFichas(getContext());
+            querysFichas.obtenerPagos(ID_FICHA, new QuerysFichas.VolleyOnEventListener() {
+                @Override
+                public void onSuccess(Object object) {
+                    try {
+                        JSONArray jsonArray = new JSONArray(object.toString());
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            listaPagos.add(new ItemPago(
+                                    jsonArray.getJSONObject(i).getString("DESCRIPCION"),
+                                    jsonArray.getJSONObject(i).getDouble("PAGO"),
+                                    jsonArray.getJSONObject(i).getString("FECHA")
+                            ));
+
+                            tablaDinamica.addItem(new String[]{
+                                    jsonArray.getJSONObject(i).getString("DESCRIPCION"),
+                                    String.format("%.2f", jsonArray.getJSONObject(i).getDouble("PAGO"))
+                            });
+                        }
+
+                        total = 0;
+
+                        if (tablaDinamica.getCount() > 0) {
+                            for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
+                                total += Double.parseDouble(tablaDinamica.getCellData(i, 1));
+                            }
+                            totalPagos.setText(String.format("%.2f", total));
+                        } else {
+                            totalPagos.setText("0.00");
+                        }
+
+                        progressDialog.dismiss();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                @Override
+                public void onSuccessBitmap(Bitmap object) {
+
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    progressDialog.dismiss();
+                    cargarPagos();
+                }
+            });
         }
     }
 

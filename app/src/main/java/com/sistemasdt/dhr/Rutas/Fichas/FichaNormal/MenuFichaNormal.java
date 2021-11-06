@@ -117,6 +117,7 @@ public class MenuFichaNormal extends Fragment {
 
                         case 6:
                             Pagos pagos = new Pagos();
+                            pagos.activarModoEdicion(sharedPreferences.getInt("ID_FICHA", 0));
                             FragmentTransaction transaction6 = getActivity().getSupportFragmentManager().beginTransaction()
                                     .setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
                             transaction6.replace(R.id.contenedor, pagos);

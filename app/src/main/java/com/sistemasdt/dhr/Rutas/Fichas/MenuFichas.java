@@ -47,8 +47,7 @@ public class MenuFichas extends Fragment {
             @Override
             public void onClick(View v) {
                 ListadoFichas listadoFichas = new ListadoFichas();
-//                Ficha ficha = new Ficha();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
                 transaction.replace(R.id.contenedor, listadoFichas);
                 transaction.commit();
             }

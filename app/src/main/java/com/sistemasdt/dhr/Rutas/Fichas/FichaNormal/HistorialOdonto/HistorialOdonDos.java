@@ -28,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -66,13 +67,14 @@ public class HistorialOdonDos extends Fragment {
     private String[] header = {"Pieza", "Descripcion", "Costo"};
     private ArrayList<String[]> rows = new ArrayList<>();
     private TextView pieza, servicio;
-    private TextView titulo_diag, titulo_pres, total_costo, titulo_costo;
+    private TextView titulo_diag, titulo_pres, total_costo, titulo_costo, titulo_pagos, total_pagos;
     private TablaDinamica tablaDinamica;
     private double total;
     private FloatingActionButton agregador;
     private int mOpcion = 0;
     private TextInputEditText desc_servicio, monto;
     private TextInputLayout layoutServicio, layoutMonto;
+    private LinearLayout layoutTotalPagos;
 
     ArrayList<String> listaPiezas;
     ArrayList<ItemPieza> listaPiezasGenenal;
@@ -93,7 +95,7 @@ public class HistorialOdonDos extends Fragment {
     private int ID_ODONTO = 0;
 
     public HistorialOdonDos() {
-        // Required empty public constructor
+        MODO_EDICION = false;
     }
 
     public void activarModoEdicion(int id) {
@@ -109,13 +111,22 @@ public class HistorialOdonDos extends Fragment {
         final Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         toolbar = view.findViewById(R.id.toolbar);
 
+        layoutTotalPagos = view.findViewById(R.id.layoutTotalPagos);
+        titulo_pagos = view.findViewById(R.id.totalPagos);
+        titulo_pagos.setTypeface(face);
+        total_pagos = view.findViewById(R.id.totalPagos);
+        total_pagos.setTypeface(face);
+
         //Encabezado
         if (!MODO_EDICION) {
             toolbar.setTitle("Historial Odontodologico (2/2)");
             toolbar.setNavigationIcon(R.drawable.ic_atras);
+            layoutTotalPagos.setVisibility(View.GONE);
+
         } else {
             toolbar.setTitle("Tratamientos");
             toolbar.setNavigationIcon(R.drawable.ic_cerrar);
+            layoutTotalPagos.setVisibility(View.VISIBLE);
         }
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -608,7 +619,6 @@ public class HistorialOdonDos extends Fragment {
     }
 
     private ArrayList<String[]> getClients() {
-
         return rows;
     }
 
