@@ -41,6 +41,7 @@ import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialFoto.HistorialFotogr
 import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.Componentes.Tabla.TablaDinamica;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.MenuFichaNormal;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.PagosFicha.ItemPago;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.PagosFicha.Pagos;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysFichas;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysPiezas;
@@ -93,6 +94,7 @@ public class HistorialOdonDos extends Fragment {
     private boolean MODO_EDICION = false;
     private int ID_FICHA = 0;
     private int ID_ODONTO = 0;
+    private double TOTAL_PAGOS = 0;
 
     public HistorialOdonDos() {
         MODO_EDICION = false;
@@ -479,13 +481,13 @@ public class HistorialOdonDos extends Fragment {
 
                         layoutMonto.setError(null);
                         layoutServicio.setError(null);
+                    }
 
-                        if (tablaDinamica.getCount() > 0) {
-                            for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
-                                total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
-                            }
-                            total_costo.setText(String.format("%.2f", total));
+                    if (tablaDinamica.getCount() > 0) {
+                        for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
+                            total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
                         }
+                        total_costo.setText(String.format("%.2f", total));
                     }
                 } else {
                     Alerter.create(getActivity())
@@ -530,73 +532,84 @@ public class HistorialOdonDos extends Fragment {
                         transaction.replace(R.id.contenedor, pagos);
                         transaction.commit();
                     } else {
-                        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-                        progressDialog.setMessage("Cargando...");
-                        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                        progressDialog.setCancelable(false);
-                        progressDialog.show();
+                        if (total >= TOTAL_PAGOS) {
+                            final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+                            progressDialog.setMessage("Cargando...");
+                            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                            progressDialog.setCancelable(false);
+                            progressDialog.show();
 
-                        try {
-                            JSONArray jsonArray = new JSONArray();
-                            for (ItemTratamiento item : listaTratamientos) {
-                                JSONObject rowJSON = new JSONObject();
-                                rowJSON.put("PLAN", item.getDescripcionServicio());
-                                rowJSON.put("COSTO", item.getMonto());
-                                rowJSON.put("FECHA", item.getFechaRegistro());
-                                rowJSON.put("ID_PIEZA", item.getPieza());
-                                rowJSON.put("ID_SERVICIO", item.getServicio());
-                                rowJSON.put("ID_HISTORIAL_ODONTO", ID_ODONTO);
+                            try {
+                                JSONArray jsonArray = new JSONArray();
+                                for (ItemTratamiento item : listaTratamientos) {
+                                    JSONObject rowJSON = new JSONObject();
+                                    rowJSON.put("PLAN", item.getDescripcionServicio());
+                                    rowJSON.put("COSTO", item.getMonto());
+                                    rowJSON.put("FECHA", item.getFechaRegistro());
+                                    rowJSON.put("ID_PIEZA", item.getPieza());
+                                    rowJSON.put("ID_SERVICIO", item.getServicio());
+                                    rowJSON.put("ID_HISTORIAL_ODONTO", ID_ODONTO);
 
-                                jsonArray.put(rowJSON);
+                                    jsonArray.put(rowJSON);
+                                }
+
+                                JSONObject jsonObject = new JSONObject();
+                                jsonObject.put("TRATAMIENTOS", jsonArray);
+
+                                QuerysFichas querysFichas = new QuerysFichas(getContext());
+                                querysFichas.actualizarTratamientos(ID_ODONTO, jsonObject, new QuerysFichas.VolleyOnEventListener() {
+                                    @Override
+                                    public void onSuccess(Object object) {
+                                        progressDialog.dismiss();
+
+                                        Alerter.create(getActivity())
+                                                .setTitle("Tratamientos")
+                                                .setText("Actualizados correctamente")
+                                                .setIcon(R.drawable.logonuevo)
+                                                .setTextTypeface(face)
+                                                .enableSwipeToDismiss()
+                                                .setBackgroundColorRes(R.color.FondoSecundario)
+                                                .show();
+
+                                        MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
+                                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+                                                .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                                        transaction.replace(R.id.contenedor, menuFichaNormal);
+                                        transaction.commit();
+                                    }
+
+                                    @Override
+                                    public void onSuccessBitmap(Bitmap object) {
+
+                                    }
+
+                                    @Override
+                                    public void onFailure(Exception e) {
+                                        progressDialog.dismiss();
+
+                                        Alerter.create(getActivity())
+                                                .setTitle("Error")
+                                                .setText("Fallo al actualizar los tratamientos")
+                                                .setIcon(R.drawable.logonuevo)
+                                                .setTextTypeface(face)
+                                                .enableSwipeToDismiss()
+                                                .setBackgroundColorRes(R.color.AzulOscuro)
+                                                .show();
+                                    }
+                                });
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-
-                            JSONObject jsonObject = new JSONObject();
-                            jsonObject.put("TRATAMIENTOS", jsonArray);
-
-                            QuerysFichas querysFichas = new QuerysFichas(getContext());
-                            querysFichas.actualizarTratamientos(ID_ODONTO, jsonObject, new QuerysFichas.VolleyOnEventListener() {
-                                @Override
-                                public void onSuccess(Object object) {
-                                    progressDialog.dismiss();
-
-                                    Alerter.create(getActivity())
-                                            .setTitle("Tratamientos")
-                                            .setText("Actualizados correctamente")
-                                            .setIcon(R.drawable.logonuevo)
-                                            .setTextTypeface(face)
-                                            .enableSwipeToDismiss()
-                                            .setBackgroundColorRes(R.color.FondoSecundario)
-                                            .show();
-
-                                    MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
-                                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
-                                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                                    transaction.replace(R.id.contenedor, menuFichaNormal);
-                                    transaction.commit();
-                                }
-
-                                @Override
-                                public void onSuccessBitmap(Bitmap object) {
-
-                                }
-
-                                @Override
-                                public void onFailure(Exception e) {
-                                    progressDialog.dismiss();
-
-                                    Alerter.create(getActivity())
-                                            .setTitle("Error")
-                                            .setText("Fallo al actualizar los tratamientos")
-                                            .setIcon(R.drawable.logonuevo)
-                                            .setTextTypeface(face)
-                                            .enableSwipeToDismiss()
-                                            .setBackgroundColorRes(R.color.AzulOscuro)
-                                            .show();
-                                }
-                            });
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        } else {
+                            Alerter.create(getActivity())
+                                    .setTitle("Error")
+                                    .setText("El total de tratamientos debe ser mayor a los pagos")
+                                    .setIcon(R.drawable.logonuevo)
+                                    .setTextTypeface(face)
+                                    .enableSwipeToDismiss()
+                                    .setBackgroundColorRes(R.color.AzulOscuro)
+                                    .show();
                         }
                     }
                 } else {
@@ -614,6 +627,10 @@ public class HistorialOdonDos extends Fragment {
 
         obtenerPiezas();
         obtenerServicios();
+
+        if (MODO_EDICION) {
+            cargarTotalPagos();
+        }
 
         return view;
     }
@@ -849,6 +866,36 @@ public class HistorialOdonDos extends Fragment {
             public void onFailure(Exception e) {
                 progressDialog.dismiss();
                 obtenerServicios();
+            }
+        });
+    }
+
+    private void cargarTotalPagos() {
+        TOTAL_PAGOS = 0;
+
+        QuerysFichas querysFichas = new QuerysFichas(getContext());
+        querysFichas.obtenerPagos(ID_FICHA, new QuerysFichas.VolleyOnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                try {
+                    JSONArray jsonArray = new JSONArray(object.toString());
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        TOTAL_PAGOS += jsonArray.getJSONObject(i).getDouble("PAGO");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                total_pagos.setText(String.format("%.2f", TOTAL_PAGOS));
+            }
+
+            @Override
+            public void onSuccessBitmap(Bitmap object) {
+
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
             }
         });
     }

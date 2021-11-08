@@ -41,8 +41,8 @@
                 android:id="@+id/layoutTotalPagos"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/tituloPagos"
@@ -254,9 +254,9 @@
                 <TextView
                     android:id="@+id/tota_costo"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="0.4"
-                    android:gravity="center_horizontal|center_vertical"
+                    android:gravity="center"
                     android:paddingTop="2dp"
                     android:paddingBottom="2dp"
                     android:text="00.00"

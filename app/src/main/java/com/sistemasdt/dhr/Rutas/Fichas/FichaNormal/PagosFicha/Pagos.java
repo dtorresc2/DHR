@@ -18,6 +18,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelStoreOwner;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -30,6 +31,7 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -89,6 +91,8 @@ public class Pagos extends Fragment {
 
     private boolean MODO_EDICION = false;
     private int ID_FICHA = 0;
+    private int ID_ODONTO = 0;
+    private double TOTAL_GASTOS = 0;
 
     public Pagos() {
         MODO_EDICION = false;
@@ -448,7 +452,7 @@ public class Pagos extends Fragment {
         });
 
         cargarPagos();
-//        cargarTotalTratamientos();
+        cargarTotalTratamientos();
         return view;
     }
 
@@ -533,7 +537,6 @@ public class Pagos extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
                 }
 
                 @Override
@@ -551,24 +554,77 @@ public class Pagos extends Fragment {
     }
 
     private void cargarTotalTratamientos() {
-        ArrayList<String> listaTratramientos;
         totalTratamientos = 0;
+        if (!MODO_EDICION) {
+            ArrayList<String> listaTratramientos;
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("HOD2", Context.MODE_PRIVATE);
-        Set<String> set = sharedPreferences.getStringSet("listaTratamientos", null);
+            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("HOD2", Context.MODE_PRIVATE);
+            Set<String> set = sharedPreferences.getStringSet("listaTratamientos", null);
 
-        if (set == null) {
-            listaTratramientos = new ArrayList<>();
+            if (set == null) {
+                listaTratramientos = new ArrayList<>();
+            } else {
+                listaTratramientos = new ArrayList<>(set);
+            }
+
+            for (String item : listaTratramientos) {
+                String cadenaAuxiliar[] = item.split(";");
+                totalTratamientos += Double.parseDouble(cadenaAuxiliar[3]);
+            }
         } else {
-            listaTratramientos = new ArrayList<>(set);
+            QuerysFichas querysTratamientos = new QuerysFichas(getContext());
+            querysTratamientos.obtenerHistorialOdontodologico(ID_FICHA, new QuerysFichas.VolleyOnEventListener() {
+                @Override
+                public void onSuccess(Object object) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(object.toString());
+                        ID_ODONTO = jsonObject.getInt("ID_HISTORIAL_ODONTO");
+
+                        QuerysFichas querysFichas1 = new QuerysFichas(getContext());
+                        querysFichas1.obtenerTratamientos(ID_ODONTO, new QuerysFichas.VolleyOnEventListener() {
+                            @Override
+                            public void onSuccess(Object object2) {
+                                try {
+                                    JSONArray jsonArray = new JSONArray(object2.toString());
+
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        totalTratamientos += jsonArray.getJSONObject(i).getDouble("COSTO");
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                totalGastos.setText(String.format("%.2f", totalTratamientos));
+                            }
+
+                            @Override
+                            public void onSuccessBitmap(Bitmap object) {
+
+                            }
+
+                            @Override
+                            public void onFailure(Exception e) {
+                                totalGastos.setText(String.format("%.2f", totalTratamientos));
+                            }
+                        });
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                @Override
+                public void onSuccessBitmap(Bitmap object) {
+
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+
+                }
+            });
         }
 
-        for (String item : listaTratramientos) {
-            String cadenaAuxiliar[] = item.split(";");
-            totalTratamientos += Double.parseDouble(cadenaAuxiliar[3]);
-        }
-
-        totalGastos.setText(String.format("%.2f", totalTratamientos));
     }
 
     private ArrayList<String[]> getClients() {

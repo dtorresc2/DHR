@@ -189,26 +189,6 @@
                 android:textColor="@color/Blanco"
                 android:textSize="18sp" />
 
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
-
-                <HorizontalScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fillViewport="true">
-
-                    <TableLayout
-                        android:id="@+id/tablaPagos"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center">
-
-                    </TableLayout>
-                </HorizontalScrollView>
-            </ScrollView>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -241,6 +221,28 @@
                     android:textSize="18sp"
                     android:textStyle="bold" />
             </LinearLayout>
+
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fillViewport="true">
+
+                    <TableLayout
+                        android:id="@+id/tablaPagos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center">
+
+                    </TableLayout>
+                </HorizontalScrollView>
+            </ScrollView>
+
         </LinearLayout>
     </ScrollView>
 </FrameLayout>
