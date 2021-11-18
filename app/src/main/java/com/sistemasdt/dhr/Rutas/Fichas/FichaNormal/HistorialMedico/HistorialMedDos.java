@@ -174,11 +174,6 @@ public class HistorialMedDos extends Fragment {
                             }
 
                             @Override
-                            public void onSuccessBitmap(Bitmap object) {
-
-                            }
-
-                            @Override
                             public void onFailure(Exception e) {
                                 progressDialog.dismiss();
 
@@ -256,11 +251,6 @@ public class HistorialMedDos extends Fragment {
                             }
 
                             @Override
-                            public void onSuccessBitmap(Bitmap object) {
-
-                            }
-
-                            @Override
                             public void onFailure(Exception e) {
                                 progressDialog.dismiss();
                                 obtenerDatos();
@@ -269,11 +259,6 @@ public class HistorialMedDos extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                }
-
-                @Override
-                public void onSuccessBitmap(Bitmap object) {
-
                 }
 
                 @Override

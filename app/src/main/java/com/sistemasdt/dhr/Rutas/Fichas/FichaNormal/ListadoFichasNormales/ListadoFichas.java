@@ -216,11 +216,6 @@ public class ListadoFichas extends Fragment {
             }
 
             @Override
-            public void onSuccessBitmap(Bitmap object) {
-
-            }
-
-            @Override
             public void onFailure(Exception e) {
                 progressDialog.dismiss();
                 obtenerFichas();

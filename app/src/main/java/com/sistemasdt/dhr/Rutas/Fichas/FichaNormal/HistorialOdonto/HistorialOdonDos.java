@@ -579,11 +579,6 @@ public class HistorialOdonDos extends Fragment {
                                     }
 
                                     @Override
-                                    public void onSuccessBitmap(Bitmap object) {
-
-                                    }
-
-                                    @Override
                                     public void onFailure(Exception e) {
                                         progressDialog.dismiss();
 
@@ -747,11 +742,6 @@ public class HistorialOdonDos extends Fragment {
                             }
 
                             @Override
-                            public void onSuccessBitmap(Bitmap object) {
-
-                            }
-
-                            @Override
                             public void onFailure(Exception e) {
                                 progressDialog.dismiss();
                                 cargarTratamientos();
@@ -761,11 +751,6 @@ public class HistorialOdonDos extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                }
-
-                @Override
-                public void onSuccessBitmap(Bitmap object) {
-
                 }
 
                 @Override
@@ -886,11 +871,6 @@ public class HistorialOdonDos extends Fragment {
                     e.printStackTrace();
                 }
                 total_pagos.setText(String.format("%.2f", TOTAL_PAGOS));
-            }
-
-            @Override
-            public void onSuccessBitmap(Bitmap object) {
-
             }
 
             @Override

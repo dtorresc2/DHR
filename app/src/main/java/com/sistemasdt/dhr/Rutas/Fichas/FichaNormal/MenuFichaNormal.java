@@ -126,6 +126,7 @@ public class MenuFichaNormal extends Fragment {
 
                         case 7:
                             HistorialFotografico historialFotografico = new HistorialFotografico();
+                            historialFotografico.activarModoEdicion(sharedPreferences.getInt("ID_FICHA", 0));
                             FragmentTransaction transaction5 = getActivity().getSupportFragmentManager().beginTransaction()
                                     .setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
                             transaction5.replace(R.id.contenedor, historialFotografico);

@@ -366,11 +366,6 @@ public class Ficha extends Fragment {
                             }
 
                             @Override
-                            public void onSuccessBitmap(Bitmap object) {
-
-                            }
-
-                            @Override
                             public void onFailure(Exception e) {
                                 progressDialog.dismiss();
 
@@ -488,11 +483,6 @@ public class Ficha extends Fragment {
                         Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
                         e.printStackTrace();
                     }
-                }
-
-                @Override
-                public void onSuccessBitmap(Bitmap object) {
-
                 }
 
                 @Override

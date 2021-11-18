@@ -31,28 +31,7 @@ public class QuerysFichas {
     public interface VolleyOnEventListener<T> {
         void onSuccess(T object);
 
-        void onSuccessBitmap(Bitmap object);
-
         void onFailure(Exception e);
-    }
-
-    public void obtenerFotosFicha(String URL, QuerysFichas.VolleyOnEventListener callback) {
-        mCallBack = callback;
-
-        ImageRequest imageRequest = new ImageRequest(URL, new Response.Listener<Bitmap>() {
-            @Override
-            public void onResponse(Bitmap response) {
-                mCallBack.onSuccessBitmap(response);
-            }
-        }, 0, 0, ImageView.ScaleType.CENTER, null, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                mCallBack.onFailure(error);
-            }
-        });
-
-        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
-        requestQueue.add(imageRequest);
     }
 
     public void registrarFicha(final JSONObject jsonBody, QuerysFichas.VolleyOnEventListener callback) {
@@ -442,6 +421,66 @@ public class QuerysFichas {
         mCallBack = callback;
 
         StringRequest stringRequest = new StringRequest(Request.Method.PUT, mContext.getResources().getString(R.string.API) + "pagos/" + id, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                mCallBack.onSuccess(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mCallBack.onFailure(error);
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    final String mRequestBody = jsonBody.toString();
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        requestQueue.add(stringRequest);
+    }
+
+    // =============== HISTORIAL FOTOGRAFICO =================
+    public void obtenerHistorialFotografico(int id, QuerysFichas.VolleyOnEventListener callback) {
+        mCallBack = callback;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, mContext.getResources().getString(R.string.API) + "fotos/" + id, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                mCallBack.onSuccess(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mCallBack.onFailure(error);
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        requestQueue.add(stringRequest);
+    }
+
+    public void actualizarHistorialFotografico(int id, final JSONObject jsonBody, QuerysFichas.VolleyOnEventListener callback) {
+        mCallBack = callback;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.PUT, mContext.getResources().getString(R.string.API) + "fotos/" + id, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 mCallBack.onSuccess(response);

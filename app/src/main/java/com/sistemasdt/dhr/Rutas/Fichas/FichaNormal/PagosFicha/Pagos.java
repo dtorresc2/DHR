@@ -415,11 +415,6 @@ public class Pagos extends Fragment {
                                 }
 
                                 @Override
-                                public void onSuccessBitmap(Bitmap object) {
-
-                                }
-
-                                @Override
                                 public void onFailure(Exception e) {
                                     progressDialog.dismiss();
 
@@ -540,11 +535,6 @@ public class Pagos extends Fragment {
                 }
 
                 @Override
-                public void onSuccessBitmap(Bitmap object) {
-
-                }
-
-                @Override
                 public void onFailure(Exception e) {
                     progressDialog.dismiss();
                     cargarPagos();
@@ -597,11 +587,6 @@ public class Pagos extends Fragment {
                             }
 
                             @Override
-                            public void onSuccessBitmap(Bitmap object) {
-
-                            }
-
-                            @Override
                             public void onFailure(Exception e) {
                                 totalGastos.setText(String.format("%.2f", totalTratamientos));
                             }
@@ -610,11 +595,6 @@ public class Pagos extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
-                }
-
-                @Override
-                public void onSuccessBitmap(Bitmap object) {
 
                 }
 

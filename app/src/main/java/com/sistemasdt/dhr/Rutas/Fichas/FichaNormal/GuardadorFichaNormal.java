@@ -356,11 +356,6 @@ public class GuardadorFichaNormal extends Fragment {
                 }
 
                 @Override
-                public void onSuccessBitmap(Bitmap object) {
-
-                }
-
-                @Override
                 public void onFailure(Exception e) {
                     progressDialog.dismiss();
                     Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
