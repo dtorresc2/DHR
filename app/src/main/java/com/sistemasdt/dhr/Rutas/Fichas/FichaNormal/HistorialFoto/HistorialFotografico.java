@@ -635,7 +635,7 @@ public class HistorialFotografico extends Fragment {
                             Picasso.with(getContext()).load(URL_FOTO).resize(250, 250).into(new Target() {
                                 @Override
                                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                                    lista_fotos.set(index, new ItemFoto(null, URL_FOTO, false));
+                                    lista_fotos.set(index, new ItemFoto(bitmap, URL_FOTO, false));
                                 }
 
                                 @Override
