@@ -18,7 +18,7 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="35dp"
+        android:layout_marginBottom="65dp"
         android:clickable="true"
         android:elevation="10dp"
         android:focusable="true"
@@ -70,6 +70,8 @@
                     android:id="@+id/obtenerFecha"
                     android:layout_width="wrap_content"
                     android:layout_height="35dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
                     android:layout_weight="0.33"
                     android:background="@color/AzulOscuro"
                     android:src="@drawable/icono_citas" />
@@ -78,6 +80,8 @@
                     android:id="@+id/fecha"
                     android:layout_width="wrap_content"
                     android:layout_height="35dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
                     android:layout_weight="1.67"
                     android:gravity="center_horizontal|center_vertical"
                     android:text="21/07/2016"
@@ -98,6 +102,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="35dp"
                     android:layout_weight="0.3"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
                     android:background="@color/AzulOscuro"
                     android:src="@drawable/ic_reloj" />
 
@@ -107,8 +113,9 @@
                     android:layout_height="35dp"
                     android:layout_weight="1.7"
                     android:gravity="center_horizontal|center_vertical"
-
                     android:text="12:00 PM"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
                     android:textColor="@color/Blanco"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -118,6 +125,7 @@
                 android:id="@+id/layoutDescripcionCita"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
                 app:counterEnabled="true"
                 app:counterMaxLength="100"
                 app:errorEnabled="true">

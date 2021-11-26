@@ -11,8 +11,10 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
@@ -40,6 +42,7 @@ import com.android.volley.toolbox.Volley;
 import com.sistemasdt.dhr.Rutas.Citas.Adaptador.AdaptadorCita;
 import com.sistemasdt.dhr.R;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.Ficha;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysCitas;
 import com.tapadoo.alerter.Alerter;
 
@@ -99,28 +102,60 @@ public class ListadoCitas extends Fragment {
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                return false;
+                switch (item.getItemId()) {
+                    case R.id.opcion_nuevo:
+                        Citas citas = new Citas();
+                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                        transaction.replace(R.id.contenedor, citas);
+                        transaction.commit();
+                        return true;
+
+                    case R.id.opcion_filtrar:
+                        MenuItem searchItem = item;
+                        SearchView searchView = (SearchView) searchItem.getActionView();
+
+                        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                            @Override
+                            public boolean onQueryTextSubmit(String query) {
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onQueryTextChange(String newText) {
+                                adapter.getFilter().filter(newText);
+                                return false;
+                            }
+                        });
+                        return true;
+
+                    case R.id.opcion_actualizar:
+                        obtenerCitas();
+                        return true;
+
+                    default:
+                        return false;
+                }
             }
         });
 
         lista_pacientes = view.findViewById(R.id.listaCitas);
 
-        agregar = view.findViewById(R.id.crearCita);
-        agregar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+//        agregar = view.findViewById(R.id.crearCita);
+//        agregar.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
 //                AgregarCita agregarCita = new AgregarCita();
 //                AgregarCita.display(getActivity().getSupportFragmentManager());
-            }
-        });
-
-        buscar = view.findViewById(R.id.consultarCita);
-        buscar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+//            }
+//        });
+//
+//        buscar = view.findViewById(R.id.consultarCita);
+//        buscar.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
 
         obtenerCitas();
 
@@ -208,8 +243,8 @@ public class ListadoCitas extends Fragment {
                             lista.add(new ItemCita(
                                     jsonArray.getJSONObject(i).getString("ID_CITA"),
                                     jsonArray.getJSONObject(i).getString("FECHA"),
-                                    jsonArray.getJSONObject(i).getString("DESCRIPCION"),
                                     jsonArray.getJSONObject(i).getString("NOMBRE_PACIENTE"),
+                                    jsonArray.getJSONObject(i).getString("DESCRIPCION"),
                                     (jsonArray.getJSONObject(i).getInt("REALIZADO") > 0) ? true : false
                             ));
                         }

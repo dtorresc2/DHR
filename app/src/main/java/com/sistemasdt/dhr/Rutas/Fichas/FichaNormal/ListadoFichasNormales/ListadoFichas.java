@@ -134,24 +134,6 @@ public class ListadoFichas extends Fragment {
         listafichas.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
 
-//        lista.add(new ItemsFichas(
-//                1, "DSF", "ASD", "23/02/2021", 20.32, 12.23, 32.40, true
-//        ));
-//
-//        adapter = new AdaptadorConsultaFicha(lista);
-//        listafichas.setLayoutManager(layoutManager);
-//        listafichas.setAdapter(adapter);
-
-//        Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-//        Alerter.create(getActivity())
-//                .setTitle("Error")
-//                .setText("Fallo en Conexion a Internet")
-//                .setIcon(R.drawable.logonuevo)
-//                .setTextTypeface(face2)
-//                .enableSwipeToDismiss()
-//                .setBackgroundColorRes(R.color.AzulOscuro)
-//                .show();
-
         obtenerFichas();
         return view;
     }

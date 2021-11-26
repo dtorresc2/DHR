@@ -11,12 +11,15 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -75,7 +78,7 @@ public class AgregarCita extends DialogFragment {
     private String ampm;
     private String id;
 
-    public AgregarCita(){
+    public AgregarCita() {
 
     }
 
@@ -126,7 +129,7 @@ public class AgregarCita extends DialogFragment {
             public boolean onMenuItemClick(MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.action_aceptar:
-                        if (!paciente.getText().toString().isEmpty() && !descripcion.getText().toString().isEmpty()){
+                        if (!paciente.getText().toString().isEmpty() && !descripcion.getText().toString().isEmpty()) {
                             final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
                             progressDialog.setMessage("Cargando...");
                             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -147,8 +150,7 @@ public class AgregarCita extends DialogFragment {
 
                             if (networkInfo != null && networkInfo.isConnected()) {
                                 insertarCitas("http://dhr.sistemasdt.xyz/Citas/agregarCita.php?estado=1");
-                            }
-                            else{
+                            } else {
                                 final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
                                 Alerter.create(getActivity())
                                         .setTitle("Error")
@@ -159,8 +161,7 @@ public class AgregarCita extends DialogFragment {
                                         .setBackgroundColorRes(R.color.AzulOscuro)
                                         .show();
                             }
-                        }
-                        else {
+                        } else {
                             Alerter.create(getActivity())
                                     .setTitle("Hay Campos Vacios")
                                     .setIcon(R.drawable.logonuevo)
@@ -183,19 +184,18 @@ public class AgregarCita extends DialogFragment {
         hora = view.findViewById(R.id.hora);
         hora.setTypeface(face);
 
-        if (meridiano == 0){
+        if (meridiano == 0) {
             ampm = " AM";
-        }
-        else {
+        } else {
             ampm = " PM";
         }
 
         mes++;
-        String mesFormateado = (mes < 10)? "0" + mes :String.valueOf(mes);
-        String minutoFormateado = (minutos < 10)? "0" + minutos :String.valueOf(minutos);
+        String mesFormateado = (mes < 10) ? "0" + mes : String.valueOf(mes);
+        String minutoFormateado = (minutos < 10) ? "0" + minutos : String.valueOf(minutos);
 
         fecha.setText(dia + "/" + mesFormateado + "/" + anio);
-        hora.setText(horas + ":" + minutoFormateado + ampm );
+        hora.setText(horas + ":" + minutoFormateado + ampm);
 
         pnombre = view.findViewById(R.id.pnom_bus);
         pnombre.setTypeface(face);
@@ -234,8 +234,7 @@ public class AgregarCita extends DialogFragment {
 
                     if (networkInfo != null && networkInfo.isConnected()) {
                         obtenerPacientes("http://dhr.sistemasdt.xyz/Normal/consultaficha.php?estado=8");
-                    }
-                    else{
+                    } else {
                         final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
                         Alerter.create(getActivity())
                                 .setTitle("Error")
@@ -246,8 +245,7 @@ public class AgregarCita extends DialogFragment {
                                 .setBackgroundColorRes(R.color.AzulOscuro)
                                 .show();
                     }
-                }
-                else {
+                } else {
                     Alerter.create(getActivity())
                             .setTitle("Hay Campos Vacios")
                             .setIcon(R.drawable.logonuevo)
@@ -278,7 +276,7 @@ public class AgregarCita extends DialogFragment {
         return view;
     }
 
-    private void obtenerHora(){
+    private void obtenerHora() {
         TimePickerDialog recogerHora = new TimePickerDialog(getContext(),
                 android.R.style.Theme_Holo_Dialog,
                 new TimePickerDialog.OnTimeSetListener() {
@@ -287,10 +285,10 @@ public class AgregarCita extends DialogFragment {
                         //Formateo el hora obtenido: antepone el 0 si son menores de 10
                         //String horaFormateada =  (hourOfDay < 10)? "0" + hourOfDay : String.valueOf(hourOfDay);
                         //Formateo el minuto obtenido: antepone el 0 si son menores de 10
-                        String minutoFormateado = (minute < 10)? "0" + minute :String.valueOf(minute);
+                        String minutoFormateado = (minute < 10) ? "0" + minute : String.valueOf(minute);
                         //Obtengo el valor a.m. o p.m., dependiendo de la selección del usuario
                         String AM_PM;
-                        if(hourOfDay < 12) {
+                        if (hourOfDay < 12) {
                             AM_PM = "AM";
                         } else {
                             AM_PM = "PM";
@@ -307,7 +305,7 @@ public class AgregarCita extends DialogFragment {
         recogerHora.show();
     }
 
-    private void obtenerFecha(){
+    private void obtenerFecha() {
         DatePickerDialog recogerFecha = new DatePickerDialog(getContext(),
                 android.R.style.Theme_Holo_Dialog,
                 new DatePickerDialog.OnDateSetListener() {
@@ -316,9 +314,9 @@ public class AgregarCita extends DialogFragment {
                         //Esta variable lo que realiza es aumentar en uno el mes ya que comienza desde 0 = enero
                         final int mesActual = month + 1;
                         //Formateo el día obtenido: antepone el 0 si son menores de 10
-                        String diaFormateado = (dayOfMonth < 10)? "0" + dayOfMonth :String.valueOf(dayOfMonth);
+                        String diaFormateado = (dayOfMonth < 10) ? "0" + dayOfMonth : String.valueOf(dayOfMonth);
                         //Formateo el mes obtenido: antepone el 0 si son menores de 10
-                        String mesFormateado = (mesActual < 10)? "0" + mesActual :String.valueOf(mesActual);
+                        String mesFormateado = (mesActual < 10) ? "0" + mesActual : String.valueOf(mesActual);
                         //Muestro la fecha con el formato deseado
                         fecha.setText(diaFormateado + "/" + mesFormateado + "/" + year);
                     }
@@ -326,7 +324,7 @@ public class AgregarCita extends DialogFragment {
                     /**
                      *También puede cargar los valores que usted desee
                      */
-                },anio, mes, dia);
+                }, anio, mes, dia);
         //Muestro el widget
         recogerFecha.show();
     }
@@ -407,8 +405,7 @@ public class AgregarCita extends DialogFragment {
 
                     if (networkInfo != null && networkInfo.isConnected()) {
                         consultarPaciente("http://dhr.sistemasdt.xyz/Normal/consultaficha.php?estado=1");
-                    }
-                    else{
+                    } else {
                         final Typeface face3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
                         Alerter.create(getActivity())
                                 .setTitle("Error")
