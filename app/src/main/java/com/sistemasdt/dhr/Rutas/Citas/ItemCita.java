@@ -2,27 +2,17 @@ package com.sistemasdt.dhr.Rutas.Citas;
 
 public class ItemCita {
     private String midCitas;
-    private String mhora;
     private String mfecha;
     private String mnombre;
     private String mdescripcion;
-    private String mrealizado;
+    private boolean mrealizado;
 
-    public ItemCita(String idCitas, String hora, String fecha, String nombre, String descripcion, String realizado) {
-        setMhora(hora);
+    public ItemCita(String id, String fecha, String nombre, String descripcion, boolean realizado) {
         setMfecha(fecha);
         setMnombre(nombre);
         setMdescripcion(descripcion);
         setMrealizado(realizado);
-        setMidCitas(idCitas);
-    }
-
-    public String getMhora() {
-        return mhora;
-    }
-
-    public void setMhora(String mhora) {
-        this.mhora = mhora;
+        setMidCitas(id);
     }
 
     public String getMfecha() {
@@ -49,11 +39,11 @@ public class ItemCita {
         this.mdescripcion = mdescripcion;
     }
 
-    public String getMrealizado() {
+    public boolean getMrealizado() {
         return mrealizado;
     }
 
-    public void setMrealizado(String mrealizado) {
+    public void setMrealizado(boolean mrealizado) {
         this.mrealizado = mrealizado;
     }
 

@@ -20,6 +20,8 @@ public class AdaptadorCita extends RecyclerView.Adapter<AdaptadorCita.ViewHolder
     private ArrayList<ItemCita> mLista;
     private int lastPosition = -1;
     private AdaptadorCita.OnItemClickListener mlistener;
+    private ViewGroup mViewGroup;
+
 
     public interface OnItemClickListener{
         void onItemClick(int position);
@@ -30,16 +32,14 @@ public class AdaptadorCita extends RecyclerView.Adapter<AdaptadorCita.ViewHolder
     }
 
     public static class ViewHolderCita extends RecyclerView.ViewHolder {
-        public TextView mhora;
         public TextView mfecha;
         public TextView mnombre;
         public TextView mdescripcion;
-        public ImageView mrealizado;
+        public TextView mrealizado;
 
 
         public ViewHolderCita(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
-//            mhora = itemView.findViewById(R.id.horaCita);
             mfecha = itemView.findViewById(R.id.fechaCita);
             mnombre = itemView.findViewById(R.id.nombrePaciente);
             mdescripcion = itemView.findViewById(R.id.descCita);
@@ -66,28 +66,30 @@ public class AdaptadorCita extends RecyclerView.Adapter<AdaptadorCita.ViewHolder
     @NonNull
     @Override
     public AdaptadorCita.ViewHolderCita onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        mViewGroup = viewGroup;
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_citas, viewGroup, false);
         Typeface face = Typeface.createFromAsset(view.getContext().getAssets(), "fonts/bahnschrift.ttf");
         AdaptadorCita.ViewHolderCita viewHolderCita = new AdaptadorCita.ViewHolderCita(view, mlistener);
-        viewHolderCita.mhora.setTypeface(face);
         viewHolderCita.mfecha.setTypeface(face);
         viewHolderCita.mnombre.setTypeface(face);
         viewHolderCita.mdescripcion.setTypeface(face);
+        viewHolderCita.mrealizado.setTypeface(face);
         return viewHolderCita;
     }
 
     @Override
     public void onBindViewHolder(@NonNull AdaptadorCita.ViewHolderCita viewHolderCita, int i) {
         ItemCita itemCita = mLista.get(i);
-        viewHolderCita.mhora.setText(itemCita.getMhora());
         viewHolderCita.mfecha.setText(itemCita.getMfecha());
         viewHolderCita.mnombre.setText(itemCita.getMnombre());
         viewHolderCita.mdescripcion.setText(itemCita.getMdescripcion());
-        if (itemCita.getMrealizado().equals("0")){
-            viewHolderCita.mrealizado.setImageResource(R.drawable.ic_estadocita);
-        }
-        else{
-            viewHolderCita.mrealizado.setImageResource(R.drawable.ic_aceptado);
+
+        if (itemCita.getMrealizado()) {
+            viewHolderCita.mrealizado.setText("Realizado");
+            viewHolderCita.mrealizado.setBackgroundColor(mViewGroup.getContext().getResources().getColor(R.color.VerdeOscuro));
+        } else {
+            viewHolderCita.mrealizado.setText("Pendiente");
+            viewHolderCita.mrealizado.setBackgroundColor(mViewGroup.getContext().getResources().getColor(R.color.RojoOscuro));
         }
         setAnimation(viewHolderCita.itemView, i);
     }

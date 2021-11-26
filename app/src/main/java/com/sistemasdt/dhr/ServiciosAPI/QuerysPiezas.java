@@ -80,7 +80,7 @@ public class QuerysPiezas {
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, mContext.getResources().getString(R.string.API) + "piezas", new Response.Listener<String>() {
             @Override
-            public void onResponse(String response) { ;
+            public void onResponse(String response) {
                 mCallBack.onSuccess(response);
             }
         }, new Response.ErrorListener() {
@@ -115,7 +115,7 @@ public class QuerysPiezas {
 
         StringRequest stringRequest = new StringRequest(Request.Method.PUT, mContext.getResources().getString(R.string.API) + "piezas/" + id, new Response.Listener<String>() {
             @Override
-            public void onResponse(String response) { ;
+            public void onResponse(String response) {
                 mCallBack.onSuccess(response);
             }
         }, new Response.ErrorListener() {
