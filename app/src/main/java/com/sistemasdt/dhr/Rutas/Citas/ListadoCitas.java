@@ -39,6 +39,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.sistemasdt.dhr.Componentes.MenusInferiores.MenuCitas;
+import com.sistemasdt.dhr.Componentes.MenusInferiores.MenuInferior;
 import com.sistemasdt.dhr.Rutas.Citas.Adaptador.AdaptadorCita;
 import com.sistemasdt.dhr.R;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -254,6 +256,16 @@ public class ListadoCitas extends Fragment {
                         lista_pacientes.setLayoutManager(layoutManager);
                         lista_pacientes.setAdapter(adapter);
 
+                        adapter.setOnItemClickListener(position -> {
+                            MenuCitas menuCitas = new MenuCitas();
+                            menuCitas.show(getActivity().getSupportFragmentManager(), "MenuCitas");
+                            menuCitas.recibirTitulo(lista.get(position).getMdescripcion());
+                            menuCitas.eventoClick(opcion -> {
+//                                    estadoFicha = lista.get(position).getEstado();
+                                realizarAccion(opcion, Integer.parseInt(lista.get(position).getMidCitas()), position);
+                            });
+                        });
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -268,6 +280,16 @@ public class ListadoCitas extends Fragment {
             });
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void realizarAccion(int opcion, int ID, final int posicion) {
+        switch (opcion) {
+            case 1:
+                Toast.makeText(getContext(), "Esta editando", Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                break;
         }
     }
 }
