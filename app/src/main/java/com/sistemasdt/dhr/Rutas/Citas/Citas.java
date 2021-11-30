@@ -28,9 +28,11 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
+import com.itextpdf.text.pdf.PRIndirectReference;
 import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.ItemPaciente;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.MenuFichaNormal;
@@ -54,6 +56,7 @@ public class Citas extends Fragment {
     private boolean MODO_EDICION = false;
     private int ID_CITA = 0;
     private int ID_PACIENTE = 0;
+    private int REALIZADO = 0;
 
     private ImageView BtnFecha, BtnHora;
     private TextView fecha, hora, descripcion, paciente;
@@ -64,21 +67,6 @@ public class Citas extends Fragment {
 
     ArrayList<String> listaPacientes;
     ArrayList<ItemPaciente> listaPacientesGeneral;
-
-    //Calendario para obtener fecha & hora
-    public final Calendar calendar = Calendar.getInstance();
-
-    //Variables para obtener la fecha
-//    int mes = c.get(Calendar.MONTH);
-//    final int dia = c.get(Calendar.DAY_OF_MONTH);
-//    final int anio = c.get(Calendar.YEAR);
-//
-//    final int horas = c.get(Calendar.HOUR);
-//    final int minutos = c.get(Calendar.MINUTE);
-//    final int meridiano = c.get(Calendar.AM_PM);
-
-
-    private String ampm;
 
     public Citas() {
         MODO_EDICION = false;
@@ -98,7 +86,11 @@ public class Citas extends Fragment {
 
         //Barra de Titulo
         toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setTitle("Cita Nueva");
+        if (!MODO_EDICION) {
+            toolbar.setTitle("Cita Nueva");
+        } else {
+            toolbar.setTitle("Edicion de Cita");
+        }
         toolbar.setNavigationIcon(R.drawable.ic_atras);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -123,8 +115,17 @@ public class Citas extends Fragment {
 
         guardador = view.findViewById(R.id.guardadorCita);
 
+        tituloFecha = view.findViewById(R.id.tituloFecha);
+        tituloFecha.setTypeface(face);
+
+        tituloHora = view.findViewById(R.id.tituloHora);
+        tituloHora.setTypeface(face);
+
+        tituloPaciente = view.findViewById(R.id.tituloPaciente);
+        tituloPaciente.setTypeface(face);
+
         Calendar c = Calendar.getInstance();
-        SimpleDateFormat formatoHora = new SimpleDateFormat("HH:mm:ss");
+        SimpleDateFormat formatoHora = new SimpleDateFormat("HH:mm");
         SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
 
         fecha.setText(formatoFecha.format(c.getTime()));
@@ -212,20 +213,21 @@ public class Citas extends Fragment {
                         .show();
                 return;
             }
+
             final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
 
-            if (!MODO_EDICION) {
-                final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-                progressDialog.setMessage("Cargando...");
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                progressDialog.setCancelable(false);
-                progressDialog.show();
+            final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+            progressDialog.setMessage("Cargando...");
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
 
-                try {
-                    Date initDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(fecha.getText().toString() + " " + hora.getText().toString());
-                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    String fechaMYSQL = formatter.format(initDate);
+            try {
+                Date initDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(fecha.getText().toString() + " " + hora.getText().toString());
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                String fechaMYSQL = formatter.format(initDate);
 
+                if (!MODO_EDICION) {
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("ID_PACIENTE", ID_PACIENTE);
                     jsonObject.put("FECHA", fechaMYSQL);
@@ -268,10 +270,56 @@ public class Citas extends Fragment {
                                     .show();
                         }
                     });
+                } else {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("ID_PACIENTE", ID_PACIENTE);
+                    jsonObject.put("FECHA", fechaMYSQL);
+                    jsonObject.put("DESCRIPCION", descripcion.getText().toString());
+                    jsonObject.put("ID_USUARIO", preferenciasUsuario.getInt("ID_USUARIO", 0));
+                    jsonObject.put("REALIZADO", REALIZADO);
+                    jsonObject.put("ID_CITA", ID_CITA);
 
-                } catch (ParseException | JSONException e) {
-                    e.printStackTrace();
+                    QuerysCitas querysCitas = new QuerysCitas(getContext());
+                    querysCitas.actualizarCita(jsonObject, new QuerysCitas.VolleyOnEventListener() {
+                        @Override
+                        public void onSuccess(Object object) {
+                            progressDialog.dismiss();
+
+                            Alerter.create(getActivity())
+                                    .setTitle("Citas")
+                                    .setText("Cita actualizada correctamente")
+                                    .setIcon(R.drawable.logonuevo)
+                                    .setTextTypeface(face)
+                                    .enableSwipeToDismiss()
+                                    .setBackgroundColorRes(R.color.FondoSecundario)
+                                    .show();
+
+                            ListadoCitas listadoCitas = new ListadoCitas();
+                            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                            transaction.replace(R.id.contenedor, listadoCitas);
+                            transaction.commit();
+                        }
+
+                        @Override
+                        public void onFailure(Exception e) {
+                            progressDialog.dismiss();
+
+                            Alerter.create(getActivity())
+                                    .setTitle("Error")
+                                    .setText("Fallo al actualizar la cita")
+                                    .setIcon(R.drawable.logonuevo)
+                                    .setTextTypeface(face)
+                                    .enableSwipeToDismiss()
+                                    .setBackgroundColorRes(R.color.AzulOscuro)
+                                    .show();
+                        }
+                    });
+
                 }
+
+            } catch (ParseException | JSONException e) {
+                progressDialog.dismiss();
+                Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -281,7 +329,7 @@ public class Citas extends Fragment {
     private void obtenerHora() {
         Calendar calendar = Calendar.getInstance();
         TimePickerDialog recogerHora = new TimePickerDialog(getContext(),
-                android.R.style.Theme_Holo_Dialog,
+//                android.R.style.Theme_Holo_Dialog,
                 (view, hourOfDay, minute) -> {
                     String minutoFormateado = (minute < 10) ? "0" + minute : String.valueOf(minute);
                     hora.setText(hourOfDay + ":" + minutoFormateado);
@@ -293,7 +341,7 @@ public class Citas extends Fragment {
     private void obtenerFecha() {
         Calendar calendar = Calendar.getInstance();
         DatePickerDialog recogerFecha = new DatePickerDialog(getContext(),
-                android.R.style.Theme_Holo_Dialog,
+//                android.R.style.Theme_Holo_Dialog,
                 (view, year, month, dayOfMonth) -> {
                     final int mesActual = month + 1;
                     String diaFormateado = (dayOfMonth < 10) ? "0" + dayOfMonth : String.valueOf(dayOfMonth);
@@ -343,7 +391,7 @@ public class Citas extends Fragment {
                         }
                     }
 
-//                    cargarDatos();
+                    cargarDatos();
 
                 } catch (JSONException e) {
                     e.fillInStackTrace();
@@ -357,6 +405,60 @@ public class Citas extends Fragment {
                 obtenerPacientes();
             }
         });
+    }
+
+    private void cargarDatos() {
+        if (MODO_EDICION) {
+            try {
+                final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("ID_USUARIO", preferenciasUsuario.getInt("ID_USUARIO", 0));
+                jsonObject.put("ID_CITA", ID_CITA);
+
+                QuerysCitas querysCitas = new QuerysCitas(getContext());
+                querysCitas.obtenerListadoCitas(jsonObject, new QuerysCitas.VolleyOnEventListener() {
+                    @Override
+                    public void onSuccess(Object object) {
+                        try {
+                            JSONArray jsonArray = new JSONArray(object.toString());
+
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                ID_PACIENTE = jsonArray.getJSONObject(i).getInt("ID_PACIENTE");
+                                descripcion.setText(jsonArray.getJSONObject(i).getString("DESCRIPCION"));
+                                REALIZADO = jsonArray.getJSONObject(i).getInt("REALIZADO");
+
+                                Date initDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(jsonArray.getJSONObject(i).getString("FECHA"));
+                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                                SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("HH:mm:ss");
+                                String fechaFormateada = simpleDateFormat.format(initDate);
+                                String horaFormateada = simpleDateFormat1.format(initDate);
+
+                                fecha.setText(fechaFormateada);
+                                hora.setText(horaFormateada);
+
+                                for (ItemPaciente item : listaPacientesGeneral) {
+                                    if (item.getCodigo() == ID_PACIENTE) {
+                                        paciente.setText(listaPacientesGeneral.get(listaPacientesGeneral.indexOf(item)).getNombre());
+                                    }
+                                }
+                            }
+
+                        } catch (JSONException | ParseException e) {
+//                        e.printStackTrace();
+                            Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+
+                    }
+                });
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     // VALIDACIONES

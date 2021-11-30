@@ -59,7 +59,7 @@ public class ListadoServicios extends Fragment {
             @Override
             public void onClick(View view) {
                 Catalogos catalogos = new Catalogos();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
                 transaction.replace(R.id.contenedor, catalogos);
                 transaction.commit();
             }
@@ -71,7 +71,7 @@ public class ListadoServicios extends Fragment {
                 switch (menuItem.getItemId()) {
                     case R.id.opcion_nuevo:
                         Servicios servicios = new Servicios();
-                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
                         transaction.replace(R.id.contenedor, servicios);
                         transaction.commit();
                         return true;
@@ -124,7 +124,7 @@ public class ListadoServicios extends Fragment {
             case 1:
                 Servicios servicios = new Servicios();
                 servicios.editarServicio(ID);
-                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
                 transaction.replace(R.id.contenedor, servicios);
                 transaction.commit();
                 break;
@@ -133,16 +133,12 @@ public class ListadoServicios extends Fragment {
                 builder.setIcon(R.drawable.logonuevo);
                 builder.setTitle("Listado de Servicios");
                 builder.setMessage("¿Desea deshabilitar el servicio?");
-                builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                        actualizarEstado(ID);
-                    }
+                builder.setPositiveButton("ACEPTAR", (dialog, id) -> {
+                    // User cancelled the dialog
+                    actualizarEstado(ID);
                 });
-                builder.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                    }
+                builder.setNegativeButton("CANCELAR", (dialog, id) -> {
+                    // User cancelled the dialog
                 });
 
                 AlertDialog dialog = builder.create();
@@ -190,7 +186,7 @@ public class ListadoServicios extends Fragment {
                         @Override
                         public void onItemClick(final int position) {
                             MenuInferior menuInferior = new MenuInferior();
-                            menuInferior.show(getFragmentManager(), "MenuInferior");
+                            menuInferior.show(getActivity().getSupportFragmentManager(), "MenuInferior");
                             menuInferior.recibirTitulo(listaServicios.get(position).getDescripcionServicio());
                             menuInferior.eventoClick(new MenuInferior.MenuInferiorListener() {
                                 @Override
