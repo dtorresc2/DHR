@@ -12,7 +12,7 @@
         layout="@layout/toolbar" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/consultador"
+        android:id="@+id/guardadorCita"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
@@ -59,10 +59,19 @@
                 android:text="Seleccione paciente"
                 android:textColor="@color/Blanco" />
 
+            <TextView
+                android:id="@+id/tituloFecha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Fecha"
+                android:textColor="@color/Blanco"
+                android:layout_marginTop="10dp"
+                android:textSize="14dp"
+                android:textStyle="bold" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
                 android:orientation="horizontal"
                 android:weightSum="2">
 
@@ -86,14 +95,23 @@
                     android:gravity="center_horizontal|center_vertical"
                     android:text="21/07/2016"
                     android:textColor="@color/Blanco"
-                    android:textSize="20sp"
+                    android:textSize="22sp"
                     android:textStyle="bold" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/tituloHora"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Hora"
+                android:textColor="@color/Blanco"
+                android:layout_marginTop="10dp"
+                android:textSize="14dp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
                 android:orientation="horizontal"
                 android:weightSum="2">
 
@@ -117,7 +135,7 @@
                     android:paddingTop="2dp"
                     android:paddingBottom="2dp"
                     android:textColor="@color/Blanco"
-                    android:textSize="20sp"
+                    android:textSize="22sp"
                     android:textStyle="bold" />
             </LinearLayout>
 

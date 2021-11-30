@@ -29,17 +29,26 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputLayout;
 import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.ItemPaciente;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.MenuFichaNormal;
 import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
+import com.sistemasdt.dhr.ServiciosAPI.QuerysCitas;
+import com.sistemasdt.dhr.ServiciosAPI.QuerysFichas;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysPacientes;
+import com.tapadoo.alerter.Alerter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class Citas extends Fragment {
     private boolean MODO_EDICION = false;
@@ -48,22 +57,26 @@ public class Citas extends Fragment {
 
     private ImageView BtnFecha, BtnHora;
     private TextView fecha, hora, descripcion, paciente;
+    private TextView tituloPaciente, tituloFecha, tituloHora;
     private Toolbar toolbar;
+    private TextInputLayout layoutDescripcion;
+    private FloatingActionButton guardador;
 
     ArrayList<String> listaPacientes;
     ArrayList<ItemPaciente> listaPacientesGeneral;
 
     //Calendario para obtener fecha & hora
-    public final Calendar c = Calendar.getInstance();
+    public final Calendar calendar = Calendar.getInstance();
 
     //Variables para obtener la fecha
-    int mes = c.get(Calendar.MONTH);
-    final int dia = c.get(Calendar.DAY_OF_MONTH);
-    final int anio = c.get(Calendar.YEAR);
+//    int mes = c.get(Calendar.MONTH);
+//    final int dia = c.get(Calendar.DAY_OF_MONTH);
+//    final int anio = c.get(Calendar.YEAR);
+//
+//    final int horas = c.get(Calendar.HOUR);
+//    final int minutos = c.get(Calendar.MINUTE);
+//    final int meridiano = c.get(Calendar.AM_PM);
 
-    final int horas = c.get(Calendar.HOUR);
-    final int minutos = c.get(Calendar.MINUTE);
-    final int meridiano = c.get(Calendar.AM_PM);
 
     private String ampm;
 
@@ -103,18 +116,19 @@ public class Citas extends Fragment {
         hora = view.findViewById(R.id.hora);
         hora.setTypeface(face);
 
-        if (meridiano == 0) {
-            ampm = " AM";
-        } else {
-            ampm = " PM";
-        }
+        layoutDescripcion = view.findViewById(R.id.layoutDescripcionCita);
+        layoutDescripcion.setTypeface(face);
+        descripcion = view.findViewById(R.id.descripcion);
+        descripcion.setTypeface(face);
 
-        mes++;
-        String mesFormateado = (mes < 10) ? "0" + mes : String.valueOf(mes);
-        String minutoFormateado = (minutos < 10) ? "0" + minutos : String.valueOf(minutos);
+        guardador = view.findViewById(R.id.guardadorCita);
 
-        fecha.setText(dia + "/" + mesFormateado + "/" + anio);
-        hora.setText(horas + ":" + minutoFormateado + ampm);
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat formatoHora = new SimpleDateFormat("HH:mm:ss");
+        SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+
+        fecha.setText(formatoFecha.format(c.getTime()));
+        hora.setText(formatoHora.format(c.getTime()));
 
         listaPacientes = new ArrayList<>();
         listaPacientesGeneral = new ArrayList<>();
@@ -183,59 +197,110 @@ public class Citas extends Fragment {
             });
         });
 
+        guardador.setOnClickListener(v -> {
+            if (!textoRequerido())
+                return;
+
+            if (ID_PACIENTE == 0) {
+                Alerter.create(getActivity())
+                        .setTitle("Error")
+                        .setText("No ha seleccionado un paciente")
+                        .setIcon(R.drawable.logonuevo)
+                        .setTextTypeface(face)
+                        .enableSwipeToDismiss()
+                        .setBackgroundColorRes(R.color.AzulOscuro)
+                        .show();
+                return;
+            }
+            final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+
+            if (!MODO_EDICION) {
+                final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+                progressDialog.setMessage("Cargando...");
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+
+                try {
+                    Date initDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(fecha.getText().toString() + " " + hora.getText().toString());
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    String fechaMYSQL = formatter.format(initDate);
+
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("ID_PACIENTE", ID_PACIENTE);
+                    jsonObject.put("FECHA", fechaMYSQL);
+                    jsonObject.put("DESCRIPCION", descripcion.getText().toString());
+                    jsonObject.put("ID_USUARIO", preferenciasUsuario.getInt("ID_USUARIO", 0));
+                    jsonObject.put("REALIZADO", 0);
+
+                    QuerysCitas querysCitas = new QuerysCitas(getContext());
+                    querysCitas.registrarCita(jsonObject, new QuerysCitas.VolleyOnEventListener() {
+                        @Override
+                        public void onSuccess(Object object) {
+                            Alerter.create(getActivity())
+                                    .setTitle("Citas")
+                                    .setText("Cita registrada correctamente")
+                                    .setIcon(R.drawable.logonuevo)
+                                    .setTextTypeface(face)
+                                    .enableSwipeToDismiss()
+                                    .setBackgroundColorRes(R.color.FondoSecundario)
+                                    .show();
+
+                            progressDialog.dismiss();
+
+                            ListadoCitas listadoCitas = new ListadoCitas();
+                            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                            transaction.replace(R.id.contenedor, listadoCitas);
+                            transaction.commit();
+                        }
+
+                        @Override
+                        public void onFailure(Exception e) {
+                            progressDialog.dismiss();
+
+                            Alerter.create(getActivity())
+                                    .setTitle("Error")
+                                    .setText("Fallo al registrar la cita")
+                                    .setIcon(R.drawable.logonuevo)
+                                    .setTextTypeface(face)
+                                    .enableSwipeToDismiss()
+                                    .setBackgroundColorRes(R.color.AzulOscuro)
+                                    .show();
+                        }
+                    });
+
+                } catch (ParseException | JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
         return view;
     }
 
     private void obtenerHora() {
+        Calendar calendar = Calendar.getInstance();
         TimePickerDialog recogerHora = new TimePickerDialog(getContext(),
                 android.R.style.Theme_Holo_Dialog,
-                new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        //Formateo el hora obtenido: antepone el 0 si son menores de 10
-                        //String horaFormateada =  (hourOfDay < 10)? "0" + hourOfDay : String.valueOf(hourOfDay);
-                        //Formateo el minuto obtenido: antepone el 0 si son menores de 10
-                        String minutoFormateado = (minute < 10) ? "0" + minute : String.valueOf(minute);
-                        //Obtengo el valor a.m. o p.m., dependiendo de la selección del usuario
-                        String AM_PM;
-                        if (hourOfDay < 12) {
-                            AM_PM = "AM";
-                        } else {
-                            AM_PM = "PM";
-                            hourOfDay -= 12;
-                        }
-                        //Muestro la hora con el formato deseado
-                        hora.setText(hourOfDay + ":" + minutoFormateado + " " + AM_PM);
-                    }
-                    //Estos valores deben ir en ese orden
-                    //Al colocar en false se muestra en formato 12 horas y true en formato 24 horas
-                    //Pero el sistema devuelve la hora en formato 24 horas
-                }, horas, minutos, false);
+                (view, hourOfDay, minute) -> {
+                    String minutoFormateado = (minute < 10) ? "0" + minute : String.valueOf(minute);
+                    hora.setText(hourOfDay + ":" + minutoFormateado);
+                }, calendar.get(Calendar.HOUR) + 12, calendar.get(Calendar.MINUTE), true);
 
         recogerHora.show();
     }
 
     private void obtenerFecha() {
+        Calendar calendar = Calendar.getInstance();
         DatePickerDialog recogerFecha = new DatePickerDialog(getContext(),
                 android.R.style.Theme_Holo_Dialog,
-                new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        //Esta variable lo que realiza es aumentar en uno el mes ya que comienza desde 0 = enero
-                        final int mesActual = month + 1;
-                        //Formateo el día obtenido: antepone el 0 si son menores de 10
-                        String diaFormateado = (dayOfMonth < 10) ? "0" + dayOfMonth : String.valueOf(dayOfMonth);
-                        //Formateo el mes obtenido: antepone el 0 si son menores de 10
-                        String mesFormateado = (mesActual < 10) ? "0" + mesActual : String.valueOf(mesActual);
-                        //Muestro la fecha con el formato deseado
-                        fecha.setText(diaFormateado + "/" + mesFormateado + "/" + year);
-                    }
-                    //Estos valores deben ir en ese orden, de lo contrario no mostrara la fecha actual
-                    /**
-                     *También puede cargar los valores que usted desee
-                     */
-                }, anio, mes, dia);
-        //Muestro el widget
+                (view, year, month, dayOfMonth) -> {
+                    final int mesActual = month + 1;
+                    String diaFormateado = (dayOfMonth < 10) ? "0" + dayOfMonth : String.valueOf(dayOfMonth);
+                    String mesFormateado = (mesActual < 10) ? "0" + mesActual : String.valueOf(mesActual);
+                    fecha.setText(diaFormateado + "/" + mesFormateado + "/" + year);
+                }, calendar.get(Calendar.YEAR) - 1, calendar.get(Calendar.MONTH) + 2, calendar.get(Calendar.DAY_OF_YEAR));
+
         recogerFecha.show();
     }
 
@@ -292,6 +357,18 @@ public class Citas extends Fragment {
                 obtenerPacientes();
             }
         });
+    }
+
+    // VALIDACIONES
+    private boolean textoRequerido() {
+        String texto = descripcion.getText().toString().trim();
+        if (texto.isEmpty()) {
+            layoutDescripcion.setError("Campo requerido");
+            return false;
+        } else {
+            layoutDescripcion.setError(null);
+            return true;
+        }
     }
 
 }

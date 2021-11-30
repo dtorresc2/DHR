@@ -9,10 +9,13 @@ import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -358,7 +361,14 @@ public class GuardadorFichaNormal extends Fragment {
                 @Override
                 public void onFailure(Exception e) {
                     progressDialog.dismiss();
-                    Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
+                    Alerter.create(getActivity())
+                            .setTitle("Error")
+                            .setText("Fallo al registrar la ficha")
+                            .setIcon(R.drawable.logonuevo)
+                            .setTextTypeface(face)
+                            .enableSwipeToDismiss()
+                            .setBackgroundColorRes(R.color.AzulOscuro)
+                            .show();
                 }
             });
 

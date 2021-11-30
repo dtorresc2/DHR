@@ -53,4 +53,30 @@ public class QuerysCitas {
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
         requestQueue.add(stringRequest);
     }
+
+    public void registrarCita(final JSONObject jsonBody, QuerysCitas.VolleyOnEventListener callback) {
+        mCallBack = callback;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, mContext.getResources().getString(R.string.API) + "citas/registro",
+                response -> mCallBack.onSuccess(response), error -> mCallBack.onFailure(error)) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() {
+                try {
+                    final String mRequestBody = jsonBody.toString();
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        requestQueue.add(stringRequest);
+    }
 }
