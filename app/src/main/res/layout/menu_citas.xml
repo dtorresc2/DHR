@@ -71,6 +71,7 @@
                 android:paddingBottom="10dp">
 
                 <ImageView
+                    android:id="@+id/icono_bloqueo"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_gravity="center_horizontal"
@@ -96,13 +97,43 @@
             android:orientation="horizontal"
             android:weightSum="2">
 
+            <LinearLayout
+                android:id="@+id/opc_asignar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="10dp"
+
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@color/FondoSecundario2"
+                android:orientation="vertical"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ic_reloj" />
+
+                <TextView
+                    android:id="@+id/texto_opc_alarma"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="Asignar Alarma"
+                    android:textColor="@color/Blanco"
+                    android:textSize="18dp" />
+            </LinearLayout>
+
 
             <LinearLayout
                 android:id="@+id/opc_eliminar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:background="@color/FondoSecundario2"
                 android:orientation="vertical"
@@ -125,33 +156,7 @@
                     android:textSize="18dp" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/opc_asignar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:background="@color/FondoSecundario2"
-                android:orientation="vertical"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp">
 
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center_horizontal"
-                    android:src="@drawable/ic_reloj" />
-
-                <TextView
-                    android:id="@+id/texto_opc_alarma"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:text="Asignar Alarma"
-                    android:textColor="@color/Blanco"
-                    android:textSize="18dp" />
-            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

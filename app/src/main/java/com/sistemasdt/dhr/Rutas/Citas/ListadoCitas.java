@@ -138,9 +138,10 @@ public class ListadoCitas extends Fragment {
                             MenuCitas menuCitas = new MenuCitas();
                             menuCitas.show(getActivity().getSupportFragmentManager(), "MenuCitas");
                             menuCitas.recibirTitulo(lista.get(position).getMdescripcion());
+                            menuCitas.recibirEstado(lista.get(position).getMrealizado());
                             menuCitas.eventoClick(opcion -> {
 //                                    estadoFicha = lista.get(position).getEstado();
-                                realizarAccion(opcion, Integer.parseInt(lista.get(position).getMidCitas()), position);
+                                realizarAccion(opcion, Integer.parseInt(lista.get(position).getMidCitas()), position, lista.get(position).getMrealizado());
                             });
                         });
 
@@ -161,7 +162,7 @@ public class ListadoCitas extends Fragment {
         }
     }
 
-    public void realizarAccion(int opcion, int ID, final int posicion) {
+    public void realizarAccion(int opcion, int ID, final int posicion, boolean estado) {
         switch (opcion) {
             case 1:
                 Citas citas = new Citas();
@@ -171,7 +172,33 @@ public class ListadoCitas extends Fragment {
                 transaction.commit();
                 break;
 
-            case 3:
+            case 2:
+                if (estado) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
+                    builder.setIcon(R.drawable.logonuevo);
+                    builder.setTitle("Listado de Citas");
+                    builder.setMessage("¿Desea terminar la cita?");
+                    builder.setPositiveButton("ACEPTAR", (dialog, id) -> actualizarEstadoCita(ID, estado));
+                    builder.setNegativeButton("CANCELAR", (dialog, id) -> {
+                    });
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                } else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
+                    builder.setIcon(R.drawable.logonuevo);
+                    builder.setTitle("Listado de Citas");
+                    builder.setMessage("¿Desea completar la cita?");
+                    builder.setPositiveButton("ACEPTAR", (dialog, id) -> actualizarEstadoCita(ID, estado));
+                    builder.setNegativeButton("CANCELAR", (dialog, id) -> {
+                    });
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+                break;
+
+            case 4:
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
                 builder.setIcon(R.drawable.logonuevo);
                 builder.setTitle("Listado de Citas");
@@ -215,7 +242,6 @@ public class ListadoCitas extends Fragment {
 
                 @Override
                 public void onFailure(Exception e) {
-
                     Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
                     Alerter.create(getActivity())
                             .setTitle("Error")
@@ -227,6 +253,51 @@ public class ListadoCitas extends Fragment {
                             .show();
                 }
             });
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void actualizarEstadoCita(int ID, boolean estado) {
+        try {
+            final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("ID_USUARIO", preferenciasUsuario.getInt("ID_USUARIO", 0));
+            jsonObject.put("ID_CITA", ID);
+            jsonObject.put("REALIZADO", estado == true ? "0" : "1");
+
+            QuerysCitas querysCitas = new QuerysCitas(getContext());
+            querysCitas.actualizarEstado(jsonObject, new QuerysCitas.VolleyOnEventListener() {
+                @Override
+                public void onSuccess(Object object) {
+                    Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                    Alerter.create(getActivity())
+                            .setTitle("Citas")
+                            .setText("Cita actualizada correctamente")
+                            .setIcon(R.drawable.logonuevo)
+                            .setTextTypeface(face)
+                            .enableSwipeToDismiss()
+                            .setBackgroundColorRes(R.color.FondoSecundario)
+                            .show();
+
+                    obtenerCitas();
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                    Alerter.create(getActivity())
+                            .setTitle("Error")
+                            .setText("Fallo al actualizar la cita")
+                            .setIcon(R.drawable.logonuevo)
+                            .setTextTypeface(face)
+                            .enableSwipeToDismiss()
+                            .setBackgroundColorRes(R.color.AzulOscuro)
+                            .show();
+                }
+            });
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
