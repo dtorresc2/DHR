@@ -1,8 +1,10 @@
 package com.sistemasdt.dhr.Rutas.Citas;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 
@@ -19,8 +21,10 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -38,7 +42,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class ListadoCitas extends Fragment {
     private Toolbar toolbar;
@@ -137,28 +145,124 @@ public class ListadoCitas extends Fragment {
 
             ImageView obtenerFechaInicial = viewCuadro.findViewById(R.id.obtenerFechaInicial);
             obtenerFechaInicial.setOnClickListener(v12 -> {
+                Calendar calendarAux = Calendar.getInstance();
+                calendarAux.set(Calendar.DATE, calendarAux.getActualMinimum(Calendar.DATE));
 
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
+                        (datePick, year, month, dayOfMonth) -> {
+                            final int mesActual = month + 1;
+                            String diaFormateado = (dayOfMonth < 10) ? "0" + dayOfMonth : String.valueOf(dayOfMonth);
+                            String mesFormateado = (mesActual < 10) ? "0" + mesActual : String.valueOf(mesActual);
+                            fechaInicialTexto.setText(diaFormateado + "/" + mesFormateado + "/" + year);
+
+                        }, calendarAux.get(Calendar.YEAR) - 1, calendarAux.get(Calendar.MONTH), calendarAux.get(Calendar.DAY_OF_YEAR));
+
+                datePickerDialog.show();
             });
 
             // FECHA FINAL
             TextView tituloFechaFinal = viewCuadro.findViewById(R.id.tituloFechaFinal);
-            tituloFechaInicial.setTypeface(typeface);
+            tituloFechaFinal.setTypeface(typeface);
 
             TextView fechaFinalTexto = viewCuadro.findViewById(R.id.fechaFinal);
-            fechaInicialTexto.setTypeface(typeface);
+            fechaFinalTexto.setTypeface(typeface);
 
             ImageView obtenerFechaFinal = viewCuadro.findViewById(R.id.obtenerFechaFinal);
-            obtenerFechaInicial.setOnClickListener(v13 -> {
+            obtenerFechaFinal.setOnClickListener(v13 -> {
+                Calendar calendarAux = Calendar.getInstance();
+                calendarAux.set(Calendar.DATE, calendarAux.getActualMaximum(Calendar.DATE));
 
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
+                        (datePick, year, month, dayOfMonth) -> {
+                            final int mesActual = month + 1;
+                            String diaFormateado = (dayOfMonth < 10) ? "0" + dayOfMonth : String.valueOf(dayOfMonth);
+                            String mesFormateado = (mesActual < 10) ? "0" + mesActual : String.valueOf(mesActual);
+                            fechaFinalTexto.setText(diaFormateado + "/" + mesFormateado + "/" + year);
+
+                        }, calendarAux.get(Calendar.YEAR) - 1, calendarAux.get(Calendar.MONTH), calendarAux.get(Calendar.DAY_OF_YEAR));
+
+                datePickerDialog.show();
             });
 
+            CheckBox checkFecha = viewCuadro.findViewById(R.id.checkFecha);
+
+
+            Button botonConsultaAvanzada = viewCuadro.findViewById(R.id.botonConsultar);
+            botonConsultaAvanzada.setTypeface(typeface);
+
+            Calendar calendar = Calendar.getInstance();
+            SimpleDateFormat formatoFechaGeneral = new SimpleDateFormat("dd/MM/yyyy");
+
+            calendar.set(Calendar.DATE, calendar.getActualMinimum(Calendar.DATE));
+
+            fechaInicialTexto.setText(formatoFechaGeneral.format(calendar.getTime()));
+
+            calendar.set(Calendar.DATE, calendar.getActualMaximum(Calendar.DATE));
+
+            fechaFinalTexto.setText(formatoFechaGeneral.format(calendar.getTime()));
 
             builder.setCancelable(false);
             builder.setView(viewCuadro);
             AlertDialog dialog = builder.create();
 
-            botonCerrar.setOnClickListener(v1 -> dialog.dismiss());
+            botonConsultaAvanzada.setOnClickListener(v14 -> {
+                if (checkCita.isChecked() || checkFecha.isChecked()) {
+                    try {
+                        final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
 
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("ID_USUARIO", preferenciasUsuario.getInt("ID_USUARIO", 0));
+
+                        if (checkCita.isChecked())
+                            jsonObject.put("REALIZADO", citaTrue.isChecked() ? 1 : 0);
+
+                        if (checkFecha.isChecked()) {
+                            Date fechaInicialAux = new SimpleDateFormat("dd/MM/yyyy").parse(fechaInicialTexto.getText().toString());
+                            Date fechaFinalAux = new SimpleDateFormat("dd/MM/yyyy").parse(fechaFinalTexto.getText().toString());
+                            SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
+
+                            if (fechaInicialAux.equals(fechaFinalAux) || fechaInicialAux.before(fechaFinalAux)) {
+                                jsonObject.put("FECHA_INICAL", formatoFecha.format(fechaInicialAux));
+                                jsonObject.put("FECHA_FINAL", formatoFecha.format(fechaFinalAux));
+                            } else {
+                                AlertDialog.Builder builderAux = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
+                                builderAux.setIcon(R.drawable.logonuevo);
+                                builderAux.setTitle("Listado de Citas");
+                                builderAux.setMessage("Rango de Fechas Incorrecto");
+                                builderAux.setPositiveButton("Aceptar",
+                                        (dialog1, which) -> {
+                                        });
+
+
+                                AlertDialog alertDialog = builderAux.create();
+                                alertDialog.show();
+                                return;
+                            }
+                        }
+
+                        obtenerConsultaAvanzada(jsonObject);
+
+                    } catch (JSONException | ParseException e) {
+                        e.printStackTrace();
+                    }
+                    dialog.dismiss();
+                } else {
+
+                    AlertDialog.Builder builderAux = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
+                    builderAux.setIcon(R.drawable.logonuevo);
+                    builderAux.setTitle("Listado de Citas");
+                    builderAux.setMessage("Seleccione al menos una opcion");
+                    builderAux.setPositiveButton("Aceptar",
+                            (dialog1, which) -> {
+                            });
+
+
+                    AlertDialog alertDialog = builderAux.create();
+                    alertDialog.show();
+                }
+            });
+
+            botonCerrar.setOnClickListener(v1 -> dialog.dismiss());
             dialog.show();
         });
 
@@ -170,7 +274,7 @@ public class ListadoCitas extends Fragment {
     }
 
 
-    public void obtenerCitas() {
+    private void obtenerCitas() {
         try {
             final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
             progressDialog.setMessage("Cargando...");
@@ -213,7 +317,6 @@ public class ListadoCitas extends Fragment {
                             menuCitas.recibirTitulo(lista.get(position).getMdescripcion());
                             menuCitas.recibirEstado(lista.get(position).getMrealizado());
                             menuCitas.eventoClick(opcion -> {
-//                                    estadoFicha = lista.get(position).getEstado();
                                 realizarAccion(opcion, Integer.parseInt(lista.get(position).getMidCitas()), position, lista.get(position).getMrealizado());
                             });
                         });
@@ -235,7 +338,7 @@ public class ListadoCitas extends Fragment {
         }
     }
 
-    public void realizarAccion(int opcion, int ID, final int posicion, boolean estado) {
+    private void realizarAccion(int opcion, int ID, final int posicion, boolean estado) {
         switch (opcion) {
             case 1:
                 Citas citas = new Citas();
@@ -283,6 +386,7 @@ public class ListadoCitas extends Fragment {
                 AlertDialog dialog = builder.create();
                 dialog.show();
                 break;
+
             default:
                 break;
         }
@@ -374,5 +478,59 @@ public class ListadoCitas extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private void obtenerConsultaAvanzada(JSONObject consulta) {
+        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+        progressDialog.setMessage("Cargando...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        QuerysCitas querysCitasAux = new QuerysCitas(getContext());
+        querysCitasAux.consultaAvanzada(consulta, new QuerysCitas.VolleyOnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                try {
+                    JSONArray jsonArray = new JSONArray(object.toString());
+                    final ArrayList<ItemCita> lista = new ArrayList<>();
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        lista.add(new ItemCita(
+                                jsonArray.getJSONObject(i).getString("ID_CITA"),
+                                jsonArray.getJSONObject(i).getString("FECHA"),
+                                jsonArray.getJSONObject(i).getString("NOMBRE_PACIENTE"),
+                                jsonArray.getJSONObject(i).getString("DESCRIPCION"),
+                                jsonArray.getJSONObject(i).getInt("REALIZADO") > 0 ? true : false
+                        ));
+                    }
+                    lista_pacientes.setHasFixedSize(true);
+                    layoutManager = new LinearLayoutManager(getContext());
+                    adapter = new AdaptadorCita(lista);
+                    lista_pacientes.setLayoutManager(layoutManager);
+                    lista_pacientes.setAdapter(adapter);
+
+                    adapter.setOnItemClickListener(position -> {
+                        MenuCitas menuCitas = new MenuCitas();
+                        menuCitas.show(getActivity().getSupportFragmentManager(), "MenuCitas");
+                        menuCitas.recibirTitulo(lista.get(position).getMdescripcion());
+                        menuCitas.recibirEstado(lista.get(position).getMrealizado());
+                        menuCitas.eventoClick(opcion -> {
+                            realizarAccion(opcion, Integer.parseInt(lista.get(position).getMidCitas()), position, lista.get(position).getMrealizado());
+                        });
+                    });
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                progressDialog.dismiss();
+                obtenerConsultaAvanzada(consulta);
+            }
+        });
     }
 }
