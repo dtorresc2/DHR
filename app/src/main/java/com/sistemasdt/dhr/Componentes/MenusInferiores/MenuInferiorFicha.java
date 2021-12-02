@@ -1,10 +1,12 @@
 package com.sistemasdt.dhr.Componentes.MenusInferiores;
 
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -34,7 +36,7 @@ public class MenuInferiorFicha extends BottomSheetDialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
+        View view = inflater.inflate(R.layout.menu_inferior_fichas, container, false);
         Typeface typeface = Typeface.createFromAsset(view.getContext().getAssets(), "fonts/bahnschrift.ttf");
 
         LinearLayout opcionEditar = view.findViewById(R.id.opc_editar);
@@ -76,6 +78,20 @@ public class MenuInferiorFicha extends BottomSheetDialogFragment {
         TextView tituloMenu = view.findViewById(R.id.tituloMenu);
         tituloMenu.setTypeface(typeface);
         tituloMenu.setText(titulo);
+
+        ImageView iconoBloqueo = view.findViewById(R.id.icono_bloqueo);
+
+        if (!ESTADO) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                iconoBloqueo.setImageDrawable(getContext().getDrawable(R.drawable.ic_check));
+            }
+            tituloBloquear.setText("Habilitar");
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                iconoBloqueo.setImageDrawable(getContext().getDrawable(R.drawable.ic_cerrar));
+            }
+            tituloBloquear.setText("Deshabilitar");
+        }
 
         return view;
     }

@@ -5,14 +5,11 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
+
 import android.graphics.Typeface;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+
 import android.os.Bundle;
-import android.os.Handler;
 
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
@@ -21,34 +18,29 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-
-import com.sistemasdt.dhr.Componentes.MenusInferiores.MenuInferior;
 import com.sistemasdt.dhr.Componentes.MenusInferiores.MenuInferiorFicha;
 import com.sistemasdt.dhr.R;
 
-import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.Pacientes;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.Adaptadores.AdaptadorConsultaFicha;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.Ficha;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.Items.ItemsFichas;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.MenuFichaNormal;
 import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysFichas;
+import com.tapadoo.alerter.Alerter;
 
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 @SuppressLint("ValidFragment")
 public class ListadoFichas extends Fragment {
@@ -56,9 +48,6 @@ public class ListadoFichas extends Fragment {
     private Toolbar toolbar;
     private AdaptadorConsultaFicha adapter;
     private RecyclerView.LayoutManager layoutManager;
-    RequestQueue requestQueue;
-    private static final String TAG = "MyActivity";
-    private String idPaciente;
     ArrayList<ItemsFichas> lista;
     private boolean estadoFicha = false;
 
@@ -72,7 +61,6 @@ public class ListadoFichas extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_listado_fichas, container, false);
         Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
 
@@ -175,27 +163,13 @@ public class ListadoFichas extends Fragment {
                     listafichas.setLayoutManager(layoutManager);
                     listafichas.setAdapter(adapter);
 
-                    adapter.setOnItemClickListener(new AdaptadorConsultaFicha.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(int position) {
-//                            MenuInferior menuInferior = new MenuInferior();
-//                            menuInferior.show(getActivity().getSupportFragmentManager(), "MenuInferior");
-//                            menuInferior.recibirTitulo(lista.get(position).getMotivo());
-//                            menuInferior.eventoClick(new MenuInferior.MenuInferiorListener() {
-//                                @Override
-//                                public void onButtonClicked(int opcion) {
-//                                    estadoFicha = lista.get(position).getEstado();
-//                                    realizarAccion(opcion, lista.get(position).getId(), position);
-//                                }
-//                            });
-
-                            MenuInferiorFicha menuInferiorFicha = new MenuInferiorFicha();
-                            menuInferiorFicha.show(getActivity().getSupportFragmentManager(), "MenuInferiorFicha");
-                            menuInferiorFicha.recibirTitulo(lista.get(position).getMotivo());
-                            estadoFicha = lista.get(position).getEstado();
-                            menuInferiorFicha.recibirEstado(estadoFicha);
-                            menuInferiorFicha.eventoClick(opcion -> realizarAccion(opcion, lista.get(position).getId(), position));
-                        }
+                    adapter.setOnItemClickListener(position -> {
+                        MenuInferiorFicha menuInferiorFicha = new MenuInferiorFicha();
+                        menuInferiorFicha.recibirTitulo(lista.get(position).getMotivo());
+                        estadoFicha = lista.get(position).getEstado();
+                        menuInferiorFicha.recibirEstado(estadoFicha);
+                        menuInferiorFicha.show(getActivity().getSupportFragmentManager(), "MenuInferiorFicha");
+                        menuInferiorFicha.eventoClick(opcion -> realizarAccion(opcion, lista.get(position).getId(), position));
                     });
 
                 } catch (JSONException e) {
@@ -213,7 +187,7 @@ public class ListadoFichas extends Fragment {
         });
     }
 
-    public void realizarAccion(int opcion, int ID, final int posicion) {
+    private void realizarAccion(int opcion, int ID, final int posicion) {
         switch (opcion) {
             case 1:
                 final SharedPreferences preferenciasFicha = getActivity().getSharedPreferences("FICHA", Context.MODE_PRIVATE);
@@ -226,30 +200,122 @@ public class ListadoFichas extends Fragment {
                 transaction.replace(R.id.contenedor, menuFichaNormal);
                 transaction.commit();
                 break;
+
             case 2:
+                if (estadoFicha) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
+                    builder.setIcon(R.drawable.logonuevo);
+                    builder.setTitle("Listado de Fichas");
+                    builder.setMessage("¿Desea deshabilitar la ficha?");
+                    builder.setPositiveButton("ACEPTAR", (dialog, id) -> actualizarEstado(ID));
+                    builder.setNegativeButton("CANCELAR", (dialog, id) -> {
+                    });
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                } else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
+                    builder.setIcon(R.drawable.logonuevo);
+                    builder.setTitle("Listado de Fichas");
+                    builder.setMessage("¿Desea habilitar la ficha?");
+                    builder.setPositiveButton("ACEPTAR", (dialog, id) -> actualizarEstado(ID));
+                    builder.setNegativeButton("CANCELAR", (dialog, id) -> {
+                    });
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+                break;
+
+            case 4:
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
                 builder.setIcon(R.drawable.logonuevo);
                 builder.setTitle("Listado de Fichas");
-                builder.setMessage("¿Desea deshabilitar la ficha?");
-                builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-//                        actualizarEstado(posicion);
-                    }
-                });
-                builder.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                    }
+                builder.setMessage("¿Desea eliminar la ficha?");
+                builder.setPositiveButton("ACEPTAR", (dialog, id) -> eliminarFicha(ID));
+                builder.setNegativeButton("CANCELAR", (dialog, id) -> {
                 });
 
                 AlertDialog dialog = builder.create();
                 dialog.show();
                 break;
-            case 3:
-                break;
             default:
                 return;
         }
+    }
+
+    private void actualizarEstado(int ID_FICHA) {
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("ESTADO", estadoFicha == true ? "0" : "1");
+
+            QuerysFichas querysFichas = new QuerysFichas(getContext());
+            querysFichas.actualizarEstadoFicha(ID_FICHA, jsonObject, new QuerysFichas.VolleyOnEventListener() {
+                @Override
+                public void onSuccess(Object object) {
+                    Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                    Alerter.create(getActivity())
+                            .setTitle("Fichas")
+                            .setText("Ficha actualizada correctamente")
+                            .setIcon(R.drawable.logonuevo)
+                            .setTextTypeface(face)
+                            .enableSwipeToDismiss()
+                            .setBackgroundColorRes(R.color.FondoSecundario)
+                            .show();
+
+                    obtenerFichas();
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                    Alerter.create(getActivity())
+                            .setTitle("Fichas")
+                            .setText("Fallo al actualizar la ficha")
+                            .setIcon(R.drawable.logonuevo)
+                            .setTextTypeface(face)
+                            .enableSwipeToDismiss()
+                            .setBackgroundColorRes(R.color.AzulOscuro)
+                            .show();
+                }
+            });
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void eliminarFicha(int ID) {
+        QuerysFichas querysFichas = new QuerysFichas(getContext());
+        querysFichas.eliminarFicha(ID, new QuerysFichas.VolleyOnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                Alerter.create(getActivity())
+                        .setTitle("Fichas")
+                        .setText("Ficha eliminada correctamente")
+                        .setIcon(R.drawable.logonuevo)
+                        .setTextTypeface(face)
+                        .enableSwipeToDismiss()
+                        .setBackgroundColorRes(R.color.FondoSecundario)
+                        .show();
+
+                obtenerFichas();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                Alerter.create(getActivity())
+                        .setTitle("Error")
+                        .setText("Fallo al eliminar la ficha")
+                        .setIcon(R.drawable.logonuevo)
+                        .setTextTypeface(face)
+                        .enableSwipeToDismiss()
+                        .setBackgroundColorRes(R.color.AzulOscuro)
+                        .show();
+            }
+        });
     }
 }
