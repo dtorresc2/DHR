@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 
 import com.sistemasdt.dhr.Componentes.MenusInferiores.MenuInferior;
+import com.sistemasdt.dhr.Componentes.MenusInferiores.MenuInferiorFicha;
 import com.sistemasdt.dhr.R;
 
 import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.Pacientes;
@@ -177,16 +178,23 @@ public class ListadoFichas extends Fragment {
                     adapter.setOnItemClickListener(new AdaptadorConsultaFicha.OnItemClickListener() {
                         @Override
                         public void onItemClick(int position) {
-                            MenuInferior menuInferior = new MenuInferior();
-                            menuInferior.show(getActivity().getSupportFragmentManager(), "MenuInferior");
-                            menuInferior.recibirTitulo(lista.get(position).getMotivo());
-                            menuInferior.eventoClick(new MenuInferior.MenuInferiorListener() {
-                                @Override
-                                public void onButtonClicked(int opcion) {
-                                    estadoFicha = lista.get(position).getEstado();
-                                    realizarAccion(opcion, lista.get(position).getId(), position);
-                                }
-                            });
+//                            MenuInferior menuInferior = new MenuInferior();
+//                            menuInferior.show(getActivity().getSupportFragmentManager(), "MenuInferior");
+//                            menuInferior.recibirTitulo(lista.get(position).getMotivo());
+//                            menuInferior.eventoClick(new MenuInferior.MenuInferiorListener() {
+//                                @Override
+//                                public void onButtonClicked(int opcion) {
+//                                    estadoFicha = lista.get(position).getEstado();
+//                                    realizarAccion(opcion, lista.get(position).getId(), position);
+//                                }
+//                            });
+
+                            MenuInferiorFicha menuInferiorFicha = new MenuInferiorFicha();
+                            menuInferiorFicha.show(getActivity().getSupportFragmentManager(), "MenuInferiorFicha");
+                            menuInferiorFicha.recibirTitulo(lista.get(position).getMotivo());
+                            estadoFicha = lista.get(position).getEstado();
+                            menuInferiorFicha.recibirEstado(estadoFicha);
+                            menuInferiorFicha.eventoClick(opcion -> realizarAccion(opcion, lista.get(position).getId(), position));
                         }
                     });
 

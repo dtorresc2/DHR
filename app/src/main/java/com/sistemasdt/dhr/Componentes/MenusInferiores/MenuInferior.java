@@ -16,8 +16,6 @@ import com.sistemasdt.dhr.R;
 
 public class MenuInferior extends BottomSheetDialogFragment {
     private MenuInferiorListener mMenuInferiorListener;
-    private Context mContext;
-    private int ID = 1;
     private String titulo = "Titulo #";
 
     public void eventoClick(MenuInferiorListener menuInferiorListener){
@@ -35,30 +33,21 @@ public class MenuInferior extends BottomSheetDialogFragment {
         Typeface typeface = Typeface.createFromAsset(view.getContext().getAssets(), "fonts/bahnschrift.ttf");
 
         LinearLayout opcionEditar = view.findViewById(R.id.opc_editar);
-        opcionEditar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mMenuInferiorListener.onButtonClicked(1);
-                dismiss();
-            }
+        opcionEditar.setOnClickListener(v -> {
+            mMenuInferiorListener.onButtonClicked(1);
+            dismiss();
         });
 
         LinearLayout opcionDeshabilitar = view.findViewById(R.id.opc_deshabilitar);
-        opcionDeshabilitar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mMenuInferiorListener.onButtonClicked(2);
-                dismiss();
-            }
+        opcionDeshabilitar.setOnClickListener(v -> {
+            mMenuInferiorListener.onButtonClicked(2);
+            dismiss();
         });
 
         LinearLayout opcionEliminar = view.findViewById(R.id.opc_eliminar);
-        opcionEliminar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mMenuInferiorListener.onButtonClicked(3);
-                dismiss();
-            }
+        opcionEliminar.setOnClickListener(v -> {
+            mMenuInferiorListener.onButtonClicked(3);
+            dismiss();
         });
 
         TextView tituloEditar = view.findViewById(R.id.texto_opc_editar);
