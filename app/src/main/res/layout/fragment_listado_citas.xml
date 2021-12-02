@@ -11,47 +11,18 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
 
-<!--    <com.getbase.floatingactionbutton.FloatingActionsMenu-->
-<!--        android:id="@+id/menuDP"-->
-<!--        android:layout_width="136dp"-->
-<!--        android:layout_height="200dp"-->
-<!--        android:layout_gravity="bottom|end"-->
-<!--        android:layout_marginStart="8dp"-->
-<!--        android:layout_marginLeft="8dp"-->
-<!--        android:layout_marginEnd="8dp"-->
-<!--        android:layout_marginRight="8dp"-->
-<!--        android:layout_marginBottom="52dp"-->
-<!--        android:clickable="true"-->
-<!--        android:elevation="10dp"-->
-<!--        app:fab_addButtonColorNormal="@color/AzulOscuro"-->
-<!--        app:fab_addButtonColorPressed="@color/FondoSecundario"-->
-<!--        app:fab_labelStyle="@style/fondoetiqueta"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="1.0"-->
-<!--        app:layout_constraintStart_toStartOf="parent">-->
-
-<!--        <com.getbase.floatingactionbutton.FloatingActionButton-->
-<!--            android:id="@+id/crearCita"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:fabSize="normal"-->
-<!--            app:fab_colorNormal="@color/FondoSecundario"-->
-<!--            app:fab_colorPressed="@color/AzulOscuro"-->
-<!--            app:fab_icon="@drawable/icono_citas"-->
-<!--            app:fab_title="Agregar" />-->
-
-<!--        <com.getbase.floatingactionbutton.FloatingActionButton-->
-<!--            android:id="@+id/consultarCita"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:fabSize="normal"-->
-<!--            app:fab_colorNormal="@color/FondoSecundario"-->
-<!--            app:fab_colorPressed="@color/AzulOscuro"-->
-<!--            app:fab_icon="@drawable/icono_buscar"-->
-<!--            app:fab_title="Consultar" />-->
-
-<!--    </com.getbase.floatingactionbutton.FloatingActionsMenu>-->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/botonConsultaAvanzada"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="65dp"
+        android:clickable="true"
+        android:elevation="10dp"
+        android:src="@drawable/icono_buscar"
+        app:backgroundTint="@color/AzulOscuro"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -68,8 +39,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/listaCitas"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                />
+                android:layout_height="match_parent" />
         </LinearLayout>
     </ScrollView>
 </FrameLayout>

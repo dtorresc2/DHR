@@ -19,7 +19,14 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.sistemasdt.dhr.Componentes.MenusInferiores.MenuCitas;
 import com.sistemasdt.dhr.Rutas.Citas.Adaptador.AdaptadorCita;
 import com.sistemasdt.dhr.R;
@@ -38,6 +45,7 @@ public class ListadoCitas extends Fragment {
     private RecyclerView lista_pacientes;
     private AdaptadorCita adapter;
     private RecyclerView.LayoutManager layoutManager;
+    private FloatingActionButton botonConsultaAvanzada;
 
     public ListadoCitas() {
         // Required empty public constructor
@@ -46,7 +54,6 @@ public class ListadoCitas extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_listado_citas, container, false);
 
         toolbar = view.findViewById(R.id.toolbar);
@@ -87,6 +94,72 @@ public class ListadoCitas extends Fragment {
                 default:
                     return false;
             }
+        });
+
+        botonConsultaAvanzada = view.findViewById(R.id.botonConsultaAvanzada);
+        botonConsultaAvanzada.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            View viewCuadro = getLayoutInflater().inflate(R.layout.dialogo_citas_consulta_avanzada, null);
+            Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+
+            ImageView botonCerrar = viewCuadro.findViewById(R.id.botonCerrar);
+            TextView tituloDialogo = viewCuadro.findViewById(R.id.tituloDialogoBA);
+            tituloDialogo.setTypeface(typeface);
+
+            TextView tituloCita = viewCuadro.findViewById(R.id.tituloEstado);
+            tituloCita.setTypeface(typeface);
+
+            RadioButton citaTrue = viewCuadro.findViewById(R.id.citaTrue);
+            citaTrue.setTypeface(typeface);
+            RadioButton citaFalse = viewCuadro.findViewById(R.id.citaFalse);
+            citaFalse.setTypeface(typeface);
+
+            CheckBox checkCita = viewCuadro.findViewById(R.id.checkCita);
+            checkCita.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) {
+                    citaTrue.setEnabled(true);
+                    citaFalse.setEnabled(true);
+                } else {
+                    citaTrue.setEnabled(false);
+                    citaFalse.setEnabled(false);
+                }
+            });
+
+            // FECHA INICIAL
+            TextView tituloFecha = viewCuadro.findViewById(R.id.tituloFecha);
+            tituloFecha.setTypeface(typeface);
+
+            TextView tituloFechaInicial = viewCuadro.findViewById(R.id.tituloFechaInicial);
+            tituloFechaInicial.setTypeface(typeface);
+
+            TextView fechaInicialTexto = viewCuadro.findViewById(R.id.fechaInicial);
+            fechaInicialTexto.setTypeface(typeface);
+
+            ImageView obtenerFechaInicial = viewCuadro.findViewById(R.id.obtenerFechaInicial);
+            obtenerFechaInicial.setOnClickListener(v12 -> {
+
+            });
+
+            // FECHA FINAL
+            TextView tituloFechaFinal = viewCuadro.findViewById(R.id.tituloFechaFinal);
+            tituloFechaInicial.setTypeface(typeface);
+
+            TextView fechaFinalTexto = viewCuadro.findViewById(R.id.fechaFinal);
+            fechaInicialTexto.setTypeface(typeface);
+
+            ImageView obtenerFechaFinal = viewCuadro.findViewById(R.id.obtenerFechaFinal);
+            obtenerFechaInicial.setOnClickListener(v13 -> {
+
+            });
+
+
+            builder.setCancelable(false);
+            builder.setView(viewCuadro);
+            AlertDialog dialog = builder.create();
+
+            botonCerrar.setOnClickListener(v1 -> dialog.dismiss());
+
+            dialog.show();
         });
 
         lista_pacientes = view.findViewById(R.id.listaCitas);
