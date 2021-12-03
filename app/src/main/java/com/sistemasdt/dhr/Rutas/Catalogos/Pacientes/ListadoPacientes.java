@@ -37,8 +37,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class ListadoPacientes extends Fragment {
-    private EditText pnombre, papellido;
-    private FloatingActionButton buscar;
     private Toolbar toolbar;
 
     private RecyclerView mRecyclerView;
@@ -69,65 +67,51 @@ public class ListadoPacientes extends Fragment {
         toolbar.setNavigationIcon(R.drawable.ic_cerrar);
         toolbar.inflateMenu(R.menu.opciones_toolbar_catalogos);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Catalogos catalogos = new Catalogos();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                transaction.replace(R.id.contenedor, catalogos);
-                transaction.commit();
-            }
+        toolbar.setNavigationOnClickListener(view1 -> {
+            Catalogos catalogos = new Catalogos();
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+            transaction.replace(R.id.contenedor, catalogos);
+            transaction.commit();
         });
 
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.opcion_nuevo:
-                        Pacientes pacientes = new Pacientes();
-                        pacientes.enviarPacientes(listaPacientes);
-                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                        transaction.replace(R.id.contenedor, pacientes);
-                        transaction.commit();
-                        return true;
+        toolbar.setOnMenuItemClickListener(menuItem -> {
+            switch (menuItem.getItemId()) {
+                case R.id.opcion_nuevo:
+                    Pacientes pacientes = new Pacientes();
+                    pacientes.enviarPacientes(listaPacientes);
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                    transaction.replace(R.id.contenedor, pacientes);
+                    transaction.commit();
+                    return true;
 
-                    case R.id.opcion_filtrar:
-                        MenuItem searchItem = menuItem;
-                        SearchView searchView = (SearchView) searchItem.getActionView();
+                case R.id.opcion_filtrar:
+                    MenuItem searchItem = menuItem;
+                    SearchView searchView = (SearchView) searchItem.getActionView();
 
-                        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                            @Override
-                            public boolean onQueryTextSubmit(String query) {
-                                return false;
-                            }
+                    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                        @Override
+                        public boolean onQueryTextSubmit(String query) {
+                            return false;
+                        }
 
-                            @Override
-                            public boolean onQueryTextChange(String newText) {
-                                mAdapter.getFilter().filter(newText);
-                                return false;
-                            }
-                        });
-                        return true;
+                        @Override
+                        public boolean onQueryTextChange(String newText) {
+                            mAdapter.getFilter().filter(newText);
+                            return false;
+                        }
+                    });
+                    return true;
 
-                    case R.id.opcion_actualizar:
-                        obtenerPacientes();
-                        return true;
+                case R.id.opcion_actualizar:
+                    obtenerPacientes();
+                    return true;
 
-                    default:
-                        return false;
-                }
+                default:
+                    return false;
             }
         });
 
         listaPacientes = new ArrayList<>();
-
-//        buscar = view.findViewById(R.id.consultador);
-//        buscar.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
 
         mRecyclerView = view.findViewById(R.id.lista_pacientes);
         mRecyclerView.setHasFixedSize(true);
@@ -143,7 +127,7 @@ public class ListadoPacientes extends Fragment {
                 Pacientes pacientes = new Pacientes();
                 pacientes.editarPaciente(ID);
                 pacientes.enviarPacientes(listaPacientes);
-                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
                 transaction.replace(R.id.contenedor, pacientes);
                 transaction.commit();
                 break;
@@ -152,16 +136,12 @@ public class ListadoPacientes extends Fragment {
                 builder.setIcon(R.drawable.logonuevo);
                 builder.setTitle("Listado de Pacientes");
                 builder.setMessage("¿Desea deshabilitar al paciente?");
-                builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                        actualizarEstado(posicion);
-                    }
+                builder.setPositiveButton("ACEPTAR", (dialog, id) -> {
+                    // User cancelled the dialog
+                    actualizarEstado(posicion);
                 });
-                builder.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                    }
+                builder.setNegativeButton("CANCELAR", (dialog, id) -> {
+                    // User cancelled the dialog
                 });
 
                 AlertDialog dialog = builder.create();
@@ -217,20 +197,14 @@ public class ListadoPacientes extends Fragment {
                     mRecyclerView.setLayoutManager(mLayoutManager);
                     mRecyclerView.setAdapter(mAdapter);
 
-                    mAdapter.setOnItemClickListener(new PacienteAdapter.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(final int position) {
-                            MenuInferior menuInferior = new MenuInferior();
-                            menuInferior.show(getFragmentManager(), "MenuInferior");
-                            menuInferior.recibirTitulo(listaPacientes.get(position).getNombre());
-                            menuInferior.eventoClick(new MenuInferior.MenuInferiorListener() {
-                                @Override
-                                public void onButtonClicked(int opcion) {
-                                    estadoPaciente = listaPacientes.get(position).getEstado();
-                                    realizarAccion(opcion, listaPacientes.get(position).getCodigo(), position);
-                                }
-                            });
-                        }
+                    mAdapter.setOnItemClickListener(position -> {
+                        MenuInferior menuInferior = new MenuInferior();
+                        menuInferior.show(getActivity().getSupportFragmentManager(), "MenuInferior");
+                        menuInferior.recibirTitulo(listaPacientes.get(position).getNombre());
+                        menuInferior.eventoClick(opcion -> {
+                            estadoPaciente = listaPacientes.get(position).getEstado();
+                            realizarAccion(opcion, listaPacientes.get(position).getCodigo(), position);
+                        });
                     });
 
                 } catch (JSONException e) {
@@ -289,14 +263,11 @@ public class ListadoPacientes extends Fragment {
                             .show();
 
                     FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
-                    funcionesBitacora.registrarBitacora("Se deshabilito el paciente #" + listaPacientes.get(ID).getCodigo());
+                    funcionesBitacora.registrarBitacora("ACTUALIZACION", "PACIENTES", "Se actualizo el estado del paciente #" + listaPacientes.get(ID).getCodigo());
 
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            progressDialog.dismiss();
-                            obtenerPacientes();
-                        }
+                    new Handler().postDelayed(() -> {
+                        progressDialog.dismiss();
+                        obtenerPacientes();
                     }, 1000);
                 }
 

@@ -6,11 +6,14 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.widget.Toolbar;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -66,14 +69,11 @@ public class Piezas extends Fragment {
         else
             toolbar.setTitle("Pieza #" + ID_PIEZA);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ListadoPiezas listadoPiezas = new ListadoPiezas();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                transaction.replace(R.id.contenedor, listadoPiezas);
-                transaction.commit();
-            }
+        toolbar.setNavigationOnClickListener(view1 -> {
+            ListadoPiezas listadoPiezas = new ListadoPiezas();
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+            transaction.replace(R.id.contenedor, listadoPiezas);
+            transaction.commit();
         });
 
         nombrePieza = view.findViewById(R.id.nombrePieza);
@@ -130,17 +130,14 @@ public class Piezas extends Fragment {
         }
 
         guardadorPieza = view.findViewById(R.id.grabarPieza);
-        guardadorPieza.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!nombreRequerido() || !numeroRequerido() || !validarNombre() || !validarNumero())
-                    return;
+        guardadorPieza.setOnClickListener(v -> {
+            if (!nombreRequerido() || !numeroRequerido() || !validarNombre() || !validarNumero())
+                return;
 
-                if (!modoEdicion)
-                    registrarPieza();
-                else
-                    actualizarPieza();
-            }
+            if (!modoEdicion)
+                registrarPieza();
+            else
+                actualizarPieza();
         });
 
         return view;
@@ -213,17 +210,14 @@ public class Piezas extends Fragment {
                         .show();
 
                 FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
-                funcionesBitacora.registrarBitacora("Se registro una pieza");
+                funcionesBitacora.registrarBitacora("CREACION", "PIEZAS", "Se creo una pieza");
 
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressDialog.dismiss();
-                        ListadoPiezas listadoPiezas = new ListadoPiezas();
-                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                        transaction.replace(R.id.contenedor, listadoPiezas);
-                        transaction.commit();
-                    }
+                new Handler().postDelayed(() -> {
+                    progressDialog.dismiss();
+                    ListadoPiezas listadoPiezas = new ListadoPiezas();
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                    transaction.replace(R.id.contenedor, listadoPiezas);
+                    transaction.commit();
                 }, 1000);
             }
 
@@ -264,17 +258,14 @@ public class Piezas extends Fragment {
                         .show();
 
                 FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
-                funcionesBitacora.registrarBitacora("Se actualizo la pieza #" + ID_PIEZA);
+                funcionesBitacora.registrarBitacora("ACTUALIZACION", "PIEZAS", "Se actualizo la pieza #" + ID_PIEZA);
 
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressDialog.dismiss();
-                        ListadoPiezas listadoPiezas = new ListadoPiezas();
-                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                        transaction.replace(R.id.contenedor, listadoPiezas);
-                        transaction.commit();
-                    }
+                new Handler().postDelayed(() -> {
+                    progressDialog.dismiss();
+                    ListadoPiezas listadoPiezas = new ListadoPiezas();
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                    transaction.replace(R.id.contenedor, listadoPiezas);
+                    transaction.commit();
                 }, 1000);
             }
 

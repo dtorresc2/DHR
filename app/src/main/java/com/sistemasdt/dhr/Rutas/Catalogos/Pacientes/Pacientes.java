@@ -77,14 +77,11 @@ public class Pacientes extends Fragment {
         else
             toolbar.setTitle("Paciente #" + ID_PACIENTE);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ListadoPacientes listadoPacientes = new ListadoPacientes();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                transaction.replace(R.id.contenedor, listadoPacientes);
-                transaction.commit();
-            }
+        toolbar.setNavigationOnClickListener(v -> {
+            ListadoPacientes listadoPacientes = new ListadoPacientes();
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+            transaction.replace(R.id.contenedor, listadoPacientes);
+            transaction.commit();
         });
 
         primerNombre = view.findViewById(R.id.primerNombre);
@@ -212,45 +209,36 @@ public class Pacientes extends Fragment {
         String dat = diaAux + "/" + mesAux + "/" + a;
         fechap.setText(dat);
 
-        fecha.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Calendar calendario = Calendar.getInstance();
-                int yy = calendario.get(Calendar.YEAR);
-                int mm = calendario.get(Calendar.MONTH);
-                int dd = calendario.get(Calendar.DAY_OF_MONTH);
-                dd--;
+        fecha.setOnClickListener(v -> {
+            final Calendar calendario = Calendar.getInstance();
+            int yy = calendario.get(Calendar.YEAR);
+            int mm = calendario.get(Calendar.MONTH);
+            int dd = calendario.get(Calendar.DAY_OF_MONTH);
+            dd--;
 
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), R.style.progressDialog, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        month++;
-                        String mesAux = (month > 9) ? String.valueOf(month) : "0" + month;
-                        String diaAux = (dayOfMonth > 9) ? String.valueOf(dayOfMonth) : "0" + dayOfMonth;
+            DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), R.style.progressDialog, (view1, year, month, dayOfMonth) -> {
+                month++;
+                String mesAux1 = (month > 9) ? String.valueOf(month) : "0" + month;
+                String diaAux1 = (dayOfMonth > 9) ? String.valueOf(dayOfMonth) : "0" + dayOfMonth;
 
-                        fechap.setText(diaAux + "/" + mesAux + "/" + year);
-                    }
-                }, yy, mm, dd);
+                fechap.setText(diaAux1 + "/" + mesAux1 + "/" + year);
+            }, yy, mm, dd);
 
-                datePickerDialog.show();
-            }
+            datePickerDialog.show();
         });
 
         if (modoEdicion) {
             obtenerPaciente();
         }
 
-        agregador.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!nombreRequerido() || !telefonoRequerido() || !edadRequerida() || !validarNombre() || !validarEdad() || !validarUsuarioRepetido())
-                    return;
+        agregador.setOnClickListener(v -> {
+            if (!nombreRequerido() || !telefonoRequerido() || !edadRequerida() || !validarNombre() || !validarEdad() || !validarUsuarioRepetido())
+                return;
 
-                if (!modoEdicion)
-                    registrarPaciente();
-                else
-                    actualizarPaciente();
-            }
+            if (!modoEdicion)
+                registrarPaciente();
+            else
+                actualizarPaciente();
         });
         return view;
     }
@@ -294,17 +282,14 @@ public class Pacientes extends Fragment {
                         .show();
 
                 FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
-                funcionesBitacora.registrarBitacora("Se registro un paciente");
-
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressDialog.dismiss();
-                        ListadoPacientes listadoPacientes = new ListadoPacientes();
-                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                        transaction.replace(R.id.contenedor, listadoPacientes);
-                        transaction.commit();
-                    }
+                funcionesBitacora.registrarBitacora("CREACION", "PACIENTES", "Se registro un paciente");
+                
+                new Handler().postDelayed(() -> {
+                    progressDialog.dismiss();
+                    ListadoPacientes listadoPacientes = new ListadoPacientes();
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                    transaction.replace(R.id.contenedor, listadoPacientes);
+                    transaction.commit();
                 }, 1000);
             }
 
@@ -353,17 +338,14 @@ public class Pacientes extends Fragment {
                         .show();
 
                 FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
-                funcionesBitacora.registrarBitacora("Se actualizo el paciente #" + ID_PACIENTE);
+                funcionesBitacora.registrarBitacora("ACTUALIZACION", "PACIENTES", "Se actualizo el paciente #" + ID_PACIENTE);
 
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressDialog.dismiss();
-                        ListadoPacientes listadoPacientes = new ListadoPacientes();
-                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                        transaction.replace(R.id.contenedor, listadoPacientes);
-                        transaction.commit();
-                    }
+                new Handler().postDelayed(() -> {
+                    progressDialog.dismiss();
+                    ListadoPacientes listadoPacientes = new ListadoPacientes();
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                    transaction.replace(R.id.contenedor, listadoPacientes);
+                    transaction.commit();
                 }, 1000);
             }
 

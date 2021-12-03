@@ -13,10 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingLeft="3dp"
-            android:paddingTop="3dp"
-            android:paddingRight="3dp"
-            android:paddingBottom="3dp">
+            android:padding="3dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -25,24 +22,52 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/desc_accion"
+                    android:id="@+id/accion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:breakStrategy="simple"
                     android:gravity="left"
                     android:paddingLeft="10dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
                     android:text="Registro de Ficha Orinaria"
                     android:textColor="@color/Blanco"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/fecha_accion"
+                    android:id="@+id/evento"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="left"
                     android:paddingLeft="10dp"
-                    android:paddingTop="3dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:text="ACTUALIZACION"
+                    android:textColor="@color/Blanco"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/seccion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:text="PACIENTES"
+                    android:textColor="@color/Blanco"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/fecha"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
                     android:text="20/10/2020 1:35 PM"
                     android:textColor="@color/Blanco"
                     android:textSize="15sp" />
@@ -51,6 +76,7 @@
                     android:id="@+id/cuenta"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="9dp"
                     android:background="@color/AzulOscuro"
                     android:paddingLeft="10dp"
                     android:paddingTop="2dp"

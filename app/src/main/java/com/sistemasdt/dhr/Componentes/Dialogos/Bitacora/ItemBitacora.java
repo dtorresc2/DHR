@@ -1,31 +1,37 @@
 package com.sistemasdt.dhr.Componentes.Dialogos.Bitacora;
 
 public class ItemBitacora {
-    int mCodigoBitacora;
-    String mAccion;
-    String mFecha;
-    String mCuenta;
+    String accion;
+    String evento;
+    String seccion;
+    String fecha;
+    String usuario;
 
-    public ItemBitacora(int mCodigoBitacora, String mAccion, String mFecha, String mCuenta) {
-        this.mCodigoBitacora = mCodigoBitacora;
-        this.mAccion = mAccion;
-        this.mFecha = mFecha;
-        this.mCuenta = mCuenta;
-    }
-
-    public int getCodigoBitacora() {
-        return mCodigoBitacora;
+    public ItemBitacora(String mAccion, String mEvento, String mSeccion, String mFecha, String mUsuario) {
+        this.accion = mAccion;
+        this.evento = mEvento;
+        this.seccion = mSeccion;
+        this.fecha = mFecha;
+        this.usuario = mUsuario;
     }
 
     public String getAccion() {
-        return mAccion;
+        return accion;
+    }
+
+    public String getEvento() {
+        return evento;
+    }
+
+    public String getSeccion() {
+        return seccion;
     }
 
     public String getFecha() {
-        return mFecha;
+        return fecha;
     }
 
-    public String getCuenta() {
-        return mCuenta;
+    public String getUsuario() {
+        return usuario;
     }
 }

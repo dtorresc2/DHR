@@ -65,14 +65,11 @@ public class Servicios extends Fragment {
         else
             toolbar.setTitle("Servicio #" + ID_SERVICIO);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ListadoServicios listadoServicios = new ListadoServicios();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                transaction.replace(R.id.contenedor, listadoServicios);
-                transaction.commit();
-            }
+        toolbar.setNavigationOnClickListener(view1 -> {
+            ListadoServicios listadoServicios = new ListadoServicios();
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+            transaction.replace(R.id.contenedor, listadoServicios);
+            transaction.commit();
         });
 
         descripcionServicio = view.findViewById(R.id.descripcionServicio);
@@ -131,17 +128,14 @@ public class Servicios extends Fragment {
         }
 
         guardadorServicio = view.findViewById(R.id.grabarServicio);
-        guardadorServicio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!descripcionRequerida() || !validarDescripcion() || !montoRequerido() || !validarMonto())
-                    return;
+        guardadorServicio.setOnClickListener(view12 -> {
+            if (!descripcionRequerida() || !validarDescripcion() || !montoRequerido() || !validarMonto())
+                return;
 
-                if (!modoEdicion)
-                    registrarServicio();
-                else
-                    actualizarServicio();
-            }
+            if (!modoEdicion)
+                registrarServicio();
+            else
+                actualizarServicio();
         });
 
         return view;
@@ -179,24 +173,20 @@ public class Servicios extends Fragment {
                         .show();
 
                 FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
-                funcionesBitacora.registrarBitacora("Se registro un servicio");
+                funcionesBitacora.registrarBitacora("CREACION", "SERVICIOS", "Se registro un servicio");
 
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressDialog.dismiss();
-                        ListadoServicios listadoServicios = new ListadoServicios();
-                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                        transaction.replace(R.id.contenedor, listadoServicios);
-                        transaction.commit();
-                    }
+                new Handler().postDelayed(() -> {
+                    progressDialog.dismiss();
+                    ListadoServicios listadoServicios = new ListadoServicios();
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                    transaction.replace(R.id.contenedor, listadoServicios);
+                    transaction.commit();
                 }, 1000);
             }
 
             @Override
             public void onFailure(Exception e) {
                 progressDialog.dismiss();
-                Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -230,17 +220,14 @@ public class Servicios extends Fragment {
                         .show();
 
                 FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
-                funcionesBitacora.registrarBitacora("Se actualizo el servicio #" + ID_SERVICIO);
+                funcionesBitacora.registrarBitacora("ACTUALIZACION", "SERVICIOS", "Se actualizo el servicio #" + ID_SERVICIO);
 
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressDialog.dismiss();
-                        ListadoServicios listadoServicios = new ListadoServicios();
-                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                        transaction.replace(R.id.contenedor, listadoServicios);
-                        transaction.commit();
-                    }
+                new Handler().postDelayed(() -> {
+                    progressDialog.dismiss();
+                    ListadoServicios listadoServicios = new ListadoServicios();
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                    transaction.replace(R.id.contenedor, listadoServicios);
+                    transaction.commit();
                 }, 1000);
             }
 

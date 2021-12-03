@@ -8,12 +8,14 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -56,52 +58,46 @@ public class ListadoPiezas extends Fragment {
         toolbar.setTitle("Piezas");
         toolbar.inflateMenu(R.menu.opciones_toolbar_catalogos);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Catalogos catalogos = new Catalogos();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                transaction.replace(R.id.contenedor, catalogos);
-                transaction.commit();
-            }
+        toolbar.setNavigationOnClickListener(view1 -> {
+            Catalogos catalogos = new Catalogos();
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+            transaction.replace(R.id.contenedor, catalogos);
+            transaction.commit();
         });
 
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.opcion_nuevo:
-                        Piezas piezas = new Piezas();
-                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                        transaction.replace(R.id.contenedor, piezas);
-                        transaction.commit();
-                        return true;
+        toolbar.setOnMenuItemClickListener(menuItem -> {
+            switch (menuItem.getItemId()) {
+                case R.id.opcion_nuevo:
+                    Piezas piezas = new Piezas();
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                    transaction.replace(R.id.contenedor, piezas);
+                    transaction.commit();
+                    return true;
 
-                    case R.id.opcion_filtrar:
-                        MenuItem searchItem = menuItem;
-                        SearchView searchView = (SearchView) searchItem.getActionView();
+                case R.id.opcion_filtrar:
+                    MenuItem searchItem = menuItem;
+                    SearchView searchView = (SearchView) searchItem.getActionView();
 
-                        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                            @Override
-                            public boolean onQueryTextSubmit(String query) {
-                                return false;
-                            }
+                    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                        @Override
+                        public boolean onQueryTextSubmit(String query) {
+                            return false;
+                        }
 
-                            @Override
-                            public boolean onQueryTextChange(String newText) {
-                                mAdapter.getFilter().filter(newText);
-                                return false;
-                            }
-                        });
-                        return true;
+                        @Override
+                        public boolean onQueryTextChange(String newText) {
+                            mAdapter.getFilter().filter(newText);
+                            return false;
+                        }
+                    });
+                    return true;
 
-                    case R.id.opcion_actualizar:
-                        listarPiezas();
-                        return true;
+                case R.id.opcion_actualizar:
+                    listarPiezas();
+                    return true;
 
-                    default:
-                        return false;
-                }
+                default:
+                    return false;
             }
         });
 
@@ -121,7 +117,7 @@ public class ListadoPiezas extends Fragment {
             case 1:
                 Piezas piezas = new Piezas();
                 piezas.editarPieza(ID);
-                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
                 transaction.replace(R.id.contenedor, piezas);
                 transaction.commit();
                 break;
@@ -130,16 +126,12 @@ public class ListadoPiezas extends Fragment {
                 builder.setIcon(R.drawable.logonuevo);
                 builder.setTitle("Listado de Piezas");
                 builder.setMessage("¿Desea deshabilitar la pieza?");
-                builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                        deshabilitarPieza(ID);
-                    }
+                builder.setPositiveButton("ACEPTAR", (dialog, id) -> {
+                    // User cancelled the dialog
+                    deshabilitarPieza(ID);
                 });
-                builder.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                    }
+                builder.setNegativeButton("CANCELAR", (dialog, id) -> {
+                    // User cancelled the dialog
                 });
 
                 AlertDialog dialog = builder.create();
@@ -183,21 +175,15 @@ public class ListadoPiezas extends Fragment {
                     mRecyclerView.setLayoutManager(mLayoutManager);
                     mRecyclerView.setAdapter(mAdapter);
 
-                    mAdapter.setOnItemClickListener(new PiezasAdapter.OnClickListener() {
-                        @Override
-                        public void onItemClick(final int position) {
-                            MenuInferior menuInferior = new MenuInferior();
-                            menuInferior.show(getFragmentManager(), "MenuInferior");
-                            menuInferior.recibirTitulo(listaPiezas.get(position).getNombrePieza());
-                            menuInferior.eventoClick(new MenuInferior.MenuInferiorListener() {
-                                @Override
-                                public void onButtonClicked(int opcion) {
-                                    estadoPieza = listaPiezas.get(position).getEstadoPieza();
-                                    itemPieza = listaPiezas.get(position);
-                                    realizarAccion(opcion, listaPiezas.get(position).getCodigoPieza());
-                                }
-                            });
-                        }
+                    mAdapter.setOnItemClickListener(position -> {
+                        MenuInferior menuInferior = new MenuInferior();
+                        menuInferior.show(getActivity().getSupportFragmentManager(), "MenuInferior");
+                        menuInferior.recibirTitulo(listaPiezas.get(position).getNombrePieza());
+                        menuInferior.eventoClick(opcion -> {
+                            estadoPieza = listaPiezas.get(position).getEstadoPieza();
+                            itemPieza = listaPiezas.get(position);
+                            realizarAccion(opcion, listaPiezas.get(position).getCodigoPieza());
+                        });
                     });
 
                 } catch (JSONException e) {
@@ -246,28 +232,23 @@ public class ListadoPiezas extends Fragment {
                             .show();
 
                     FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
-                    funcionesBitacora.registrarBitacora("Se deshabilito la pieza #" + ID);
+                    funcionesBitacora.registrarBitacora("ACTUALIZACION", "PIEZAS", "Se actualizo el estado de la pieza #" + ID);
 
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            progressDialog.dismiss();
-                            ListadoPiezas listadoPiezas = new ListadoPiezas();
-                            FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                            transaction.replace(R.id.contenedor, listadoPiezas);
-                            transaction.commit();
-                        }
+                    new Handler().postDelayed(() -> {
+                        progressDialog.dismiss();
+                        ListadoPiezas listadoPiezas = new ListadoPiezas();
+                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                        transaction.replace(R.id.contenedor, listadoPiezas);
+                        transaction.commit();
                     }, 1000);
                 }
 
                 @Override
                 public void onFailure(Exception e) {
                     progressDialog.dismiss();
-//                Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
                 }
             });
-        }
-        else {
+        } else {
             Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
             Alerter.create(getActivity())
                     .setTitle("La pieza esta deshabilitada")

@@ -31,17 +31,9 @@ public class QuerysBitacoras {
     public void obtenerBitacora(int id, QuerysBitacoras.VolleyOnEventListener callback) {
         mCallBack = callback;
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, mContext.getResources().getString(R.string.API) + "bitacora/" + id, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                mCallBack.onSuccess(response);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                mCallBack.onFailure(error);
-            }
-        }) {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, mContext.getResources().getString(R.string.API) + "bitacora/" + id,
+                response -> mCallBack.onSuccess(response),
+                error -> mCallBack.onFailure(error)) {
             @Override
             public String getBodyContentType() {
                 return "application/json; charset=utf-8";
@@ -55,17 +47,9 @@ public class QuerysBitacoras {
     public void registrarBitacora(final JSONObject jsonBody, QuerysBitacoras.VolleyOnEventListener callback) {
         mCallBack = callback;
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, mContext.getResources().getString(R.string.API) + "bitacora", new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                mCallBack.onSuccess(response);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                mCallBack.onFailure(error);
-            }
-        }) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, mContext.getResources().getString(R.string.API) + "bitacora",
+                response -> mCallBack.onSuccess(response),
+                error -> mCallBack.onFailure(error)) {
             @Override
             public String getBodyContentType() {
                 return "application/json; charset=utf-8";

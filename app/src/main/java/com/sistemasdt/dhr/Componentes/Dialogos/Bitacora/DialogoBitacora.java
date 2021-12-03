@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -12,10 +13,12 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysBitacoras;
@@ -70,17 +73,14 @@ public class DialogoBitacora extends DialogFragment {
         toolbar.setTitleTextColor(getResources().getColor(R.color.Blanco));
 
         toolbar.inflateMenu(R.menu.opciones_toolbarcitas);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.action_aceptar:
-                        dismiss();
-                        return true;
+        toolbar.setOnMenuItemClickListener(menuItem -> {
+            switch (menuItem.getItemId()) {
+                case R.id.action_aceptar:
+                    dismiss();
+                    return true;
 
-                    default:
-                        return false;
-                }
+                default:
+                    return false;
             }
         });
 
@@ -94,7 +94,7 @@ public class DialogoBitacora extends DialogFragment {
         return view;
     }
 
-    public void obtenerBitacora(){
+    public void obtenerBitacora() {
         listaBitacora.clear();
 
         final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
@@ -113,10 +113,11 @@ public class DialogoBitacora extends DialogFragment {
                     JSONArray jsonArray = new JSONArray(object.toString());
                     for (int i = 0; i < jsonArray.length(); i++) {
                         listaBitacora.add(new ItemBitacora(
-                                jsonArray.getJSONObject(i).getInt("ID_BITACORA"),
                                 jsonArray.getJSONObject(i).getString("ACCION"),
+                                jsonArray.getJSONObject(i).getString("EVENTO"),
+                                jsonArray.getJSONObject(i).getString("SECCION"),
                                 jsonArray.getJSONObject(i).getString("FECHA"),
-                                jsonArray.getJSONObject(i).getString("CUENTA")
+                                jsonArray.getJSONObject(i).getString("USUARIO")
                         ));
                     }
                     mAdapter = new BitacoraAdapter(listaBitacora);
@@ -125,14 +126,15 @@ public class DialogoBitacora extends DialogFragment {
 
                     progressDialog.dismiss();
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    progressDialog.dismiss();
+                    Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
                 }
-                progressDialog.dismiss();
             }
 
             @Override
             public void onFailure(Exception e) {
                 progressDialog.dismiss();
+                Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
             }
         });
     }

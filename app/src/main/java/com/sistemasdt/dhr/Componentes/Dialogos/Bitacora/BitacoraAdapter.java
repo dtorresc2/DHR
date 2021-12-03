@@ -1,8 +1,10 @@
 package com.sistemasdt.dhr.Componentes.Dialogos.Bitacora;
 
 import android.graphics.Typeface;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,19 +18,21 @@ public class BitacoraAdapter extends RecyclerView.Adapter<BitacoraAdapter.Bitaco
     private ArrayList<ItemBitacora> mListaBitacora;
 
     public static class BitacoraViewHolder extends RecyclerView.ViewHolder {
-        TextView descripcion, fecha, cuenta;
+        TextView evento, fecha, cuenta, seccion, accion;
         public View separador;
 
         public BitacoraViewHolder(@NonNull View itemView) {
             super(itemView);
-            descripcion = itemView.findViewById(R.id.desc_accion);
-            fecha = itemView.findViewById(R.id.fecha_accion);
+            evento = itemView.findViewById(R.id.evento);
+            fecha = itemView.findViewById(R.id.fecha);
+            seccion = itemView.findViewById(R.id.seccion);
+            accion = itemView.findViewById(R.id.accion);
             cuenta = itemView.findViewById(R.id.cuenta);
             separador = itemView.findViewById(R.id.separadorBitacora);
         }
     }
 
-    public BitacoraAdapter(ArrayList<ItemBitacora> listaBitacora){
+    public BitacoraAdapter(ArrayList<ItemBitacora> listaBitacora) {
         mListaBitacora = listaBitacora;
     }
 
@@ -41,21 +45,24 @@ public class BitacoraAdapter extends RecyclerView.Adapter<BitacoraAdapter.Bitaco
         BitacoraViewHolder bitacoraViewHolder = new BitacoraViewHolder(view);
         bitacoraViewHolder.cuenta.setTypeface(typeface);
         bitacoraViewHolder.fecha.setTypeface(typeface);
-        bitacoraViewHolder.descripcion.setTypeface(typeface);
+        bitacoraViewHolder.seccion.setTypeface(typeface);
+        bitacoraViewHolder.accion.setTypeface(typeface);
+        bitacoraViewHolder.evento.setTypeface(typeface);
         return bitacoraViewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull BitacoraViewHolder bitacoraViewHolder, int i) {
         ItemBitacora itemBitacora = mListaBitacora.get(i);
-        bitacoraViewHolder.cuenta.setText(itemBitacora.getCuenta());
+        bitacoraViewHolder.cuenta.setText(itemBitacora.getUsuario());
         bitacoraViewHolder.fecha.setText(itemBitacora.getFecha());
-        bitacoraViewHolder.descripcion.setText(itemBitacora.getAccion());
+        bitacoraViewHolder.seccion.setText(itemBitacora.getSeccion());
+        bitacoraViewHolder.accion.setText(itemBitacora.getAccion());
+        bitacoraViewHolder.evento.setText(itemBitacora.getEvento());
 
-        if (i < mListaBitacora.size()){
+        if (i < mListaBitacora.size()) {
             bitacoraViewHolder.separador.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             bitacoraViewHolder.separador.setVisibility(View.INVISIBLE);
         }
     }

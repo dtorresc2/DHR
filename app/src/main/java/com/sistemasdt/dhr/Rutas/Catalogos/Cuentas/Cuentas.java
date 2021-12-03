@@ -6,12 +6,15 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.widget.Toolbar;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -70,7 +73,7 @@ public class Cuentas extends Fragment {
             @Override
             public void onClick(View view) {
                 ListadoCuentas listadoCuentas = new ListadoCuentas();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
                 transaction.replace(R.id.contenedor, listadoCuentas);
                 transaction.commit();
             }
@@ -202,19 +205,15 @@ public class Cuentas extends Fragment {
                         .setBackgroundColorRes(R.color.FondoSecundario)
                         .show();
 
-//                registrarBitacora("Se creo una cuenta");
                 FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
-                funcionesBitacora.registrarBitacora("Se creo una cuenta");
+                funcionesBitacora.registrarBitacora("CREACION", "CUENTAS", "Creacion de cuenta");
 
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressDialog.dismiss();
-                        ListadoCuentas listadoCuentas = new ListadoCuentas();
-                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                        transaction.replace(R.id.contenedor, listadoCuentas);
-                        transaction.commit();
-                    }
+                new Handler().postDelayed(() -> {
+                    progressDialog.dismiss();
+                    ListadoCuentas listadoCuentas = new ListadoCuentas();
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                    transaction.replace(R.id.contenedor, listadoCuentas);
+                    transaction.commit();
                 }, 1000);
             }
 
@@ -252,17 +251,14 @@ public class Cuentas extends Fragment {
                         .show();
 
                 FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
-                funcionesBitacora.registrarBitacora("Se actualizo el password de la cuenta #" + ID_CUENTA);
+                funcionesBitacora.registrarBitacora("ACTUALIZACION", "CUENTAS", "Se actualizo el password de la cuenta #" + ID_CUENTA);
 
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressDialog.dismiss();
-                        ListadoCuentas listadoCuentas = new ListadoCuentas();
-                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                        transaction.replace(R.id.contenedor, listadoCuentas);
-                        transaction.commit();
-                    }
+                new Handler().postDelayed(() -> {
+                    progressDialog.dismiss();
+                    ListadoCuentas listadoCuentas = new ListadoCuentas();
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                    transaction.replace(R.id.contenedor, listadoCuentas);
+                    transaction.commit();
                 }, 1000);
             }
 
@@ -281,14 +277,9 @@ public class Cuentas extends Fragment {
         progressDialog.show();
 
         Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            public void run() {
-                progressDialog.dismiss();
-            }
-        }, 1000);
+        handler.postDelayed(() -> progressDialog.dismiss(), 1000);
 
         final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
-//        final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("PERFIL", Context.MODE_PRIVATE);
 
         QuerysCuentas querysCuentas = new QuerysCuentas(getContext());
         querysCuentas.obtenerCuenta(

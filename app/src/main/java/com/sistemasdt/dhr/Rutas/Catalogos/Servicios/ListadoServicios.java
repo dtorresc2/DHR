@@ -55,52 +55,46 @@ public class ListadoServicios extends Fragment {
         toolbar.setTitle("Servicios");
         toolbar.inflateMenu(R.menu.opciones_toolbar_catalogos);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Catalogos catalogos = new Catalogos();
-                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                transaction.replace(R.id.contenedor, catalogos);
-                transaction.commit();
-            }
+        toolbar.setNavigationOnClickListener(view1 -> {
+            Catalogos catalogos = new Catalogos();
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+            transaction.replace(R.id.contenedor, catalogos);
+            transaction.commit();
         });
 
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.opcion_nuevo:
-                        Servicios servicios = new Servicios();
-                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                        transaction.replace(R.id.contenedor, servicios);
-                        transaction.commit();
-                        return true;
+        toolbar.setOnMenuItemClickListener(menuItem -> {
+            switch (menuItem.getItemId()) {
+                case R.id.opcion_nuevo:
+                    Servicios servicios = new Servicios();
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                    transaction.replace(R.id.contenedor, servicios);
+                    transaction.commit();
+                    return true;
 
-                    case R.id.opcion_filtrar:
-                        MenuItem searchItem = menuItem;
-                        SearchView searchView = (SearchView) searchItem.getActionView();
+                case R.id.opcion_filtrar:
+                    MenuItem searchItem = menuItem;
+                    SearchView searchView = (SearchView) searchItem.getActionView();
 
-                        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                            @Override
-                            public boolean onQueryTextSubmit(String query) {
-                                return false;
-                            }
+                    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                        @Override
+                        public boolean onQueryTextSubmit(String query) {
+                            return false;
+                        }
 
-                            @Override
-                            public boolean onQueryTextChange(String newText) {
-                                mAdapter.getFilter().filter(newText);
-                                return false;
-                            }
-                        });
-                        return true;
+                        @Override
+                        public boolean onQueryTextChange(String newText) {
+                            mAdapter.getFilter().filter(newText);
+                            return false;
+                        }
+                    });
+                    return true;
 
-                    case R.id.opcion_actualizar:
-                        listarServicios();
-                        return true;
+                case R.id.opcion_actualizar:
+                    listarServicios();
+                    return true;
 
-                    default:
-                        return false;
-                }
+                default:
+                    return false;
             }
         });
 
@@ -109,10 +103,6 @@ public class ListadoServicios extends Fragment {
         mRecyclerView = view.findViewById(R.id.listado_servicios);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
-//        mAdapter = new ServiciosAdapter(listaServicios);
-//
-//        mRecyclerView.setLayoutManager(mLayoutManager);
-//        mRecyclerView.setAdapter(mAdapter);
 
         listarServicios();
 
@@ -182,20 +172,14 @@ public class ListadoServicios extends Fragment {
                     mRecyclerView.setLayoutManager(mLayoutManager);
                     mRecyclerView.setAdapter(mAdapter);
 
-                    mAdapter.setOnItemClickListener(new ServiciosAdapter.OnClickListener() {
-                        @Override
-                        public void onItemClick(final int position) {
-                            MenuInferior menuInferior = new MenuInferior();
-                            menuInferior.show(getActivity().getSupportFragmentManager(), "MenuInferior");
-                            menuInferior.recibirTitulo(listaServicios.get(position).getDescripcionServicio());
-                            menuInferior.eventoClick(new MenuInferior.MenuInferiorListener() {
-                                @Override
-                                public void onButtonClicked(int opcion) {
-                                    estadoServicio = listaServicios.get(position).getEstadoServicio();
-                                    realizarAccion(opcion, listaServicios.get(position).getCodigoServicio());
-                                }
-                            });
-                        }
+                    mAdapter.setOnItemClickListener(position -> {
+                        MenuInferior menuInferior = new MenuInferior();
+                        menuInferior.show(getActivity().getSupportFragmentManager(), "MenuInferior");
+                        menuInferior.recibirTitulo(listaServicios.get(position).getDescripcionServicio());
+                        menuInferior.eventoClick(opcion -> {
+                            estadoServicio = listaServicios.get(position).getEstadoServicio();
+                            realizarAccion(opcion, listaServicios.get(position).getCodigoServicio());
+                        });
                     });
 
                 } catch (JSONException e) {
@@ -243,14 +227,11 @@ public class ListadoServicios extends Fragment {
                             .show();
 
                     FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
-                    funcionesBitacora.registrarBitacora("Se deshabilito el servicio #" + ID);
+                    funcionesBitacora.registrarBitacora("ACTUALIZACION", "SERVICIOS", "Se deshabilito el servicio #" + ID);
 
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            progressDialog.dismiss();
-                            listarServicios();
-                        }
+                    new Handler().postDelayed(() -> {
+                        progressDialog.dismiss();
+                        listarServicios();
                     }, 1000);
                 }
 

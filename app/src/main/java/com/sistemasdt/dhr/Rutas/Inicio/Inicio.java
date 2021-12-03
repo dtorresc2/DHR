@@ -371,7 +371,7 @@ public class Inicio extends Fragment {
                             obtenerPerfil();
 
                             FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
-                            funcionesBitacora.registrarBitacora("Se actualizo el perfil");
+                            funcionesBitacora.registrarBitacora("ACTUALIZACION", "PERFIL", "Se actualizo el perfil");
                         }
 
                         @Override

@@ -55,53 +55,47 @@ public class ListadoCuentas extends Fragment {
         toolbar.setTitle("Cuentas");
         toolbar.inflateMenu(R.menu.opciones_toolbar_catalogos);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Catalogos catalogos = new Catalogos();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                transaction.replace(R.id.contenedor, catalogos);
-                transaction.commit();
-            }
+        toolbar.setNavigationOnClickListener(view1 -> {
+            Catalogos catalogos = new Catalogos();
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+            transaction.replace(R.id.contenedor, catalogos);
+            transaction.commit();
         });
 
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.opcion_nuevo:
-                        Cuentas cuentas = new Cuentas();
-                        cuentas.enviarCuentas(listaCuentas);
-                        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                        transaction.replace(R.id.contenedor, cuentas);
-                        transaction.commit();
-                        return true;
+        toolbar.setOnMenuItemClickListener(menuItem -> {
+            switch (menuItem.getItemId()) {
+                case R.id.opcion_nuevo:
+                    Cuentas cuentas = new Cuentas();
+                    cuentas.enviarCuentas(listaCuentas);
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                    transaction.replace(R.id.contenedor, cuentas);
+                    transaction.commit();
+                    return true;
 
-                    case R.id.opcion_filtrar:
-                        MenuItem searchItem = menuItem;
-                        SearchView searchView = (SearchView) searchItem.getActionView();
+                case R.id.opcion_filtrar:
+                    MenuItem searchItem = menuItem;
+                    SearchView searchView = (SearchView) searchItem.getActionView();
 
-                        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                            @Override
-                            public boolean onQueryTextSubmit(String query) {
-                                return false;
-                            }
+                    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                        @Override
+                        public boolean onQueryTextSubmit(String query) {
+                            return false;
+                        }
 
-                            @Override
-                            public boolean onQueryTextChange(String newText) {
-                                mAdapter.getFilter().filter(newText);
-                                return false;
-                            }
-                        });
-                        return true;
+                        @Override
+                        public boolean onQueryTextChange(String newText) {
+                            mAdapter.getFilter().filter(newText);
+                            return false;
+                        }
+                    });
+                    return true;
 
-                    case R.id.opcion_actualizar:
-                        obtenerCuentas();
-                        return true;
+                case R.id.opcion_actualizar:
+                    obtenerCuentas();
+                    return true;
 
-                    default:
-                        return false;
-                }
+                default:
+                    return false;
             }
         });
 
@@ -121,7 +115,7 @@ public class ListadoCuentas extends Fragment {
                 Cuentas cuentas = new Cuentas();
                 cuentas.editarCuenta(ID);
                 cuentas.enviarCuentas(listaCuentas);
-                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
                 transaction.replace(R.id.contenedor, cuentas);
                 transaction.commit();
                 break;
@@ -161,19 +155,11 @@ public class ListadoCuentas extends Fragment {
                     mRecyclerView.setLayoutManager(mLayoutManager);
                     mRecyclerView.setAdapter(mAdapter);
 
-                    mAdapter.setOnItemClickListener(new CuentasAdapter.OnClickListener() {
-                        @Override
-                        public void onItemClick(final int position) {
-                            MenuInferiorDos menuInferiorDos = new MenuInferiorDos();
-                            menuInferiorDos.show(getFragmentManager(), "MenuInferior");
-                            menuInferiorDos.recibirTitulo(listaCuentas.get(position).getUsuarioCuenta());
-                            menuInferiorDos.eventoClick(new MenuInferiorDos.MenuInferiorListener() {
-                                @Override
-                                public void onButtonClicked(int opcion) {
-                                    realizarAccion(opcion, listaCuentas.get(position).getCodigoCuenta());
-                                }
-                            });
-                        }
+                    mAdapter.setOnItemClickListener(position -> {
+                        MenuInferiorDos menuInferiorDos = new MenuInferiorDos();
+                        menuInferiorDos.show(getActivity().getSupportFragmentManager(), "MenuInferior");
+                        menuInferiorDos.recibirTitulo(listaCuentas.get(position).getUsuarioCuenta());
+                        menuInferiorDos.eventoClick(opcion -> realizarAccion(opcion, listaCuentas.get(position).getCodigoCuenta()));
                     });
 
                 } catch (JSONException e) {
@@ -213,7 +199,8 @@ public class ListadoCuentas extends Fragment {
                                     .show();
 
                             FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
-                            funcionesBitacora.registrarBitacora("Se elimino la cuenta #" + ID);
+                            funcionesBitacora.registrarBitacora("ELIMINACION", "CUENTAS", "Se elimino la cuenta #" + ID);
+
                             obtenerCuentas();
                         }
 
@@ -235,10 +222,7 @@ public class ListadoCuentas extends Fragment {
                 }
             }
         });
-        builder.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
-            }
+        builder.setNegativeButton("CANCELAR", (dialog, id) -> {
         });
 
         AlertDialog dialog = builder.create();
