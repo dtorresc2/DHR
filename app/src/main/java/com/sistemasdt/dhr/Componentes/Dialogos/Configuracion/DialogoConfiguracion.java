@@ -76,7 +76,7 @@ public class DialogoConfiguracion extends DialogFragment {
         View view = inflater.inflate(R.layout.dialogo_configuracion, container, false);
         final Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setTitle("DialogoConfiguracion");
+        toolbar.setTitle("Configuracion del Sistema");
         toolbar.setTitleTextColor(getResources().getColor(R.color.Blanco));
         //toolbar.setNavigationIcon(R.drawable.ic_cerrar);
         /*toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -87,17 +87,14 @@ public class DialogoConfiguracion extends DialogFragment {
         });*/
 
         toolbar.inflateMenu(R.menu.opciones_toolbarcitas);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.action_aceptar:
-                        dismiss();
-                        return true;
+        toolbar.setOnMenuItemClickListener(menuItem -> {
+            switch (menuItem.getItemId()) {
+                case R.id.action_aceptar:
+                    dismiss();
+                    return true;
 
-                    default:
-                        return false;
-                }
+                default:
+                    return false;
             }
         });
 
@@ -156,45 +153,27 @@ public class DialogoConfiguracion extends DialogFragment {
         }
 
         limpiar1 = view.findViewById(R.id.limpiar1);
-        limpiar1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                vaciarFotos();
-            }
-        });
+        limpiar1.setOnClickListener(v -> vaciarFotos());
 
         limpiar2 = view.findViewById(R.id.limpiar2);
-        limpiar2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                vaciarFichas();
-            }
-        });
+        limpiar2.setOnClickListener(v -> vaciarFichas());
 
         limpiar3 = view.findViewById(R.id.limpiar3);
-        limpiar3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                vaciarFichasE();
-            }
-        });
+        limpiar3.setOnClickListener(v -> vaciarFichasE());
 
         final SharedPreferences preferencias = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
         recordarCuenta.setChecked(preferencias.getBoolean("recordar", false));
 
-        recordarCuenta.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (recordarCuenta.isChecked()){
-                    SharedPreferences.Editor editor = preferencias.edit();
-                    editor.putBoolean("recordar", true);
-                    editor.commit();
-                }
-                else {
-                    SharedPreferences.Editor editor = preferencias.edit();
-                    editor.putBoolean("recordar", false);
-                    editor.commit();
-                }
+        recordarCuenta.setOnClickListener(v -> {
+            if (recordarCuenta.isChecked()){
+                SharedPreferences.Editor editor = preferencias.edit();
+                editor.putBoolean("recordar", true);
+                editor.commit();
+            }
+            else {
+                SharedPreferences.Editor editor = preferencias.edit();
+                editor.putBoolean("recordar", false);
+                editor.commit();
             }
         });
 
