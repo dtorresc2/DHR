@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.sistemasdt.dhr.Componentes.Dialogos.Bitacora.FuncionesBitacora;
 import com.sistemasdt.dhr.Componentes.MenusInferiores.MenuInferiorFicha;
 import com.sistemasdt.dhr.R;
 
@@ -263,6 +264,9 @@ public class ListadoFichas extends Fragment {
                             .setBackgroundColorRes(R.color.FondoSecundario)
                             .show();
 
+                    FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
+                    funcionesBitacora.registrarBitacora("ACTUALIZACION", "FICHA NORMAL", "Se el estado de la ficha #" + ID_FICHA);
+
                     obtenerFichas();
                 }
 
@@ -300,6 +304,9 @@ public class ListadoFichas extends Fragment {
                         .enableSwipeToDismiss()
                         .setBackgroundColorRes(R.color.FondoSecundario)
                         .show();
+
+                FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
+                funcionesBitacora.registrarBitacora("ELIMINACION", "FICHA NORMAL", "Se elimino la ficha #" + ID);
 
                 obtenerFichas();
             }

@@ -37,6 +37,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.itextpdf.text.pdf.parser.TextRenderInfo;
+import com.sistemasdt.dhr.Componentes.Dialogos.Bitacora.FuncionesBitacora;
 import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.ItemPaciente;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialMedico.HistorialMed;
@@ -91,21 +92,17 @@ public class Ficha extends Fragment {
         toolbar.setTitle("Ficha");
         toolbar.setNavigationIcon(R.drawable.ic_cerrar);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!MODO_EDICION) {
-                    MenuFichas menuFichas = new MenuFichas();
-                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                    transaction.replace(R.id.contenedor, menuFichas);
-                    transaction.commit();
-                }
-                else{
-                    MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
-                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                    transaction.replace(R.id.contenedor, menuFichaNormal);
-                    transaction.commit();
-                }
+        toolbar.setNavigationOnClickListener(v -> {
+            if (!MODO_EDICION) {
+                MenuFichas menuFichas = new MenuFichas();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                transaction.replace(R.id.contenedor, menuFichas);
+                transaction.commit();
+            } else {
+                MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                transaction.replace(R.id.contenedor, menuFichaNormal);
+                transaction.commit();
             }
         });
 
@@ -168,45 +165,26 @@ public class Ficha extends Fragment {
             fecha.setText(dat);
 
         //Obtener Calendario
-        calendario.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Calendar calendario = Calendar.getInstance();
-                int yy = calendario.get(Calendar.YEAR);
-                int mm = calendario.get(Calendar.MONTH);
-                int dd = calendario.get(Calendar.DAY_OF_MONTH);
-                dd--;
+        calendario.setOnClickListener(v -> {
+            final Calendar calendario = Calendar.getInstance();
+            int yy = calendario.get(Calendar.YEAR);
+            int mm = calendario.get(Calendar.MONTH);
+            int dd = calendario.get(Calendar.DAY_OF_MONTH);
+            dd--;
 
-                DatePickerDialog datePicker = new DatePickerDialog(getActivity(),
-                        R.style.progressDialog
-                        , new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        monthOfYear++;
-                        String mesAux = (monthOfYear > 9) ? String.valueOf(monthOfYear) : "0" + monthOfYear;
-                        String diaAux = (dayOfMonth > 9) ? String.valueOf(dayOfMonth) : "0" + dayOfMonth;
+            DatePickerDialog datePicker = new DatePickerDialog(getActivity(),
+                    R.style.progressDialog
+                    , (view12, year, monthOfYear, dayOfMonth) -> {
+                monthOfYear++;
+                String mesAux1 = (monthOfYear > 9) ? String.valueOf(monthOfYear) : "0" + monthOfYear;
+                String diaAux1 = (dayOfMonth > 9) ? String.valueOf(dayOfMonth) : "0" + dayOfMonth;
 
-                        String dat = diaAux + "/" + mesAux + "/" + year;
-                        fecha.setText(dat);
-                    }
-                }, yy, mm, dd);
+                String dat1 = diaAux1 + "/" + mesAux1 + "/" + year;
+                fecha.setText(dat1);
+            }, yy, mm, dd);
 
-//                DatePickerDialog datePicker = new DatePickerDialog(getActivity(),
-//                        android.R.style.Theme_Holo_Dialog_MinWidth
-//                        , new DatePickerDialog.OnDateSetListener() {
-//                    @Override
-//                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-//                        monthOfYear++;
-//                        String mesAux = (monthOfYear > 9) ? String.valueOf(monthOfYear) : "0" + monthOfYear;
-//                        String diaAux = (dayOfMonth > 9) ? String.valueOf(dayOfMonth) : "0" + dayOfMonth;
-//
-//                        String dat = diaAux + "/" + mesAux + "/" + year;
-//                        fecha.setText(dat);
-//                    }
-//                }, yy, mm, dd);
 
-                datePicker.show();
-            }
+            datePicker.show();
         });
 
         listaPacientes = new ArrayList<>();
@@ -217,179 +195,158 @@ public class Ficha extends Fragment {
         paciente = view.findViewById(R.id.paciente);
         paciente.setTypeface(face);
 
-        paciente.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Dialog dialog = new Dialog(getContext());
-                dialog.setContentView(R.layout.dialogo_busqueda);
-                dialog.getWindow().setLayout(view.getWidth() - 50, 1000);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.show();
+        paciente.setOnClickListener(v -> {
+            final Dialog dialog = new Dialog(getContext());
+            dialog.setContentView(R.layout.dialogo_busqueda);
+            dialog.getWindow().setLayout(view.getWidth() - 50, 1000);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.show();
 
-                EditText editText = dialog.findViewById(R.id.buscador);
-                editText.setTypeface(face);
+            EditText editText = dialog.findViewById(R.id.buscador);
+            editText.setTypeface(face);
 
-                TextView textView = dialog.findViewById(R.id.tituloDialogo);
-                textView.setTypeface(face);
+            TextView textView = dialog.findViewById(R.id.tituloDialogo);
+            textView.setTypeface(face);
 
-                ListView listView = dialog.findViewById(R.id.lista_items);
+            ListView listView = dialog.findViewById(R.id.lista_items);
 
-//                final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, listaPacientes) {
-//                    @Override
-//                    public View getView(int position, View convertView, ViewGroup parent) {
-//                        View view = LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_list_item_1, parent, false);
-//                        Typeface typeface = Typeface.createFromAsset(view.getContext().getAssets(), "fonts/bahnschrift.ttf");
-//                        TextView textView = view.findViewById(android.R.id.text1);
-//                        textView.setTypeface(typeface);
-//                        return view;
-//                    }
-//                };
+            final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, listaPacientes);
+            listView.setAdapter(adapter);
 
-                final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, listaPacientes);
-                listView.setAdapter(adapter);
+            editText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                editText.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
 
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    adapter.getFilter().filter(s);
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+
+            listView.setOnItemClickListener((parent, view1, position, id) -> {
+                String filter = adapter.getItem(position).toLowerCase().trim();
+                paciente.setText(adapter.getItem(position));
+
+                for (ItemPaciente item : listaPacientesGeneral) {
+                    if (item.getNombre().toLowerCase().trim().contains(filter)) {
+                        ID_PACIENTE = listaPacientesGeneral.get(listaPacientesGeneral.indexOf(item)).getCodigo();
                     }
+                }
 
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        adapter.getFilter().filter(s);
-                    }
+                dialog.dismiss();
+            });
+        });
 
-                    @Override
-                    public void afterTextChanged(Editable s) {
+        guardador.setOnClickListener(v -> {
+            if (!motivoRequerido())
+                return;
 
-                    }
-                });
+            if (ID_PACIENTE == 0) {
+                Alerter.create(getActivity())
+                        .setTitle("Error")
+                        .setText("No ha seleccionado un paciente")
+                        .setIcon(R.drawable.logonuevo)
+                        .setTextTypeface(face)
+                        .enableSwipeToDismiss()
+                        .setBackgroundColorRes(R.color.AzulOscuro)
+                        .show();
+                return;
+            }
 
-                listView.setOnItemClickListener(new OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        String filter = adapter.getItem(position).toLowerCase().trim();
-                        paciente.setText(adapter.getItem(position));
+            if (!MODO_EDICION) {
+                final SharedPreferences preferenciasFicha = getActivity().getSharedPreferences("FICHA", Context.MODE_PRIVATE);
+                final SharedPreferences.Editor escritor = preferenciasFicha.edit();
+                escritor.putString("ID_PACIENTE", String.valueOf(ID_PACIENTE));
+                escritor.putString("PACIENTE", paciente.getText().toString());
+                escritor.putString("FECHA", fecha.getText().toString());
+                escritor.putString("MEDICO", medico.getText().toString());
+                escritor.putString("MOTIVO", motivo.getText().toString());
+                escritor.putString("REFERENTE", referente.getText().toString());
+                escritor.commit();
 
-                        for (ItemPaciente item : listaPacientesGeneral) {
-                            if (item.getNombre().toLowerCase().trim().contains(filter)) {
-                                ID_PACIENTE = listaPacientesGeneral.get(listaPacientesGeneral.indexOf(item)).getCodigo();
-//                                String codigoPaciente = String.valueOf(listaPacientesGeneral.get(listaPacientesGeneral.indexOf(item)).getCodigo());
-//                                Toast.makeText(getContext(), codigoPaciente, Toast.LENGTH_LONG).show();
-                            }
+                final SharedPreferences preferenciasFicha2 = getActivity().getSharedPreferences("RESUMEN_FN", Context.MODE_PRIVATE);
+                final SharedPreferences.Editor escritor2 = preferenciasFicha2.edit();
+                escritor2.putString("PACIENTE", paciente.getText().toString());
+                escritor2.commit();
+
+                HistorialMed historialMed = new HistorialMed();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                transaction.replace(R.id.contenedor, historialMed);
+                transaction.commit();
+            } else {
+                final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+                progressDialog.setMessage("Cargando...");
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+
+                try {
+                    Date initDate = new SimpleDateFormat("dd/MM/yyyy").parse(fecha.getText().toString());
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                    String fechaMYSQL = formatter.format(initDate);
+
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("ID_PACIENTE", ID_PACIENTE);
+                    jsonObject.put("FECHA", fechaMYSQL);
+                    jsonObject.put("MEDICO", medico.getText().toString());
+                    jsonObject.put("MOTIVO", motivo.getText().toString());
+                    jsonObject.put("REFERENTE", referente.getText().toString());
+
+                    QuerysFichas querysFichas = new QuerysFichas(getContext());
+                    querysFichas.actualizarFicha(ID_FICHA, jsonObject, new QuerysFichas.VolleyOnEventListener() {
+                        @Override
+                        public void onSuccess(Object object) {
+                            progressDialog.dismiss();
+
+                            Alerter.create(getActivity())
+                                    .setTitle("Ficha")
+                                    .setText("Actualizada correctamente")
+                                    .setIcon(R.drawable.logonuevo)
+                                    .setTextTypeface(face)
+                                    .enableSwipeToDismiss()
+                                    .setBackgroundColorRes(R.color.FondoSecundario)
+                                    .show();
+
+                            FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
+                            funcionesBitacora.registrarBitacora("ACTUALIZACION", "FICHA NORMAL", "Se actualizo la ficha #" + ID_FICHA);
+
+                            MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
+                            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+                                    .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                            transaction.replace(R.id.contenedor, menuFichaNormal);
+                            transaction.commit();
                         }
 
-                        dialog.dismiss();
-                    }
-                });
-            }
-        });
+                        @Override
+                        public void onFailure(Exception e) {
+                            progressDialog.dismiss();
 
-        guardador.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!motivoRequerido())
-                    return;
+                            Alerter.create(getActivity())
+                                    .setTitle("Error")
+                                    .setText("Fallo al actualizar la ficha")
+                                    .setIcon(R.drawable.logonuevo)
+                                    .setTextTypeface(face)
+                                    .enableSwipeToDismiss()
+                                    .setBackgroundColorRes(R.color.AzulOscuro)
+                                    .show();
+                        }
+                    });
 
-                if (ID_PACIENTE == 0) {
-                    Alerter.create(getActivity())
-                            .setTitle("Error")
-                            .setText("No ha seleccionado un paciente")
-                            .setIcon(R.drawable.logonuevo)
-                            .setTextTypeface(face)
-                            .enableSwipeToDismiss()
-                            .setBackgroundColorRes(R.color.AzulOscuro)
-                            .show();
-                    return;
+
+                } catch (ParseException | JSONException e) {
+                    e.printStackTrace();
                 }
 
-                if (!MODO_EDICION) {
-                    final SharedPreferences preferenciasFicha = getActivity().getSharedPreferences("FICHA", Context.MODE_PRIVATE);
-                    final SharedPreferences.Editor escritor = preferenciasFicha.edit();
-                    escritor.putString("ID_PACIENTE", String.valueOf(ID_PACIENTE));
-                    escritor.putString("PACIENTE", paciente.getText().toString());
-                    escritor.putString("FECHA", fecha.getText().toString());
-                    escritor.putString("MEDICO", medico.getText().toString());
-                    escritor.putString("MOTIVO", motivo.getText().toString());
-                    escritor.putString("REFERENTE", referente.getText().toString());
-                    escritor.commit();
-
-                    final SharedPreferences preferenciasFicha2 = getActivity().getSharedPreferences("RESUMEN_FN", Context.MODE_PRIVATE);
-                    final SharedPreferences.Editor escritor2 = preferenciasFicha2.edit();
-                    escritor2.putString("PACIENTE", paciente.getText().toString());
-                    escritor2.commit();
-
-                    HistorialMed historialMed = new HistorialMed();
-                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                    transaction.replace(R.id.contenedor, historialMed);
-                    transaction.commit();
-                } else {
-                    final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-                    progressDialog.setMessage("Cargando...");
-                    progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                    progressDialog.setCancelable(false);
-                    progressDialog.show();
-
-                    try {
-                        Date initDate = new SimpleDateFormat("dd/MM/yyyy").parse(fecha.getText().toString());
-                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-                        String fechaMYSQL = formatter.format(initDate);
-
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("ID_PACIENTE", ID_PACIENTE);
-                        jsonObject.put("FECHA", fechaMYSQL);
-                        jsonObject.put("MEDICO", medico.getText().toString());
-                        jsonObject.put("MOTIVO", motivo.getText().toString());
-                        jsonObject.put("REFERENTE", referente.getText().toString());
-
-                        QuerysFichas querysFichas = new QuerysFichas(getContext());
-                        querysFichas.actualizarFicha(ID_FICHA, jsonObject, new QuerysFichas.VolleyOnEventListener() {
-                            @Override
-                            public void onSuccess(Object object) {
-                                progressDialog.dismiss();
-
-                                Alerter.create(getActivity())
-                                        .setTitle("Ficha")
-                                        .setText("Actualizada correctamente")
-                                        .setIcon(R.drawable.logonuevo)
-                                        .setTextTypeface(face)
-                                        .enableSwipeToDismiss()
-                                        .setBackgroundColorRes(R.color.FondoSecundario)
-                                        .show();
-
-                                MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
-                                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
-                                        .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                                transaction.replace(R.id.contenedor, menuFichaNormal);
-                                transaction.commit();
-                            }
-
-                            @Override
-                            public void onFailure(Exception e) {
-                                progressDialog.dismiss();
-
-                                Alerter.create(getActivity())
-                                        .setTitle("Error")
-                                        .setText("Fallo al actualizar la ficha")
-                                        .setIcon(R.drawable.logonuevo)
-                                        .setTextTypeface(face)
-                                        .enableSwipeToDismiss()
-                                        .setBackgroundColorRes(R.color.AzulOscuro)
-                                        .show();
-                            }
-                        });
-
-
-                    } catch (ParseException | JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
             }
         });
-
-//        cargarDatos();
 
         return view;
     }

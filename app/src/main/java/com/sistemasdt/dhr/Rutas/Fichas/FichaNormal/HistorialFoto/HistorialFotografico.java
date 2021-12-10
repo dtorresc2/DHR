@@ -29,6 +29,7 @@ import android.provider.MediaStore;
 import androidx.annotation.NonNull;
 
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.sistemasdt.dhr.Componentes.Dialogos.Bitacora.FuncionesBitacora;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.GuardadorFichaNormal;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialOdonto.HistorialOdonDos;
 
@@ -166,16 +167,13 @@ public class HistorialFotografico extends Fragment {
                         lista_fotos.add(new ItemFoto(bitmap, "", false));
                         fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
                         rv.setAdapter(fotoAdapter);
-                        fotoAdapter.setOnItemClickListener(new FotoAdapter.OnClickListener() {
-                            @Override
-                            public void onItemClick(int position) {
-                                if (position > 0) {
-                                    menuOpciones.setVisibility(View.GONE);
-                                    toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(true);
-                                } else {
-                                    menuOpciones.setVisibility(View.VISIBLE);
-                                    toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(false);
-                                }
+                        fotoAdapter.setOnItemClickListener(position -> {
+                            if (position > 0) {
+                                menuOpciones.setVisibility(View.GONE);
+                                toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(true);
+                            } else {
+                                menuOpciones.setVisibility(View.VISIBLE);
+                                toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(false);
                             }
                         });
                     }
@@ -185,7 +183,7 @@ public class HistorialFotografico extends Fragment {
 //        https://stackoverflow.com/questions/67156608/how-get-image-from-gallery-in-fragmentjetpack-navigation-component
 //        https://www.youtube.com/watch?v=qO3FFuBrT2E&ab_channel=CodingDemos
 //        https://stackoverflow.com/questions/64431993/how-to-get-specific-number-of-images-with-activity-results-api
-        lanzadorGaleria = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), (ActivityResultCallback<ActivityResult>) result -> {
+        lanzadorGaleria = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == Activity.RESULT_OK) {
                 try {
                     if (result.getData() != null) {
@@ -198,16 +196,13 @@ public class HistorialFotografico extends Fragment {
                         rv.setLayoutManager(staggeredGridLayoutManager);
                         fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
                         rv.setAdapter(fotoAdapter);
-                        fotoAdapter.setOnItemClickListener(new FotoAdapter.OnClickListener() {
-                            @Override
-                            public void onItemClick(int position) {
-                                if (position > 0) {
-                                    menuOpciones.setVisibility(View.GONE);
-                                    toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(true);
-                                } else {
-                                    menuOpciones.setVisibility(View.VISIBLE);
-                                    toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(false);
-                                }
+                        fotoAdapter.setOnItemClickListener(position -> {
+                            if (position > 0) {
+                                menuOpciones.setVisibility(View.GONE);
+                                toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(true);
+                            } else {
+                                menuOpciones.setVisibility(View.VISIBLE);
+                                toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(false);
                             }
                         });
                     }
@@ -239,89 +234,76 @@ public class HistorialFotografico extends Fragment {
             toolbar.setNavigationIcon(R.drawable.ic_cerrar);
         }
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!MODO_EDICION) {
-                    Pagos pagos = new Pagos();
-                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                    transaction.replace(R.id.contenedor, pagos);
-                    transaction.commit();
-                } else {
-                    MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
-                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                    transaction.replace(R.id.contenedor, menuFichaNormal);
-                    transaction.commit();
-                }
+        toolbar.setNavigationOnClickListener(v -> {
+            if (!MODO_EDICION) {
+                Pagos pagos = new Pagos();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                transaction.replace(R.id.contenedor, pagos);
+                transaction.commit();
+            } else {
+                MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                transaction.replace(R.id.contenedor, menuFichaNormal);
+                transaction.commit();
             }
         });
 
         toolbar.inflateMenu(R.menu.opciones_toolbar_fotos);
         toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(false);
 
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.action_eliminar:
-                        for (ItemFoto aux : lista_fotos) {
-                            if (aux.isSelected()) {
-                                lista_eliminada.add(aux);
-                            }
+        toolbar.setOnMenuItemClickListener(menuItem -> {
+            switch (menuItem.getItemId()) {
+                case R.id.action_eliminar:
+                    for (ItemFoto aux : lista_fotos) {
+                        if (aux.isSelected()) {
+                            lista_eliminada.add(aux);
+                        }
+                    }
+
+                    // Eliminar lista
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
+                    builder.setIcon(R.drawable.logonuevo);
+                    builder.setTitle("Historial Fotografico");
+                    builder.setMessage("¿Desea eliminar los elementos seleccionados?");
+                    builder.setPositiveButton("ACEPTAR", (dialog, id) -> {
+                        for (ItemFoto aux : lista_eliminada) {
+                            lista_fotos.remove(aux);
                         }
 
-                        // Eliminar lista
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
-                        builder.setIcon(R.drawable.logonuevo);
-                        builder.setTitle("Historial Fotografico");
-                        builder.setMessage("¿Desea eliminar los elementos seleccionados?");
-                        builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                for (ItemFoto aux : lista_eliminada) {
-                                    lista_fotos.remove(aux);
-                                }
+                        lista_eliminada.clear();
 
-                                lista_eliminada.clear();
-
-                                // Actualizar recyleview
-                                staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-                                rv.setLayoutManager(staggeredGridLayoutManager);
-                                fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
-                                rv.setAdapter(fotoAdapter);
-                                fotoAdapter.setOnItemClickListener(new FotoAdapter.OnClickListener() {
-                                    @Override
-                                    public void onItemClick(int position) {
-                                        if (position > 0) {
-                                            menuOpciones.setVisibility(View.GONE);
-                                            toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(true);
-                                        } else {
-                                            menuOpciones.setVisibility(View.VISIBLE);
-                                            toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(false);
-                                        }
-                                    }
-                                });
-
-                                // Reestablecer menu
+                        // Actualizar recyleview
+                        staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+                        rv.setLayoutManager(staggeredGridLayoutManager);
+                        fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
+                        rv.setAdapter(fotoAdapter);
+                        fotoAdapter.setOnItemClickListener(position -> {
+                            if (position > 0) {
+                                menuOpciones.setVisibility(View.GONE);
+                                toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(true);
+                            } else {
                                 menuOpciones.setVisibility(View.VISIBLE);
                                 toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(false);
                             }
                         });
 
-                        builder.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                // User cancelled the dialog
-                            }
-                        });
+                        // Reestablecer menu
+                        menuOpciones.setVisibility(View.VISIBLE);
+                        toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(false);
+                    });
 
-                        AlertDialog dialog = builder.create();
-                        dialog.show();
-                        return true;
+                    builder.setNegativeButton("CANCELAR", (dialog, id) -> {
+                        // User cancelled the dialog
+                    });
 
-                    default:
-                        return false;
-                }
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                    return true;
+
+                default:
+                    return false;
             }
         });
 
@@ -336,149 +318,140 @@ public class HistorialFotografico extends Fragment {
         StrictMode.setVmPolicy(builder.build());
 
         //Abir camara
-        camara.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    abrirCamara();
-                } else {
-                    lanzadorPermisos.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                }
-                menuOpciones.collapse();
+        camara.setOnClickListener(v -> {
+            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                abrirCamara();
+            } else {
+                lanzadorPermisos.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
             }
+            menuOpciones.collapse();
         });
 
         //Abrir galeria
-        fototeca.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                lanzadorGaleria.launch(intent);
-                menuOpciones.collapse();
-            }
+        fototeca.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            lanzadorGaleria.launch(intent);
+            menuOpciones.collapse();
         });
 
-        agregador.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (lista_fotos.size() > 0) {
-                    if (!MODO_EDICION) {
-                        SharedPreferences preferences = getActivity().getSharedPreferences("HFOTO", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = preferences.edit();
+        agregador.setOnClickListener(v -> {
+            if (lista_fotos.size() > 0) {
+                if (!MODO_EDICION) {
+                    SharedPreferences preferences = getActivity().getSharedPreferences("HFOTO", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
 
-                        Set<String> set = new HashSet<>();
-                        String codigoFoto = "";
+                    Set<String> set = new HashSet<>();
+                    String codigoFoto = "";
 
+                    for (int i = 0; i < lista_fotos.size(); i++) {
+                        Bitmap bitmap_aux = lista_fotos.get(i).getFoto();
+                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                        bitmap_aux.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+                        byte[] b = byteArrayOutputStream.toByteArray();
+                        codigoFoto = Base64.encodeToString(b, Base64.DEFAULT);
+
+                        String cadena = codigoFoto;
+                        set.add(cadena);
+                    }
+
+                    editor.putStringSet("listaFotos", set);
+                    editor.apply();
+
+                    final SharedPreferences preferenciasFicha2 = getActivity().getSharedPreferences("RESUMEN_FN", Context.MODE_PRIVATE);
+                    final SharedPreferences.Editor escritor2 = preferenciasFicha2.edit();
+                    escritor2.putString("NO_FOTOS", String.valueOf(lista_fotos.size()));
+                    escritor2.commit();
+
+                    GuardadorFichaNormal guardadorFichaNormal = new GuardadorFichaNormal();
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                    transaction.replace(R.id.contenedor, guardadorFichaNormal);
+                    transaction.commit();
+                } else {
+                    final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+                    progressDialog.setMessage("Cargando...");
+                    progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                    progressDialog.setCancelable(false);
+                    progressDialog.show();
+
+                    JSONArray jsonArrayFotos = new JSONArray();
+                    JSONObject jsonObject = new JSONObject();
+
+                    try {
                         for (int i = 0; i < lista_fotos.size(); i++) {
                             Bitmap bitmap_aux = lista_fotos.get(i).getFoto();
                             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                             bitmap_aux.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
                             byte[] b = byteArrayOutputStream.toByteArray();
-                            codigoFoto = Base64.encodeToString(b, Base64.DEFAULT);
+                            String codigoFoto = Base64.encodeToString(b, Base64.DEFAULT);
 
-                            String cadena = codigoFoto;
-                            set.add(cadena);
+                            JSONObject rowJSON = new JSONObject();
+                            rowJSON.put("FOTO", codigoFoto);
+                            rowJSON.put("URL", " ");
+                            rowJSON.put("DESCRIPCION", " ");
+                            rowJSON.put("NOMBRE", " ");
+                            rowJSON.put("ID_FICHA", ID_FICHA);
+
+                            jsonArrayFotos.put(rowJSON);
                         }
 
-                        editor.putStringSet("listaFotos", set);
-                        editor.apply();
+                        jsonObject.put("HISTORIAL_FOTOS", jsonArrayFotos);
 
-                        final SharedPreferences preferenciasFicha2 = getActivity().getSharedPreferences("RESUMEN_FN", Context.MODE_PRIVATE);
-                        final SharedPreferences.Editor escritor2 = preferenciasFicha2.edit();
-                        escritor2.putString("NO_FOTOS", String.valueOf(lista_fotos.size()));
-                        escritor2.commit();
+                    } catch (JSONException e) {
+                        Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG);
 
-                        GuardadorFichaNormal guardadorFichaNormal = new GuardadorFichaNormal();
-                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
-                                .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                        transaction.replace(R.id.contenedor, guardadorFichaNormal);
-                        transaction.commit();
-                    } else {
-                        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-                        progressDialog.setMessage("Cargando...");
-                        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                        progressDialog.setCancelable(false);
-                        progressDialog.show();
-
-                        JSONArray jsonArrayFotos = new JSONArray();
-                        JSONObject jsonObject = new JSONObject();
-
-                        try {
-                            for (int i = 0; i < lista_fotos.size(); i++) {
-//                                byte[] decodedString = Base64.decode(lista_fotos.get(i).getFoto().toString(), Base64.DEFAULT);
-//                                String codigoFoto = Base64.encodeToString(decodedString, Base64.DEFAULT);
-
-                                Bitmap bitmap_aux = lista_fotos.get(i).getFoto();
-                                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                                bitmap_aux.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-                                byte[] b = byteArrayOutputStream.toByteArray();
-                                String codigoFoto = Base64.encodeToString(b, Base64.DEFAULT);
-
-                                JSONObject rowJSON = new JSONObject();
-                                rowJSON.put("FOTO", codigoFoto);
-                                rowJSON.put("URL", " ");
-                                rowJSON.put("DESCRIPCION", " ");
-                                rowJSON.put("NOMBRE", " ");
-                                rowJSON.put("ID_FICHA", ID_FICHA);
-
-                                jsonArrayFotos.put(rowJSON);
-                            }
-
-                            jsonObject.put("HISTORIAL_FOTOS", jsonArrayFotos);
-
-                        } catch (JSONException e) {
-                            Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG);
-
-                            e.printStackTrace();
-                        }
-
-                        QuerysFichas querysFichas = new QuerysFichas(getContext());
-                        querysFichas.actualizarHistorialFotografico(ID_FICHA, jsonObject, new QuerysFichas.VolleyOnEventListener() {
-                            @Override
-                            public void onSuccess(Object object) {
-                                progressDialog.dismiss();
-
-                                Alerter.create(getActivity())
-                                        .setTitle("Historial Fotografico")
-                                        .setText("Actualizado correctamente")
-                                        .setIcon(R.drawable.logonuevo)
-                                        .setTextTypeface(face)
-                                        .enableSwipeToDismiss()
-                                        .setBackgroundColorRes(R.color.FondoSecundario)
-                                        .show();
-
-                                MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
-                                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
-                                        .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                                transaction.replace(R.id.contenedor, menuFichaNormal);
-                                transaction.commit();
-                            }
-
-                            @Override
-                            public void onFailure(Exception e) {
-                                progressDialog.dismiss();
-
-                                Alerter.create(getActivity())
-                                        .setTitle("Error")
-                                        .setText("Fallo al actualizar el Historial Fotografico")
-                                        .setIcon(R.drawable.logonuevo)
-                                        .setTextTypeface(face)
-                                        .enableSwipeToDismiss()
-                                        .setBackgroundColorRes(R.color.AzulOscuro)
-                                        .show();
-                            }
-                        });
+                        e.printStackTrace();
                     }
-                } else {
-                    Alerter.create(getActivity())
-                            .setTitle("Error")
-                            .setText("No ha agregado fotos")
-                            .setIcon(R.drawable.logonuevo)
-                            .setTextTypeface(face)
-                            .enableSwipeToDismiss()
-                            .setBackgroundColorRes(R.color.AzulOscuro)
-                            .show();
+
+                    QuerysFichas querysFichas = new QuerysFichas(getContext());
+                    querysFichas.actualizarHistorialFotografico(ID_FICHA, jsonObject, new QuerysFichas.VolleyOnEventListener() {
+                        @Override
+                        public void onSuccess(Object object) {
+                            progressDialog.dismiss();
+
+                            Alerter.create(getActivity())
+                                    .setTitle("Historial Fotografico")
+                                    .setText("Actualizado correctamente")
+                                    .setIcon(R.drawable.logonuevo)
+                                    .setTextTypeface(face)
+                                    .enableSwipeToDismiss()
+                                    .setBackgroundColorRes(R.color.FondoSecundario)
+                                    .show();
+
+                            FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
+                            funcionesBitacora.registrarBitacora("ACTUALIZACION", "FOTOS - FICHA NORMAL", "Se actualizo la ficha #" + ID_FICHA);
+
+                            MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
+                            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+                                    .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                            transaction.replace(R.id.contenedor, menuFichaNormal);
+                            transaction.commit();
+                        }
+
+                        @Override
+                        public void onFailure(Exception e) {
+                            progressDialog.dismiss();
+
+                            Alerter.create(getActivity())
+                                    .setTitle("Error")
+                                    .setText("Fallo al actualizar el Historial Fotografico")
+                                    .setIcon(R.drawable.logonuevo)
+                                    .setTextTypeface(face)
+                                    .enableSwipeToDismiss()
+                                    .setBackgroundColorRes(R.color.AzulOscuro)
+                                    .show();
+                        }
+                    });
                 }
+            } else {
+                Alerter.create(getActivity())
+                        .setTitle("Error")
+                        .setText("No ha agregado fotos")
+                        .setIcon(R.drawable.logonuevo)
+                        .setTextTypeface(face)
+                        .enableSwipeToDismiss()
+                        .setBackgroundColorRes(R.color.AzulOscuro)
+                        .show();
             }
         });
 
@@ -613,16 +586,13 @@ public class HistorialFotografico extends Fragment {
                         rv.setLayoutManager(staggeredGridLayoutManager);
                         fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
                         rv.setAdapter(fotoAdapter);
-                        fotoAdapter.setOnItemClickListener(new FotoAdapter.OnClickListener() {
-                            @Override
-                            public void onItemClick(int position) {
-                                if (position > 0) {
-                                    menuOpciones.setVisibility(View.GONE);
-                                    toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(true);
-                                } else {
-                                    menuOpciones.setVisibility(View.VISIBLE);
-                                    toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(false);
-                                }
+                        fotoAdapter.setOnItemClickListener(position -> {
+                            if (position > 0) {
+                                menuOpciones.setVisibility(View.GONE);
+                                toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(true);
+                            } else {
+                                menuOpciones.setVisibility(View.VISIBLE);
+                                toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(false);
                             }
                         });
 

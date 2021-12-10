@@ -134,6 +134,7 @@ public class DialogoBitacora extends DialogFragment {
             @Override
             public void onFailure(Exception e) {
                 progressDialog.dismiss();
+                obtenerBitacora();
                 Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
             }
         });

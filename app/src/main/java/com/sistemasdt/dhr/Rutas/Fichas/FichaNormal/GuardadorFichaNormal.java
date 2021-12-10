@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sistemasdt.dhr.Componentes.Dialogos.Bitacora.FuncionesBitacora;
 import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysFichas;
@@ -56,34 +57,27 @@ public class GuardadorFichaNormal extends Fragment {
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle("Resumen de Ficha");
         toolbar.setNavigationIcon(R.drawable.ic_cerrar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Eliminar lista
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
-                builder.setIcon(R.drawable.logonuevo);
-                builder.setTitle("Resumen de Ficha");
-                builder.setMessage("¿Seguro que desea cancelar?");
-                builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        MenuFichas menuFichas = new MenuFichas();
-                        FragmentTransaction transaction = getFragmentManager().beginTransaction()
-                                .setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                        transaction.replace(R.id.contenedor, menuFichas);
-                        transaction.commit();
-                    }
-                });
+        toolbar.setNavigationOnClickListener(v -> {
+            // Eliminar lista
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
+            builder.setIcon(R.drawable.logonuevo);
+            builder.setTitle("Resumen de Ficha");
+            builder.setMessage("¿Seguro que desea cancelar?");
+            builder.setPositiveButton("ACEPTAR", (dialog, id) -> {
+                MenuFichas menuFichas = new MenuFichas();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                transaction.replace(R.id.contenedor, menuFichas);
+                transaction.commit();
+            });
 
-                builder.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                    }
-                });
+            builder.setNegativeButton("CANCELAR", (dialog, id) -> {
+                // User cancelled the dialog
+            });
 
-                AlertDialog dialog = builder.create();
-                dialog.show();
+            AlertDialog dialog = builder.create();
+            dialog.show();
 
-            }
         });
 
         tituloResumenPaciente = view.findViewById(R.id.tituloResumenPaciente);
@@ -117,28 +111,19 @@ public class GuardadorFichaNormal extends Fragment {
         resumenFotos.setTypeface(face);
 
         guardador = view.findViewById(R.id.guardadorFichaN);
-        guardador.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
-                builder.setIcon(R.drawable.logonuevo);
-                builder.setTitle("Resumen de Ficha");
-                builder.setMessage("¿Seguro que desea registrar?");
-                builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        guardarFicha();
-                    }
-                });
+        guardador.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
+            builder.setIcon(R.drawable.logonuevo);
+            builder.setTitle("Resumen de Ficha");
+            builder.setMessage("¿Seguro que desea registrar?");
+            builder.setPositiveButton("ACEPTAR", (dialog, id) -> guardarFicha());
 
-                builder.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                    }
-                });
+            builder.setNegativeButton("CANCELAR", (dialog, id) -> {
+                // User cancelled the dialog
+            });
 
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            }
+            AlertDialog dialog = builder.create();
+            dialog.show();
         });
 
 
@@ -317,44 +302,54 @@ public class GuardadorFichaNormal extends Fragment {
                             .setBackgroundColorRes(R.color.FondoSecundario)
                             .show();
 
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            progressDialog.dismiss();
+                    new Handler().postDelayed(() -> {
+                        progressDialog.dismiss();
 
-                            // HISTORIAL MEDICO 1
-                            SharedPreferences sharedPreferences1 = getActivity().getSharedPreferences("HMED1", Context.MODE_PRIVATE);
+                        // FICHA
+                        SharedPreferences sharedPreferencesFN = getActivity().getSharedPreferences("FICHA", Context.MODE_PRIVATE);
 
-                            // HISTORIAL MEDICO 2
-                            SharedPreferences sharedPreferences2 = getActivity().getSharedPreferences("HMED2", Context.MODE_PRIVATE);
+                        // HISTORIAL MEDICO 1
+                        SharedPreferences sharedPreferences11 = getActivity().getSharedPreferences("HMED1", Context.MODE_PRIVATE);
 
-                            // HISTORIAL ODONTO 1
-                            SharedPreferences sharedPreferences3 = getActivity().getSharedPreferences("HOD1", Context.MODE_PRIVATE);
+                        // HISTORIAL MEDICO 2
+                        SharedPreferences sharedPreferences21 = getActivity().getSharedPreferences("HMED2", Context.MODE_PRIVATE);
 
-                            // HISTORIAL ODONTO 2
-                            SharedPreferences sharedPreferences4 = getActivity().getSharedPreferences("HOD2", Context.MODE_PRIVATE);
+                        // HISTORIAL ODONTO 1
+                        SharedPreferences sharedPreferences31 = getActivity().getSharedPreferences("HOD1", Context.MODE_PRIVATE);
 
-                            // HISTORIAL FOTOGRAFICO
-                            SharedPreferences sharedPreferences5 = getActivity().getSharedPreferences("HFOTO", Context.MODE_PRIVATE);
+                        // HISTORIAL ODONTO 2
+                        SharedPreferences sharedPreferences41 = getActivity().getSharedPreferences("HOD2", Context.MODE_PRIVATE);
 
-                            // Limpieza de Datos
-                            SharedPreferences.Editor editor = sharedPreferences1.edit().clear();
-                            editor.commit();
-                            SharedPreferences.Editor editor1 = sharedPreferences2.edit().clear();
-                            editor1.commit();
-                            SharedPreferences.Editor editor2 = sharedPreferences3.edit().clear();
-                            editor2.commit();
-                            SharedPreferences.Editor editor3 = sharedPreferences4.edit().clear();
-                            editor3.commit();
-                            SharedPreferences.Editor editor4 = sharedPreferences5.edit().clear();
-                            editor4.commit();
+                        // HISTORIAL FOTOGRAFICO
+                        SharedPreferences sharedPreferences51 = getActivity().getSharedPreferences("HFOTO", Context.MODE_PRIVATE);
 
-                            MenuFichas menuFichas = new MenuFichas();
-                            FragmentTransaction transaction = getFragmentManager().beginTransaction()
-                                    .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                            transaction.replace(R.id.contenedor, menuFichas);
-                            transaction.commit();
-                        }
+                        // PAGOS
+                        SharedPreferences sharedPreferences61 = getActivity().getSharedPreferences("PAGOS", Context.MODE_PRIVATE);
+
+                        // Limpieza de Datos
+                        SharedPreferences.Editor editor5 = sharedPreferencesFN.edit().clear();
+                        editor5.commit();
+                        SharedPreferences.Editor editor6 = sharedPreferences61.edit().clear();
+                        editor6.commit();
+                        SharedPreferences.Editor editor = sharedPreferences11.edit().clear();
+                        editor.commit();
+                        SharedPreferences.Editor editor1 = sharedPreferences21.edit().clear();
+                        editor1.commit();
+                        SharedPreferences.Editor editor2 = sharedPreferences31.edit().clear();
+                        editor2.commit();
+                        SharedPreferences.Editor editor3 = sharedPreferences41.edit().clear();
+                        editor3.commit();
+                        SharedPreferences.Editor editor4 = sharedPreferences51.edit().clear();
+                        editor4.commit();
+
+                        FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
+                        funcionesBitacora.registrarBitacora("CREACION", "FICHAS NORMALES", "Se registro una ficha");
+
+                        MenuFichas menuFichas = new MenuFichas();
+                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+                                .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                        transaction.replace(R.id.contenedor, menuFichas);
+                        transaction.commit();
                     }, 1000);
                 }
 

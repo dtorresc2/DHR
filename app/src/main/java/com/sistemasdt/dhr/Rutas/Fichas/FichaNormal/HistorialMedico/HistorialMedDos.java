@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 
+import com.sistemasdt.dhr.Componentes.Dialogos.Bitacora.FuncionesBitacora;
 import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.Ficha;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialOdonto.HistorialOdon;
@@ -65,20 +66,17 @@ public class HistorialMedDos extends Fragment {
             toolbar.setNavigationIcon(R.drawable.ic_cerrar);
         }
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!MODO_EDICION) {
-                    HistorialMed historialMed = new HistorialMed();
-                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                    transaction.replace(R.id.contenedor, historialMed);
-                    transaction.commit();
-                } else {
-                    MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
-                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                    transaction.replace(R.id.contenedor, menuFichaNormal);
-                    transaction.commit();
-                }
+        toolbar.setNavigationOnClickListener(v -> {
+            if (!MODO_EDICION) {
+                HistorialMed historialMed = new HistorialMed();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                transaction.replace(R.id.contenedor, historialMed);
+                transaction.commit();
+            } else {
+                MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                transaction.replace(R.id.contenedor, menuFichaNormal);
+                transaction.commit();
             }
         });
 
@@ -108,89 +106,89 @@ public class HistorialMedDos extends Fragment {
         otrosLayout = view.findViewById(R.id.otroLayout);
         otrosLayout.setTypeface(face);
 
-        guardador.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!MODO_EDICION) {
-                    final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("HMED2", Context.MODE_PRIVATE);
-                    final SharedPreferences.Editor escritor = sharedPreferences.edit();
-                    escritor.putBoolean("CORAZON", corazon.isChecked());
-                    escritor.putBoolean("ARTRITIS", artritris.isChecked());
-                    escritor.putBoolean("TUBERCULOSIS", tuberculosis.isChecked());
-                    escritor.putBoolean("FIEBREREU", f_reuma.isChecked());
-                    escritor.putBoolean("PRESION_ALTA", pres_alta.isChecked());
-                    escritor.putBoolean("PRESION_BAJA", pres_baja.isChecked());
-                    escritor.putBoolean("DIABETES", diabetes.isChecked());
-                    escritor.putBoolean("ANEMIA", anemia.isChecked());
-                    escritor.putBoolean("EPILEPSIA", epilepsia.isChecked());
-                    escritor.putString("OTROS", otro.getText().toString());
-                    escritor.commit();
+        guardador.setOnClickListener(v -> {
+            if (!MODO_EDICION) {
+                final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("HMED2", Context.MODE_PRIVATE);
+                final SharedPreferences.Editor escritor = sharedPreferences.edit();
+                escritor.putBoolean("CORAZON", corazon.isChecked());
+                escritor.putBoolean("ARTRITIS", artritris.isChecked());
+                escritor.putBoolean("TUBERCULOSIS", tuberculosis.isChecked());
+                escritor.putBoolean("FIEBREREU", f_reuma.isChecked());
+                escritor.putBoolean("PRESION_ALTA", pres_alta.isChecked());
+                escritor.putBoolean("PRESION_BAJA", pres_baja.isChecked());
+                escritor.putBoolean("DIABETES", diabetes.isChecked());
+                escritor.putBoolean("ANEMIA", anemia.isChecked());
+                escritor.putBoolean("EPILEPSIA", epilepsia.isChecked());
+                escritor.putString("OTROS", otro.getText().toString());
+                escritor.commit();
 
-                    HistorialOdon historialOdon = new HistorialOdon();
-                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                    transaction.replace(R.id.contenedor, historialOdon);
-                    transaction.commit();
-                } else {
-                    final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-                    progressDialog.setMessage("Cargando...");
-                    progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                    progressDialog.setCancelable(false);
-                    progressDialog.show();
+                HistorialOdon historialOdon = new HistorialOdon();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                transaction.replace(R.id.contenedor, historialOdon);
+                transaction.commit();
+            } else {
+                final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+                progressDialog.setMessage("Cargando...");
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setCancelable(false);
+                progressDialog.show();
 
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("CORAZON", (corazon.isChecked()) ? 1 : 0);
-                        jsonObject.put("ARTRITIS", (artritris.isChecked()) ? 1 : 0);
-                        jsonObject.put("TUBERCULOSIS", (tuberculosis.isChecked()) ? 1 : 0);
-                        jsonObject.put("PRESION_ALTA", (pres_alta.isChecked()) ? 1 : 0);
-                        jsonObject.put("PRESION_BAJA", (pres_baja.isChecked()) ? 1 : 0);
-                        jsonObject.put("FIEBREREU", (f_reuma.isChecked()) ? 1 : 0);
-                        jsonObject.put("ANEMIA", (anemia.isChecked()) ? 1 : 0);
-                        jsonObject.put("EPILEPSIA", (epilepsia.isChecked()) ? 1 : 0);
-                        jsonObject.put("DIABETES", (diabetes.isChecked()) ? 1 : 0);
-                        jsonObject.put("OTROS", otro.getText().toString());
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("CORAZON", (corazon.isChecked()) ? 1 : 0);
+                    jsonObject.put("ARTRITIS", (artritris.isChecked()) ? 1 : 0);
+                    jsonObject.put("TUBERCULOSIS", (tuberculosis.isChecked()) ? 1 : 0);
+                    jsonObject.put("PRESION_ALTA", (pres_alta.isChecked()) ? 1 : 0);
+                    jsonObject.put("PRESION_BAJA", (pres_baja.isChecked()) ? 1 : 0);
+                    jsonObject.put("FIEBREREU", (f_reuma.isChecked()) ? 1 : 0);
+                    jsonObject.put("ANEMIA", (anemia.isChecked()) ? 1 : 0);
+                    jsonObject.put("EPILEPSIA", (epilepsia.isChecked()) ? 1 : 0);
+                    jsonObject.put("DIABETES", (diabetes.isChecked()) ? 1 : 0);
+                    jsonObject.put("OTROS", otro.getText().toString());
 
-                        QuerysFichas querysFichas = new QuerysFichas(getContext());
-                        querysFichas.actualizarPadecimientosHM(ID_HISTORIAL_MEDICO, jsonObject, new QuerysFichas.VolleyOnEventListener() {
-                            @Override
-                            public void onSuccess(Object object) {
-                                progressDialog.dismiss();
+                    QuerysFichas querysFichas = new QuerysFichas(getContext());
+                    querysFichas.actualizarPadecimientosHM(ID_HISTORIAL_MEDICO, jsonObject, new QuerysFichas.VolleyOnEventListener() {
+                        @Override
+                        public void onSuccess(Object object) {
+                            progressDialog.dismiss();
 
-                                Alerter.create(getActivity())
-                                        .setTitle("Padecimientos")
-                                        .setText("Actualizados correctamente")
-                                        .setIcon(R.drawable.logonuevo)
-                                        .setTextTypeface(face)
-                                        .enableSwipeToDismiss()
-                                        .setBackgroundColorRes(R.color.FondoSecundario)
-                                        .show();
+                            Alerter.create(getActivity())
+                                    .setTitle("Padecimientos")
+                                    .setText("Actualizados correctamente")
+                                    .setIcon(R.drawable.logonuevo)
+                                    .setTextTypeface(face)
+                                    .enableSwipeToDismiss()
+                                    .setBackgroundColorRes(R.color.FondoSecundario)
+                                    .show();
 
-                                MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
-                                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
-                                        .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                                transaction.replace(R.id.contenedor, menuFichaNormal);
-                                transaction.commit();
-                            }
+                            FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
+                            funcionesBitacora.registrarBitacora("ACTUALIZACION", "PADECIMIENTOS", "Se actualizo la ficha #" + ID_FICHA);
 
-                            @Override
-                            public void onFailure(Exception e) {
-                                progressDialog.dismiss();
+                            MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
+                            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+                                    .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                            transaction.replace(R.id.contenedor, menuFichaNormal);
+                            transaction.commit();
+                        }
 
-                                Alerter.create(getActivity())
-                                        .setTitle("Error")
-                                        .setText("Fallo al actualizar los padecimientos")
-                                        .setIcon(R.drawable.logonuevo)
-                                        .setTextTypeface(face)
-                                        .enableSwipeToDismiss()
-                                        .setBackgroundColorRes(R.color.AzulOscuro)
-                                        .show();
-                            }
-                        });
+                        @Override
+                        public void onFailure(Exception e) {
+                            progressDialog.dismiss();
 
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                            Alerter.create(getActivity())
+                                    .setTitle("Error")
+                                    .setText("Fallo al actualizar los padecimientos")
+                                    .setIcon(R.drawable.logonuevo)
+                                    .setTextTypeface(face)
+                                    .enableSwipeToDismiss()
+                                    .setBackgroundColorRes(R.color.AzulOscuro)
+                                    .show();
+                        }
+                    });
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         });

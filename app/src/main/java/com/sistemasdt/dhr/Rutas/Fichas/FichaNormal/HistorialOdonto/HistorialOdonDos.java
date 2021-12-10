@@ -34,6 +34,7 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sistemasdt.dhr.Componentes.Dialogos.Bitacora.FuncionesBitacora;
 import com.sistemasdt.dhr.Componentes.MenusInferiores.MenuInferiorDos;
 import com.sistemasdt.dhr.Rutas.Catalogos.Piezas.ItemPieza;
 import com.sistemasdt.dhr.Rutas.Catalogos.Servicios.ItemServicio;
@@ -54,6 +55,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -72,7 +74,6 @@ public class HistorialOdonDos extends Fragment {
     private TablaDinamica tablaDinamica;
     private double total;
     private FloatingActionButton agregador;
-    private int mOpcion = 0;
     private TextInputEditText desc_servicio, monto;
     private TextInputLayout layoutServicio, layoutMonto;
     private LinearLayout layoutTotalPagos;
@@ -131,20 +132,17 @@ public class HistorialOdonDos extends Fragment {
             layoutTotalPagos.setVisibility(View.VISIBLE);
         }
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!MODO_EDICION) {
-                    HistorialOdon historialOdon = new HistorialOdon();
-                    FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                    fragmentTransaction.replace(R.id.contenedor, historialOdon);
-                    fragmentTransaction.commit();
-                } else {
-                    MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
-                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                    transaction.replace(R.id.contenedor, menuFichaNormal);
-                    transaction.commit();
-                }
+        toolbar.setNavigationOnClickListener(v -> {
+            if (!MODO_EDICION) {
+                HistorialOdon historialOdon = new HistorialOdon();
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                fragmentTransaction.replace(R.id.contenedor, historialOdon);
+                fragmentTransaction.commit();
+            } else {
+                MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                transaction.replace(R.id.contenedor, menuFichaNormal);
+                transaction.commit();
             }
         });
 
@@ -202,121 +200,109 @@ public class HistorialOdonDos extends Fragment {
 
         pieza = view.findViewById(R.id.pieza);
         pieza.setTypeface(face);
-        pieza.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Dialog dialog = new Dialog(getContext());
-                dialog.setContentView(R.layout.dialogo_busqueda);
-                dialog.getWindow().setLayout(view.getWidth() - 50, 1000);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.show();
+        pieza.setOnClickListener(v -> {
+            final Dialog dialog = new Dialog(getContext());
+            dialog.setContentView(R.layout.dialogo_busqueda);
+            dialog.getWindow().setLayout(view.getWidth() - 50, 1000);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.show();
 
-                EditText editText = dialog.findViewById(R.id.buscador);
-                editText.setTypeface(face);
+            EditText editText = dialog.findViewById(R.id.buscador);
+            editText.setTypeface(face);
 
-                TextView textView = dialog.findViewById(R.id.tituloDialogo);
-                textView.setTypeface(face);
-                textView.setText("Seleccione una pieza");
+            TextView textView = dialog.findViewById(R.id.tituloDialogo);
+            textView.setTypeface(face);
+            textView.setText("Seleccione una pieza");
 
-                ListView listView = dialog.findViewById(R.id.lista_items);
+            ListView listView = dialog.findViewById(R.id.lista_items);
 
-                final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, listaPiezas);
-                listView.setAdapter(adapter);
+            final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, listaPiezas);
+            listView.setAdapter(adapter);
 
-                editText.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            editText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    adapter.getFilter().filter(s);
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+
+            listView.setOnItemClickListener((parent, view1, position, id) -> {
+                String filter = adapter.getItem(position).toLowerCase().trim();
+                pieza.setText(adapter.getItem(position));
+
+                for (ItemPieza item : listaPiezasGenenal) {
+                    if (item.getNombrePieza().toLowerCase().trim().contains(filter)) {
+                        ID_PIEZA = listaPiezasGenenal.get(listaPiezasGenenal.indexOf(item)).getCodigoPieza();
                     }
+                }
 
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        adapter.getFilter().filter(s);
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable s) {
-
-                    }
-                });
-
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        String filter = adapter.getItem(position).toLowerCase().trim();
-                        pieza.setText(adapter.getItem(position));
-
-                        for (ItemPieza item : listaPiezasGenenal) {
-                            if (item.getNombrePieza().toLowerCase().trim().contains(filter)) {
-                                ID_PIEZA = listaPiezasGenenal.get(listaPiezasGenenal.indexOf(item)).getCodigoPieza();
-                            }
-                        }
-
-                        dialog.dismiss();
-                    }
-                });
-            }
+                dialog.dismiss();
+            });
         });
 
         servicio = view.findViewById(R.id.servicio);
         servicio.setTypeface(face);
-        servicio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Dialog dialog = new Dialog(getContext());
-                dialog.setContentView(R.layout.dialogo_busqueda);
-                dialog.getWindow().setLayout(view.getWidth() - 50, 1000);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.show();
+        servicio.setOnClickListener(v -> {
+            final Dialog dialog = new Dialog(getContext());
+            dialog.setContentView(R.layout.dialogo_busqueda);
+            dialog.getWindow().setLayout(view.getWidth() - 50, 1000);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.show();
 
-                EditText editText = dialog.findViewById(R.id.buscador);
-                editText.setTypeface(face);
+            EditText editText = dialog.findViewById(R.id.buscador);
+            editText.setTypeface(face);
 
-                TextView textView = dialog.findViewById(R.id.tituloDialogo);
-                textView.setTypeface(face);
-                textView.setText("Seleccione un servicio");
+            TextView textView = dialog.findViewById(R.id.tituloDialogo);
+            textView.setTypeface(face);
+            textView.setText("Seleccione un servicio");
 
-                ListView listView = dialog.findViewById(R.id.lista_items);
+            ListView listView = dialog.findViewById(R.id.lista_items);
 
-                final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, listaServicios);
-                listView.setAdapter(adapter);
+            final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, listaServicios);
+            listView.setAdapter(adapter);
 
-                editText.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            editText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    adapter.getFilter().filter(s);
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+
+            listView.setOnItemClickListener((parent, view12, position, id) -> {
+                String filter = adapter.getItem(position).toLowerCase().trim();
+                servicio.setText(adapter.getItem(position));
+
+                for (ItemServicio item : listaServiciosGeneral) {
+                    if (item.getDescripcionServicio().toLowerCase().trim().contains(filter)) {
+                        ID_SERVICIO = listaServiciosGeneral.get(listaServiciosGeneral.indexOf(item)).getCodigoServicio();
+                        desc_servicio.setText(listaServiciosGeneral.get(listaServiciosGeneral.indexOf(item)).getDescripcionServicio());
+                        monto.setText(String.format("%.2f", listaServiciosGeneral.get(listaServiciosGeneral.indexOf(item)).getMontoServicio()));
                     }
+                }
 
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        adapter.getFilter().filter(s);
-                    }
+                dialog.dismiss();
+            });
 
-                    @Override
-                    public void afterTextChanged(Editable s) {
-
-                    }
-                });
-
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        String filter = adapter.getItem(position).toLowerCase().trim();
-                        servicio.setText(adapter.getItem(position));
-
-                        for (ItemServicio item : listaServiciosGeneral) {
-                            if (item.getDescripcionServicio().toLowerCase().trim().contains(filter)) {
-                                ID_SERVICIO = listaServiciosGeneral.get(listaServiciosGeneral.indexOf(item)).getCodigoServicio();
-                                desc_servicio.setText(listaServiciosGeneral.get(listaServiciosGeneral.indexOf(item)).getDescripcionServicio());
-                                monto.setText(String.format("%.2f", listaServiciosGeneral.get(listaServiciosGeneral.indexOf(item)).getMontoServicio()));
-                            }
-                        }
-
-                        dialog.dismiss();
-                    }
-                });
-
-            }
         });
 
         tableLayout = view.findViewById(R.id.table);
@@ -337,286 +323,280 @@ public class HistorialOdonDos extends Fragment {
         tablaDinamica.addHeader(header);
         tablaDinamica.addData(getClients());
         tablaDinamica.fondoHeader(R.color.AzulOscuro);
-        tablaDinamica.setOnItemClickListener(new TablaDinamica.OnClickListener() {
-            @Override
-            public void onItemClick(final int position) {
-                MenuInferiorDos menuInferiorDos = new MenuInferiorDos();
-                menuInferiorDos.show(getActivity().getSupportFragmentManager(), "MenuInferior");
-                menuInferiorDos.recibirTitulo(tablaDinamica.getCellData(position, 1));
-                menuInferiorDos.eventoClick(new MenuInferiorDos.MenuInferiorListener() {
-                    @Override
-                    public void onButtonClicked(int opcion) {
-                        int index = position - 1;
-                        switch (opcion) {
-                            case 1:
-                                // Editar Tratamiento
-                                modoEdicionTratamiento = true;
-                                listador.setText("ACTUALIZAR TRATAMIENTO");
+        tablaDinamica.setOnItemClickListener(position -> {
+            MenuInferiorDos menuInferiorDos = new MenuInferiorDos();
+            menuInferiorDos.show(getActivity().getSupportFragmentManager(), "MenuInferior");
+            menuInferiorDos.recibirTitulo(tablaDinamica.getCellData(position, 1));
+            menuInferiorDos.eventoClick(opcion -> {
+                int index = position - 1;
+                switch (opcion) {
+                    case 1:
+                        // Editar Tratamiento
+                        modoEdicionTratamiento = true;
+                        listador.setText("ACTUALIZAR TRATAMIENTO");
 
-                                ID_PIEZA = listaTratamientos.get(index).getPieza();
-                                ID_SERVICIO = listaTratamientos.get(index).getServicio();
-                                desc_servicio.setText(listaTratamientos.get(index).getDescripcionServicio());
-                                monto.setText(String.format("%.2f", listaTratamientos.get(index).getMonto()));
-                                servicio.setText(listaTratamientos.get(index).getDescripcionServicio());
-                                pieza.setText(tablaDinamica.getCellData(position, 0));
+                        ID_PIEZA = listaTratamientos.get(index).getPieza();
+                        ID_SERVICIO = listaTratamientos.get(index).getServicio();
+                        desc_servicio.setText(listaTratamientos.get(index).getDescripcionServicio());
+                        monto.setText(String.format("%.2f", listaTratamientos.get(index).getMonto()));
+                        servicio.setText(listaTratamientos.get(index).getDescripcionServicio());
+                        pieza.setText(tablaDinamica.getCellData(position, 0));
 
-                                for (ItemServicio item : listaServiciosGeneral) {
-                                    if (item.getCodigoServicio() == ID_SERVICIO) {
-                                        servicio.setText(listaServiciosGeneral.get(listaServiciosGeneral.indexOf(item)).getDescripcionServicio());
-                                    }
-                                }
-
-                                POSICION = index;
-                                break;
-                            case 2:
-                                // Eliminar Tratamiento
-                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
-                                builder.setIcon(R.drawable.logonuevo);
-                                builder.setTitle("Historial Odontodologico");
-                                builder.setMessage("¿Desea eliminar el tratamiento?");
-                                builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        tablaDinamica.removeRow(position);
-                                        total = 0;
-                                        listaTratamientos.remove(position - 1);
-
-                                        if (tablaDinamica.getCount() > 0) {
-                                            for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
-                                                total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
-                                            }
-                                            total_costo.setText(String.format("%.2f", total));
-                                        } else {
-                                            total_costo.setText("0.00");
-                                        }
-                                    }
-                                });
-
-                                builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-
-                                    }
-                                });
-
-                                AlertDialog dialog = builder.create();
-                                dialog.show();
-                                break;
+                        for (ItemServicio item : listaServiciosGeneral) {
+                            if (item.getCodigoServicio() == ID_SERVICIO) {
+                                servicio.setText(listaServiciosGeneral.get(listaServiciosGeneral.indexOf(item)).getDescripcionServicio());
+                            }
                         }
-                    }
-                });
-            }
+
+                        POSICION = index;
+                        break;
+                    case 2:
+                        // Eliminar Tratamiento
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
+                        builder.setIcon(R.drawable.logonuevo);
+                        builder.setTitle("Historial Odontodologico");
+                        builder.setMessage("¿Desea eliminar el tratamiento?");
+                        builder.setPositiveButton("Aceptar", (dialog, which) -> {
+                            tablaDinamica.removeRow(position);
+                            total = 0;
+                            listaTratamientos.remove(position - 1);
+
+                            if (tablaDinamica.getCount() > 0) {
+                                for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
+                                    total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
+                                }
+                                total_costo.setText(String.format("%.2f", total));
+                            } else {
+                                total_costo.setText("0.00");
+                            }
+                        });
+
+                        builder.setNegativeButton("Cancelar", (dialog, which) -> {
+
+                        });
+
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                        break;
+                }
+            });
         });
 
         //Proceso para listar
         listador = view.findViewById(R.id.guardador_hm);
         listador.setTypeface(face);
-        listador.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!descripcionRequerida() || !montoRequerido() || !validarMonto())
-                    return;
+        listador.setOnClickListener(v -> {
+            if (!descripcionRequerida() || !montoRequerido() || !validarMonto())
+                return;
 
-                if (ID_PIEZA > 0 && ID_SERVICIO > 0) {
-                    total = 0;
+            if (ID_PIEZA > 0 && ID_SERVICIO > 0) {
+                total = 0;
 
-                    String[] item = new String[]{
-                            pieza.getText().toString(),
+                String[] item = new String[]{
+                        pieza.getText().toString(),
+                        desc_servicio.getText().toString(),
+                        monto.getText().toString()
+                };
+
+                String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+
+                if (!modoEdicionTratamiento) {
+                    tablaDinamica.addItem(item);
+                    listaTratamientos.add(new ItemTratamiento(
+                            ID_PIEZA,
+                            ID_SERVICIO,
                             desc_servicio.getText().toString(),
-                            monto.getText().toString()
-                    };
-
-                    String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-
-                    if (!modoEdicionTratamiento) {
-                        tablaDinamica.addItem(item);
-                        listaTratamientos.add(new ItemTratamiento(
+                            Double.parseDouble(monto.getText().toString()),
+                            date
+                    ));
+                } else {
+                    if (listaTratamientos.size() > 0) {
+                        listaTratamientos.set(POSICION, new ItemTratamiento(
                                 ID_PIEZA,
                                 ID_SERVICIO,
                                 desc_servicio.getText().toString(),
                                 Double.parseDouble(monto.getText().toString()),
                                 date
                         ));
-                    } else {
-                        if (listaTratamientos.size() > 0) {
-                            listaTratamientos.set(POSICION, new ItemTratamiento(
-                                    ID_PIEZA,
-                                    ID_SERVICIO,
-                                    desc_servicio.getText().toString(),
-                                    Double.parseDouble(monto.getText().toString()),
-                                    date
-                            ));
 
-                            // Reinciar Tabla
-                            tablaDinamica.removeAll();
-                            tablaDinamica.addHeader(header);
-//                        tablaDinamica.addData(getClients());
-                            tablaDinamica.fondoHeader(R.color.AzulOscuro);
+                        // Reinciar Tabla
+                        tablaDinamica.removeAll();
+                        tablaDinamica.addHeader(header);
+                        tablaDinamica.fondoHeader(R.color.AzulOscuro);
 
-                            for (ItemTratamiento tratamiento : listaTratamientos) {
-                                String descPieza = "";
+                        for (ItemTratamiento tratamiento : listaTratamientos) {
+                            String descPieza = "";
 
-                                for (ItemPieza PIEZA : listaPiezasGenenal) {
-                                    if (tratamiento.getPieza() == PIEZA.getCodigoPieza()) {
-                                        descPieza = PIEZA.getNombrePieza();
-                                    }
+                            for (ItemPieza PIEZA : listaPiezasGenenal) {
+                                if (tratamiento.getPieza() == PIEZA.getCodigoPieza()) {
+                                    descPieza = PIEZA.getNombrePieza();
                                 }
-
-                                tablaDinamica.addItem(new String[]{
-                                        descPieza,
-                                        tratamiento.getDescripcionServicio(),
-                                        String.format("%.2f", tratamiento.getMonto())
-                                });
                             }
 
-                            modoEdicionTratamiento = false;
-                            POSICION = 0;
-                            listador.setText("AGREGAR TRATAMIENTO");
+                            tablaDinamica.addItem(new String[]{
+                                    descPieza,
+                                    tratamiento.getDescripcionServicio(),
+                                    String.format("%.2f", tratamiento.getMonto())
+                            });
                         }
 
-                        ID_SERVICIO = 0;
-                        desc_servicio.setText(null);
-                        monto.setText(null);
-                        servicio.setText("Seleccione Servicio");
-
-                        layoutMonto.setError(null);
-                        layoutServicio.setError(null);
+                        modoEdicionTratamiento = false;
+                        POSICION = 0;
+                        listador.setText("AGREGAR TRATAMIENTO");
                     }
 
-                    if (tablaDinamica.getCount() > 0) {
-                        for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
-                            total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
-                        }
-                        total_costo.setText(String.format("%.2f", total));
-                    }
-                } else {
-                    Alerter.create(getActivity())
-                            .setTitle("Error")
-                            .setText("Hay campos vacios o incorrectos")
-                            .setIcon(R.drawable.logonuevo)
-                            .setTextTypeface(face)
-                            .enableSwipeToDismiss()
-                            .setBackgroundColorRes(R.color.AzulOscuro)
-                            .show();
+                    ID_SERVICIO = 0;
+                    desc_servicio.setText(null);
+                    monto.setText(null);
+                    servicio.setText("Seleccione Servicio");
+
+                    layoutMonto.setError(null);
+                    layoutServicio.setError(null);
                 }
+
+                if (tablaDinamica.getCount() > 0) {
+                    for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
+                        total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
+                    }
+                    total_costo.setText(String.format("%.2f", total));
+                }
+            } else {
+                Alerter.create(getActivity())
+                        .setTitle("Error")
+                        .setText("Hay campos vacios o incorrectos")
+                        .setIcon(R.drawable.logonuevo)
+                        .setTextTypeface(face)
+                        .enableSwipeToDismiss()
+                        .setBackgroundColorRes(R.color.AzulOscuro)
+                        .show();
             }
         });
 
         // Proceso para guardar
-        agregador.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (listaTratamientos.size() > 0) {
-                    if (!MODO_EDICION) {
-                        SharedPreferences preferences = getActivity().getSharedPreferences("HOD2", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = preferences.edit();
+        agregador.setOnClickListener(v -> {
+            if (listaTratamientos.size() > 0) {
+                if (!MODO_EDICION) {
+                    SharedPreferences preferences = getActivity().getSharedPreferences("HOD2", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
 
-                        Set<String> set = new HashSet<>();
+                    Set<String> set = new HashSet<>();
 
-                        for (ItemTratamiento item : listaTratamientos) {
-                            String cadena = item.getPieza() + ";" + item.getServicio() + ";" + item.getDescripcionServicio() + ";" + item.getMonto() + ";" + item.getFechaRegistro() + ";";
-                            set.add(cadena);
-                        }
+                    for (ItemTratamiento item : listaTratamientos) {
+                        String cadena = item.getPieza() + ";" + item.getServicio() + ";" + item.getDescripcionServicio() + ";" + item.getMonto() + ";" + item.getFechaRegistro() + ";";
+                        set.add(cadena);
+                    }
 
-                        editor.putStringSet("listaTratamientos", set);
-                        editor.apply();
+                    editor.putStringSet("listaTratamientos", set);
+                    editor.apply();
 
-                        final SharedPreferences preferenciasFicha2 = getActivity().getSharedPreferences("RESUMEN_FN", Context.MODE_PRIVATE);
-                        final SharedPreferences.Editor escritor2 = preferenciasFicha2.edit();
-                        escritor2.putString("NO_TRATAMIENTOS", String.valueOf(listaTratamientos.size()));
-                        escritor2.commit();
+                    final SharedPreferences preferenciasFicha2 = getActivity().getSharedPreferences("RESUMEN_FN", Context.MODE_PRIVATE);
+                    final SharedPreferences.Editor escritor2 = preferenciasFicha2.edit();
+                    escritor2.putString("NO_TRATAMIENTOS", String.valueOf(listaTratamientos.size()));
+                    escritor2.commit();
 
-                        Pagos pagos = new Pagos();
-                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
-                                .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                        transaction.replace(R.id.contenedor, pagos);
-                        transaction.commit();
-                    } else {
-                        if (total >= TOTAL_PAGOS) {
-                            final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-                            progressDialog.setMessage("Cargando...");
-                            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                            progressDialog.setCancelable(false);
-                            progressDialog.show();
+                    Pagos pagos = new Pagos();
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                    transaction.replace(R.id.contenedor, pagos);
+                    transaction.commit();
+                } else {
+                    if (total >= TOTAL_PAGOS) {
+                        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+                        progressDialog.setMessage("Cargando...");
+                        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                        progressDialog.setCancelable(false);
+                        progressDialog.show();
 
-                            try {
-                                JSONArray jsonArray = new JSONArray();
-                                for (ItemTratamiento item : listaTratamientos) {
-                                    JSONObject rowJSON = new JSONObject();
-                                    rowJSON.put("PLAN", item.getDescripcionServicio());
-                                    rowJSON.put("COSTO", item.getMonto());
-                                    rowJSON.put("FECHA", item.getFechaRegistro());
-                                    rowJSON.put("ID_PIEZA", item.getPieza());
-                                    rowJSON.put("ID_SERVICIO", item.getServicio());
-                                    rowJSON.put("ID_HISTORIAL_ODONTO", ID_ODONTO);
+                        try {
+                            JSONArray jsonArray = new JSONArray();
+                            for (ItemTratamiento item : listaTratamientos) {
+                                String fechaMYSQL;
 
-                                    jsonArray.put(rowJSON);
+                                if (item.getFechaRegistro().contains("/")) {
+                                    Date initDate = new SimpleDateFormat("dd/MM/yyyy").parse(item.getFechaRegistro());
+                                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                                    fechaMYSQL = formatter.format(initDate);
+                                } else {
+                                    fechaMYSQL = item.getFechaRegistro();
                                 }
 
-                                JSONObject jsonObject = new JSONObject();
-                                jsonObject.put("TRATAMIENTOS", jsonArray);
+                                JSONObject rowJSON = new JSONObject();
+                                rowJSON.put("PLAN", item.getDescripcionServicio());
+                                rowJSON.put("COSTO", item.getMonto());
+                                rowJSON.put("FECHA", fechaMYSQL);
+                                rowJSON.put("ID_PIEZA", item.getPieza());
+                                rowJSON.put("ID_SERVICIO", item.getServicio());
+                                rowJSON.put("ID_HISTORIAL_ODONTO", ID_ODONTO);
 
-                                QuerysFichas querysFichas = new QuerysFichas(getContext());
-                                querysFichas.actualizarTratamientos(ID_ODONTO, jsonObject, new QuerysFichas.VolleyOnEventListener() {
-                                    @Override
-                                    public void onSuccess(Object object) {
-                                        progressDialog.dismiss();
-
-                                        Alerter.create(getActivity())
-                                                .setTitle("Tratamientos")
-                                                .setText("Actualizados correctamente")
-                                                .setIcon(R.drawable.logonuevo)
-                                                .setTextTypeface(face)
-                                                .enableSwipeToDismiss()
-                                                .setBackgroundColorRes(R.color.FondoSecundario)
-                                                .show();
-
-                                        MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
-                                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
-                                                .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                                        transaction.replace(R.id.contenedor, menuFichaNormal);
-                                        transaction.commit();
-                                    }
-
-                                    @Override
-                                    public void onFailure(Exception e) {
-                                        progressDialog.dismiss();
-
-                                        Alerter.create(getActivity())
-                                                .setTitle("Error")
-                                                .setText("Fallo al actualizar los tratamientos")
-                                                .setIcon(R.drawable.logonuevo)
-                                                .setTextTypeface(face)
-                                                .enableSwipeToDismiss()
-                                                .setBackgroundColorRes(R.color.AzulOscuro)
-                                                .show();
-                                    }
-                                });
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                                jsonArray.put(rowJSON);
                             }
-                        } else {
-                            Alerter.create(getActivity())
-                                    .setTitle("Error")
-                                    .setText("El total de tratamientos debe ser mayor a los pagos")
-                                    .setIcon(R.drawable.logonuevo)
-                                    .setTextTypeface(face)
-                                    .enableSwipeToDismiss()
-                                    .setBackgroundColorRes(R.color.AzulOscuro)
-                                    .show();
+
+                            JSONObject jsonObject = new JSONObject();
+                            jsonObject.put("TRATAMIENTOS", jsonArray);
+
+                            QuerysFichas querysFichas = new QuerysFichas(getContext());
+                            querysFichas.actualizarTratamientos(ID_ODONTO, jsonObject, new QuerysFichas.VolleyOnEventListener() {
+                                @Override
+                                public void onSuccess(Object object) {
+                                    progressDialog.dismiss();
+
+                                    Alerter.create(getActivity())
+                                            .setTitle("Tratamientos")
+                                            .setText("Actualizados correctamente")
+                                            .setIcon(R.drawable.logonuevo)
+                                            .setTextTypeface(face)
+                                            .enableSwipeToDismiss()
+                                            .setBackgroundColorRes(R.color.FondoSecundario)
+                                            .show();
+
+                                    FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
+                                    funcionesBitacora.registrarBitacora("ACTUALIZACION", "TRATAMIENTOS", "Se actualizo la ficha #" + ID_FICHA);
+
+                                    MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
+                                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+                                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                                    transaction.replace(R.id.contenedor, menuFichaNormal);
+                                    transaction.commit();
+                                }
+
+                                @Override
+                                public void onFailure(Exception e) {
+                                    progressDialog.dismiss();
+
+                                    Alerter.create(getActivity())
+                                            .setTitle("Error")
+                                            .setText("Fallo al actualizar los tratamientos")
+                                            .setIcon(R.drawable.logonuevo)
+                                            .setTextTypeface(face)
+                                            .enableSwipeToDismiss()
+                                            .setBackgroundColorRes(R.color.AzulOscuro)
+                                            .show();
+                                }
+                            });
+
+                        } catch (JSONException | ParseException e) {
+                            e.printStackTrace();
                         }
+                    } else {
+                        Alerter.create(getActivity())
+                                .setTitle("Error")
+                                .setText("El total de tratamientos debe ser mayor a los pagos")
+                                .setIcon(R.drawable.logonuevo)
+                                .setTextTypeface(face)
+                                .enableSwipeToDismiss()
+                                .setBackgroundColorRes(R.color.AzulOscuro)
+                                .show();
                     }
-                } else {
-                    Alerter.create(getActivity())
-                            .setTitle("Error")
-                            .setText("No ha agregado tratamientos")
-                            .setIcon(R.drawable.logonuevo)
-                            .setTextTypeface(face)
-                            .enableSwipeToDismiss()
-                            .setBackgroundColorRes(R.color.AzulOscuro)
-                            .show();
                 }
+            } else {
+                Alerter.create(getActivity())
+                        .setTitle("Error")
+                        .setText("No ha agregado tratamientos")
+                        .setIcon(R.drawable.logonuevo)
+                        .setTextTypeface(face)
+                        .enableSwipeToDismiss()
+                        .setBackgroundColorRes(R.color.AzulOscuro)
+                        .show();
             }
         });
 
@@ -632,10 +612,6 @@ public class HistorialOdonDos extends Fragment {
 
     private ArrayList<String[]> getClients() {
         return rows;
-    }
-
-    public void ObtenerOpcion(int opcion) {
-        mOpcion = opcion;
     }
 
     public void cargarTratamientos() {

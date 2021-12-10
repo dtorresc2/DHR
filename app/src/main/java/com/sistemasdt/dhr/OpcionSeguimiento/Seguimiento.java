@@ -74,7 +74,7 @@ public class Seguimiento extends Fragment {
                     switch (dato) {
                         case 1:
                             HistorialOdonDos historialOdonDos = new HistorialOdonDos();
-                            historialOdonDos.ObtenerOpcion(2);
+//                            historialOdonDos.ObtenerOpcion(2);
                             FragmentTransaction transaction3 = getFragmentManager().beginTransaction()
                                     .setCustomAnimations(R.anim.left_in, R.anim.left_out);
                             transaction3.replace(R.id.contenedor, historialOdonDos);

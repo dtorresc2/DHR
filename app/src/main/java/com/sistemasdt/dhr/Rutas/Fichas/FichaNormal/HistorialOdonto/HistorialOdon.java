@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import com.sistemasdt.dhr.Componentes.Dialogos.Bitacora.FuncionesBitacora;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialMedico.HistorialMedDos;
 import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.MenuFichaNormal;
@@ -64,21 +65,18 @@ public class HistorialOdon extends Fragment {
             toolbar.setNavigationIcon(R.drawable.ic_cerrar);
         }
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!MODO_EDICION) {
-                    HistorialMedDos historialMedDos = new HistorialMedDos();
-                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                    transaction.replace(R.id.contenedor, historialMedDos);
-                    transaction.commit();
-                } else {
-                    MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
-                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                    transaction.replace(R.id.contenedor, menuFichaNormal);
-                    transaction.commit();
-                }
+        toolbar.setNavigationOnClickListener(v -> {
+            if (!MODO_EDICION) {
+                HistorialMedDos historialMedDos = new HistorialMedDos();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                transaction.replace(R.id.contenedor, historialMedDos);
+                transaction.commit();
+            } else {
+                MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                transaction.replace(R.id.contenedor, menuFichaNormal);
+                transaction.commit();
             }
         });
 
@@ -93,77 +91,76 @@ public class HistorialOdon extends Fragment {
 
         guardador = view.findViewById(R.id.guardador_hd);
 
-        guardador.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!MODO_EDICION) {
-                    final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("HOD1", Context.MODE_PRIVATE);
-                    final SharedPreferences.Editor escritor = sharedPreferences.edit();
-                    escritor.putBoolean("DOLOR", dolor.isChecked());
-                    escritor.putString("DESC_DOLOR", desc_dolor.getText().toString());
-                    escritor.putBoolean("GINGIVITIS", gingivitis.isChecked());
-                    escritor.putString("OTROS", otros.getText().toString());
-                    escritor.commit();
+        guardador.setOnClickListener(v -> {
+            if (!MODO_EDICION) {
+                final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("HOD1", Context.MODE_PRIVATE);
+                final SharedPreferences.Editor escritor = sharedPreferences.edit();
+                escritor.putBoolean("DOLOR", dolor.isChecked());
+                escritor.putString("DESC_DOLOR", desc_dolor.getText().toString());
+                escritor.putBoolean("GINGIVITIS", gingivitis.isChecked());
+                escritor.putString("OTROS", otros.getText().toString());
+                escritor.commit();
 
-                    HistorialOdonDos historialOdonDos = new HistorialOdonDos();
-                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                    transaction.replace(R.id.contenedor, historialOdonDos);
-                    transaction.commit();
-                } else {
-                    final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-                    progressDialog.setMessage("Cargando...");
-                    progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                    progressDialog.setCancelable(false);
-                    progressDialog.show();
+                HistorialOdonDos historialOdonDos = new HistorialOdonDos();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                transaction.replace(R.id.contenedor, historialOdonDos);
+                transaction.commit();
+            } else {
+                final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+                progressDialog.setMessage("Cargando...");
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setCancelable(false);
+                progressDialog.show();
 
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("DOLOR", (dolor.isChecked()) ? 1 : 0);
-                        jsonObject.put("GINGIVITIS", (gingivitis.isChecked()) ? 1 : 0);
-                        jsonObject.put("DESCRIPCION_DOLOR", desc_dolor.getText().toString());
-                        jsonObject.put("OTROS", otros.getText().toString());
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("DOLOR", (dolor.isChecked()) ? 1 : 0);
+                    jsonObject.put("GINGIVITIS", (gingivitis.isChecked()) ? 1 : 0);
+                    jsonObject.put("DESCRIPCION_DOLOR", desc_dolor.getText().toString());
+                    jsonObject.put("OTROS", otros.getText().toString());
 
-                        QuerysFichas querysFichas = new QuerysFichas(getContext());
-                        querysFichas.actualizarHistorialOdontodologico(ID_FICHA, jsonObject, new QuerysFichas.VolleyOnEventListener() {
-                            @Override
-                            public void onSuccess(Object object) {
-                                progressDialog.dismiss();
+                    QuerysFichas querysFichas = new QuerysFichas(getContext());
+                    querysFichas.actualizarHistorialOdontodologico(ID_FICHA, jsonObject, new QuerysFichas.VolleyOnEventListener() {
+                        @Override
+                        public void onSuccess(Object object) {
+                            progressDialog.dismiss();
 
-                                Alerter.create(getActivity())
-                                        .setTitle("Historial Odontodologico")
-                                        .setText("Actualizado correctamente")
-                                        .setIcon(R.drawable.logonuevo)
-                                        .setTextTypeface(face)
-                                        .enableSwipeToDismiss()
-                                        .setBackgroundColorRes(R.color.FondoSecundario)
-                                        .show();
+                            Alerter.create(getActivity())
+                                    .setTitle("Historial Odontodologico")
+                                    .setText("Actualizado correctamente")
+                                    .setIcon(R.drawable.logonuevo)
+                                    .setTextTypeface(face)
+                                    .enableSwipeToDismiss()
+                                    .setBackgroundColorRes(R.color.FondoSecundario)
+                                    .show();
 
+                            FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
+                            funcionesBitacora.registrarBitacora("ACTUALIZACION", "HISTORIAL ODONTODOLOGICO", "Se actualizo la ficha #" + ID_FICHA);
 
-                                MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
-                                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
-                                        .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                                transaction.replace(R.id.contenedor, menuFichaNormal);
-                                transaction.commit();
-                            }
+                            MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
+                            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+                                    .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                            transaction.replace(R.id.contenedor, menuFichaNormal);
+                            transaction.commit();
+                        }
 
-                            @Override
-                            public void onFailure(Exception e) {
-                                progressDialog.dismiss();
+                        @Override
+                        public void onFailure(Exception e) {
+                            progressDialog.dismiss();
 
-                                Alerter.create(getActivity())
-                                        .setTitle("Error")
-                                        .setText("Fallo al actualizar el Historial Odontodologico")
-                                        .setIcon(R.drawable.logonuevo)
-                                        .setTextTypeface(face)
-                                        .enableSwipeToDismiss()
-                                        .setBackgroundColorRes(R.color.AzulOscuro)
-                                        .show();
-                            }
-                        });
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                            Alerter.create(getActivity())
+                                    .setTitle("Error")
+                                    .setText("Fallo al actualizar el Historial Odontodologico")
+                                    .setIcon(R.drawable.logonuevo)
+                                    .setTextTypeface(face)
+                                    .enableSwipeToDismiss()
+                                    .setBackgroundColorRes(R.color.AzulOscuro)
+                                    .show();
+                        }
+                    });
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         });

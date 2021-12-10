@@ -42,6 +42,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.sistemasdt.dhr.Componentes.Dialogos.Bitacora.FuncionesBitacora;
 import com.sistemasdt.dhr.Componentes.MenusInferiores.MenuInferiorDos;
 import com.sistemasdt.dhr.OpcionSeguimiento.Seguimiento;
 import com.sistemasdt.dhr.Rutas.Catalogos.Piezas.ItemPieza;
@@ -60,6 +61,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -120,20 +122,17 @@ public class Pagos extends Fragment {
             toolbar.setNavigationIcon(R.drawable.ic_cerrar);
         }
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!MODO_EDICION) {
-                    HistorialOdonDos historialOdonDos = new HistorialOdonDos();
-                    FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                    fragmentTransaction.replace(R.id.contenedor, historialOdonDos);
-                    fragmentTransaction.commit();
-                } else {
-                    MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
-                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                    transaction.replace(R.id.contenedor, menuFichaNormal);
-                    transaction.commit();
-                }
+        toolbar.setNavigationOnClickListener(v -> {
+            if (!MODO_EDICION) {
+                HistorialOdonDos historialOdonDos = new HistorialOdonDos();
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                fragmentTransaction.replace(R.id.contenedor, historialOdonDos);
+                fragmentTransaction.commit();
+            } else {
+                MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                transaction.replace(R.id.contenedor, menuFichaNormal);
+                transaction.commit();
             }
         });
 
@@ -209,240 +208,226 @@ public class Pagos extends Fragment {
         tablaDinamica.addHeader(header);
         tablaDinamica.addData(getClients());
         tablaDinamica.fondoHeader(R.color.AzulOscuro);
-        tablaDinamica.setOnItemClickListener(new TablaDinamica.OnClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                MenuInferiorDos menuInferiorDos = new MenuInferiorDos();
-                menuInferiorDos.show(getActivity().getSupportFragmentManager(), "MenuInferior");
-                menuInferiorDos.recibirTitulo(tablaDinamica.getCellData(position, 0));
-                menuInferiorDos.eventoClick(new MenuInferiorDos.MenuInferiorListener() {
-                    @Override
-                    public void onButtonClicked(int opcion) {
-                        int index = position - 1;
-                        switch (opcion) {
-                            case 1:
-                                // Editar Pago
-                                modoEdicionPago = true;
-                                listador.setText("ACTUALIZAR PAGO");
+        tablaDinamica.setOnItemClickListener(position -> {
+            MenuInferiorDos menuInferiorDos = new MenuInferiorDos();
+            menuInferiorDos.show(getActivity().getSupportFragmentManager(), "MenuInferior");
+            menuInferiorDos.recibirTitulo(tablaDinamica.getCellData(position, 0));
+            menuInferiorDos.eventoClick(opcion -> {
+                int index = position - 1;
+                switch (opcion) {
+                    case 1:
+                        // Editar Pago
+                        modoEdicionPago = true;
+                        listador.setText("ACTUALIZAR PAGO");
 
-                                descripcionPago.setText(listaPagos.get(index).getDescripcionPago());
-                                cantidadPago.setText(String.format("%.2f", listaPagos.get(index).getMonto()));
+                        descripcionPago.setText(listaPagos.get(index).getDescripcionPago());
+                        cantidadPago.setText(String.format("%.2f", listaPagos.get(index).getMonto()));
 
-                                POSICION = index;
-                                break;
-                            case 2:
-                                // Eliminar Tratamiento
-                                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getActivity(), R.style.progressDialog);
-                                builder.setIcon(R.drawable.logonuevo);
-                                builder.setTitle("Pagos");
-                                builder.setMessage("¿Desea eliminar el pago?");
-                                builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        tablaDinamica.removeRow(position);
-                                        total = 0;
-                                        listaPagos.remove(position - 1);
+                        POSICION = index;
+                        break;
+                    case 2:
+                        // Eliminar Tratamiento
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
+                        builder.setIcon(R.drawable.logonuevo);
+                        builder.setTitle("Pagos");
+                        builder.setMessage("¿Desea eliminar el pago?");
+                        builder.setPositiveButton("Aceptar", (dialog, which) -> {
+                            tablaDinamica.removeRow(position);
+                            total = 0;
+                            listaPagos.remove(position - 1);
 
-                                        if (tablaDinamica.getCount() > 0) {
-                                            for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
-                                                total += Double.parseDouble(tablaDinamica.getCellData(i, 1));
-                                            }
-                                            totalPagos.setText(String.format("%.2f", total));
-                                        } else {
-                                            totalPagos.setText("0.00");
-                                        }
-                                    }
-                                });
+                            if (tablaDinamica.getCount() > 0) {
+                                for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
+                                    total += Double.parseDouble(tablaDinamica.getCellData(i, 1));
+                                }
+                                totalPagos.setText(String.format("%.2f", total));
+                            } else {
+                                totalPagos.setText("0.00");
+                            }
+                        });
 
-                                builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
+                        builder.setNegativeButton("Cancelar", (dialog, which) -> {
 
-                                    }
-                                });
+                        });
 
-                                AlertDialog dialog = builder.create();
-                                dialog.show();
-                                break;
-                        }
-                    }
-                });
-            }
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                        break;
+                }
+            });
         });
 
-        listador.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!descripcionRequerida() || !montoRequerido() || !validarMonto())
-                    return;
+        listador.setOnClickListener(v -> {
+            if (!descripcionRequerida() || !montoRequerido() || !validarMonto())
+                return;
 
-                total = 0;
+            total = 0;
 
-                String[] item = new String[]{
+            String[] item = new String[]{
+                    descripcionPago.getText().toString(),
+                    cantidadPago.getText().toString()
+            };
+
+            String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+
+            if (!modoEdicionPago) {
+                tablaDinamica.addItem(item);
+                listaPagos.add(new ItemPago(
                         descripcionPago.getText().toString(),
-                        cantidadPago.getText().toString()
-                };
-
-                String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-
-                if (!modoEdicionPago) {
-                    tablaDinamica.addItem(item);
-                    listaPagos.add(new ItemPago(
+                        Double.parseDouble(cantidadPago.getText().toString()),
+                        date
+                ));
+            } else {
+                if (listaPagos.size() > 0) {
+                    listaPagos.set(POSICION, new ItemPago(
                             descripcionPago.getText().toString(),
                             Double.parseDouble(cantidadPago.getText().toString()),
                             date
                     ));
-                } else {
-                    if (listaPagos.size() > 0) {
-                        listaPagos.set(POSICION, new ItemPago(
-                                descripcionPago.getText().toString(),
-                                Double.parseDouble(cantidadPago.getText().toString()),
-                                date
-                        ));
 
-                        // Reinciar Tabla
-                        tablaDinamica.removeAll();
-                        tablaDinamica.addHeader(header);
-//                        tablaDinamica.addData(getClients());
-                        tablaDinamica.fondoHeader(R.color.AzulOscuro);
+                    // Reinciar Tabla
+                    tablaDinamica.removeAll();
+                    tablaDinamica.addHeader(header);
+                    tablaDinamica.fondoHeader(R.color.AzulOscuro);
 
-                        for (ItemPago itemPago : listaPagos) {
-
-                            tablaDinamica.addItem(new String[]{
-                                    itemPago.getDescripcionPago(),
-                                    String.format("%.2f", itemPago.getMonto())
-                            });
-//                            JSONObject rowJSON = new JSONObject();
-//                            rowJSON.put("PAGO", item.getMonto());
-//                            rowJSON.put("DESCRIPCION", item.getDescripcionPago());
-//                            rowJSON.put("FECHA", item.getFecha());
-//                            rowJSON.put("ID_FICHA", ID_FICHA);
-//
-//                            jsonArray.put(rowJSON);
-                        }
-
-                        modoEdicionPago = false;
-                        POSICION = 0;
-                        listador.setText("AGREGAR TRATAMIENTO");
+                    for (ItemPago itemPago : listaPagos) {
+                        tablaDinamica.addItem(new String[]{
+                                itemPago.getDescripcionPago(),
+                                String.format("%.2f", itemPago.getMonto())
+                        });
                     }
+
+                    modoEdicionPago = false;
+                    POSICION = 0;
+                    listador.setText("AGREGAR TRATAMIENTO");
                 }
+            }
 
-                descripcionPago.setText(null);
-                cantidadPago.setText(null);
+            descripcionPago.setText(null);
+            cantidadPago.setText(null);
 
-                descripcionPagoLayout.setError(null);
-                cantidadPagoLayout.setError(null);
+            descripcionPagoLayout.setError(null);
+            cantidadPagoLayout.setError(null);
 
-                if (tablaDinamica.getCount() > 0) {
-                    for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
-                        total += Double.parseDouble(tablaDinamica.getCellData(i, 1));
-                    }
-                    totalPagos.setText(String.format("%.2f", total));
+            if (tablaDinamica.getCount() > 0) {
+                for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
+                    total += Double.parseDouble(tablaDinamica.getCellData(i, 1));
                 }
+                totalPagos.setText(String.format("%.2f", total));
             }
         });
 
-        agregador.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (totalTratamientos >= total) {
-                    if (!MODO_EDICION) {
-                        SharedPreferences preferences = getActivity().getSharedPreferences("PAGOS", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = preferences.edit();
+        agregador.setOnClickListener(v -> {
+            if (totalTratamientos >= total) {
+                if (!MODO_EDICION) {
+                    SharedPreferences preferences = getActivity().getSharedPreferences("PAGOS", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
 
-                        Set<String> set = new HashSet<>();
+                    Set<String> set = new HashSet<>();
 
+                    for (ItemPago item : listaPagos) {
+                        String cadena = item.getDescripcionPago() + ";" + item.getMonto() + ";" + item.getFecha() + ";";
+                        set.add(cadena);
+                    }
+
+                    editor.putStringSet("listaPagos", set);
+                    editor.apply();
+
+                    final SharedPreferences preferenciasFicha2 = getActivity().getSharedPreferences("RESUMEN_FN", Context.MODE_PRIVATE);
+                    final SharedPreferences.Editor escritor2 = preferenciasFicha2.edit();
+                    escritor2.putString("NO_PAGOS", String.valueOf(listaPagos.size()));
+                    escritor2.commit();
+
+                    HistorialFotografico historialFotografico = new HistorialFotografico();
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                    transaction.replace(R.id.contenedor, historialFotografico);
+                    transaction.commit();
+                } else {
+                    final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+                    progressDialog.setMessage("Cargando...");
+                    progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                    progressDialog.setCancelable(false);
+                    progressDialog.show();
+
+                    try {
+                        JSONArray jsonArray = new JSONArray();
                         for (ItemPago item : listaPagos) {
-                            String cadena = item.getDescripcionPago() + ";" + item.getMonto() + ";" + item.getFecha() + ";";
-                            set.add(cadena);
-                        }
+                            String fechaMYSQL;
 
-                        editor.putStringSet("listaPagos", set);
-                        editor.apply();
-
-                        final SharedPreferences preferenciasFicha2 = getActivity().getSharedPreferences("RESUMEN_FN", Context.MODE_PRIVATE);
-                        final SharedPreferences.Editor escritor2 = preferenciasFicha2.edit();
-                        escritor2.putString("NO_PAGOS", String.valueOf(listaPagos.size()));
-                        escritor2.commit();
-
-                        HistorialFotografico historialFotografico = new HistorialFotografico();
-                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
-                                .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                        transaction.replace(R.id.contenedor, historialFotografico);
-                        transaction.commit();
-                    } else {
-                        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-                        progressDialog.setMessage("Cargando...");
-                        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                        progressDialog.setCancelable(false);
-                        progressDialog.show();
-
-                        try {
-                            JSONArray jsonArray = new JSONArray();
-                            for (ItemPago item : listaPagos) {
-                                JSONObject rowJSON = new JSONObject();
-                                rowJSON.put("PAGO", item.getMonto());
-                                rowJSON.put("DESCRIPCION", item.getDescripcionPago());
-                                rowJSON.put("FECHA", item.getFecha());
-                                rowJSON.put("ID_FICHA", ID_FICHA);
-
-                                jsonArray.put(rowJSON);
+                            if (item.getFecha().contains("/")) {
+                                Date initDate = new SimpleDateFormat("dd/MM/yyyy").parse(item.getFecha());
+                                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                                fechaMYSQL = formatter.format(initDate);
+                            } else {
+                                fechaMYSQL = item.getFecha();
                             }
 
-                            JSONObject jsonObject = new JSONObject();
-                            jsonObject.put("PAGOS", jsonArray);
+                            JSONObject rowJSON = new JSONObject();
+                            rowJSON.put("PAGO", item.getMonto());
+                            rowJSON.put("DESCRIPCION", item.getDescripcionPago());
+                            rowJSON.put("FECHA", fechaMYSQL);
+                            rowJSON.put("ID_FICHA", ID_FICHA);
 
-                            QuerysFichas querysFichas = new QuerysFichas(getContext());
-                            querysFichas.actualizarPagos(ID_FICHA, jsonObject, new QuerysFichas.VolleyOnEventListener() {
-                                @Override
-                                public void onSuccess(Object object) {
-                                    progressDialog.dismiss();
-
-                                    Alerter.create(getActivity())
-                                            .setTitle("Pagos")
-                                            .setText("Actualizados correctamente")
-                                            .setIcon(R.drawable.logonuevo)
-                                            .setTextTypeface(face)
-                                            .enableSwipeToDismiss()
-                                            .setBackgroundColorRes(R.color.FondoSecundario)
-                                            .show();
-
-                                    MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
-                                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
-                                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                                    transaction.replace(R.id.contenedor, menuFichaNormal);
-                                    transaction.commit();
-                                }
-
-                                @Override
-                                public void onFailure(Exception e) {
-                                    progressDialog.dismiss();
-
-                                    Alerter.create(getActivity())
-                                            .setTitle("Error")
-                                            .setText("Fallo al actualizar los PAGOS")
-                                            .setIcon(R.drawable.logonuevo)
-                                            .setTextTypeface(face)
-                                            .enableSwipeToDismiss()
-                                            .setBackgroundColorRes(R.color.AzulOscuro)
-                                            .show();
-                                }
-                            });
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                            jsonArray.put(rowJSON);
                         }
+
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("PAGOS", jsonArray);
+
+                        QuerysFichas querysFichas = new QuerysFichas(getContext());
+                        querysFichas.actualizarPagos(ID_FICHA, jsonObject, new QuerysFichas.VolleyOnEventListener() {
+                            @Override
+                            public void onSuccess(Object object) {
+                                progressDialog.dismiss();
+
+                                Alerter.create(getActivity())
+                                        .setTitle("Pagos")
+                                        .setText("Actualizados correctamente")
+                                        .setIcon(R.drawable.logonuevo)
+                                        .setTextTypeface(face)
+                                        .enableSwipeToDismiss()
+                                        .setBackgroundColorRes(R.color.FondoSecundario)
+                                        .show();
+
+                                FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
+                                funcionesBitacora.registrarBitacora("ACTUALIZACION", "PAGOS - FICHA NORMAL", "Se actualizo la ficha #" + ID_FICHA);
+
+                                MenuFichaNormal menuFichaNormal = new MenuFichaNormal();
+                                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+                                        .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                                transaction.replace(R.id.contenedor, menuFichaNormal);
+                                transaction.commit();
+                            }
+
+                            @Override
+                            public void onFailure(Exception e) {
+                                progressDialog.dismiss();
+
+                                Alerter.create(getActivity())
+                                        .setTitle("Error")
+                                        .setText("Fallo al actualizar los PAGOS")
+                                        .setIcon(R.drawable.logonuevo)
+                                        .setTextTypeface(face)
+                                        .enableSwipeToDismiss()
+                                        .setBackgroundColorRes(R.color.AzulOscuro)
+                                        .show();
+                            }
+                        });
+
+                    } catch (JSONException | ParseException e) {
+                        e.printStackTrace();
                     }
-                } else {
-                    Alerter.create(getActivity())
-                            .setTitle("Error")
-                            .setText("El pago no puede ser mayor a la deuda")
-                            .setIcon(R.drawable.logonuevo)
-                            .setTextTypeface(face)
-                            .enableSwipeToDismiss()
-                            .setBackgroundColorRes(R.color.AzulOscuro)
-                            .show();
                 }
+            } else {
+                Alerter.create(getActivity())
+                        .setTitle("Error")
+                        .setText("El pago no puede ser mayor a la deuda")
+                        .setIcon(R.drawable.logonuevo)
+                        .setTextTypeface(face)
+                        .enableSwipeToDismiss()
+                        .setBackgroundColorRes(R.color.AzulOscuro)
+                        .show();
             }
         });
 

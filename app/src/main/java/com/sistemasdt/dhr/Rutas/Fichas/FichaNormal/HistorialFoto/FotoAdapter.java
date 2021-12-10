@@ -78,23 +78,20 @@ public class FotoAdapter extends RecyclerView.Adapter<FotoAdapter.ViewHolderCons
             viewHolderConsulta.siv.setImageBitmap(image);
 
             viewHolderConsulta.ivSelected.setVisibility(itemFoto.isSelected() ? View.VISIBLE : View.GONE);
-            viewHolderConsulta.siv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    itemFoto.setSelected(!itemFoto.isSelected());
-                    viewHolderConsulta.ivSelected.setVisibility(itemFoto.isSelected() ? View.VISIBLE : View.GONE);
+            viewHolderConsulta.siv.setOnClickListener(v -> {
+                itemFoto.setSelected(!itemFoto.isSelected());
+                viewHolderConsulta.ivSelected.setVisibility(itemFoto.isSelected() ? View.VISIBLE : View.GONE);
 
-                    int conteo = 0;
+                int conteo = 0;
 
-                    for (ItemFoto aux : imageList) {
-                        if (aux.isSelected()) {
-                            conteo++;
-                        }
+                for (ItemFoto aux : imageList) {
+                    if (aux.isSelected()) {
+                        conteo++;
                     }
+                }
 
-                    if (listener != null) {
-                        listener.onItemClick(conteo);
-                    }
+                if (listener != null) {
+                    listener.onItemClick(conteo);
                 }
             });
         } else {
@@ -103,43 +100,43 @@ public class FotoAdapter extends RecyclerView.Adapter<FotoAdapter.ViewHolderCons
                     .placeholder(R.drawable.logonuevo)
                     .resize(250, 250)
                     .into(new Target() {
-                @Override
-                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                    viewHolderConsulta.siv.setImageBitmap(bitmap);
-                    ItemFoto aux = new ItemFoto(bitmap, "", false);
-                    imageList.set(contador, aux);
-
-                    viewHolderConsulta.ivSelected.setVisibility(aux.isSelected() ? View.VISIBLE : View.GONE);
-                    viewHolderConsulta.siv.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(View v) {
-                            aux.setSelected(!aux.isSelected());
+                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                            viewHolderConsulta.siv.setImageBitmap(bitmap);
+                            ItemFoto aux = new ItemFoto(bitmap, "", false);
+                            imageList.set(contador, aux);
+
                             viewHolderConsulta.ivSelected.setVisibility(aux.isSelected() ? View.VISIBLE : View.GONE);
+                            viewHolderConsulta.siv.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    aux.setSelected(!aux.isSelected());
+                                    viewHolderConsulta.ivSelected.setVisibility(aux.isSelected() ? View.VISIBLE : View.GONE);
 
-                            int conteo = 0;
+                                    int conteo = 0;
 
-                            for (ItemFoto aux : imageList) {
-                                if (aux.isSelected()) {
-                                    conteo++;
+                                    for (ItemFoto aux : imageList) {
+                                        if (aux.isSelected()) {
+                                            conteo++;
+                                        }
+                                    }
+
+                                    if (listener != null) {
+                                        listener.onItemClick(conteo);
+                                    }
                                 }
-                            }
+                            });
+                        }
 
-                            if (listener != null) {
-                                listener.onItemClick(conteo);
-                            }
+                        @Override
+                        public void onBitmapFailed(Drawable errorDrawable) {
+                        }
+
+                        @Override
+                        public void onPrepareLoad(Drawable placeHolderDrawable) {
+                            viewHolderConsulta.siv.setImageDrawable(placeHolderDrawable);
                         }
                     });
-                }
-
-                @Override
-                public void onBitmapFailed(Drawable errorDrawable) {
-                }
-
-                @Override
-                public void onPrepareLoad(Drawable placeHolderDrawable) {
-                    viewHolderConsulta.siv.setImageDrawable(placeHolderDrawable);
-                }
-            });
         }
     }
 
