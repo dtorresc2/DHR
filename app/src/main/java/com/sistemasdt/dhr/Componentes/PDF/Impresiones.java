@@ -36,11 +36,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 
 public class Impresiones {
@@ -87,7 +91,6 @@ public class Impresiones {
 
         listadoPagos = new ArrayList<>();
         listadoTratamientos = new ArrayList<>();
-
     }
 
     public void generarFichaNormal(int ID_FICHA) {
@@ -96,6 +99,16 @@ public class Impresiones {
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCancelable(false);
         progressDialog.show();
+
+        File carpetaPlantillas = new File(CONTEXT.getExternalFilesDir(null).toString(), "Plantillas");
+
+        File plantilla1 = new File(carpetaPlantillas, "portada_ficha.pdf");
+        File plantilla2 = new File(carpetaPlantillas, "cuerpo_ficha.pdf");
+
+        new Thread(() -> {
+            obtenerPlantillas(CONTEXT.getString(R.string.S3) + "Plantillas/FichaNormal/portada_ficha.pdf", plantilla1);
+            obtenerPlantillas(CONTEXT.getString(R.string.S3) + "Plantillas/FichaNormal/cuerpo_ficha.pdf", plantilla2);
+        }).start();
 
         obtenerFicha(ID_FICHA);
         obtenerHistorialMedico(ID_FICHA);
@@ -408,23 +421,7 @@ public class Impresiones {
                 //GENERACION DEL DOCUMENTO =========================================================
                 documento.close();
 
-                File carpetaPlantillas = new File(CONTEXT.getExternalFilesDir(null).toString(), "Plantillas");
-
-                if (!carpetaPlantillas.exists()) {
-                    carpetaPlantillas.mkdirs();
-                }
-
-                File plantilla1 = new File(carpetaPlantillas, "portada_ficha.pdf");
-                File plantilla2 = new File(carpetaPlantillas, "cuerpo_ficha.pdf");
                 File pdfInfo = new File(folder, "Prueba.pdf");
-
-                if (!plantilla1.exists()) {
-                    CopyRawToSDCard(R.raw.portada_ficha, plantilla1.getAbsolutePath());
-                }
-
-                if (!plantilla2.exists()) {
-                    CopyRawToSDCard(R.raw.cuerpo_ficha, plantilla2.getAbsolutePath());
-                }
 
                 PdfReader reader = new PdfReader(plantilla1.getAbsolutePath());
                 PdfReader reader2 = new PdfReader(plantilla2.getAbsolutePath());
@@ -450,8 +447,7 @@ public class Impresiones {
                 File pdf3 = new File(folder, "Final.pdf");
                 PdfReader reader3 = new PdfReader(pdf3.getAbsolutePath());
 
-                Long consecutivo = System.currentTimeMillis() / 1000;
-                File pdfFinal = new File(folder, consecutivo.toString() + ".pdf");
+                File pdfFinal = new File(folder, "FichaNormal.pdf");
                 PdfStamper estampador_info = new PdfStamper(reader3, new FileOutputStream(pdfFinal));
 
                 //Estampando informacion
@@ -658,4 +654,24 @@ public class Impresiones {
         }
     }
 
+    private void obtenerPlantillas(String url, File outputFile) {
+        try {
+            URL u = new URL(url);
+            URLConnection conn = u.openConnection();
+            int contentLength = conn.getContentLength();
+
+            DataInputStream stream = new DataInputStream(u.openStream());
+
+            byte[] buffer = new byte[contentLength];
+            stream.readFully(buffer);
+            stream.close();
+
+            DataOutputStream fos = new DataOutputStream(new FileOutputStream(outputFile));
+            fos.write(buffer);
+            fos.flush();
+            fos.close();
+        } catch (IOException e) {
+            Toast.makeText(CONTEXT, e.toString(), Toast.LENGTH_LONG).show();
+        }
+    }
 }
