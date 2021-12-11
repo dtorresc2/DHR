@@ -1,9 +1,13 @@
 package com.sistemasdt.dhr.Componentes.PDF;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
 
+import android.os.Environment;
 import android.os.Handler;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.fragment.app.FragmentManager;
 
@@ -16,18 +20,27 @@ import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfImportedPage;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import com.sistemasdt.dhr.R;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialOdonto.ItemTratamiento;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.PagosFicha.ItemPago;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysFichas;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public class Impresiones {
@@ -35,9 +48,15 @@ public class Impresiones {
     private FragmentManager FRAGMENT_MANAGER;
     private ArrayList<String> listaPacientes = null;
 
+    private static final String TAG = "PDF_VIEW";
+
+
     private String NOMBRE_PACIENTE;
     private String EDAD_PACIENTE;
     private String CODIGO_FICHA;
+    private double TRATAMIENTOS = 0;
+    private double PAGOS = 0;
+    private double SALDO = 0;
 
     private int HOSPITALIZADO = 0;
     private int ALERGIA = 0;
@@ -57,14 +76,31 @@ public class Impresiones {
     private int DIABETES = 0;
     private String DESCRIPCION_OTROS;
 
+    private int ID_HISTORIAL_ODONTO = 0;
+    private ArrayList<String[]> listadoTratamientos;
+
+    private ArrayList<String> listadoPagos;
+
     public Impresiones(Context context, FragmentManager fragmentManager) {
         CONTEXT = context;
         FRAGMENT_MANAGER = fragmentManager;
+
+        listadoPagos = new ArrayList<>();
+        listadoTratamientos = new ArrayList<>();
+
     }
 
     public void generarFichaNormal(int ID_FICHA) {
+        final ProgressDialog progressDialog = new ProgressDialog(CONTEXT, R.style.progressDialog);
+        progressDialog.setMessage("Cargando...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
         obtenerFicha(ID_FICHA);
         obtenerHistorialMedico(ID_FICHA);
+        obtenerTratamientos(ID_FICHA);
+        obtenerPagos(ID_FICHA);
 
         Handler handler = new Handler();
         handler.postDelayed(() -> {
@@ -254,18 +290,194 @@ public class Impresiones {
                 tabla_padecimientos2.setSpacingBefore(5);
                 documento.add(titulo5);
 
+                //Historial Odontodologico =========================================================
+                Paragraph titulo9 = new Paragraph("Historial Odontodologico", fuentecorrelativo);
+                titulo9.setSpacingBefore(15);
+                documento.add(titulo9);
+
+                Paragraph paragraph = new Paragraph("Balance de Ficha", fuentedatos);
+                paragraph.setAlignment(Element.ALIGN_CENTER);
+                paragraph.setSpacingBefore(10);
+                documento.add(paragraph);
+
+                //TABLA BALANCE DE FICHA
+                PdfPTable tabla_balance = new PdfPTable(3);
+                PdfPCell columnasbal, filasbal;
+                String registros4[] = {"Tratamientos", "Pagos", "Balance"};
+
+                String celdasreg[] = {
+                        String.format("%.2f", TRATAMIENTOS),
+                        String.format("%.2f", PAGOS),
+                        String.format("%.2f", SALDO)
+                };
+
+                //Columnas
+                for (int i = 0; i < 3; i++) {
+                    columnasbal = new PdfPCell(new Phrase(registros4[i], fuentecolumna));
+                    columnasbal.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    columnasbal.setVerticalAlignment(Element.ALIGN_CENTER);
+                    columnasbal.setBackgroundColor(fondo);
+                    tabla_balance.addCell(columnasbal);
+                }
+                tabla_balance.setHeaderRows(1);
+
+                //Relleno de las filas
+                for (int row = 0; row < 1; row++) {
+                    for (int column = 0; column < 3; column++) {
+                        filasbal = new PdfPCell(new Phrase(celdasreg[column], fuentedatos));
+                        filasbal.setHorizontalAlignment(Element.ALIGN_CENTER);
+                        tabla_balance.addCell(filasbal);
+                    }
+                }
+                tabla_balance.setSpacingBefore(15);
+                documento.add(tabla_balance);
+
+                paragraph = new Paragraph("Tratamientos", fuentedatos);
+                paragraph.setAlignment(Element.ALIGN_CENTER);
+                paragraph.setSpacingBefore(10);
+                documento.add(paragraph);
+
+                // TABLA DE TRATAMIENTOS
+                PdfPTable TABLA_TRATAMIENTOS = new PdfPTable(3);
+                PdfPCell COLUMNA_TRATAMIENTO;
+                String registros2[] = {"Pieza", "Tratamiento", "Monto"};
+
+                //Columnas
+                for (int i = 0; i < registros2.length; i++) {
+                    COLUMNA_TRATAMIENTO = new PdfPCell(new Phrase(registros2[i], fuentecolumna));
+                    COLUMNA_TRATAMIENTO.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    COLUMNA_TRATAMIENTO.setVerticalAlignment(Element.ALIGN_CENTER);
+                    COLUMNA_TRATAMIENTO.setBackgroundColor(fondo);
+                    TABLA_TRATAMIENTOS.addCell(COLUMNA_TRATAMIENTO);
+                }
+
+                TABLA_TRATAMIENTOS.setSpacingBefore(15);
+                documento.add(TABLA_TRATAMIENTOS);
+
+                PdfPTable TABLA_TRATAMIENTOS_RELLENO = new PdfPTable(3);
+                PdfPCell FILA_TRATAMIENTO;
+
+                //Relleno de las filas
+                for (int row = 0; row < listadoTratamientos.size(); row++) {
+                    for (int column = 0; column < registros2.length; column++) {
+                        FILA_TRATAMIENTO = new PdfPCell(new Phrase(listadoTratamientos.get(row)[column], fuentedatos));
+                        FILA_TRATAMIENTO.setHorizontalAlignment(Element.ALIGN_CENTER);
+                        TABLA_TRATAMIENTOS_RELLENO.addCell(FILA_TRATAMIENTO);
+                    }
+                }
+
+                documento.add(TABLA_TRATAMIENTOS_RELLENO);
+
+                paragraph = new Paragraph("Pagos", fuentedatos);
+                paragraph.setAlignment(Element.ALIGN_CENTER);
+                paragraph.setSpacingBefore(10);
+                documento.add(paragraph);
+
+                // TABLA DE PAGOS DE FICHA
+                PdfPTable TABLA_PAGOS = new PdfPTable(2);
+                PdfPCell COLUMNA_PAGO;
+                String columnasAux[] = {"Descripcion", "Monto"};
+
+                //Columnas
+                for (int i = 0; i < columnasAux.length; i++) {
+                    COLUMNA_PAGO = new PdfPCell(new Phrase(columnasAux[i], fuentecolumna));
+                    COLUMNA_PAGO.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    COLUMNA_PAGO.setVerticalAlignment(Element.ALIGN_CENTER);
+                    COLUMNA_PAGO.setBackgroundColor(fondo);
+                    TABLA_PAGOS.addCell(COLUMNA_PAGO);
+                }
+
+                TABLA_PAGOS.setSpacingBefore(15);
+                documento.add(TABLA_PAGOS);
+
+                PdfPTable TABLA_PAGOS_RELLENO = new PdfPTable(2);
+                PdfPCell FILA_PAGOS;
+
+                //Relleno de las filas
+                for (int row = 0; row < listadoPagos.size(); row++) {
+                    String[] cadena = listadoPagos.get(row).split(";");
+
+                    for (int column = 0; column < columnasAux.length; column++) {
+                        FILA_PAGOS = new PdfPCell(new Phrase(cadena[column], fuentedatos));
+                        FILA_PAGOS.setHorizontalAlignment(Element.ALIGN_CENTER);
+                        TABLA_PAGOS_RELLENO.addCell(FILA_PAGOS);
+                    }
+                }
+                documento.add(TABLA_PAGOS_RELLENO);
 
                 //GENERACION DEL DOCUMENTO =========================================================
                 documento.close();
 
-                LectorPDF lectorPDF = new LectorPDF(pdf);
-                lectorPDF.display(FRAGMENT_MANAGER);
+                File carpetaPlantillas = new File(CONTEXT.getExternalFilesDir(null).toString(), "Plantillas");
 
+                if (!carpetaPlantillas.exists()) {
+                    carpetaPlantillas.mkdirs();
+                }
+
+                File plantilla1 = new File(carpetaPlantillas, "portada_ficha.pdf");
+                File plantilla2 = new File(carpetaPlantillas, "cuerpo_ficha.pdf");
+                File pdfInfo = new File(folder, "Prueba.pdf");
+
+                if (!plantilla1.exists()) {
+                    CopyRawToSDCard(R.raw.portada_ficha, plantilla1.getAbsolutePath());
+                }
+
+                if (!plantilla2.exists()) {
+                    CopyRawToSDCard(R.raw.cuerpo_ficha, plantilla2.getAbsolutePath());
+                }
+
+                PdfReader reader = new PdfReader(plantilla1.getAbsolutePath());
+                PdfReader reader2 = new PdfReader(plantilla2.getAbsolutePath());
+                PdfReader info = new PdfReader(pdfInfo.getAbsolutePath());
+
+                //Estampando portada
+                File pdf2 = new File(folder, "Final.pdf");
+                PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(pdf2));
+
+                if (info.getNumberOfPages() > 1) {
+                    //Estampando el resto de hojas
+                    for (int i = 1; i < info.getNumberOfPages() + 1; i++) {
+                        PdfImportedPage page = stamper.getImportedPage(reader2, 1);
+                        stamper.insertPage(i + 1, reader2.getPageSize(1));
+                        stamper.getUnderContent(i + 1).addTemplate(page, 0, 0);
+                    }
+                }
+
+                stamper.close();
+                reader.close();
+                reader2.close();
+
+                File pdf3 = new File(folder, "Final.pdf");
+                PdfReader reader3 = new PdfReader(pdf3.getAbsolutePath());
+
+                Long consecutivo = System.currentTimeMillis() / 1000;
+                File pdfFinal = new File(folder, consecutivo.toString() + ".pdf");
+                PdfStamper estampador_info = new PdfStamper(reader3, new FileOutputStream(pdfFinal));
+
+                //Estampando informacion
+                for (int i = 1; i < info.getNumberOfPages() + 1; i++) {
+                    PdfImportedPage page = estampador_info.getImportedPage(info, i);
+                    estampador_info.getOverContent(i).addTemplate(page, 0, 0);
+                }
+
+                estampador_info.close();
+                reader3.close();
+                info.close();
+
+                pdf.delete();
+                pdf2.delete();
+
+                progressDialog.dismiss();
+
+                if (pdfFinal.exists()) {
+                    LectorPDF lectorPDF = new LectorPDF(pdfFinal);
+                    lectorPDF.display(FRAGMENT_MANAGER);
+                }
 
             } catch (DocumentException | IOException e) {
-                e.printStackTrace();
+                Toast.makeText(CONTEXT, e.toString(), Toast.LENGTH_LONG).show();
             }
-        }, 1000);
+        }, 1500);
 
     }
 
@@ -279,8 +491,11 @@ public class Impresiones {
                     NOMBRE_PACIENTE = jsonObject.getString("NOMBRE");
                     EDAD_PACIENTE = jsonObject.getString("EDAD_PACIENTE");
                     CODIGO_FICHA = jsonObject.getString("CODIGO_INTERNO");
+
+                    TRATAMIENTOS = jsonObject.getDouble("DEBE");
+                    PAGOS = jsonObject.getDouble("HABER");
+                    SALDO = jsonObject.getDouble("SALDO");
                 } catch (JSONException e) {
-//                    Toast.makeText(CONTEXT, e.toString(), Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 }
             }
@@ -348,6 +563,99 @@ public class Impresiones {
                 obtenerPadecimientos(ID_HISTORIAL_MEDICO);
             }
         });
+    }
+
+    private void obtenerTratamientos(int ID_FICHA) {
+        QuerysFichas querysFichas = new QuerysFichas(CONTEXT);
+        querysFichas.obtenerHistorialOdontodologico(ID_FICHA, new QuerysFichas.VolleyOnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                try {
+                    JSONObject jsonObject = new JSONObject(object.toString());
+                    ID_HISTORIAL_ODONTO = jsonObject.getInt("ID_HISTORIAL_ODONTO");
+
+                    QuerysFichas querysFichas1 = new QuerysFichas(CONTEXT);
+                    querysFichas1.obtenerTratamientos(ID_HISTORIAL_ODONTO, new QuerysFichas.VolleyOnEventListener() {
+                        @Override
+                        public void onSuccess(Object object) {
+                            try {
+                                JSONArray jsonArray = new JSONArray(object.toString());
+                                listadoTratamientos.clear();
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    listadoTratamientos.add(new String[]{
+                                            jsonArray.getJSONObject(i).getString("NOMBRE_PIEZA"),
+                                            jsonArray.getJSONObject(i).getString("PLAN"),
+                                            String.format("%.2f", jsonArray.getJSONObject(i).getDouble("COSTO"))
+                                    });
+                                }
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Exception e) {
+                            obtenerTratamientos(ID_HISTORIAL_ODONTO);
+                        }
+                    });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                obtenerTratamientos(ID_FICHA);
+            }
+        });
+    }
+
+    private void obtenerPagos(int ID_FICHA) {
+        QuerysFichas querysFichas = new QuerysFichas(CONTEXT);
+        querysFichas.obtenerPagos(ID_FICHA, new QuerysFichas.VolleyOnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                try {
+                    JSONArray jsonArray = new JSONArray(object.toString());
+                    listadoPagos.clear();
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        listadoPagos.add(
+                                jsonArray.getJSONObject(i).getString("DESCRIPCION") + ";" +
+                                        String.format("%.2f", jsonArray.getJSONObject(i).getDouble("PAGO")
+                                        ) + ";"
+                        );
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                obtenerPagos(ID_FICHA);
+            }
+        });
+    }
+
+    private void CopyRawToSDCard(int id, String path) {
+        InputStream in = CONTEXT.getResources().openRawResource(id);
+        FileOutputStream out = null;
+        try {
+            out = new FileOutputStream(path);
+            byte[] buff = new byte[1024];
+            int read = 0;
+            while ((read = in.read(buff)) > 0) {
+                out.write(buff, 0, read);
+            }
+            in.close();
+            out.close();
+            Log.i(TAG, "copyFile, success!");
+        } catch (FileNotFoundException e) {
+            Log.e(TAG, "copyFile FileNotFoundException " + e.getMessage());
+        } catch (IOException e) {
+            Log.e(TAG, "copyFile IOException " + e.getMessage());
+        }
     }
 
 }
