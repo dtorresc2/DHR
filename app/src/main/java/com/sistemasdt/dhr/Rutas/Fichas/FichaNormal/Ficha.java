@@ -1,6 +1,7 @@
 package com.sistemasdt.dhr.Rutas.Fichas.FichaNormal;
 
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -17,6 +18,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.widget.Toolbar;
@@ -70,9 +73,20 @@ public class Ficha extends Fragment {
     private boolean MODO_EDICION = false;
     private int ID_FICHA = 0;
 
+    ActivityResultLauncher<String> lanzadorPermisos;
+
     public Ficha() {
         // Required empty public constructor
         MODO_EDICION = false;
+
+        // INICIALIZADOR DE ACTIVIDAD PARA PERMISOS
+        lanzadorPermisos = registerForActivityResult(
+                new ActivityResultContracts.RequestPermission(),
+                result -> {
+                    if (result) {
+
+                    }
+                });
     }
 
     public void activarModoEdicion(int id) {
@@ -86,6 +100,9 @@ public class Ficha extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_ficha, container, false);
         final Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+
+//        lanzadorPermisos.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+//        lanzadorPermisos.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
 
         //Barra de Titulo
         toolbar = view.findViewById(R.id.toolbar);

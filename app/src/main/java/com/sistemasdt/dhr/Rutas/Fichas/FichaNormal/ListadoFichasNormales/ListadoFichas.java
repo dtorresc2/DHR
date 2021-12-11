@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.sistemasdt.dhr.Componentes.Dialogos.Bitacora.FuncionesBitacora;
 import com.sistemasdt.dhr.Componentes.MenusInferiores.MenuInferiorFicha;
+import com.sistemasdt.dhr.Componentes.PDF.Impresiones;
 import com.sistemasdt.dhr.R;
 
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.Adaptadores.AdaptadorConsultaFicha;
@@ -226,6 +227,11 @@ public class ListadoFichas extends Fragment {
                     AlertDialog dialog = builder.create();
                     dialog.show();
                 }
+                break;
+
+            case 3:
+                Impresiones impresiones = new Impresiones(getContext(), getActivity().getSupportFragmentManager());
+                impresiones.generarFichaNormal(ID);
                 break;
 
             case 4:
