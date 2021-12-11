@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
@@ -46,7 +47,10 @@ import com.sistemasdt.dhr.MainActivity;
 
 import com.sistemasdt.dhr.Componentes.Dialogos.Configuracion.DialogoConfiguracion;
 import com.sistemasdt.dhr.R;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialFoto.ItemFoto;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysCuentas;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,8 +65,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class Inicio extends Fragment {
-    private TextView usuario, configuracion, editar_perfil, totalPacientes, contadorFE, contadorFN, contadorPac;
-    private TextView correo, citasPendientes, cerrarSesion, empresa, editar_nombre, bitacora;
+    private TextView usuario, configuracion, editar_perfil;
+    private TextView cerrarSesion, empresa, bitacora;
     private SharedPreferences preferencias;
     private RequestQueue requestQueue;
     private ImageView fotoPerfil;
@@ -89,7 +93,6 @@ public class Inicio extends Fragment {
 
     //Editar Perfil
     private ImageView imagenPerfilAux;
-    private NetworkImageView networkImageView;
 
     public Inicio() {
         // Required empty public constructor
@@ -130,74 +133,54 @@ public class Inicio extends Fragment {
         bitacora = view.findViewById(R.id.inicio_opc_log_texto);
         bitacora.setTypeface(face2);
 
-        bitacora.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogoBitacora dialogoBitacora = new DialogoBitacora();
-                dialogoBitacora.display(getFragmentManager());
-            }
+        bitacora.setOnClickListener(v -> {
+            DialogoBitacora dialogoBitacora = new DialogoBitacora();
+            dialogoBitacora.display(getActivity().getSupportFragmentManager());
         });
 
         cerrarSesion = view.findViewById(R.id.inicio_opc_salir_texto);
         cerrarSesion.setTypeface(face2);
 
-        configuracion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DialogoConfiguracion dialogoConfiguracion = new DialogoConfiguracion();
-                dialogoConfiguracion.display(getFragmentManager());
-            }
+        configuracion.setOnClickListener(view1 -> {
+            DialogoConfiguracion dialogoConfiguracion = new DialogoConfiguracion();
+            dialogoConfiguracion.display(getActivity().getSupportFragmentManager());
         });
 
-        editar_perfil.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                EditarPerfil();
-            }
-        });
+        editar_perfil.setOnClickListener(view12 -> EditarPerfil());
 
-        cerrarSesion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
-                builder.setIcon(R.drawable.logonuevo);
-                builder.setTitle("DHR");
-                builder.setMessage("¿Desea cerrar la sesion?");
-                builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        SharedPreferences preferencias = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+        cerrarSesion.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
+            builder.setIcon(R.drawable.logonuevo);
+            builder.setTitle("DHR");
+            builder.setMessage("¿Desea cerrar la sesion?");
+            builder.setPositiveButton("ACEPTAR", (dialog, id) -> {
+                SharedPreferences preferencias = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
 
-                        final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.progressDialog);
-                        progressDialog.setMessage("Cerrando Sesion");
-                        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                        progressDialog.setCancelable(false);
-                        progressDialog.show();
+                final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.progressDialog);
+                progressDialog.setMessage("Cerrando Sesion");
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setCancelable(false);
+                progressDialog.show();
 
-                        Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            public void run() {
-                                progressDialog.dismiss();
-                                Intent intent = new Intent(getActivity(), MainActivity.class);
-                                getActivity().startActivity(intent);
-                                getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                                getActivity().finish();
-                            }
-                        }, 500);
+                Handler handler = new Handler();
+                handler.postDelayed(() -> {
+                    progressDialog.dismiss();
+                    Intent intent = new Intent(getActivity(), MainActivity.class);
+                    getActivity().startActivity(intent);
+                    getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    getActivity().finish();
+                }, 500);
 
-                        SharedPreferences.Editor editor = preferencias.edit();
-                        editor.clear();
-                        editor.commit();
-                    }
-                });
-                builder.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                    }
-                });
+                SharedPreferences.Editor editor = preferencias.edit();
+                editor.clear();
+                editor.commit();
+            });
+            builder.setNegativeButton("CANCELAR", (dialog, id) -> {
+                // User cancelled the dialog
+            });
 
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            }
+            AlertDialog dialog = builder.create();
+            dialog.show();
         });
 
         obtenerPerfil();
@@ -212,12 +195,8 @@ public class Inicio extends Fragment {
         progressDialog.setCancelable(false);
         progressDialog.show();
 
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            public void run() {
-                progressDialog.dismiss();
-            }
-        }, 1000);
+//        Handler handler = new Handler();
+//        handler.postDelayed(() -> progressDialog.dismiss(), 1000);
 
         final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
         final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("PERFIL", Context.MODE_PRIVATE);
@@ -235,10 +214,12 @@ public class Inicio extends Fragment {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        progressDialog.dismiss();
                     }
 
                     @Override
                     public void onFailure(Exception e) {
+                        progressDialog.dismiss();
                         e.printStackTrace();
                         obtenerPerfil();
                     }
@@ -257,10 +238,30 @@ public class Inicio extends Fragment {
                     editor.putString("URL", getContext().getResources().getString(R.string.S3) + jsonObject.getString("URL") + ".jpg");
                     editor.commit();
 
-                    ImageRequest imageRequest = new ImageRequest(getContext().getResources().getString(R.string.S3) + jsonObject.getString("URL") + ".jpg",
-                            new BitmapListener(fotoPerfil), 0, 0, null, null,
-                            new MyErrorListener(fotoPerfil));
-                    requestQueue.add(imageRequest);
+//                    ImageRequest imageRequest = new ImageRequest(getContext().getResources().getString(R.string.S3) + jsonObject.getString("URL") + ".jpg",
+//                            new BitmapListener(fotoPerfil), 0, 0, null, null,
+//                            new MyErrorListener(fotoPerfil));
+//                    requestQueue.add(imageRequest);
+
+                    Picasso.with(getContext())
+                            .load(getContext().getResources().getString(R.string.S3) + jsonObject.getString("URL") + ".jpg")
+                            .placeholder(R.drawable.logonuevo)
+                            .resize(125, 125)
+                            .into(new Target() {
+                                @Override
+                                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                    fotoPerfil.setImageBitmap(bitmap);
+                                }
+                                @Override
+                                public void onBitmapFailed(Drawable errorDrawable) {
+                                }
+
+                                @Override
+                                public void onPrepareLoad(Drawable placeHolderDrawable) {
+                                    fotoPerfil.setImageDrawable(placeHolderDrawable);
+                                }
+                            });
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -289,10 +290,29 @@ public class Inicio extends Fragment {
         nombrePerfilAux.setText(sharedPreferences.getString("EMPRESA", "-"));
 
         imagenPerfilAux = viewCuadro.findViewById(R.id.imagenPerfilAux);
-        ImageRequest imageRequest = new ImageRequest(sharedPreferences.getString("URL", getContext().getResources().getString(R.string.S3) + "not.jpg"),
-                new BitmapListener(imagenPerfilAux), 0, 0, null, null,
-                new MyErrorListener(imagenPerfilAux));
-        requestQueue.add(imageRequest);
+//        ImageRequest imageRequest = new ImageRequest(sharedPreferences.getString("URL", getContext().getResources().getString(R.string.S3) + "not.jpg"),
+//                new BitmapListener(imagenPerfilAux), 0, 0, null, null,
+//                new MyErrorListener(imagenPerfilAux));
+//        requestQueue.add(imageRequest);
+
+        Picasso.with(getContext())
+                .load(sharedPreferences.getString("URL", getContext().getResources().getString(R.string.S3) + "not.jpg"))
+                .placeholder(R.drawable.logonuevo)
+                .resize(125, 125)
+                .into(new Target() {
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        imagenPerfilAux.setImageBitmap(bitmap);
+                    }
+                    @Override
+                    public void onBitmapFailed(Drawable errorDrawable) {
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+                        imagenPerfilAux.setImageDrawable(placeHolderDrawable);
+                    }
+                });
 
         final Button galeria = viewCuadro.findViewById(R.id.botonGaleria);
         galeria.setTypeface(face2);
@@ -310,86 +330,72 @@ public class Inicio extends Fragment {
         builder.setView(viewCuadro);
         final AlertDialog dialog = builder.create();
 
-        galeria.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                intent.setType("image/");
-                startActivityForResult(intent.createChooser(intent, "Seleccione"), COD_SELECCIONA);
+        galeria.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            intent.setType("image/");
+            startActivityForResult(intent.createChooser(intent, "Seleccione"), COD_SELECCIONA);
+        });
+
+        camara.setOnClickListener(v -> {
+            if (checkearPermiso()) {
+                abrirCamara();
+            } else {
+                solicitarPermiso();
             }
         });
 
-        camara.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (checkearPermiso()) {
-                    abrirCamara();
+        botonAceptar.setOnClickListener(view -> {
+            if (!nombrePerfilAux.getText().toString().isEmpty()) {
+                final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+                progressDialog.setMessage("Cargando...");
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+
+                final SharedPreferences sharedPreferences1 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+                String codigoFoto;
+
+                if (bitmap != null) {
+                    Bitmap bitmap_aux = bitmap;
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    bitmap_aux.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+                    byte[] b = byteArrayOutputStream.toByteArray();
+                    codigoFoto = Base64.encodeToString(b, Base64.DEFAULT);
                 } else {
-                    solicitarPermiso();
+                    codigoFoto = "0";
                 }
-            }
-        });
 
-        botonAceptar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!nombrePerfilAux.getText().toString().isEmpty()) {
-                    final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-                    progressDialog.setMessage("Cargando...");
-                    progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                    progressDialog.setCancelable(false);
-                    progressDialog.show();
+                JSONObject jsonBody = new JSONObject();
+                try {
+                    jsonBody.put("NOMBRE", nombrePerfilAux.getText().toString());
+                    jsonBody.put("URL", "url");
+                    jsonBody.put("buffer", codigoFoto);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
-                    final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
-                    String codigoFoto;
+                QuerysCuentas querysCuentas = new QuerysCuentas(getContext());
+                querysCuentas.actualizarPerfil(sharedPreferences1.getInt("ID_USUARIO", 0), jsonBody, new QuerysCuentas.VolleyOnEventListener() {
+                    @Override
+                    public void onSuccess(Object object) {
+                        progressDialog.dismiss();
+                        dialog.dismiss();
+                        obtenerPerfil();
 
-                    if (bitmap != null) {
-                        Bitmap bitmap_aux = bitmap;
-                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                        bitmap_aux.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-                        byte[] b = byteArrayOutputStream.toByteArray();
-                        codigoFoto = Base64.encodeToString(b, Base64.DEFAULT);
-                    } else {
-                        codigoFoto = "0";
+                        FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
+                        funcionesBitacora.registrarBitacora("ACTUALIZACION", "PERFIL", "Se actualizo el perfil");
                     }
 
-                    JSONObject jsonBody = new JSONObject();
-                    try {
-                        jsonBody.put("NOMBRE", nombrePerfilAux.getText().toString());
-                        jsonBody.put("URL", "url");
-                        jsonBody.put("buffer", codigoFoto);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                    @Override
+                    public void onFailure(Exception e) {
                     }
-
-                    QuerysCuentas querysCuentas = new QuerysCuentas(getContext());
-                    querysCuentas.actualizarPerfil(sharedPreferences.getInt("ID_USUARIO", 0), jsonBody, new QuerysCuentas.VolleyOnEventListener() {
-                        @Override
-                        public void onSuccess(Object object) {
-                            progressDialog.dismiss();
-                            dialog.dismiss();
-                            obtenerPerfil();
-
-                            FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
-                            funcionesBitacora.registrarBitacora("ACTUALIZACION", "PERFIL", "Se actualizo el perfil");
-                        }
-
-                        @Override
-                        public void onFailure(Exception e) {
-                        }
-                    });
-                } else {
-                    Toast.makeText(getContext(), "Hay campos obligatorios", Toast.LENGTH_LONG).show();
-                }
+                });
+            } else {
+                Toast.makeText(getContext(), "Hay campos obligatorios", Toast.LENGTH_LONG).show();
             }
         });
 
-        botonCancelar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+        botonCancelar.setOnClickListener(v -> dialog.dismiss());
 
         dialog.show();
     }
