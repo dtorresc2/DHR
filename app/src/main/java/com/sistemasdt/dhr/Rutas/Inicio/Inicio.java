@@ -20,6 +20,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,6 +34,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.sistemasdt.dhr.Componentes.Dialogos.Bitacora.DialogoBitacora;
 import com.sistemasdt.dhr.Componentes.Dialogos.Bitacora.FuncionesBitacora;
@@ -43,6 +47,7 @@ import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysCuentas;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
+import com.tapadoo.alerter.Alerter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,6 +60,9 @@ public class Inicio extends Fragment {
     private TextView cerrarSesion, empresa, bitacora;
     private RoundedImageView fotoPerfil;
     private Bitmap bitmap;
+
+    private TextInputLayout layoutPerfil;
+    private TextInputEditText nombrePerfilAux;
 
     //Editar Perfil
     private ImageView imagenPerfilAux;
@@ -257,9 +265,28 @@ public class Inicio extends Fragment {
         TextView tituloPerfil = viewCuadro.findViewById(R.id.tituloDialogoPerfil);
         tituloPerfil.setTypeface(face2);
 
-        final EditText nombrePerfilAux = viewCuadro.findViewById(R.id.nombrePerfilAux);
+        layoutPerfil = viewCuadro.findViewById(R.id.layoutNombrePerfil);
+        layoutPerfil.setTypeface(face2);
+
+        nombrePerfilAux = viewCuadro.findViewById(R.id.nombrePerfilAux);
         nombrePerfilAux.setTypeface(face2);
         nombrePerfilAux.setText(sharedPreferences.getString("EMPRESA", "-"));
+        nombrePerfilAux.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                textoRequerido();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         imagenPerfilAux = viewCuadro.findViewById(R.id.imagenPerfilAux);
 
@@ -312,56 +339,78 @@ public class Inicio extends Fragment {
         });
 
         botonAceptar.setOnClickListener(view -> {
-            if (!nombrePerfilAux.getText().toString().isEmpty()) {
-                final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-                progressDialog.setMessage("Cargando...");
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                progressDialog.setCancelable(false);
-                progressDialog.show();
+            if (!textoRequerido())
+                return;
 
-                final SharedPreferences sharedPreferences1 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
-                String codigoFoto;
+            final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+            progressDialog.setMessage("Cargando...");
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
 
-                if (bitmap != null) {
-                    Bitmap bitmap_aux = bitmap;
-                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                    bitmap_aux.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-                    byte[] b = byteArrayOutputStream.toByteArray();
-                    codigoFoto = Base64.encodeToString(b, Base64.DEFAULT);
-                } else {
-                    codigoFoto = "0";
-                }
+            final SharedPreferences sharedPreferences1 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+            String codigoFoto;
 
-                JSONObject jsonBody = new JSONObject();
-                try {
-                    jsonBody.put("NOMBRE", nombrePerfilAux.getText().toString());
-                    jsonBody.put("URL", "url");
-                    jsonBody.put("buffer", codigoFoto);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                QuerysCuentas querysCuentas = new QuerysCuentas(getContext());
-                querysCuentas.actualizarPerfil(sharedPreferences1.getInt("ID_USUARIO", 0), jsonBody, new QuerysCuentas.VolleyOnEventListener() {
-                    @Override
-                    public void onSuccess(Object object) {
-                        progressDialog.dismiss();
-                        dialog.dismiss();
-                        obtenerPerfil();
-                        FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
-                        funcionesBitacora.registrarBitacora("ACTUALIZACION", "PERFIL", "Se actualizo el perfil");
-                    }
-
-                    @Override
-                    public void onFailure(Exception e) {
-                    }
-                });
+            if (bitmap != null) {
+                Bitmap bitmap_aux = bitmap;
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                bitmap_aux.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+                byte[] b = byteArrayOutputStream.toByteArray();
+                codigoFoto = Base64.encodeToString(b, Base64.DEFAULT);
             } else {
-                Toast.makeText(getContext(), "Hay campos obligatorios", Toast.LENGTH_LONG).show();
+                codigoFoto = "0";
             }
+
+            JSONObject jsonBody = new JSONObject();
+            try {
+                jsonBody.put("NOMBRE", nombrePerfilAux.getText().toString());
+                jsonBody.put("URL", "url");
+                jsonBody.put("buffer", codigoFoto);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            QuerysCuentas querysCuentas = new QuerysCuentas(getContext());
+            querysCuentas.actualizarPerfil(sharedPreferences1.getInt("ID_USUARIO", 0), jsonBody, new QuerysCuentas.VolleyOnEventListener() {
+                @Override
+                public void onSuccess(Object object) {
+                    progressDialog.dismiss();
+                    dialog.dismiss();
+                    obtenerPerfil();
+                    FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
+                    funcionesBitacora.registrarBitacora("ACTUALIZACION", "PERFIL", "Se actualizo el perfil");
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    progressDialog.dismiss();
+
+                    Alerter.create(getActivity())
+                            .setTitle("Error")
+                            .setText("Fallo al actualizar el perfil")
+                            .setIcon(R.drawable.logonuevo)
+                            .setTextTypeface(face2)
+                            .enableSwipeToDismiss()
+                            .setBackgroundColorRes(R.color.AzulOscuro)
+                            .show();
+                }
+            });
+
         });
 
         botonCancelar.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
+    }
+
+    // VALIDACIONES
+    private boolean textoRequerido() {
+        String texto = nombrePerfilAux.getText().toString().trim();
+        if (texto.isEmpty()) {
+            layoutPerfil.setError("Campo requerido");
+            return false;
+        } else {
+            layoutPerfil.setError(null);
+            return true;
+        }
     }
 }

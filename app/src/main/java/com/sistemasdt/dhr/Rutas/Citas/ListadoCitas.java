@@ -13,6 +13,7 @@ import android.os.Bundle;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
@@ -29,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.sistemasdt.dhr.Componentes.MenusInferiores.MenuCitas;
@@ -268,10 +270,26 @@ public class ListadoCitas extends Fragment {
 
         lista_pacientes = view.findViewById(R.id.listaCitas);
 
+//        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+//        itemTouchHelper.attachToRecyclerView(lista_pacientes);
+
         obtenerCitas();
 
         return view;
     }
+
+//    ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+//        @Override
+//        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+//            Toast.makeText(getContext(), "on Move", Toast.LENGTH_SHORT).show();
+//            return false;
+//        }
+//
+//        @Override
+//        public void onSwiped(final RecyclerView.ViewHolder viewHolder, int swipeDir) {
+//            Toast.makeText(getContext(), "on Swipe", Toast.LENGTH_SHORT).show();
+//        }
+//    };
 
 
     private void obtenerCitas() {

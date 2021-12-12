@@ -1,34 +1,29 @@
 package com.sistemasdt.dhr.Componentes.Dialogos.Configuracion;
 
-import android.Manifest;
 import android.app.Dialog;
-import android.app.ProgressDialog;
+
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.graphics.Typeface;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
 
-import androidx.annotation.NonNull;
+import android.graphics.Typeface;
+
+import android.os.Bundle;
+
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.LayoutInflater;
-import android.view.MenuItem;
+
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import com.sistemasdt.dhr.R;
 
-import java.io.File;
 
 public class DialogoConfiguracion extends DialogFragment {
     private Toolbar toolbar;
