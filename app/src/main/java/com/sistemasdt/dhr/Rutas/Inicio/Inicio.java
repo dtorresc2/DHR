@@ -145,7 +145,6 @@ public class Inicio extends Fragment {
                 SharedPreferences preferencias = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
 
                 final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.progressDialog);
-                progressDialog.setMessage("Cerrando Sesion");
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                 progressDialog.setCancelable(false);
                 progressDialog.show();
@@ -177,7 +176,6 @@ public class Inicio extends Fragment {
 
     public void obtenerPerfil() {
         final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-        progressDialog.setMessage("Cargando...");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCancelable(false);
         progressDialog.show();
@@ -342,12 +340,6 @@ public class Inicio extends Fragment {
             if (!textoRequerido())
                 return;
 
-            final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-            progressDialog.setMessage("Cargando...");
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-
             final SharedPreferences sharedPreferences1 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
             String codigoFoto;
 
@@ -374,7 +366,6 @@ public class Inicio extends Fragment {
             querysCuentas.actualizarPerfil(sharedPreferences1.getInt("ID_USUARIO", 0), jsonBody, new QuerysCuentas.VolleyOnEventListener() {
                 @Override
                 public void onSuccess(Object object) {
-                    progressDialog.dismiss();
                     dialog.dismiss();
                     obtenerPerfil();
                     FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
@@ -383,8 +374,6 @@ public class Inicio extends Fragment {
 
                 @Override
                 public void onFailure(Exception e) {
-                    progressDialog.dismiss();
-
                     Alerter.create(getActivity())
                             .setTitle("Error")
                             .setText("Fallo al actualizar el perfil")
