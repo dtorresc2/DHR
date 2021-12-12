@@ -32,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.sistemasdt.dhr.Componentes.Dialogos.Bitacora.DialogoBitacora;
 import com.sistemasdt.dhr.Componentes.Dialogos.Bitacora.FuncionesBitacora;
 import com.sistemasdt.dhr.MainActivity;
@@ -52,7 +53,7 @@ import java.util.Calendar;
 public class Inicio extends Fragment {
     private TextView usuario, configuracion, editar_perfil;
     private TextView cerrarSesion, empresa, bitacora;
-    private ImageView fotoPerfil;
+    private RoundedImageView fotoPerfil;
     private Bitmap bitmap;
 
     //Editar Perfil

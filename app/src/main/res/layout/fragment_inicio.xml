@@ -17,13 +17,24 @@
             android:layout_marginBottom="20dp"
             android:orientation="vertical">
 
-            <ImageView
+            <!--            <ImageView-->
+            <!--                android:id="@+id/imagenPerfil"-->
+            <!--                android:layout_width="125dp"-->
+            <!--                android:layout_height="125dp"-->
+            <!--                android:layout_gravity="center_horizontal"-->
+            <!--                android:layout_marginTop="25dp"-->
+            <!--                android:src="@drawable/logonuevo" />-->
+
+            <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/imagenPerfil"
-                android:layout_width="125dp"
-                android:layout_height="125dp"
+                android:layout_width="165dp"
+                android:layout_height="165dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="25dp"
-                android:src="@drawable/logonuevo" />
+                android:src="@drawable/logonuevo"
+                app:riv_border_color="@color/FondoSecundario"
+                app:riv_corner_radius="30dip"
+                app:riv_oval="true" />
 
             <TextView
                 android:id="@+id/usuarioPerfil"
