@@ -749,8 +749,17 @@ public class HistorialOdonDos extends Fragment {
         progressDialog.show();
 
         final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("ID_USUARIO", preferenciasUsuario.getInt("ID_USUARIO", 0));
+            jsonObject.put("ID_PIEZA", "0");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         QuerysPiezas querysPiezas = new QuerysPiezas(getContext());
-        querysPiezas.obtenerListadoPiezas(preferenciasUsuario.getInt("ID_USUARIO", 0), new QuerysPiezas.VolleyOnEventListener() {
+        querysPiezas.obtenerListadoPiezas(jsonObject, new QuerysPiezas.VolleyOnEventListener() {
             @Override
             public void onSuccess(Object object) {
                 try {
@@ -797,8 +806,16 @@ public class HistorialOdonDos extends Fragment {
 
         final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
 
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("ID_USUARIO", preferenciasUsuario.getInt("ID_USUARIO", 0));
+            jsonObject.put("ID_SERVICIO", "0");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         QuerysServicios querysServicios = new QuerysServicios(getContext());
-        querysServicios.obtenerListadoServicios(preferenciasUsuario.getInt("ID_USUARIO", 0), new QuerysServicios.VolleyOnEventListener() {
+        querysServicios.obtenerListadoServicios(jsonObject, new QuerysServicios.VolleyOnEventListener() {
             @Override
             public void onSuccess(Object object) {
                 try {

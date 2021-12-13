@@ -6,11 +6,14 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.widget.Toolbar;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -26,6 +29,7 @@ import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysServicios;
 import com.tapadoo.alerter.Alerter;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -246,20 +250,30 @@ public class Servicios extends Fragment {
         progressDialog.setCancelable(false);
         progressDialog.show();
 
+        final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("ID_USUARIO", preferenciasUsuario.getInt("ID_USUARIO", 0));
+            jsonObject.put("ID_SERVICIO", ID_SERVICIO);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         QuerysServicios querysServicios = new QuerysServicios(getContext());
-        querysServicios.obtenerServicioEspecifico(ID_SERVICIO, new QuerysServicios.VolleyOnEventListener() {
+        querysServicios.obtenerListadoServicios(jsonObject, new QuerysServicios.VolleyOnEventListener() {
             @Override
             public void onSuccess(Object object) {
                 progressDialog.dismiss();
                 try {
-                    JSONObject jsonObject = new JSONObject(object.toString());
+                    JSONArray jsonArray = new JSONArray(object.toString());
+                    JSONObject jsonObject = jsonArray.getJSONObject(0);
                     descripcionServicio.setText(jsonObject.getString("DESCRIPCION"));
                     montoServicio.setText(String.format("%.2f", jsonObject.getDouble("MONTO")));
                     boolean habilitado = ((jsonObject.getInt("ESTADO")) > 0 ? true : false);
                     trueServicio.setChecked(habilitado);
                     falseServicio.setChecked(!habilitado);
                 } catch (JSONException e) {
-                    progressDialog.dismiss();
                     Log.i("SERVICIO", e.toString());
                     e.printStackTrace();
                 }

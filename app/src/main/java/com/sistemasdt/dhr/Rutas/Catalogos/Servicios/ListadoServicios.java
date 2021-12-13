@@ -154,8 +154,16 @@ public class ListadoServicios extends Fragment {
 
         final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
 
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("ID_USUARIO",preferenciasUsuario.getInt("ID_USUARIO", 0));
+            jsonObject.put("ID_SERVICIO","0");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         QuerysServicios querysServicios = new QuerysServicios(getContext());
-        querysServicios.obtenerListadoServicios(preferenciasUsuario.getInt("ID_USUARIO", 0), new QuerysServicios.VolleyOnEventListener() {
+        querysServicios.obtenerListadoServicios(jsonObject, new QuerysServicios.VolleyOnEventListener() {
             @Override
             public void onSuccess(Object object) {
                 try {

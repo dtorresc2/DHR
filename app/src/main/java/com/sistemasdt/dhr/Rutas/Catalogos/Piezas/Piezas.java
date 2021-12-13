@@ -29,6 +29,7 @@ import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysPiezas;
 import com.tapadoo.alerter.Alerter;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -150,13 +151,24 @@ public class Piezas extends Fragment {
         progressDialog.setCancelable(false);
         progressDialog.show();
 
+        final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("ID_USUARIO",preferenciasUsuario.getInt("ID_USUARIO", 0));
+            jsonObject.put("ID_PIEZA",ID_PIEZA);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         QuerysPiezas querysPiezas = new QuerysPiezas(getContext());
-        querysPiezas.obtenerPiezaEspecifica(ID_PIEZA, new QuerysPiezas.VolleyOnEventListener() {
+        querysPiezas.obtenerListadoPiezas(jsonObject, new QuerysPiezas.VolleyOnEventListener() {
             @Override
             public void onSuccess(Object object) {
                 progressDialog.dismiss();
                 try {
-                    JSONObject jsonObject = new JSONObject(object.toString());
+                    JSONArray jsonArray = new JSONArray(object.toString());
+                    JSONObject jsonObject = jsonArray.getJSONObject(0);
                     nombrePieza.setText(jsonObject.getString("NOMBRE"));
                     numeroPieza.setText(jsonObject.getString("NUMERO"));
                     boolean habilitado = ((jsonObject.getInt("ESTADO")) > 0 ? true : false);
