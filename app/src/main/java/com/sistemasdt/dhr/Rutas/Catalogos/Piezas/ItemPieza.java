@@ -5,12 +5,14 @@ public class ItemPieza {
     private int mNumeroPieza;
     private String mNombrePieza;
     private boolean mEstadoPieza;
+    private int mNumeroFichas;
 
-    public ItemPieza(int codigoPieza, int numeroPieza, String nombrePieza, boolean estadoPieza) {
+    public ItemPieza(int codigoPieza, int numeroPieza, String nombrePieza, boolean estadoPieza, int numeroFichas) {
         mCodigoPieza = codigoPieza;
         mNumeroPieza = numeroPieza;
         mNombrePieza = nombrePieza;
         mEstadoPieza = estadoPieza;
+        mNumeroFichas = numeroFichas;
     }
 
     public int getCodigoPieza() {
@@ -27,5 +29,9 @@ public class ItemPieza {
 
     public boolean getEstadoPieza() {
         return mEstadoPieza;
+    }
+
+    public int getNumeroFichas() {
+        return mNumeroFichas;
     }
 }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/FondoSecundario"
     tools:context=".Rutas.Catalogos.Piezas.Piezas">
 
@@ -36,12 +36,13 @@
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutNombre"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Nombre"
                 app:counterEnabled="true"
-                app:errorEnabled="true"
-                app:counterMaxLength="65">
+                app:counterMaxLength="65"
+                app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/nombrePieza"
@@ -53,12 +54,14 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutNumero"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:hint="Numero"
-                app:errorEnabled="true"
                 app:counterEnabled="true"
-                app:counterMaxLength="10">
+                app:counterMaxLength="10"
+                app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/numeroPieza"
@@ -73,18 +76,18 @@
                 android:id="@+id/tituloEstadoPieza"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:paddingLeft="4dp"
                 android:text="Estado de la Pieza:"
-                android:textSize="18dp"
                 android:textColor="@color/Blanco"
-                android:layout_marginTop="10dp"/>
+                android:textSize="18dp" />
 
             <RadioGroup
                 android:id="@+id/estado_Pieza"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal">
 
@@ -98,7 +101,7 @@
 
                 <Space
                     android:layout_width="20dp"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent" />
 
                 <RadioButton
                     android:id="@+id/falsePieza"

@@ -770,7 +770,8 @@ public class HistorialOdonDos extends Fragment {
                                     jsonArray.getJSONObject(i).getInt("ID_PIEZA"),
                                     jsonArray.getJSONObject(i).getInt("NUMERO"),
                                     jsonArray.getJSONObject(i).getString("NOMBRE"),
-                                    (jsonArray.getJSONObject(i).getInt("ESTADO") > 0) ? true : false
+                                    (jsonArray.getJSONObject(i).getInt("ESTADO") > 0) ? true : false,
+                                    jsonArray.getJSONObject(i).getInt("FICHAS_NORMALES")
                             );
 
                             listaPiezas.add(pieza.getNombrePieza());

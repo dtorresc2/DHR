@@ -24,6 +24,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.sistemasdt.dhr.Componentes.Dialogos.Bitacora.FuncionesBitacora;
 import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysPiezas;
@@ -38,6 +39,7 @@ import java.util.regex.Pattern;
 public class Piezas extends Fragment {
     private Toolbar toolbar;
     private TextInputEditText nombrePieza, numeroPieza;
+    private TextInputLayout layoutNombre, layoutNumero;
     private RadioButton truePieza, falsePieza;
     private FloatingActionButton guardadorPieza;
     private TextView tituloPieza;
@@ -120,6 +122,12 @@ public class Piezas extends Fragment {
         tituloPieza = view.findViewById(R.id.tituloEstadoPieza);
         tituloPieza.setTypeface(typeface);
 
+        layoutNombre = view.findViewById(R.id.layoutNombre);
+        layoutNombre.setTypeface(typeface);
+
+        layoutNumero = view.findViewById(R.id.layoutNumero);
+        layoutNumero.setTypeface(typeface);
+
         truePieza = view.findViewById(R.id.truePieza);
         truePieza.setTypeface(typeface);
 
@@ -155,8 +163,8 @@ public class Piezas extends Fragment {
 
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("ID_USUARIO",preferenciasUsuario.getInt("ID_USUARIO", 0));
-            jsonObject.put("ID_PIEZA",ID_PIEZA);
+            jsonObject.put("ID_USUARIO", preferenciasUsuario.getInt("ID_USUARIO", 0));
+            jsonObject.put("ID_PIEZA", ID_PIEZA);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -293,10 +301,10 @@ public class Piezas extends Fragment {
     private boolean nombreRequerido() {
         String textoCodigo = nombrePieza.getText().toString().trim();
         if (textoCodigo.isEmpty()) {
-            nombrePieza.setError("Campo requerido");
+            layoutNombre.setError("Campo requerido");
             return false;
         } else {
-            nombrePieza.setError(null);
+            layoutNombre.setError(null);
             return true;
         }
     }
@@ -304,10 +312,10 @@ public class Piezas extends Fragment {
     private boolean numeroRequerido() {
         String textoCodigo = numeroPieza.getText().toString().trim();
         if (textoCodigo.isEmpty()) {
-            numeroPieza.setError("Campo requerido");
+            layoutNumero.setError("Campo requerido");
             return false;
         } else {
-            numeroPieza.setError(null);
+            layoutNumero.setError(null);
             return true;
         }
     }
@@ -316,10 +324,10 @@ public class Piezas extends Fragment {
         String textoDescripcion = nombrePieza.getText().toString().trim();
         Pattern patron = Pattern.compile("^[a-zA-Z ]+$");
         if (patron.matcher(textoDescripcion).matches()) {
-            nombrePieza.setError(null);
+            layoutNombre.setError(null);
             return true;
         } else {
-            nombrePieza.setError("Nombre invalido");
+            layoutNombre.setError("Nombre invalido");
             return false;
         }
     }
@@ -328,10 +336,10 @@ public class Piezas extends Fragment {
         String textoDescripcion = numeroPieza.getText().toString().trim();
         Pattern patron = Pattern.compile("^[0-9]+$");
         if (patron.matcher(textoDescripcion).matches()) {
-            numeroPieza.setError(null);
+            layoutNumero.setError(null);
             return true;
         } else {
-            numeroPieza.setError("Numero invalido");
+            layoutNumero.setError("Numero invalido");
             return false;
         }
     }

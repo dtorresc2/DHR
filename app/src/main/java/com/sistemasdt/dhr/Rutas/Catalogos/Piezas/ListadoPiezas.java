@@ -25,6 +25,7 @@ import com.sistemasdt.dhr.Componentes.Dialogos.Bitacora.FuncionesBitacora;
 import com.sistemasdt.dhr.Componentes.MenusInferiores.MenuInferior;
 import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.Rutas.Catalogos.Catalogos;
+import com.sistemasdt.dhr.ServiciosAPI.QuerysFichas;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysPiezas;
 import com.tapadoo.alerter.Alerter;
 
@@ -125,10 +126,10 @@ public class ListadoPiezas extends Fragment {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
                 builder.setIcon(R.drawable.logonuevo);
                 builder.setTitle("Listado de Piezas");
-                builder.setMessage("¿Desea deshabilitar la pieza?");
+                builder.setMessage(estadoPieza ? "¿Desea deshabilitar la pieza?" : "¿Desea habilitar la pieza?");
                 builder.setPositiveButton("ACEPTAR", (dialog, id) -> {
                     // User cancelled the dialog
-                    deshabilitarPieza(ID);
+                    actualizarEstadoPieza(ID);
                 });
                 builder.setNegativeButton("CANCELAR", (dialog, id) -> {
                     // User cancelled the dialog
@@ -139,6 +140,18 @@ public class ListadoPiezas extends Fragment {
                 break;
 
             case 3:
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
+                alertDialogBuilder.setIcon(R.drawable.logonuevo);
+                alertDialogBuilder.setTitle("Listado de Piezas");
+                alertDialogBuilder.setMessage(estadoPieza ? "¿Desea deshabilitar la pieza?" : "¿Desea habilitar la pieza?");
+                alertDialogBuilder.setPositiveButton("ACEPTAR", (dialog1, which) -> {
+                    eliminarPieza(ID);
+                });
+                alertDialogBuilder.setNegativeButton("CANCELAR", (dialog1, id) -> {
+                });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
                 break;
 
             default:
@@ -150,8 +163,8 @@ public class ListadoPiezas extends Fragment {
         listaPiezas.clear();
 
         final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-        progressDialog.setMessage("Cargando...");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setMessage("Cargando...");
         progressDialog.setCancelable(false);
         progressDialog.show();
 
@@ -159,8 +172,8 @@ public class ListadoPiezas extends Fragment {
 
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("ID_USUARIO",preferenciasUsuario.getInt("ID_USUARIO", 0));
-            jsonObject.put("ID_PIEZA","0");
+            jsonObject.put("ID_USUARIO", preferenciasUsuario.getInt("ID_USUARIO", 0));
+            jsonObject.put("ID_PIEZA", "0");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -176,7 +189,8 @@ public class ListadoPiezas extends Fragment {
                                 jsonArray.getJSONObject(i).getInt("ID_PIEZA"),
                                 jsonArray.getJSONObject(i).getInt("NUMERO"),
                                 jsonArray.getJSONObject(i).getString("NOMBRE"),
-                                (jsonArray.getJSONObject(i).getInt("ESTADO") > 0) ? true : false
+                                (jsonArray.getJSONObject(i).getInt("ESTADO") > 0) ? true : false,
+                                jsonArray.getJSONObject(i).getInt("FICHAS_NORMALES")
                         ));
                     }
                     mAdapter = new PiezasAdapter(listaPiezas);
@@ -187,6 +201,9 @@ public class ListadoPiezas extends Fragment {
                         MenuInferior menuInferior = new MenuInferior();
                         menuInferior.show(getActivity().getSupportFragmentManager(), "MenuInferior");
                         menuInferior.recibirTitulo(listaPiezas.get(position).getNombrePieza());
+                        menuInferior.recibirCantiadFichas(listaPiezas.get(position).getNumeroFichas());
+                        menuInferior.recibirEstado(listaPiezas.get(position).getEstadoPieza());
+
                         menuInferior.eventoClick(opcion -> {
                             estadoPieza = listaPiezas.get(position).getEstadoPieza();
                             itemPieza = listaPiezas.get(position);
@@ -208,63 +225,93 @@ public class ListadoPiezas extends Fragment {
         });
     }
 
-    private void deshabilitarPieza(final int ID) {
-        if (estadoPieza) {
-            final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-            progressDialog.setMessage("Cargando...");
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progressDialog.setCancelable(false);
-            progressDialog.show();
+    private void actualizarEstadoPieza(final int ID) {
+        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setMessage("Cargando...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
 
-            QuerysPiezas querysPiezas = new QuerysPiezas(getContext());
-            JSONObject jsonBody = new JSONObject();
-            try {
-                jsonBody.put("NUMERO", itemPieza.getNumeroPieza());
-                jsonBody.put("NOMBRE", itemPieza.getNombrePieza());
-                jsonBody.put("ESTADO", false);
-            } catch (JSONException e) {
-                e.printStackTrace();
+        QuerysPiezas querysPiezas = new QuerysPiezas(getContext());
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("ID_PIEZA", ID);
+            jsonBody.put("ESTADO", estadoPieza == true ? "0" : "1");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        querysPiezas.actualizarEstadoPieza(jsonBody, new QuerysPiezas.VolleyOnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+
+                Alerter.create(getActivity())
+                        .setTitle("Actualizado correctamente")
+                        .setIcon(R.drawable.logonuevo)
+                        .setTextTypeface(typeface)
+                        .enableSwipeToDismiss()
+                        .setBackgroundColorRes(R.color.FondoSecundario)
+                        .show();
+
+                FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
+                funcionesBitacora.registrarBitacora("ACTUALIZACION", "PIEZAS", "Se actualizo el estado de la pieza #" + ID);
+
+                new Handler().postDelayed(() -> {
+                    progressDialog.dismiss();
+                    ListadoPiezas listadoPiezas = new ListadoPiezas();
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                    transaction.replace(R.id.contenedor, listadoPiezas);
+                    transaction.commit();
+                }, 1000);
             }
 
-            querysPiezas.actualizarPieza(ID, jsonBody, new QuerysPiezas.VolleyOnEventListener() {
-                @Override
-                public void onSuccess(Object object) {
-                    Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+            @Override
+            public void onFailure(Exception e) {
+                progressDialog.dismiss();
+            }
+        });
+    }
 
-                    Alerter.create(getActivity())
-                            .setTitle("Deshabilitado correctamente")
-                            .setIcon(R.drawable.logonuevo)
-                            .setTextTypeface(typeface)
-                            .enableSwipeToDismiss()
-                            .setBackgroundColorRes(R.color.FondoSecundario)
-                            .show();
+    private void eliminarPieza(final int ID) {
+        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setMessage("Cargando...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
 
-                    FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
-                    funcionesBitacora.registrarBitacora("ACTUALIZACION", "PIEZAS", "Se actualizo el estado de la pieza #" + ID);
+        QuerysPiezas querysPiezas = new QuerysPiezas(getContext());
+        querysPiezas.eliminarPieza(ID, new QuerysPiezas.VolleyOnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                Alerter.create(getActivity())
+                        .setTitle("Piezas")
+                        .setText("Pieza eliminada correctamente")
+                        .setIcon(R.drawable.logonuevo)
+                        .setTextTypeface(face)
+                        .enableSwipeToDismiss()
+                        .setBackgroundColorRes(R.color.FondoSecundario)
+                        .show();
 
-                    new Handler().postDelayed(() -> {
-                        progressDialog.dismiss();
-                        ListadoPiezas listadoPiezas = new ListadoPiezas();
-                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                        transaction.replace(R.id.contenedor, listadoPiezas);
-                        transaction.commit();
-                    }, 1000);
-                }
+                FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
+                funcionesBitacora.registrarBitacora("ELIMINACION", "PIEZAS", "Se elimino la pieza #" + ID);
 
-                @Override
-                public void onFailure(Exception e) {
-                    progressDialog.dismiss();
-                }
-            });
-        } else {
-            Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-            Alerter.create(getActivity())
-                    .setTitle("La pieza esta deshabilitada")
-                    .setIcon(R.drawable.logonuevo)
-                    .setTextTypeface(typeface)
-                    .enableSwipeToDismiss()
-                    .setBackgroundColorRes(R.color.FondoSecundario)
-                    .show();
-        }
+                listarPiezas();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                Alerter.create(getActivity())
+                        .setTitle("Error")
+                        .setText("Fallo al eliminar la pieza")
+                        .setIcon(R.drawable.logonuevo)
+                        .setTextTypeface(face)
+                        .enableSwipeToDismiss()
+                        .setBackgroundColorRes(R.color.AzulOscuro)
+                        .show();
+            }
+        });
     }
 }
