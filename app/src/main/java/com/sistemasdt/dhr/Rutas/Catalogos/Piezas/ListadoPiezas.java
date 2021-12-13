@@ -127,12 +127,8 @@ public class ListadoPiezas extends Fragment {
                 builder.setIcon(R.drawable.logonuevo);
                 builder.setTitle("Listado de Piezas");
                 builder.setMessage(estadoPieza ? "¿Desea deshabilitar la pieza?" : "¿Desea habilitar la pieza?");
-                builder.setPositiveButton("ACEPTAR", (dialog, id) -> {
-                    // User cancelled the dialog
-                    actualizarEstadoPieza(ID);
-                });
+                builder.setPositiveButton("ACEPTAR", (dialog, id) -> actualizarEstadoPieza(ID));
                 builder.setNegativeButton("CANCELAR", (dialog, id) -> {
-                    // User cancelled the dialog
                 });
 
                 AlertDialog dialog = builder.create();
@@ -143,10 +139,8 @@ public class ListadoPiezas extends Fragment {
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
                 alertDialogBuilder.setIcon(R.drawable.logonuevo);
                 alertDialogBuilder.setTitle("Listado de Piezas");
-                alertDialogBuilder.setMessage(estadoPieza ? "¿Desea deshabilitar la pieza?" : "¿Desea habilitar la pieza?");
-                alertDialogBuilder.setPositiveButton("ACEPTAR", (dialog1, which) -> {
-                    eliminarPieza(ID);
-                });
+                alertDialogBuilder.setMessage("¿Desea eliminar la pieza?");
+                alertDialogBuilder.setPositiveButton("ACEPTAR", (dialog1, which) -> eliminarPieza(ID));
                 alertDialogBuilder.setNegativeButton("CANCELAR", (dialog1, id) -> {
                 });
 
@@ -294,6 +288,8 @@ public class ListadoPiezas extends Fragment {
                         .setBackgroundColorRes(R.color.FondoSecundario)
                         .show();
 
+                progressDialog.dismiss();
+
                 FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
                 funcionesBitacora.registrarBitacora("ELIMINACION", "PIEZAS", "Se elimino la pieza #" + ID);
 
@@ -311,6 +307,8 @@ public class ListadoPiezas extends Fragment {
                         .enableSwipeToDismiss()
                         .setBackgroundColorRes(R.color.AzulOscuro)
                         .show();
+                progressDialog.dismiss();
+
             }
         });
     }

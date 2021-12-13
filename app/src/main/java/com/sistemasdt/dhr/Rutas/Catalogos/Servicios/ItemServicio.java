@@ -5,12 +5,14 @@ public class ItemServicio {
     private String mDescripcionServicio;
     private double mMontoServicio;
     private boolean mEstadoServicio;
+    private int mCantidadFichasNormales;
 
-    public ItemServicio(int codigoServicio, String descripcionServicio, double montoServicio, boolean estadoServicio) {
+    public ItemServicio(int codigoServicio, String descripcionServicio, double montoServicio, boolean estadoServicio, int fichas_normales) {
         mCodigoServicio = codigoServicio;
         mDescripcionServicio = descripcionServicio;
         mMontoServicio = montoServicio;
         mEstadoServicio = estadoServicio;
+        mCantidadFichasNormales = fichas_normales;
     }
 
     public int getCodigoServicio() {
@@ -28,4 +30,9 @@ public class ItemServicio {
     public boolean getEstadoServicio() {
         return mEstadoServicio;
     }
+
+    public int getCantidadFichasNormales() {
+        return mCantidadFichasNormales;
+    }
+
 }

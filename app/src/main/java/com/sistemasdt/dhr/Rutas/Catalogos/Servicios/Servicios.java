@@ -24,6 +24,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.sistemasdt.dhr.Componentes.Dialogos.Bitacora.FuncionesBitacora;
 import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysServicios;
@@ -38,6 +39,7 @@ import java.util.regex.Pattern;
 public class Servicios extends Fragment {
     private Toolbar toolbar;
     private TextInputEditText descripcionServicio, montoServicio;
+    private TextInputLayout layoutDescripcion, layoutMonto;
     private RadioButton trueServicio, falseServicio;
     private FloatingActionButton guardadorServicio;
     private TextView tituloServicio;
@@ -130,6 +132,12 @@ public class Servicios extends Fragment {
         if (modoEdicion) {
             obtenerServicio();
         }
+
+        layoutDescripcion = view.findViewById(R.id.layoutDescripcion);
+        layoutDescripcion.setTypeface(typeface);
+
+        layoutMonto = view.findViewById(R.id.layoutMonto);
+        layoutMonto.setTypeface(typeface);
 
         guardadorServicio = view.findViewById(R.id.grabarServicio);
         guardadorServicio.setOnClickListener(view12 -> {
@@ -292,10 +300,10 @@ public class Servicios extends Fragment {
     private boolean descripcionRequerida() {
         String textoCodigo = descripcionServicio.getText().toString().trim();
         if (textoCodigo.isEmpty()) {
-            descripcionServicio.setError("Campo requerido");
+            layoutDescripcion.setError("Campo requerido");
             return false;
         } else {
-            descripcionServicio.setError(null);
+            layoutDescripcion.setError(null);
             return true;
         }
     }
@@ -303,10 +311,10 @@ public class Servicios extends Fragment {
     private boolean montoRequerido() {
         String textCorreo = montoServicio.getText().toString().trim();
         if (textCorreo.isEmpty()) {
-            montoServicio.setError("Campo requerido");
+            layoutMonto.setError("Campo requerido");
             return false;
         } else {
-            montoServicio.setError(null);
+            layoutMonto.setError(null);
             return true;
         }
     }
@@ -315,10 +323,10 @@ public class Servicios extends Fragment {
         String textoDescripcion = descripcionServicio.getText().toString().trim();
         Pattern patron = Pattern.compile("^[a-zA-Z0-9 ]+$");
         if (patron.matcher(textoDescripcion).matches()) {
-            descripcionServicio.setError(null);
+            layoutDescripcion.setError(null);
             return true;
         } else {
-            descripcionServicio.setError("Descripcion invalida");
+            layoutDescripcion.setError("Descripcion invalida");
             return false;
         }
     }
@@ -327,10 +335,10 @@ public class Servicios extends Fragment {
         String textoDescripcion = montoServicio.getText().toString().trim();
         Pattern patron = Pattern.compile("^[0-9]+(\\.[0-9]{2})$");
         if (patron.matcher(textoDescripcion).matches()) {
-            montoServicio.setError(null);
+            layoutMonto.setError(null);
             return true;
         } else {
-            montoServicio.setError("Monto invalido, debe usar ####.##");
+            layoutMonto.setError("Monto invalido, debe usar ####.##");
             return false;
         }
     }

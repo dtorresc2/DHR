@@ -174,4 +174,27 @@ public class QuerysServicios {
         requestQueue.add(stringRequest);
     }
 
+    public void eliminarServicio(final int id, QuerysServicios.VolleyOnEventListener callback) {
+        mCallBack = callback;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.DELETE, mContext.getResources().getString(R.string.API) + "servicios/" + id,
+                response -> mCallBack.onSuccess(response), error -> mCallBack.onFailure(error)) {
+
+            //TOKEN DE AUTENTICACION
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("x-access-dhr-token", TOKEN);
+                return params;
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        requestQueue.add(stringRequest);
+    }
 }
