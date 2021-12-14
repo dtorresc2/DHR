@@ -15,13 +15,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.sistemasdt.dhr.R;
-import com.sistemasdt.dhr.ServiciosAPI.QuerysBitacoras;
+import com.sistemasdt.dhr.ServiciosAPI.QuerysBitacora;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -105,8 +104,8 @@ public class DialogoBitacora extends DialogFragment {
 
         final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
 
-        QuerysBitacoras querysBitacoras = new QuerysBitacoras(getContext());
-        querysBitacoras.obtenerBitacora(preferenciasUsuario.getInt("ID_USUARIO", 0), new QuerysBitacoras.VolleyOnEventListener() {
+        QuerysBitacora querysBitacora = new QuerysBitacora(getContext());
+        querysBitacora.obtenerBitacora(preferenciasUsuario.getInt("ID_USUARIO", 0), new QuerysBitacora.VolleyOnEventListener() {
             @Override
             public void onSuccess(Object object) {
                 try {

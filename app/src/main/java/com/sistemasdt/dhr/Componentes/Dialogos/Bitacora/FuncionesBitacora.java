@@ -3,7 +3,7 @@ package com.sistemasdt.dhr.Componentes.Dialogos.Bitacora;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.sistemasdt.dhr.ServiciosAPI.QuerysBitacoras;
+import com.sistemasdt.dhr.ServiciosAPI.QuerysBitacora;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,7 +17,7 @@ public class FuncionesBitacora {
 
     public void registrarBitacora(String evento, String seccion, String accion) {
         final SharedPreferences sharedPreferences = mContext.getSharedPreferences("sesion", Context.MODE_PRIVATE);
-        QuerysBitacoras querysBitacoras = new QuerysBitacoras(mContext);
+        QuerysBitacora querysBitacora = new QuerysBitacora(mContext);
         JSONObject jsonBodyAux = new JSONObject();
         try {
             jsonBodyAux.put("EVENTO", evento);
@@ -30,7 +30,7 @@ public class FuncionesBitacora {
             e.printStackTrace();
         }
 
-        querysBitacoras.registrarBitacora(jsonBodyAux, new QuerysBitacoras.VolleyOnEventListener() {
+        querysBitacora.registrarBitacora(jsonBodyAux, new QuerysBitacora.VolleyOnEventListener() {
             @Override
             public void onSuccess(Object object) {
 

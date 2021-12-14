@@ -1,6 +1,7 @@
 package com.sistemasdt.dhr.ServiciosAPI;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -13,13 +14,18 @@ import com.sistemasdt.dhr.R;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class QuerysCitas {
     Context mContext;
     private QuerysCitas.VolleyOnEventListener<String> mCallBack;
+    private String TOKEN;
 
     public QuerysCitas(Context context) {
         mContext = context;
+        final SharedPreferences preferenciasUsuario = mContext.getSharedPreferences("sesion", Context.MODE_PRIVATE);
+        TOKEN = preferenciasUsuario.getString("TOKEN", "");
     }
 
     public interface VolleyOnEventListener<T> {
@@ -33,6 +39,14 @@ public class QuerysCitas {
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, mContext.getResources().getString(R.string.API) + "citas/consulta",
                 response -> mCallBack.onSuccess(response), error -> mCallBack.onFailure(error)) {
+
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("x-access-dhr-token", TOKEN);
+                return params;
+            }
+
             @Override
             public String getBodyContentType() {
                 return "application/json; charset=utf-8";
@@ -59,6 +73,14 @@ public class QuerysCitas {
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, mContext.getResources().getString(R.string.API) + "citas/consulta/avanzado",
                 response -> mCallBack.onSuccess(response), error -> mCallBack.onFailure(error)) {
+
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("x-access-dhr-token", TOKEN);
+                return params;
+            }
+
             @Override
             public String getBodyContentType() {
                 return "application/json; charset=utf-8";
@@ -85,6 +107,14 @@ public class QuerysCitas {
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, mContext.getResources().getString(R.string.API) + "citas/registro",
                 response -> mCallBack.onSuccess(response), error -> mCallBack.onFailure(error)) {
+
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("x-access-dhr-token", TOKEN);
+                return params;
+            }
+
             @Override
             public String getBodyContentType() {
                 return "application/json; charset=utf-8";
@@ -111,6 +141,14 @@ public class QuerysCitas {
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, mContext.getResources().getString(R.string.API) + "citas/actualiza",
                 response -> mCallBack.onSuccess(response), error -> mCallBack.onFailure(error)) {
+
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("x-access-dhr-token", TOKEN);
+                return params;
+            }
+
             @Override
             public String getBodyContentType() {
                 return "application/json; charset=utf-8";
@@ -137,6 +175,14 @@ public class QuerysCitas {
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, mContext.getResources().getString(R.string.API) + "citas/actualiza/estado",
                 response -> mCallBack.onSuccess(response), error -> mCallBack.onFailure(error)) {
+
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("x-access-dhr-token", TOKEN);
+                return params;
+            }
+
             @Override
             public String getBodyContentType() {
                 return "application/json; charset=utf-8";
@@ -163,6 +209,14 @@ public class QuerysCitas {
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, mContext.getResources().getString(R.string.API) + "citas/elimina",
                 response -> mCallBack.onSuccess(response), error -> mCallBack.onFailure(error)) {
+
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("x-access-dhr-token", TOKEN);
+                return params;
+            }
+
             @Override
             public String getBodyContentType() {
                 return "application/json; charset=utf-8";

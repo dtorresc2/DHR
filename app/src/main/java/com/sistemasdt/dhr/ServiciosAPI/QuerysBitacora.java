@@ -1,11 +1,10 @@
 package com.sistemasdt.dhr.ServiciosAPI;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.sistemasdt.dhr.R;
@@ -13,10 +12,13 @@ import com.sistemasdt.dhr.R;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
-public class QuerysBitacoras {
+public class QuerysBitacora {
     Context mContext;
-    private QuerysBitacoras.VolleyOnEventListener<String> mCallBack;
+    private QuerysBitacora.VolleyOnEventListener<String> mCallBack;
+    private String TOKEN;
 
     public interface VolleyOnEventListener<T> {
         void onSuccess(T object);
@@ -24,16 +26,26 @@ public class QuerysBitacoras {
         void onFailure(Exception e);
     }
 
-    public QuerysBitacoras(Context context){
+    public QuerysBitacora(Context context) {
         mContext = context;
+        final SharedPreferences preferenciasUsuario = mContext.getSharedPreferences("sesion", Context.MODE_PRIVATE);
+        TOKEN = preferenciasUsuario.getString("TOKEN", "");
     }
 
-    public void obtenerBitacora(int id, QuerysBitacoras.VolleyOnEventListener callback) {
+    public void obtenerBitacora(int id, QuerysBitacora.VolleyOnEventListener callback) {
         mCallBack = callback;
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, mContext.getResources().getString(R.string.API) + "bitacora/" + id,
                 response -> mCallBack.onSuccess(response),
                 error -> mCallBack.onFailure(error)) {
+
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("x-access-dhr-token", TOKEN);
+                return params;
+            }
+
             @Override
             public String getBodyContentType() {
                 return "application/json; charset=utf-8";
@@ -44,12 +56,20 @@ public class QuerysBitacoras {
         requestQueue.add(stringRequest);
     }
 
-    public void registrarBitacora(final JSONObject jsonBody, QuerysBitacoras.VolleyOnEventListener callback) {
+    public void registrarBitacora(final JSONObject jsonBody, QuerysBitacora.VolleyOnEventListener callback) {
         mCallBack = callback;
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, mContext.getResources().getString(R.string.API) + "bitacora",
                 response -> mCallBack.onSuccess(response),
                 error -> mCallBack.onFailure(error)) {
+
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("x-access-dhr-token", TOKEN);
+                return params;
+            }
+
             @Override
             public String getBodyContentType() {
                 return "application/json; charset=utf-8";
