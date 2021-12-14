@@ -8,12 +8,15 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.widget.Toolbar;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -31,6 +34,7 @@ import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysPacientes;
 import com.tapadoo.alerter.Alerter;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -283,7 +287,7 @@ public class Pacientes extends Fragment {
 
                 FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
                 funcionesBitacora.registrarBitacora("CREACION", "PACIENTES", "Se registro un paciente");
-                
+
                 new Handler().postDelayed(() -> {
                     progressDialog.dismiss();
                     ListadoPacientes listadoPacientes = new ListadoPacientes();
@@ -364,13 +368,25 @@ public class Pacientes extends Fragment {
         progressDialog.setCancelable(false);
         progressDialog.show();
 
+        final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("ID_USUARIO", preferenciasUsuario.getInt("ID_USUARIO", 0));
+            jsonObject.put("ID_PACIENTE", ID_PACIENTE);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         QuerysPacientes querysPacientes = new QuerysPacientes(getContext());
-        querysPacientes.obtenerPacienteEspecifico(ID_PACIENTE, new QuerysPacientes.VolleyOnEventListener() {
+        querysPacientes.obtenerPacientes(jsonObject, new QuerysPacientes.VolleyOnEventListener() {
             @Override
             public void onSuccess(Object object) {
                 progressDialog.dismiss();
                 try {
-                    JSONObject jsonObject = new JSONObject(object.toString());
+                    JSONArray jsonArray = new JSONArray(object.toString());
+                    JSONObject jsonObject = jsonArray.getJSONObject(0);
+
                     primerNombre.setText(jsonObject.getString("NOMBRE"));
                     edad.setText(jsonObject.getString("EDAD"));
                     ocupacion.setText(jsonObject.getString("OCUPACION"));

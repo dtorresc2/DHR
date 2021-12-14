@@ -363,8 +363,17 @@ public class Citas extends Fragment {
         progressDialog.show();
 
         final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("ID_USUARIO", preferenciasUsuario.getInt("ID_USUARIO", 0));
+            jsonObject.put("ID_PACIENTE", "0");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         QuerysPacientes querysPacientes = new QuerysPacientes(getContext());
-        querysPacientes.obtenerPacientes(preferenciasUsuario.getInt("ID_USUARIO", 0), new QuerysPacientes.VolleyOnEventListener() {
+        querysPacientes.obtenerPacientes(jsonObject, new QuerysPacientes.VolleyOnEventListener() {
             @Override
             public void onSuccess(Object object) {
                 try {
@@ -383,7 +392,9 @@ public class Citas extends Fragment {
                                     jsonArray.getJSONObject(i).getDouble("HABER"),
                                     jsonArray.getJSONObject(i).getDouble("SALDO"),
                                     jsonArray.getJSONObject(i).getString("OCUPACION"),
-                                    (jsonArray.getJSONObject(i).getInt("SEXO") > 0) ? true : false
+                                    (jsonArray.getJSONObject(i).getInt("SEXO") > 0) ? true : false,
+                                    jsonArray.getJSONObject(i).getInt("FICHAS_NORMALES"),
+                                    jsonArray.getJSONObject(i).getInt("CITAS")
                             );
 
                             listaPacientes.add(paciente.getNombre());

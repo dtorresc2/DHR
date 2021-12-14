@@ -13,8 +13,12 @@ public class ItemPaciente {
     private double mDebe;
     private double mHaber;
     private double mSaldo;
+    private int mCantidadFichas;
+    private int mCantidadCitas;
 
-    public ItemPaciente(int id, String nombre, String telefono, String dpi, int edad, String fecha, boolean estado, double debe, double haber, double saldo, String ocupacion, boolean sexo) {
+    public ItemPaciente(int id, String nombre, String telefono, String dpi, int edad, String fecha,
+                        boolean estado, double debe, double haber, double saldo, String ocupacion,
+                        boolean sexo, int cantidadFichas, int cantidadCitas) {
         mCodigo = id;
         mNombre = nombre;
         mTelefono = telefono;
@@ -27,6 +31,8 @@ public class ItemPaciente {
         mSaldo = saldo;
         mOcupacion = ocupacion;
         mSexo = sexo;
+        mCantidadFichas = cantidadFichas;
+        mCantidadCitas = cantidadCitas;
     }
 
     public int getCodigo() {
@@ -75,5 +81,13 @@ public class ItemPaciente {
 
     public boolean getGenero() {
         return mSexo;
+    }
+
+    public int getCantidadFichas() {
+        return mCantidadFichas;
+    }
+
+    public int getCantidadCitas() {
+        return mCantidadCitas;
     }
 }

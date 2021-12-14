@@ -7,14 +7,19 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Handler;
+
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+
 import android.os.Bundle;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +33,7 @@ import com.sistemasdt.dhr.Componentes.MenusInferiores.MenuInferior;
 import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.Rutas.Catalogos.Catalogos;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysPacientes;
+import com.sistemasdt.dhr.ServiciosAPI.QuerysPiezas;
 import com.tapadoo.alerter.Alerter;
 
 import org.json.JSONArray;
@@ -148,6 +154,16 @@ public class ListadoPacientes extends Fragment {
                 dialog.show();
                 break;
             case 3:
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
+                alertDialogBuilder.setIcon(R.drawable.logonuevo);
+                alertDialogBuilder.setTitle("Listado de Pacientes");
+                alertDialogBuilder.setMessage("¿Desea eliminar el paciente?");
+                alertDialogBuilder.setPositiveButton("ACEPTAR", (dialog1, which) -> eliminarPaciente(ID));
+                alertDialogBuilder.setNegativeButton("CANCELAR", (dialog1, id) -> {
+                });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
                 break;
             default:
                 return;
@@ -170,8 +186,16 @@ public class ListadoPacientes extends Fragment {
 
         final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
 
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("ID_USUARIO", preferenciasUsuario.getInt("ID_USUARIO", 0));
+            jsonObject.put("ID_PACIENTE", "0");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         QuerysPacientes querysPacientes = new QuerysPacientes(getContext());
-        querysPacientes.obtenerPacientes(preferenciasUsuario.getInt("ID_USUARIO", 0), new QuerysPacientes.VolleyOnEventListener() {
+        querysPacientes.obtenerPacientes(jsonObject, new QuerysPacientes.VolleyOnEventListener() {
             @Override
             public void onSuccess(Object object) {
                 try {
@@ -189,7 +213,9 @@ public class ListadoPacientes extends Fragment {
                                 jsonArray.getJSONObject(i).getDouble("HABER"),
                                 jsonArray.getJSONObject(i).getDouble("SALDO"),
                                 jsonArray.getJSONObject(i).getString("OCUPACION"),
-                                (jsonArray.getJSONObject(i).getInt("SEXO") > 0) ? true : false
+                                (jsonArray.getJSONObject(i).getInt("SEXO") > 0) ? true : false,
+                                jsonArray.getJSONObject(i).getInt("FICHAS_NORMALES"),
+                                jsonArray.getJSONObject(i).getInt("CITAS")
                         ));
                     }
 
@@ -201,6 +227,9 @@ public class ListadoPacientes extends Fragment {
                         MenuInferior menuInferior = new MenuInferior();
                         menuInferior.show(getActivity().getSupportFragmentManager(), "MenuInferior");
                         menuInferior.recibirTitulo(listaPacientes.get(position).getNombre());
+                        menuInferior.recibirEstado(listaPacientes.get(position).getEstado());
+                        menuInferior.recibirCantiadFichas(listaPacientes.get(position).getCantidadFichas() + listaPacientes.get(position).getCantidadCitas());
+
                         menuInferior.eventoClick(opcion -> {
                             estadoPaciente = listaPacientes.get(position).getEstado();
                             realizarAccion(opcion, listaPacientes.get(position).getCodigo(), position);
@@ -222,70 +251,94 @@ public class ListadoPacientes extends Fragment {
     }
 
     public void actualizarEstado(final int ID) {
-        if (estadoPaciente) {
-            final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-            progressDialog.setMessage("Cargando...");
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progressDialog.setCancelable(false);
-            progressDialog.show();
+        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+        progressDialog.setMessage("Cargando...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
 
-            QuerysPacientes querysPacientes = new QuerysPacientes(getContext());
-            JSONObject jsonBody = new JSONObject();
+        QuerysPacientes querysPacientes = new QuerysPacientes(getContext());
+        JSONObject jsonBody = new JSONObject();
 
-            String[] auxFecha = listaPacientes.get(ID).getFecha().split("/");
-            String fechaBD = auxFecha[2] + "/" + auxFecha[1] + "/" + auxFecha[0];
+        try {
+            jsonBody.put("ESTADO", estadoPaciente == true ? "0" : "1");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-            try {
-                jsonBody.put("ESTADO", false);
-                jsonBody.put("NOMBRE", listaPacientes.get(ID).getNombre());
-                jsonBody.put("EDAD", listaPacientes.get(ID).getEdad());
-                jsonBody.put("OCUPACION", listaPacientes.get(ID).getOcupacion());
-                jsonBody.put("TELEFONO", listaPacientes.get(ID).getTelefono());
-                jsonBody.put("FECHA_NACIMIENTO", fechaBD);
-                jsonBody.put("DPI", listaPacientes.get(ID).getDpi());
-                jsonBody.put("SEXO", listaPacientes.get(ID).getGenero());
-            } catch (JSONException e) {
-                e.printStackTrace();
+        querysPacientes.actualizarEstado(listaPacientes.get(ID).getCodigo(), jsonBody, new QuerysPacientes.VolleyOnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                estadoPaciente = false;
+
+                Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                Alerter.create(getActivity())
+                        .setText("Actualizado Correctamente")
+                        .setIcon(R.drawable.logonuevo)
+                        .setTextTypeface(typeface)
+                        .enableSwipeToDismiss()
+                        .setBackgroundColorRes(R.color.FondoSecundario)
+                        .show();
+
+                FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
+                funcionesBitacora.registrarBitacora("ACTUALIZACION", "PACIENTES", "Se actualizo el estado del paciente #" + listaPacientes.get(ID).getCodigo());
+
+                new Handler().postDelayed(() -> {
+                    progressDialog.dismiss();
+                    obtenerPacientes();
+                }, 1000);
             }
 
-            querysPacientes.actualizarPaciente(listaPacientes.get(ID).getCodigo(), jsonBody, new QuerysPacientes.VolleyOnEventListener() {
-                @Override
-                public void onSuccess(Object object) {
-                    estadoPaciente = false;
-
-                    Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-                    Alerter.create(getActivity())
-                            .setText("Deshabilitado Correctamente")
-                            .setIcon(R.drawable.logonuevo)
-                            .setTextTypeface(typeface)
-                            .enableSwipeToDismiss()
-                            .setBackgroundColorRes(R.color.FondoSecundario)
-                            .show();
-
-                    FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
-                    funcionesBitacora.registrarBitacora("ACTUALIZACION", "PACIENTES", "Se actualizo el estado del paciente #" + listaPacientes.get(ID).getCodigo());
-
-                    new Handler().postDelayed(() -> {
-                        progressDialog.dismiss();
-                        obtenerPacientes();
-                    }, 1000);
-                }
-
-                @Override
-                public void onFailure(Exception e) {
-                    progressDialog.dismiss();
-                }
-            });
-        } else {
-            Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-            Alerter.create(getActivity())
-                    .setTitle("El paciente esta deshabilitado")
-                    .setIcon(R.drawable.logonuevo)
-                    .setTextTypeface(typeface)
-                    .enableSwipeToDismiss()
-                    .setBackgroundColorRes(R.color.FondoSecundario)
-                    .show();
-        }
+            @Override
+            public void onFailure(Exception e) {
+                progressDialog.dismiss();
+            }
+        });
     }
 
+    private void eliminarPaciente(final int ID) {
+        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setMessage("Cargando...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        QuerysPacientes querysPacientes = new QuerysPacientes(getContext());
+        querysPacientes.eliminarPacinte(ID, new QuerysPacientes.VolleyOnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                Alerter.create(getActivity())
+                        .setTitle("Pacientes")
+                        .setText("Paciente eliminado correctamente")
+                        .setIcon(R.drawable.logonuevo)
+                        .setTextTypeface(face)
+                        .enableSwipeToDismiss()
+                        .setBackgroundColorRes(R.color.FondoSecundario)
+                        .show();
+
+                progressDialog.dismiss();
+
+                FuncionesBitacora funcionesBitacora = new FuncionesBitacora(getContext());
+                funcionesBitacora.registrarBitacora("ELIMINACION", "PACIENTES", "Se elimino el paciente #" + ID);
+
+                obtenerPacientes();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+                Alerter.create(getActivity())
+                        .setTitle("Error")
+                        .setText("Fallo al eliminar el paciente")
+                        .setIcon(R.drawable.logonuevo)
+                        .setTextTypeface(face)
+                        .enableSwipeToDismiss()
+                        .setBackgroundColorRes(R.color.AzulOscuro)
+                        .show();
+
+                progressDialog.dismiss();
+            }
+        });
+    }
 }

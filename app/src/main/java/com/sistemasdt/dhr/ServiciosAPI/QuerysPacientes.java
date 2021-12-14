@@ -1,6 +1,7 @@
 package com.sistemasdt.dhr.ServiciosAPI;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -14,13 +15,18 @@ import com.sistemasdt.dhr.R;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class QuerysPacientes {
     Context mContext;
     private QuerysPacientes.VolleyOnEventListener<String> mCallBack;
+    private String TOKEN;
 
     public QuerysPacientes(Context context) {
         mContext = context;
+        final SharedPreferences preferenciasUsuario = mContext.getSharedPreferences("sesion", Context.MODE_PRIVATE);
+        TOKEN = preferenciasUsuario.getString("TOKEN", "");
     }
 
     public interface VolleyOnEventListener<T> {
@@ -29,23 +35,34 @@ public class QuerysPacientes {
         void onFailure(Exception e);
     }
 
-    public void obtenerPacientes(int id, QuerysPacientes.VolleyOnEventListener callback) {
+    public void obtenerPacientes(final JSONObject jsonBody, QuerysPacientes.VolleyOnEventListener callback) {
         mCallBack = callback;
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, mContext.getResources().getString(R.string.API) + "pacientes/" + id + "/usuario", new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, mContext.getResources().getString(R.string.API) + "pacientes/listado",
+                response -> mCallBack.onSuccess(response), error -> mCallBack.onFailure(error)) {
+
             @Override
-            public void onResponse(String response) {
-                mCallBack.onSuccess(response);
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("x-access-dhr-token", TOKEN);
+                return params;
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                mCallBack.onFailure(error);
-            }
-        }) {
+
             @Override
             public String getBodyContentType() {
                 return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() {
+                try {
+                    final String mRequestBody = jsonBody.toString();
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+                return null;
             }
         };
 
@@ -56,24 +73,22 @@ public class QuerysPacientes {
     public void registrarPaciente(final JSONObject jsonBody, QuerysPacientes.VolleyOnEventListener callback) {
         mCallBack = callback;
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, mContext.getResources().getString(R.string.API) + "pacientes", new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, mContext.getResources().getString(R.string.API) + "pacientes",
+                response -> mCallBack.onSuccess(response), error -> mCallBack.onFailure(error)) {
             @Override
-            public void onResponse(String response) {
-                mCallBack.onSuccess(response);
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("x-access-dhr-token", TOKEN);
+                return params;
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                mCallBack.onFailure(error);
-            }
-        }) {
+
             @Override
             public String getBodyContentType() {
                 return "application/json; charset=utf-8";
             }
 
             @Override
-            public byte[] getBody() throws AuthFailureError {
+            public byte[] getBody() {
                 try {
                     final String mRequestBody = jsonBody.toString();
                     return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
@@ -82,30 +97,6 @@ public class QuerysPacientes {
                 }
 
                 return null;
-            }
-        };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
-        requestQueue.add(stringRequest);
-    }
-
-    public void obtenerPacienteEspecifico(final int id, QuerysPacientes.VolleyOnEventListener callback) {
-        mCallBack = callback;
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, mContext.getResources().getString(R.string.API) + "pacientes/" + id, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                mCallBack.onSuccess(response);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                mCallBack.onFailure(error);
-            }
-        }) {
-            @Override
-            public String getBodyContentType() {
-                return "application/json; charset=utf-8";
             }
         };
 
@@ -116,24 +107,22 @@ public class QuerysPacientes {
     public void actualizarPaciente(final int id, final JSONObject jsonBody, QuerysPacientes.VolleyOnEventListener callback) {
         mCallBack = callback;
 
-        StringRequest stringRequest = new StringRequest(Request.Method.PUT, mContext.getResources().getString(R.string.API) + "pacientes/" + id, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.PUT, mContext.getResources().getString(R.string.API) + "pacientes/" + id,
+                response -> mCallBack.onSuccess(response), error -> mCallBack.onFailure(error)) {
             @Override
-            public void onResponse(String response) {
-                mCallBack.onSuccess(response);
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("x-access-dhr-token", TOKEN);
+                return params;
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                mCallBack.onFailure(error);
-            }
-        }) {
+
             @Override
             public String getBodyContentType() {
                 return "application/json; charset=utf-8";
             }
 
             @Override
-            public byte[] getBody() throws AuthFailureError {
+            public byte[] getBody() {
                 try {
                     final String mRequestBody = jsonBody.toString();
                     return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
@@ -142,6 +131,64 @@ public class QuerysPacientes {
                 }
 
                 return null;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        requestQueue.add(stringRequest);
+    }
+
+    public void actualizarEstado(final int id, final JSONObject jsonBody, QuerysPacientes.VolleyOnEventListener callback) {
+        mCallBack = callback;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.PUT, mContext.getResources().getString(R.string.API) + "pacientes/" + id + "/estado",
+                response -> mCallBack.onSuccess(response), error -> mCallBack.onFailure(error)) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("x-access-dhr-token", TOKEN);
+                return params;
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() {
+                try {
+                    final String mRequestBody = jsonBody.toString();
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        requestQueue.add(stringRequest);
+    }
+
+    public void eliminarPacinte(final int ID, QuerysPacientes.VolleyOnEventListener callback) {
+        mCallBack = callback;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.DELETE, mContext.getResources().getString(R.string.API) + "piezas/" + ID,
+                response -> mCallBack.onSuccess(response),
+                error -> mCallBack.onFailure(error)) {
+
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("x-access-dhr-token", TOKEN);
+                return params;
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
             }
         };
 
