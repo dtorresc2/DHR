@@ -172,10 +172,10 @@ public class QuerysPacientes {
         requestQueue.add(stringRequest);
     }
 
-    public void eliminarPacinte(final int ID, QuerysPacientes.VolleyOnEventListener callback) {
+    public void eliminarPaciente(final int ID, QuerysPacientes.VolleyOnEventListener callback) {
         mCallBack = callback;
 
-        StringRequest stringRequest = new StringRequest(Request.Method.DELETE, mContext.getResources().getString(R.string.API) + "piezas/" + ID,
+        StringRequest stringRequest = new StringRequest(Request.Method.DELETE, mContext.getResources().getString(R.string.API) + "pacientes/" + ID,
                 response -> mCallBack.onSuccess(response),
                 error -> mCallBack.onFailure(error)) {
 

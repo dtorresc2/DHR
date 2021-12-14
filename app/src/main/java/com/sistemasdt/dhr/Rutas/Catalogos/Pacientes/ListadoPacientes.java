@@ -158,7 +158,7 @@ public class ListadoPacientes extends Fragment {
                 alertDialogBuilder.setIcon(R.drawable.logonuevo);
                 alertDialogBuilder.setTitle("Listado de Pacientes");
                 alertDialogBuilder.setMessage("¿Desea eliminar el paciente?");
-                alertDialogBuilder.setPositiveButton("ACEPTAR", (dialog1, which) -> eliminarPaciente(ID));
+                alertDialogBuilder.setPositiveButton("ACEPTAR", (dialog1, which) -> eliminarPaciente(posicion));
                 alertDialogBuilder.setNegativeButton("CANCELAR", (dialog1, id) -> {
                 });
 
@@ -304,7 +304,7 @@ public class ListadoPacientes extends Fragment {
         progressDialog.show();
 
         QuerysPacientes querysPacientes = new QuerysPacientes(getContext());
-        querysPacientes.eliminarPacinte(ID, new QuerysPacientes.VolleyOnEventListener() {
+        querysPacientes.eliminarPaciente(listaPacientes.get(ID).getCodigo(), new QuerysPacientes.VolleyOnEventListener() {
             @Override
             public void onSuccess(Object object) {
                 Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
