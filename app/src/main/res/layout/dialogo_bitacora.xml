@@ -2,28 +2,27 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/FondoSecundario">
 
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
 
-    <!--    <LinearLayout-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:orientation="vertical">-->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/botonConsultaAvanzada"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="65dp"
+        android:clickable="true"
+        android:elevation="10dp"
+        android:src="@drawable/icono_buscar"
+        app:backgroundTint="@color/AzulOscuro"
+        tools:ignore="SpeakableTextPresentCheck" />
 
-    <!--        <TextView-->
-    <!--            android:id="@+id/tituloGeneral"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_marginTop="70dp"-->
-    <!--            android:paddingLeft="10dp"-->
-    <!--            android:text="General"-->
-    <!--            android:textColor="@color/Blanco"-->
-    <!--            android:textSize="24sp" />-->
-
-    <!--    </LinearLayout>-->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listaBitacora"
         android:layout_width="match_parent"

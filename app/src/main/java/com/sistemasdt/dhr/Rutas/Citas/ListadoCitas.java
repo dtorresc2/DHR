@@ -224,7 +224,7 @@ public class ListadoCitas extends Fragment {
                             SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
 
                             if (fechaInicialAux.equals(fechaFinalAux) || fechaInicialAux.before(fechaFinalAux)) {
-                                jsonObject.put("FECHA_INICAL", formatoFecha.format(fechaInicialAux));
+                                jsonObject.put("FECHA_INICIAL", formatoFecha.format(fechaInicialAux));
                                 jsonObject.put("FECHA_FINAL", formatoFecha.format(fechaFinalAux));
                             } else {
                                 AlertDialog.Builder builderAux = new AlertDialog.Builder(getActivity(), R.style.progressDialog);

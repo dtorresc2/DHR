@@ -50,65 +50,6 @@
             android:weightSum="2">
 
             <TextView
-                android:id="@+id/tituloEstado"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.2"
-                android:text="Estado Cita"
-                android:textColor="@color/Blanco"
-                android:textSize="14dp"
-                android:textStyle="bold" />
-
-            <CheckBox
-                android:id="@+id/checkCita"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.8"
-                tools:ignore="TouchTargetSizeCheck" />
-        </LinearLayout>
-
-        <RadioGroup
-            android:id="@+id/estadoCita"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="12dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="12dp"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/citaTrue"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:checked="true"
-                android:enabled="false"
-                android:text="Atendida" />
-
-            <RadioButton
-                android:id="@+id/citaFalse"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_weight="1"
-                android:enabled="false"
-
-                android:text="Pendiente" />
-        </RadioGroup>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="12dp"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:weightSum="2">
-
-            <TextView
                 android:id="@+id/tituloFecha"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -132,9 +73,9 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
+            android:enabled="false"
             android:gravity="center_horizontal"
             android:text="Fecha Inicial"
-            android:enabled="false"
             android:textColor="@color/Blanco"
             android:textSize="14dp"
             android:textStyle="bold" />
@@ -170,7 +111,6 @@
                 android:textColor="@color/Blanco"
                 android:textSize="18sp" />
         </LinearLayout>
-
 
         <TextView
             android:id="@+id/tituloFechaFinal"
@@ -216,16 +156,133 @@
                 android:textSize="18sp" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/botonConsultar"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginRight="12dp"
-            android:background="@drawable/boton"
-            android:text="Consultar"
-            android:textSize="18sp" />
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/tituloOpcionEvento"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:text="EVENTO"
+                android:textColor="@color/Blanco"
+                android:textSize="14dp"
+                android:textStyle="bold" />
+
+            <CheckBox
+                android:id="@+id/checkEvento"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.8"
+                tools:ignore="TouchTargetSizeCheck" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/evento"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="12dp"
+            android:background="@color/AzulOscuro"
+            android:drawableRight="@drawable/ic_down"
+            android:gravity="center"
+            android:padding="12dp"
+            android:text="Seleccione Evento"
+            android:textColor="@color/Blanco" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="12dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/tituloOpcionSeccion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:text="SECCION"
+                android:textColor="@color/Blanco"
+                android:textSize="14dp"
+                android:textStyle="bold" />
+
+            <CheckBox
+                android:id="@+id/checkSeccion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.8"
+                tools:ignore="TouchTargetSizeCheck" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/cuenta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="12dp"
+            android:background="@color/AzulOscuro"
+            android:drawableRight="@drawable/ic_down"
+            android:gravity="center"
+            android:padding="12dp"
+            android:text="Seleccione Seccion"
+            android:textColor="@color/Blanco" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="12dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/tituloOpcionCuenta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:text="CUENTA"
+                android:textColor="@color/Blanco"
+                android:textSize="14dp"
+                android:textStyle="bold" />
+
+            <CheckBox
+                android:id="@+id/checkCuenta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.8"
+                tools:ignore="TouchTargetSizeCheck" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/seccion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="12dp"
+            android:background="@color/AzulOscuro"
+            android:drawableRight="@drawable/ic_down"
+            android:gravity="center"
+            android:padding="12dp"
+            android:text="Seleccione Cuenta"
+            android:textColor="@color/Blanco" />
     </LinearLayout>
+
+
 
 </ScrollView>

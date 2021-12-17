@@ -24,8 +24,11 @@ import com.sistemasdt.dhr.ServiciosAPI.QuerysBitacora;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class DialogoBitacora extends DialogFragment {
     private Toolbar toolbar;
@@ -34,8 +37,11 @@ public class DialogoBitacora extends DialogFragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<ItemBitacora> listaBitacora;
 
-    public DialogoBitacora() {
+    public interface OnInputListener {
+        void sendInput(String input);
+    }
 
+    public DialogoBitacora() {
     }
 
     public static DialogoBitacora display(FragmentManager fragmentManager) {
@@ -103,13 +109,29 @@ public class DialogoBitacora extends DialogFragment {
         progressDialog.show();
 
         final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+        JSONObject jsonObject = new JSONObject();
+
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        try {
+            jsonObject.put("ID_USUARIO", preferenciasUsuario.getInt("ID_USUARIO", 0));
+            calendar.set(Calendar.DATE, calendar.getActualMinimum(Calendar.DATE));
+            jsonObject.put("FECHA_INICIAL", simpleDateFormat.format(calendar.getTime()));
+            calendar.set(Calendar.DATE, calendar.getActualMaximum(Calendar.DATE));
+            jsonObject.put("FECHA_FINAL", simpleDateFormat.format(calendar.getTime()));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         QuerysBitacora querysBitacora = new QuerysBitacora(getContext());
-        querysBitacora.obtenerBitacora(preferenciasUsuario.getInt("ID_USUARIO", 0), new QuerysBitacora.VolleyOnEventListener() {
+        querysBitacora.obtenerBitacoraFiltrada(jsonObject, new QuerysBitacora.VolleyOnEventListener() {
             @Override
             public void onSuccess(Object object) {
                 try {
                     JSONArray jsonArray = new JSONArray(object.toString());
+
                     for (int i = 0; i < jsonArray.length(); i++) {
                         listaBitacora.add(new ItemBitacora(
                                 jsonArray.getJSONObject(i).getString("ACCION"),

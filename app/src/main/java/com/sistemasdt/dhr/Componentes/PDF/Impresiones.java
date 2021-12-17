@@ -50,10 +50,8 @@ import java.util.ArrayList;
 public class Impresiones {
     private Context CONTEXT;
     private FragmentManager FRAGMENT_MANAGER;
-    private ArrayList<String> listaPacientes = null;
 
     private static final String TAG = "PDF_VIEW";
-
 
     private String NOMBRE_PACIENTE;
     private String EDAD_PACIENTE;
