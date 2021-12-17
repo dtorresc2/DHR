@@ -36,6 +36,7 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.sistemasdt.dhr.R;
+import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.ItemPaciente;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysBitacora;
 
 import org.json.JSONArray;
@@ -53,6 +54,9 @@ public class DialogoBitacora extends DialogFragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<ItemBitacora> listaBitacora;
     private FloatingActionButton consultaAvanzada;
+    private ArrayList<String> listaEventos;
+    private ArrayList<String> listaSecciones;
+    private ArrayList<String> listaCuentas;
 
     public DialogoBitacora() {
     }
@@ -104,6 +108,13 @@ public class DialogoBitacora extends DialogFragment {
 
         consultaAvanzada = view.findViewById(R.id.botonConsultaAvanzada);
         consultaAvanzada.setOnClickListener(v -> {
+            listaEventos = new ArrayList<>();
+            listaSecciones = new ArrayList<>();
+            listaCuentas = new ArrayList<>();
+
+            obtenerSecciones();
+            obtenerEventos();
+
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             View viewCuadro = getLayoutInflater().inflate(R.layout.dialogo_bitacora_consulta_avanzada, null);
             Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
@@ -196,8 +207,8 @@ public class DialogoBitacora extends DialogFragment {
 
                     ListView listView = dialog.findViewById(R.id.lista_items);
 
-//                    final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, listaPacientes);
-//                    listView.setAdapter(adapter);
+                    final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, listaEventos);
+                    listView.setAdapter(adapter);
 
                     editText.addTextChangedListener(new TextWatcher() {
                         @Override
@@ -207,13 +218,18 @@ public class DialogoBitacora extends DialogFragment {
 
                         @Override
                         public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                            adapter.getFilter().filter(s);
+                            adapter.getFilter().filter(s);
                         }
 
                         @Override
                         public void afterTextChanged(Editable s) {
 
                         }
+                    });
+
+                    listView.setOnItemClickListener((parent, view1, position, id) -> {
+                        evento.setText(adapter.getItem(position));
+                        dialog.dismiss();
                     });
                 }
             });
@@ -252,8 +268,8 @@ public class DialogoBitacora extends DialogFragment {
 
                     ListView listView = dialog.findViewById(R.id.lista_items);
 
-//                    final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, listaPacientes);
-//                    listView.setAdapter(adapter);
+                    final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, listaSecciones);
+                    listView.setAdapter(adapter);
 
                     editText.addTextChangedListener(new TextWatcher() {
                         @Override
@@ -263,13 +279,18 @@ public class DialogoBitacora extends DialogFragment {
 
                         @Override
                         public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                            adapter.getFilter().filter(s);
+                            adapter.getFilter().filter(s);
                         }
 
                         @Override
                         public void afterTextChanged(Editable s) {
 
                         }
+                    });
+
+                    listView.setOnItemClickListener((parent, view1, position, id) -> {
+                        seccion.setText(adapter.getItem(position));
+                        dialog.dismiss();
                     });
                 }
             });
@@ -308,8 +329,8 @@ public class DialogoBitacora extends DialogFragment {
 
                     ListView listView = dialog.findViewById(R.id.lista_items);
 
-//                    final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, listaPacientes);
-//                    listView.setAdapter(adapter);
+                    final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, listaCuentas);
+                    listView.setAdapter(adapter);
 
                     editText.addTextChangedListener(new TextWatcher() {
                         @Override
@@ -319,7 +340,7 @@ public class DialogoBitacora extends DialogFragment {
 
                         @Override
                         public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                            adapter.getFilter().filter(s);
+                            adapter.getFilter().filter(s);
                         }
 
                         @Override
@@ -415,6 +436,7 @@ public class DialogoBitacora extends DialogFragment {
                     mRecyclerView.setAdapter(mAdapter);
 
                     progressDialog.dismiss();
+
                 } catch (JSONException e) {
                     progressDialog.dismiss();
                     Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
@@ -426,6 +448,56 @@ public class DialogoBitacora extends DialogFragment {
                 progressDialog.dismiss();
                 obtenerBitacora();
                 Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void obtenerSecciones() {
+        listaSecciones.clear();
+
+        QuerysBitacora querysBitacora = new QuerysBitacora(getContext());
+        querysBitacora.obtenerSecciones(new QuerysBitacora.VolleyOnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                try {
+                    JSONArray jsonArray = new JSONArray(object.toString());
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        listaSecciones.add(jsonArray.getJSONObject(i).getString("SECCION"));
+                    }
+
+                } catch (JSONException e) {
+                    Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        });
+    }
+
+    public void obtenerEventos() {
+        listaEventos.clear();
+
+        QuerysBitacora querysBitacora = new QuerysBitacora(getContext());
+        querysBitacora.obtenerEventos(new QuerysBitacora.VolleyOnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                try {
+                    JSONArray jsonArray = new JSONArray(object.toString());
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        listaEventos.add(jsonArray.getJSONObject(i).getString("EVENTO"));
+                    }
+
+                } catch (JSONException e) {
+                    Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
             }
         });
     }

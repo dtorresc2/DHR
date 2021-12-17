@@ -56,6 +56,54 @@ public class QuerysBitacora {
         requestQueue.add(stringRequest);
     }
 
+    public void obtenerEventos(QuerysBitacora.VolleyOnEventListener callback) {
+        mCallBack = callback;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, mContext.getResources().getString(R.string.API) + "/bitacora/consulta/eventos",
+                response -> mCallBack.onSuccess(response),
+                error -> mCallBack.onFailure(error)) {
+
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("x-access-dhr-token", TOKEN);
+                return params;
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        requestQueue.add(stringRequest);
+    }
+
+    public void obtenerSecciones(QuerysBitacora.VolleyOnEventListener callback) {
+        mCallBack = callback;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, mContext.getResources().getString(R.string.API) + "bitacora/consulta/secciones",
+                response -> mCallBack.onSuccess(response),
+                error -> mCallBack.onFailure(error)) {
+
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("x-access-dhr-token", TOKEN);
+                return params;
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        requestQueue.add(stringRequest);
+    }
+
     public void obtenerBitacoraFiltrada(final JSONObject jsonBody, QuerysBitacora.VolleyOnEventListener callback) {
         mCallBack = callback;
 
