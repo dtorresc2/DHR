@@ -36,13 +36,16 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.sistemasdt.dhr.R;
+import com.sistemasdt.dhr.Rutas.Catalogos.Cuentas.ItemCuenta;
 import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.ItemPaciente;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysBitacora;
+import com.sistemasdt.dhr.ServiciosAPI.QuerysCuentas;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.GenericArrayType;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -57,6 +60,8 @@ public class DialogoBitacora extends DialogFragment {
     private ArrayList<String> listaEventos;
     private ArrayList<String> listaSecciones;
     private ArrayList<String> listaCuentas;
+    private ArrayList<ItemCuenta> listaCuentasGeneral;
+    private int ID_CUENTA = 0;
 
     public DialogoBitacora() {
     }
@@ -108,12 +113,16 @@ public class DialogoBitacora extends DialogFragment {
 
         consultaAvanzada = view.findViewById(R.id.botonConsultaAvanzada);
         consultaAvanzada.setOnClickListener(v -> {
+            ID_CUENTA = 0;
+
             listaEventos = new ArrayList<>();
             listaSecciones = new ArrayList<>();
             listaCuentas = new ArrayList<>();
+            listaCuentasGeneral = new ArrayList<>();
 
             obtenerSecciones();
             obtenerEventos();
+            obtenerCuentas();
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             View viewCuadro = getLayoutInflater().inflate(R.layout.dialogo_bitacora_consulta_avanzada, null);
@@ -348,6 +357,19 @@ public class DialogoBitacora extends DialogFragment {
 
                         }
                     });
+
+                    listView.setOnItemClickListener((parent, view1, position, id) -> {
+                        String filter = adapter.getItem(position).toLowerCase().trim();
+                        cuenta.setText(adapter.getItem(position));
+
+                        for (ItemCuenta item : listaCuentasGeneral) {
+                            if (item.getUsuarioCuenta().toLowerCase().trim().contains(filter)) {
+                                ID_CUENTA = listaCuentasGeneral.get(listaCuentasGeneral.indexOf(item)).getCodigoCuenta();
+                            }
+                        }
+
+                        dialog.dismiss();
+                    });
                 }
             });
 
@@ -472,7 +494,7 @@ public class DialogoBitacora extends DialogFragment {
 
             @Override
             public void onFailure(Exception e) {
-
+                Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -497,7 +519,41 @@ public class DialogoBitacora extends DialogFragment {
 
             @Override
             public void onFailure(Exception e) {
+                Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 
+    public void obtenerCuentas() {
+        listaCuentas.clear();
+        listaCuentasGeneral.clear();
+
+        final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+
+        QuerysCuentas querysCuentas = new QuerysCuentas(getContext());
+
+        querysCuentas.obtenerCuentas(preferenciasUsuario.getInt("ID_USUARIO", 0), new QuerysCuentas.VolleyOnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                try {
+                    JSONArray jsonArray = new JSONArray(object.toString());
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        listaCuentas.add(jsonArray.getJSONObject(i).getString("USUARIO"));
+
+                        listaCuentasGeneral.add(new ItemCuenta(
+                                jsonArray.getJSONObject(i).getInt("ID_CUENTA"),
+                                jsonArray.getJSONObject(i).getString("USUARIO")
+                        ));
+                    }
+
+                } catch (JSONException e) {
+                    Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
             }
         });
     }

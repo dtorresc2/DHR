@@ -59,7 +59,7 @@ public class QuerysBitacora {
     public void obtenerEventos(QuerysBitacora.VolleyOnEventListener callback) {
         mCallBack = callback;
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, mContext.getResources().getString(R.string.API) + "/bitacora/consulta/eventos",
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, mContext.getResources().getString(R.string.API) + "bitacora/consulta/eventos",
                 response -> mCallBack.onSuccess(response),
                 error -> mCallBack.onFailure(error)) {
 
