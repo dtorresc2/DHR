@@ -227,7 +227,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/cuenta"
+            android:id="@+id/seccion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
@@ -269,7 +269,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/seccion"
+            android:id="@+id/cuenta"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
@@ -281,8 +281,20 @@
             android:padding="12dp"
             android:text="Seleccione Cuenta"
             android:textColor="@color/Blanco" />
-    </LinearLayout>
 
+        <Button
+            android:id="@+id/botonConsultar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="12dp"
+            android:background="@drawable/boton"
+            android:text="Consultar"
+            android:textColor="@color/Blanco"
+            android:textSize="18sp" />
+
+    </LinearLayout>
 
 
 </ScrollView>
