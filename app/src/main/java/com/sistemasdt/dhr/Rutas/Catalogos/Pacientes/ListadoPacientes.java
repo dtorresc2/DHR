@@ -48,8 +48,6 @@ public class ListadoPacientes extends Fragment {
     private RecyclerView mRecyclerView;
     private PacienteAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    RequestQueue requestQueue;
-    private static final String TAG = "MyActivity";
     SharedPreferences preferencias;
     private int mOpcion = 0;
     private boolean estadoPaciente = false;
@@ -57,7 +55,6 @@ public class ListadoPacientes extends Fragment {
     private ArrayList<ItemPaciente> listaPacientes;
 
     public ListadoPacientes() {
-        // Required empty public constructor
     }
 
     @Override
@@ -65,11 +62,10 @@ public class ListadoPacientes extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_listado_pacientes, container, false);
-        final Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-        requestQueue = Volley.newRequestQueue(getContext());
+
         preferencias = getActivity().getSharedPreferences("ListadoPacientes", Context.MODE_PRIVATE);
         toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setTitle("Pacientes");
+        toolbar.setTitle("Listado de Pacientes");
         toolbar.setNavigationIcon(R.drawable.ic_cerrar);
         toolbar.inflateMenu(R.menu.opciones_toolbar_catalogos);
 

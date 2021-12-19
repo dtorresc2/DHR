@@ -79,7 +79,7 @@ public class Pacientes extends Fragment {
         if (!modoEdicion)
             toolbar.setTitle("Paciente Nuevo");
         else
-            toolbar.setTitle("Paciente #" + ID_PACIENTE);
+            toolbar.setTitle("Edicion de Paciente");
 
         toolbar.setNavigationOnClickListener(v -> {
             ListadoPacientes listadoPacientes = new ListadoPacientes();

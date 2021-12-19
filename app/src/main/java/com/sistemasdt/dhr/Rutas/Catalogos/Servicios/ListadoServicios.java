@@ -44,18 +44,16 @@ public class ListadoServicios extends Fragment {
     private ArrayList<ItemServicio> listaServicios;
 
     public ListadoServicios() {
-        // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_listado_servicios, container, false);
 
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_cerrar);
-        toolbar.setTitle("Servicios");
+        toolbar.setTitle("Listado de Servicios");
         toolbar.inflateMenu(R.menu.opciones_toolbar_catalogos);
 
         toolbar.setNavigationOnClickListener(view1 -> {
@@ -102,7 +100,6 @@ public class ListadoServicios extends Fragment {
         });
 
         listaServicios = new ArrayList<>();
-
         mRecyclerView = view.findViewById(R.id.listado_servicios);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());

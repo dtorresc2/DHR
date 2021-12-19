@@ -60,7 +60,6 @@ public class Servicios extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_servicios, container, false);
         typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
 
@@ -69,7 +68,7 @@ public class Servicios extends Fragment {
         if (!modoEdicion)
             toolbar.setTitle("Servicio Nuevo");
         else
-            toolbar.setTitle("Servicio #" + ID_SERVICIO);
+            toolbar.setTitle("Edicion de Servicio");
 
         toolbar.setNavigationOnClickListener(view1 -> {
             ListadoServicios listadoServicios = new ListadoServicios();

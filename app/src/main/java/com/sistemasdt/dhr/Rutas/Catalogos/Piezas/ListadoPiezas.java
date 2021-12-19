@@ -42,7 +42,6 @@ public class ListadoPiezas extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<ItemPieza> listaPiezas;
     private boolean estadoPieza = false;
-    private ItemPieza itemPieza;
 
     public ListadoPiezas() {
         // Required empty public constructor
@@ -56,7 +55,7 @@ public class ListadoPiezas extends Fragment {
 
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_cerrar);
-        toolbar.setTitle("Piezas");
+        toolbar.setTitle("Listado de Piezas");
         toolbar.inflateMenu(R.menu.opciones_toolbar_catalogos);
 
         toolbar.setNavigationOnClickListener(view1 -> {
@@ -200,7 +199,6 @@ public class ListadoPiezas extends Fragment {
 
                         menuInferior.eventoClick(opcion -> {
                             estadoPieza = listaPiezas.get(position).getEstadoPieza();
-                            itemPieza = listaPiezas.get(position);
                             realizarAccion(opcion, listaPiezas.get(position).getCodigoPieza());
                         });
                     });

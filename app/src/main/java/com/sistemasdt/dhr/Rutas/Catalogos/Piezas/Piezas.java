@@ -60,7 +60,6 @@ public class Piezas extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_piezas, container, false);
         typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
 
@@ -70,7 +69,7 @@ public class Piezas extends Fragment {
         if (!modoEdicion)
             toolbar.setTitle("Pieza Nueva");
         else
-            toolbar.setTitle("Pieza #" + ID_PIEZA);
+            toolbar.setTitle("Edicion de Pieza");
 
         toolbar.setNavigationOnClickListener(view1 -> {
             ListadoPiezas listadoPiezas = new ListadoPiezas();

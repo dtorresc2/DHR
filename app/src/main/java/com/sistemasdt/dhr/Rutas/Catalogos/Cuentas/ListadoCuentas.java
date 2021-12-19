@@ -52,7 +52,7 @@ public class ListadoCuentas extends Fragment {
 
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_cerrar);
-        toolbar.setTitle("Cuentas");
+        toolbar.setTitle("Listado de Cuentas");
         toolbar.inflateMenu(R.menu.opciones_toolbar_catalogos);
 
         toolbar.setNavigationOnClickListener(view1 -> {

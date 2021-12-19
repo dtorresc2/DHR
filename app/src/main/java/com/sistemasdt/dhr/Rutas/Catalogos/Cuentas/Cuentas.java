@@ -67,16 +67,13 @@ public class Cuentas extends Fragment {
         if (!modoEdicion)
             toolbar.setTitle("Cuenta Nueva");
         else
-            toolbar.setTitle("Cuenta #" + ID_CUENTA);
+            toolbar.setTitle("Edicion de Cuenta");
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ListadoCuentas listadoCuentas = new ListadoCuentas();
-                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                transaction.replace(R.id.contenedor, listadoCuentas);
-                transaction.commit();
-            }
+        toolbar.setNavigationOnClickListener(view1 -> {
+            ListadoCuentas listadoCuentas = new ListadoCuentas();
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+            transaction.replace(R.id.contenedor, listadoCuentas);
+            transaction.commit();
         });
 
         usuarioCuentaLayout = view.findViewById(R.id.usuarioCuentaLayout);
