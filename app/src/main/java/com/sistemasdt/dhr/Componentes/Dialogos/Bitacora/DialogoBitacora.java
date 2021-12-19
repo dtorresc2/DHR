@@ -35,10 +35,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.sistemasdt.dhr.Componentes.MenusInferiores.MenuCitas;
 import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.Rutas.Catalogos.Cuentas.ItemCuenta;
 import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.ItemPaciente;
+import com.sistemasdt.dhr.Rutas.Citas.Adaptador.AdaptadorCita;
+import com.sistemasdt.dhr.Rutas.Citas.ItemCita;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysBitacora;
+import com.sistemasdt.dhr.ServiciosAPI.QuerysCitas;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysCuentas;
 
 import org.json.JSONArray;
@@ -46,9 +50,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.GenericArrayType;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class DialogoBitacora extends DialogFragment {
     private Toolbar toolbar;
@@ -394,7 +400,62 @@ public class DialogoBitacora extends DialogFragment {
             AlertDialog dialog = builder.create();
 
             botonConsultaAvanzada.setOnClickListener(v15 -> {
+                if (checkCuenta.isChecked() || checkFecha.isChecked() || checkEvento.isChecked() || checkSeccion.isChecked()) {
+                    try {
+                        final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
 
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("ID_USUARIO", preferenciasUsuario.getInt("ID_USUARIO", 0));
+                        jsonObject.put("EVENTO", checkEvento.isChecked() ? evento.getText().toString() : "");
+                        jsonObject.put("SECCION", checkSeccion.isChecked() ? seccion.getText().toString() : "");
+                        jsonObject.put("ID_CUENTA", checkCuenta.isChecked() ? ID_CUENTA : 0);
+
+                        if (checkFecha.isChecked()) {
+                            Date fechaInicialAux = new SimpleDateFormat("dd/MM/yyyy").parse(fechaInicialTexto.getText().toString());
+                            Date fechaFinalAux = new SimpleDateFormat("dd/MM/yyyy").parse(fechaFinalTexto.getText().toString());
+                            SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
+
+                            if (fechaInicialAux.equals(fechaFinalAux) || fechaInicialAux.before(fechaFinalAux)) {
+                                jsonObject.put("FECHA_INICIAL", formatoFecha.format(fechaInicialAux));
+                                jsonObject.put("FECHA_FINAL", formatoFecha.format(fechaFinalAux));
+                            } else {
+                                AlertDialog.Builder builderAux = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
+                                builderAux.setIcon(R.drawable.logonuevo);
+                                builderAux.setTitle("Listado de Citas");
+                                builderAux.setMessage("Rango de Fechas Incorrecto");
+                                builderAux.setPositiveButton("Aceptar",
+                                        (dialog1, which) -> {
+                                        });
+
+
+                                AlertDialog alertDialog = builderAux.create();
+                                alertDialog.show();
+                                return;
+                            }
+                        } else {
+                            jsonObject.put("FECHA_INICIAL", "");
+                            jsonObject.put("FECHA_FINAL", "");
+                        }
+
+                        obtenerConsultaAvanzada(jsonObject);
+
+                    } catch (JSONException | ParseException e) {
+                        e.printStackTrace();
+                    }
+                    dialog.dismiss();
+                } else {
+                    AlertDialog.Builder builderAux = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
+                    builderAux.setIcon(R.drawable.logonuevo);
+                    builderAux.setTitle("Bitacora del Sistema");
+                    builderAux.setMessage("Seleccione al menos una opcion");
+                    builderAux.setPositiveButton("Aceptar",
+                            (dialog1, which) -> {
+                            });
+
+
+                    AlertDialog alertDialog = builderAux.create();
+                    alertDialog.show();
+                }
             });
 
             botonCerrar.setOnClickListener(v1 -> dialog.dismiss());
@@ -553,6 +614,49 @@ public class DialogoBitacora extends DialogFragment {
 
             @Override
             public void onFailure(Exception e) {
+                Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void obtenerConsultaAvanzada(JSONObject consulta) {
+        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+        progressDialog.setMessage("Cargando...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        QuerysBitacora querysBitacora = new QuerysBitacora(getContext());
+        querysBitacora.consultaAvanzada(consulta, new QuerysBitacora.VolleyOnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                try {
+                    JSONArray jsonArray = new JSONArray(object.toString());
+                    listaBitacora.clear();
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        listaBitacora.add(new ItemBitacora(
+                                jsonArray.getJSONObject(i).getString("ACCION"),
+                                jsonArray.getJSONObject(i).getString("EVENTO"),
+                                jsonArray.getJSONObject(i).getString("SECCION"),
+                                jsonArray.getJSONObject(i).getString("FECHA"),
+                                jsonArray.getJSONObject(i).getString("USUARIO")
+                        ));
+                    }
+
+                    mAdapter = new BitacoraAdapter(listaBitacora);
+                    mRecyclerView.setLayoutManager(mLayoutManager);
+                    mRecyclerView.setAdapter(mAdapter);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                progressDialog.dismiss();
                 Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
             }
         });

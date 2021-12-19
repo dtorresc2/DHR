@@ -249,7 +249,6 @@ public class ListadoCitas extends Fragment {
                     }
                     dialog.dismiss();
                 } else {
-
                     AlertDialog.Builder builderAux = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
                     builderAux.setIcon(R.drawable.logonuevo);
                     builderAux.setTitle("Listado de Citas");
