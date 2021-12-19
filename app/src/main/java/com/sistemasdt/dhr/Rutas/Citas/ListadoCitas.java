@@ -269,27 +269,10 @@ public class ListadoCitas extends Fragment {
 
         lista_pacientes = view.findViewById(R.id.listaCitas);
 
-//        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-//        itemTouchHelper.attachToRecyclerView(lista_pacientes);
-
         obtenerCitas();
 
         return view;
     }
-
-//    ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-//        @Override
-//        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-//            Toast.makeText(getContext(), "on Move", Toast.LENGTH_SHORT).show();
-//            return false;
-//        }
-//
-//        @Override
-//        public void onSwiped(final RecyclerView.ViewHolder viewHolder, int swipeDir) {
-//            Toast.makeText(getContext(), "on Swipe", Toast.LENGTH_SHORT).show();
-//        }
-//    };
-
 
     private void obtenerCitas() {
         try {
@@ -300,13 +283,18 @@ public class ListadoCitas extends Fragment {
             progressDialog.show();
 
             final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+            Calendar calendar = Calendar.getInstance();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("ID_USUARIO", preferenciasUsuario.getInt("ID_USUARIO", 0));
-            jsonObject.put("ID_CITA", 0);
+            calendar.set(Calendar.DATE, calendar.getActualMinimum(Calendar.DATE));
+            jsonObject.put("FECHA_INICIAL", simpleDateFormat.format(calendar.getTime()));
+            calendar.set(Calendar.DATE, calendar.getActualMaximum(Calendar.DATE));
+            jsonObject.put("FECHA_FINAL", simpleDateFormat.format(calendar.getTime()));
 
             QuerysCitas querysCitas = new QuerysCitas(getContext());
-            querysCitas.obtenerListadoCitas(jsonObject, new QuerysCitas.VolleyOnEventListener() {
+            querysCitas.obtenerListadoCitasFiltrado(jsonObject, new QuerysCitas.VolleyOnEventListener() {
                 @Override
                 public void onSuccess(Object object) {
                     try {

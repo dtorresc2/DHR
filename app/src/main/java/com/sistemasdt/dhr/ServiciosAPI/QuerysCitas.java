@@ -68,6 +68,40 @@ public class QuerysCitas {
         requestQueue.add(stringRequest);
     }
 
+    public void obtenerListadoCitasFiltrado(final JSONObject jsonBody, QuerysCitas.VolleyOnEventListener callback) {
+        mCallBack = callback;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, mContext.getResources().getString(R.string.API) + "citas/consulta/filtrado",
+                response -> mCallBack.onSuccess(response), error -> mCallBack.onFailure(error)) {
+
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("x-access-dhr-token", TOKEN);
+                return params;
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() {
+                try {
+                    final String mRequestBody = jsonBody.toString();
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        requestQueue.add(stringRequest);
+    }
+
     public void consultaAvanzada(final JSONObject jsonBody, QuerysCitas.VolleyOnEventListener callback) {
         mCallBack = callback;
 
