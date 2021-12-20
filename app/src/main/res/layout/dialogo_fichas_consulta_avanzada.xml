@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/FondoSecundario">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="15dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <ImageView
+                android:id="@+id/botonCerrar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1.7"
+                android:background="@color/AzulOscuro"
+                android:src="@drawable/ic_cerrar" />
+
+            <TextView
+                android:id="@+id/tituloDialogoBA"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:background="@color/AzulOscuro"
+                android:gravity="center"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:text="Busqueda Avanzada"
+                android:textColor="@color/Blanco"
+                android:textSize="24sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="12dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/tituloFecha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:text="RANGO DE FECHAS"
+                android:textColor="@color/Blanco"
+                android:textSize="14dp"
+                android:textStyle="bold" />
+
+            <CheckBox
+                android:id="@+id/checkFecha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.8"
+                tools:ignore="TouchTargetSizeCheck" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tituloFechaInicial"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:enabled="false"
+            android:gravity="center_horizontal"
+            android:text="Fecha Inicial"
+            android:textColor="@color/Blanco"
+            android:textSize="14dp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="12dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <ImageView
+                android:id="@+id/obtenerFechaInicial"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_weight="0.3"
+                android:background="@color/AzulOscuro"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:src="@drawable/icono_citas" />
+
+            <TextView
+                android:id="@+id/fechaInicial"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_weight="1.7"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:text="21/07/2016"
+                android:textColor="@color/Blanco"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tituloFechaFinal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:gravity="center_horizontal"
+            android:text="Fecha Final"
+            android:textColor="@color/Blanco"
+            android:textSize="14dp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="12dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <ImageView
+                android:id="@+id/obtenerFechaFinal"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_weight="0.3"
+                android:background="@color/AzulOscuro"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:src="@drawable/icono_citas" />
+
+            <TextView
+                android:id="@+id/fechaFinal"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_weight="1.7"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:text="21/07/2016"
+                android:textColor="@color/Blanco"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="12dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/tituloEstado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:text="ESTADO DE FICHA"
+                android:textColor="@color/Blanco"
+                android:textSize="14dp"
+                android:textStyle="bold" />
+
+            <CheckBox
+                android:id="@+id/checkEstado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.8"
+                tools:ignore="TouchTargetSizeCheck" />
+        </LinearLayout>
+
+        <RadioGroup
+            android:id="@+id/estadoCita"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="12dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/citaTrue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:enabled="false"
+                android:text="Habilitada" />
+
+            <RadioButton
+                android:id="@+id/citaFalse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:enabled="false"
+                android:text="Deshabilitada" />
+        </RadioGroup>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="12dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/tituloSaldo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:text="SALDO DE FICHA"
+                android:textColor="@color/Blanco"
+                android:textSize="14dp"
+                android:textStyle="bold" />
+
+            <CheckBox
+                android:id="@+id/checkSaldo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.8"
+                tools:ignore="TouchTargetSizeCheck" />
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/saldoLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="12dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/saldo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:enabled="false"
+                android:hint="Saldo"
+                android:inputType="numberDecimal" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/botonConsultar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="12dp"
+            android:background="@drawable/boton"
+            android:text="Consultar"
+            android:textColor="@color/Blanco"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+
+</ScrollView>

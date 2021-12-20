@@ -1,6 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        dev {
+        }
+    }
     compileSdkVersion 30
     defaultConfig {
         applicationId "com.sistemasdt.dhr"
@@ -11,6 +15,10 @@ android {
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
+        dev {
+            buildConfigField "String", 'BASE_URL', '"https://dev-api.yourbackend.com"'
+            signingConfig signingConfigs.dev
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'

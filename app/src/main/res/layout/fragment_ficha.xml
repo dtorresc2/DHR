@@ -77,7 +77,6 @@
                     android:id="@+id/fechaLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
                     android:layout_weight="0.3">
 
                     <com.google.android.material.textfield.TextInputEditText

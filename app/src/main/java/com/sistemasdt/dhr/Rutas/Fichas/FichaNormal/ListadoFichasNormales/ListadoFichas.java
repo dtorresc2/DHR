@@ -42,7 +42,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 @SuppressLint("ValidFragment")
 public class ListadoFichas extends Fragment {
@@ -52,7 +54,6 @@ public class ListadoFichas extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     ArrayList<ItemsFichas> lista;
     private boolean estadoFicha = false;
-
 
     private int mOpcion = 0;
 
@@ -64,7 +65,6 @@ public class ListadoFichas extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_listado_fichas, container, false);
-        Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
 
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle("Fichas Generales");
@@ -80,43 +80,40 @@ public class ListadoFichas extends Fragment {
         });
 
 
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.opcion_nuevo:
-                        Ficha ficha = new Ficha();
-                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                        transaction.replace(R.id.contenedor, ficha);
-                        transaction.commit();
-                        return true;
+        toolbar.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.opcion_nuevo:
+                    Ficha ficha = new Ficha();
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                    transaction.replace(R.id.contenedor, ficha);
+                    transaction.commit();
+                    return true;
 
-                    case R.id.opcion_filtrar:
-                        MenuItem searchItem = item;
-                        SearchView searchView = (SearchView) searchItem.getActionView();
+                case R.id.opcion_filtrar:
+                    MenuItem searchItem = item;
+                    SearchView searchView = (SearchView) searchItem.getActionView();
 
-                        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                            @Override
-                            public boolean onQueryTextSubmit(String query) {
-                                return false;
-                            }
+                    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                        @Override
+                        public boolean onQueryTextSubmit(String query) {
+                            return false;
+                        }
 
-                            @Override
-                            public boolean onQueryTextChange(String newText) {
-                                adapter.getFilter().filter(newText);
-                                return false;
-                            }
-                        });
-                        return true;
+                        @Override
+                        public boolean onQueryTextChange(String newText) {
+                            adapter.getFilter().filter(newText);
+                            return false;
+                        }
+                    });
+                    return true;
 
-                    case R.id.opcion_actualizar:
-                        obtenerFichas();
-                        return true;
+                case R.id.opcion_actualizar:
+                    obtenerFichas();
+                    return true;
 
-                    default:
-                        return false;
+                default:
+                    return false;
 
-                }
             }
         });
 
@@ -141,8 +138,22 @@ public class ListadoFichas extends Fragment {
 
         final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
 
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("ID_USUARIO", preferenciasUsuario.getInt("ID_USUARIO", 0));
+            calendar.set(Calendar.DATE, calendar.getActualMinimum(Calendar.DATE));
+            jsonObject.put("FECHA_INICIAL", simpleDateFormat.format(calendar.getTime()));
+            calendar.set(Calendar.DATE, calendar.getActualMaximum(Calendar.DATE));
+            jsonObject.put("FECHA_FINAL", simpleDateFormat.format(calendar.getTime()));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         QuerysFichas querysFichas = new QuerysFichas(getContext());
-        querysFichas.obtenerFichas(preferenciasUsuario.getInt("ID_USUARIO", 0), new QuerysFichas.VolleyOnEventListener() {
+        querysFichas.obtenerFichasFiltradas(jsonObject, new QuerysFichas.VolleyOnEventListener() {
             @Override
             public void onSuccess(Object object) {
                 try {
@@ -171,7 +182,7 @@ public class ListadoFichas extends Fragment {
                         estadoFicha = lista.get(position).getEstado();
                         menuInferiorFicha.recibirEstado(estadoFicha);
                         menuInferiorFicha.show(getActivity().getSupportFragmentManager(), "MenuInferiorFicha");
-                        menuInferiorFicha.eventoClick(opcion -> realizarAccion(opcion, lista.get(position).getId(), position));
+                        menuInferiorFicha.eventoClick(opcion -> realizarAccion(opcion, lista.get(position).getId()));
                     });
 
                 } catch (JSONException e) {
@@ -189,7 +200,7 @@ public class ListadoFichas extends Fragment {
         });
     }
 
-    private void realizarAccion(int opcion, int ID, final int posicion) {
+    private void realizarAccion(int opcion, int ID) {
         switch (opcion) {
             case 1:
                 final SharedPreferences preferenciasFicha = getActivity().getSharedPreferences("FICHA", Context.MODE_PRIVATE);

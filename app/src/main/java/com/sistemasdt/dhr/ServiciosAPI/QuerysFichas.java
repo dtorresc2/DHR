@@ -120,6 +120,40 @@ public class QuerysFichas {
         requestQueue.add(stringRequest);
     }
 
+    public void obtenerFichasFiltradas(final JSONObject jsonBody, QuerysFichas.VolleyOnEventListener callback) {
+        mCallBack = callback;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, mContext.getResources().getString(R.string.API) + "fichas/consulta/filtrado",
+                response -> mCallBack.onSuccess(response), error -> mCallBack.onFailure(error)) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("x-access-dhr-token", TOKEN);
+                return params;
+            }
+
+            @Override
+            public byte[] getBody() {
+                try {
+                    final String mRequestBody = jsonBody.toString();
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        requestQueue.add(stringRequest);
+    }
+
     public void actualizarFicha(int id, final JSONObject jsonBody, QuerysFichas.VolleyOnEventListener callback) {
         mCallBack = callback;
 
