@@ -8,6 +8,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.19027777777777777" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/drawable/boton.xml" value="0.26342592592592595" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/drawable/circle.xml" value="0.26342592592592595" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/drawable/circulolog.xml" value="0.26342592592592595" />
@@ -32,6 +33,7 @@
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/drawable/ic_estrella64.xml" value="0.26342592592592595" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/drawable/ic_file.xml" value="0.26342592592592595" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/drawable/ic_finance.xml" value="0.26342592592592595" />
+        <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/drawable/ic_launcher_background.xml" value="0.19027777777777777" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/drawable/item_selected.xml" value="0.2439814814814815" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/layout/activity_inicio_sesion.xml" value="0.32592592592592595" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/layout/activity_main.xml" value="0.32592592592592595" />
@@ -103,6 +105,7 @@
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/layout/number_picker_dialog.xml" value="0.32592592592592595" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/layout/toolbar.xml" value="0.32592592592592595" />
         <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/menu/botton_navigation_menu.xml" value="0.22962962962962963" />
+        <entry key="..\:/Documentos/Trabajos/APP-DHR/DHR/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.19027777777777777" />
       </map>
     </option>
   </component>

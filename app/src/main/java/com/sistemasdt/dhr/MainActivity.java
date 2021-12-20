@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.view.WindowManager;
 
 import com.sistemasdt.dhr.Rutas.Citas.Servicio.NotificacionService;
+import com.sistemasdt.dhr.Rutas.Citas.Servicio.RecibidorServicio;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,15 +26,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        ComponentName serviceComponent = new ComponentName(this, NotificacionService.class);
-        JobInfo.Builder builder = new JobInfo.Builder(0, serviceComponent);
-        builder.setMinimumLatency(10000);
-        builder.setOverrideDeadline(10000);
-        builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY);
-
-        JobScheduler jobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
-        jobScheduler.schedule(builder.build());
-
         new Handler().postDelayed(() -> {
             SharedPreferences preferencias = MainActivity.this.getSharedPreferences("sesion", Context.MODE_PRIVATE);
 
@@ -43,6 +35,10 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
+
+                    //Inicializador del Servicio
+                    RecibidorServicio.scheduleJob(this);
+
                 } else {
                     Intent intent = new Intent(MainActivity.this, InicioSesion.class);
                     startActivity(intent);

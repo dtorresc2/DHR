@@ -26,7 +26,7 @@ public class RecibidorServicio extends BroadcastReceiver {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public static void scheduleJob(Context context) {
         ComponentName serviceComponent = new ComponentName(context, NotificacionService.class);
-        JobInfo.Builder builder = new JobInfo.Builder(0, serviceComponent);
+        JobInfo.Builder builder = new JobInfo.Builder(335, serviceComponent);
         builder.setMinimumLatency(PERIOD_MS);
         builder.setOverrideDeadline(PERIOD_MS);
         builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY);
