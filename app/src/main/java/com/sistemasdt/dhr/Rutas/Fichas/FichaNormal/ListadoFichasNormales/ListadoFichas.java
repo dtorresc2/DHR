@@ -308,8 +308,11 @@ public class ListadoFichas extends Fragment {
                                 jsonObject.put("TIPO_SALDO", 2);
                             if (!textoRequerido())
                                 return;
+
+                            jsonObject.put("SALDO", Double.parseDouble(saldo.getText().toString()));
                         } else {
                             jsonObject.put("TIPO_SALDO", 3);
+                            jsonObject.put("SALDO", 0);
                         }
 
                         obtenerConsultaAvanzada(jsonObject);
@@ -319,8 +322,7 @@ public class ListadoFichas extends Fragment {
                     }
 
                     dialog.dismiss();
-                }
-                else {
+                } else {
                     AlertDialog.Builder builderAux = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
                     builderAux.setIcon(R.drawable.logonuevo);
                     builderAux.setTitle("Listado de Fichas");
@@ -618,7 +620,7 @@ public class ListadoFichas extends Fragment {
             @Override
             public void onFailure(Exception e) {
                 progressDialog.dismiss();
-                obtenerFichas();
+                obtenerConsultaAvanzada(consulta);
             }
         });
     }
