@@ -58,7 +58,6 @@ public class ListadoCitas extends Fragment {
     private FloatingActionButton botonConsultaAvanzada;
 
     public ListadoCitas() {
-        // Required empty public constructor
     }
 
     @Override
@@ -187,7 +186,6 @@ public class ListadoCitas extends Fragment {
             });
 
             CheckBox checkFecha = viewCuadro.findViewById(R.id.checkFecha);
-
 
             Button botonConsultaAvanzada = viewCuadro.findViewById(R.id.botonConsultar);
             botonConsultaAvanzada.setTypeface(typeface);

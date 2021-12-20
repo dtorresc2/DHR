@@ -12,7 +12,7 @@
         layout="@layout/toolbar" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/grabarPaciente"
+        android:id="@+id/botonConsultaAvanzada"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

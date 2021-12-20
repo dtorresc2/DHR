@@ -427,7 +427,6 @@ public class DialogoBitacora extends DialogFragment {
                                         (dialog1, which) -> {
                                         });
 
-
                                 AlertDialog alertDialog = builderAux.create();
                                 alertDialog.show();
                                 return;

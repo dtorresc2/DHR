@@ -3,6 +3,7 @@ package com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.ListadoFichasNormales;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -22,8 +23,17 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.sistemasdt.dhr.Componentes.Dialogos.Bitacora.FuncionesBitacora;
 import com.sistemasdt.dhr.Componentes.MenusInferiores.MenuInferiorFicha;
 import com.sistemasdt.dhr.Componentes.PDF.Impresiones;
@@ -42,9 +52,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 @SuppressLint("ValidFragment")
 public class ListadoFichas extends Fragment {
@@ -52,8 +64,12 @@ public class ListadoFichas extends Fragment {
     private Toolbar toolbar;
     private AdaptadorConsultaFicha adapter;
     private RecyclerView.LayoutManager layoutManager;
-    ArrayList<ItemsFichas> lista;
+    private ArrayList<ItemsFichas> lista;
     private boolean estadoFicha = false;
+    private FloatingActionButton botonConsultaAvanzada;
+
+    private TextInputLayout layoutSaldo;
+    TextInputEditText saldo;
 
     private int mOpcion = 0;
 
@@ -115,6 +131,212 @@ public class ListadoFichas extends Fragment {
                     return false;
 
             }
+        });
+
+        botonConsultaAvanzada = view.findViewById(R.id.botonConsultaAvanzada);
+        botonConsultaAvanzada.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            View viewCuadro = getLayoutInflater().inflate(R.layout.dialogo_fichas_consulta_avanzada, null);
+            Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+
+            ImageView botonCerrar = viewCuadro.findViewById(R.id.botonCerrar);
+            TextView tituloDialogo = viewCuadro.findViewById(R.id.tituloDialogoBA);
+            tituloDialogo.setTypeface(typeface);
+
+            TextView tituloEstadoFicha = viewCuadro.findViewById(R.id.tituloEstado);
+            tituloEstadoFicha.setTypeface(typeface);
+
+            RadioButton trueFicha = viewCuadro.findViewById(R.id.trueFicha);
+            trueFicha.setTypeface(typeface);
+            RadioButton falseFicha = viewCuadro.findViewById(R.id.falseFicha);
+            falseFicha.setTypeface(typeface);
+
+            CheckBox checkEstado = viewCuadro.findViewById(R.id.checkEstado);
+            checkEstado.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) {
+                    trueFicha.setEnabled(true);
+                    falseFicha.setEnabled(true);
+                } else {
+                    trueFicha.setEnabled(false);
+                    falseFicha.setEnabled(false);
+                }
+            });
+
+            // FECHA INICIAL
+            TextView tituloFecha = viewCuadro.findViewById(R.id.tituloFecha);
+            tituloFecha.setTypeface(typeface);
+
+            TextView tituloFechaInicial = viewCuadro.findViewById(R.id.tituloFechaInicial);
+            tituloFechaInicial.setTypeface(typeface);
+
+            TextView fechaInicialTexto = viewCuadro.findViewById(R.id.fechaInicial);
+            fechaInicialTexto.setTypeface(typeface);
+
+            ImageView obtenerFechaInicial = viewCuadro.findViewById(R.id.obtenerFechaInicial);
+            obtenerFechaInicial.setOnClickListener(v12 -> {
+                Calendar calendarAux = Calendar.getInstance();
+                calendarAux.set(Calendar.DATE, calendarAux.getActualMinimum(Calendar.DATE));
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
+                        (datePick, year, month, dayOfMonth) -> {
+                            final int mesActual = month + 1;
+                            String diaFormateado = (dayOfMonth < 10) ? "0" + dayOfMonth : String.valueOf(dayOfMonth);
+                            String mesFormateado = (mesActual < 10) ? "0" + mesActual : String.valueOf(mesActual);
+                            fechaInicialTexto.setText(diaFormateado + "/" + mesFormateado + "/" + year);
+
+                        }, calendarAux.get(Calendar.YEAR) - 1, calendarAux.get(Calendar.MONTH), calendarAux.get(Calendar.DAY_OF_YEAR));
+
+                datePickerDialog.show();
+            });
+
+            // FECHA FINAL
+            TextView tituloFechaFinal = viewCuadro.findViewById(R.id.tituloFechaFinal);
+            tituloFechaFinal.setTypeface(typeface);
+
+            TextView fechaFinalTexto = viewCuadro.findViewById(R.id.fechaFinal);
+            fechaFinalTexto.setTypeface(typeface);
+
+            ImageView obtenerFechaFinal = viewCuadro.findViewById(R.id.obtenerFechaFinal);
+            obtenerFechaFinal.setOnClickListener(v13 -> {
+                Calendar calendarAux = Calendar.getInstance();
+                calendarAux.set(Calendar.DATE, calendarAux.getActualMaximum(Calendar.DATE));
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
+                        (datePick, year, month, dayOfMonth) -> {
+                            final int mesActual = month + 1;
+                            String diaFormateado = (dayOfMonth < 10) ? "0" + dayOfMonth : String.valueOf(dayOfMonth);
+                            String mesFormateado = (mesActual < 10) ? "0" + mesActual : String.valueOf(mesActual);
+                            fechaFinalTexto.setText(diaFormateado + "/" + mesFormateado + "/" + year);
+
+                        }, calendarAux.get(Calendar.YEAR) - 1, calendarAux.get(Calendar.MONTH), calendarAux.get(Calendar.DAY_OF_YEAR));
+
+                datePickerDialog.show();
+            });
+
+            CheckBox checkFecha = viewCuadro.findViewById(R.id.checkFecha);
+
+            Button botonConsultar = viewCuadro.findViewById(R.id.botonConsultar);
+            botonConsultar.setTypeface(typeface);
+
+            Calendar calendar = Calendar.getInstance();
+            SimpleDateFormat formatoFechaGeneral = new SimpleDateFormat("dd/MM/yyyy");
+
+            calendar.set(Calendar.DATE, calendar.getActualMinimum(Calendar.DATE));
+            fechaInicialTexto.setText(formatoFechaGeneral.format(calendar.getTime()));
+
+            calendar.set(Calendar.DATE, calendar.getActualMaximum(Calendar.DATE));
+            fechaFinalTexto.setText(formatoFechaGeneral.format(calendar.getTime()));
+
+            // SALDO DE FICHA
+            TextView tituloSaldo = viewCuadro.findViewById(R.id.tituloSaldo);
+            tituloSaldo.setTypeface(typeface);
+
+            RadioButton saldoIgual = viewCuadro.findViewById(R.id.saldoIgual);
+            saldoIgual.setTypeface(typeface);
+
+            RadioButton saldoMenor = viewCuadro.findViewById(R.id.saldoMenor);
+            saldoMenor.setTypeface(typeface);
+
+            RadioButton saldoMayor = viewCuadro.findViewById(R.id.saldoMayor);
+            saldoMayor.setTypeface(typeface);
+
+            layoutSaldo = viewCuadro.findViewById(R.id.saldoLayout);
+            layoutSaldo.setTypeface(typeface);
+
+            saldo = viewCuadro.findViewById(R.id.saldo);
+            saldo.setTypeface(typeface);
+
+            CheckBox checkSaldo = viewCuadro.findViewById(R.id.checkSaldo);
+            checkSaldo.setTypeface(typeface);
+            checkSaldo.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                saldo.setEnabled(isChecked);
+                saldoMenor.setEnabled(isChecked);
+                saldoMayor.setEnabled(isChecked);
+                saldoIgual.setEnabled(isChecked);
+            });
+
+            builder.setCancelable(false);
+            builder.setView(viewCuadro);
+            AlertDialog dialog = builder.create();
+
+            botonConsultar.setOnClickListener(v14 -> {
+                if (checkEstado.isChecked() || checkFecha.isChecked() || checkSaldo.isChecked()) {
+                    try {
+                        final SharedPreferences preferenciasUsuario = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("ID_USUARIO", preferenciasUsuario.getInt("ID_USUARIO", 0));
+
+                        if (checkEstado.isChecked()) {
+                            jsonObject.put("ESTADO", trueFicha.isChecked() ? 1 : 0);
+                        } else {
+                            jsonObject.put("ESTADO", 2);
+                        }
+
+                        if (checkFecha.isChecked()) {
+                            Date fechaInicialAux = new SimpleDateFormat("dd/MM/yyyy").parse(fechaInicialTexto.getText().toString());
+                            Date fechaFinalAux = new SimpleDateFormat("dd/MM/yyyy").parse(fechaFinalTexto.getText().toString());
+                            SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
+
+                            if (fechaInicialAux.equals(fechaFinalAux) || fechaInicialAux.before(fechaFinalAux)) {
+                                jsonObject.put("FECHA_INICIAL", formatoFecha.format(fechaInicialAux));
+                                jsonObject.put("FECHA_FINAL", formatoFecha.format(fechaFinalAux));
+                            } else {
+                                AlertDialog.Builder builderAux = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
+                                builderAux.setIcon(R.drawable.logonuevo);
+                                builderAux.setTitle("Listado de Citas");
+                                builderAux.setMessage("Rango de Fechas Incorrecto");
+                                builderAux.setPositiveButton("Aceptar",
+                                        (dialog1, which) -> {
+                                        });
+
+                                AlertDialog alertDialog = builderAux.create();
+                                alertDialog.show();
+                                return;
+                            }
+                        } else {
+                            jsonObject.put("FECHA_INICIAL", "");
+                            jsonObject.put("FECHA_FINAL", "");
+                        }
+
+                        if (checkSaldo.isChecked()) {
+                            if (saldoIgual.isChecked())
+                                jsonObject.put("TIPO_SALDO", 0);
+                            if (saldoMenor.isChecked())
+                                jsonObject.put("TIPO_SALDO", 1);
+                            if (saldoMayor.isChecked())
+                                jsonObject.put("TIPO_SALDO", 2);
+                            if (!textoRequerido())
+                                return;
+                        } else {
+                            jsonObject.put("TIPO_SALDO", 3);
+                        }
+
+                        obtenerConsultaAvanzada(jsonObject);
+
+                    } catch (JSONException | ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                    dialog.dismiss();
+                }
+                else {
+                    AlertDialog.Builder builderAux = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
+                    builderAux.setIcon(R.drawable.logonuevo);
+                    builderAux.setTitle("Listado de Fichas");
+                    builderAux.setMessage("Seleccione al menos una opcion");
+                    builderAux.setPositiveButton("Aceptar",
+                            (dialog1, which) -> {
+                            });
+
+
+                    AlertDialog alertDialog = builderAux.create();
+                    alertDialog.show();
+                }
+            });
+
+            botonCerrar.setOnClickListener(v1 -> dialog.dismiss());
+            dialog.show();
         });
 
         lista = new ArrayList<>();
@@ -341,5 +563,75 @@ public class ListadoFichas extends Fragment {
                         .show();
             }
         });
+    }
+
+    private void obtenerConsultaAvanzada(JSONObject consulta) {
+        lista.clear();
+        estadoFicha = false;
+
+        final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+        progressDialog.setMessage("Cargando...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        QuerysFichas querysFichas = new QuerysFichas(getContext());
+        querysFichas.consultaAvanzada(consulta, new QuerysFichas.VolleyOnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                try {
+                    JSONArray jsonArray = new JSONArray(object.toString());
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        lista.add(new ItemsFichas(
+                                jsonArray.getJSONObject(i).getInt("ID_FICHA"),
+                                jsonArray.getJSONObject(i).getString("NOMBRE"),
+                                jsonArray.getJSONObject(i).getString("MOTIVO"),
+                                jsonArray.getJSONObject(i).getString("FECHA"),
+                                Double.parseDouble(jsonArray.getJSONObject(i).getString("DEBE")),
+                                Double.parseDouble(jsonArray.getJSONObject(i).getString("HABER")),
+                                Double.parseDouble(jsonArray.getJSONObject(i).getString("SALDO")),
+                                (jsonArray.getJSONObject(i).getInt("ESTADO") > 0) ? true : false
+                        ));
+                    }
+
+                    adapter = new AdaptadorConsultaFicha(lista);
+                    listafichas.setLayoutManager(layoutManager);
+                    listafichas.setAdapter(adapter);
+
+                    adapter.setOnItemClickListener(position -> {
+                        MenuInferiorFicha menuInferiorFicha = new MenuInferiorFicha();
+                        menuInferiorFicha.recibirTitulo(lista.get(position).getMotivo());
+                        estadoFicha = lista.get(position).getEstado();
+                        menuInferiorFicha.recibirEstado(estadoFicha);
+                        menuInferiorFicha.show(getActivity().getSupportFragmentManager(), "MenuInferiorFicha");
+                        menuInferiorFicha.eventoClick(opcion -> realizarAccion(opcion, lista.get(position).getId()));
+                    });
+
+                } catch (JSONException e) {
+                    Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                progressDialog.dismiss();
+                obtenerFichas();
+            }
+        });
+    }
+
+    //    VALIDACIONES
+    private boolean textoRequerido() {
+        String textoCodigo = saldo.getText().toString().trim();
+        if (textoCodigo.isEmpty()) {
+            layoutSaldo.setError("Campo requerido");
+            return false;
+        } else {
+            layoutSaldo.setError(null);
+            return true;
+        }
     }
 }

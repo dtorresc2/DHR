@@ -185,7 +185,7 @@
         </LinearLayout>
 
         <RadioGroup
-            android:id="@+id/estadoCita"
+            android:id="@+id/estadoFicha"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -196,7 +196,7 @@
             android:orientation="horizontal">
 
             <RadioButton
-                android:id="@+id/citaTrue"
+                android:id="@+id/trueFicha"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -205,7 +205,7 @@
                 android:text="Habilitada" />
 
             <RadioButton
-                android:id="@+id/citaFalse"
+                android:id="@+id/falseFicha"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -242,6 +242,45 @@
                 tools:ignore="TouchTargetSizeCheck" />
         </LinearLayout>
 
+        <RadioGroup
+            android:id="@+id/saldoFicha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="12dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/saldoIgual"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:enabled="false"
+                android:text="Igual a" />
+
+            <RadioButton
+                android:id="@+id/saldoMenor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:enabled="false"
+                android:text="Menor a" />
+
+            <RadioButton
+                android:id="@+id/saldoMayor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:enabled="false"
+                android:text="Mayor a" />
+        </RadioGroup>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/saldoLayout"
             android:layout_width="match_parent"
@@ -271,6 +310,4 @@
             android:textColor="@color/Blanco"
             android:textSize="18sp" />
     </LinearLayout>
-
-
 </ScrollView>
