@@ -35,10 +35,6 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
-
-                    //Inicializador del Servicio
-                    RecibidorServicio.scheduleJob(this);
-
                 } else {
                     Intent intent = new Intent(MainActivity.this, InicioSesion.class);
                     startActivity(intent);

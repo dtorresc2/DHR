@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.sistemasdt.dhr.Rutas.Citas.ListadoCitas;
+import com.sistemasdt.dhr.Rutas.Citas.Servicio.RecibidorServicio;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.Ficha;
 import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
 import com.sistemasdt.dhr.Rutas.Inicio.Inicio;
@@ -29,6 +30,9 @@ public class Principal extends AppCompatActivity implements BottomNavigationView
         bottomNavigationView = findViewById(R.id.menuinferior);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setSelectedItemId(R.id.navigation_fichas);
+
+        //Inicializador del Servicio
+        RecibidorServicio.scheduleJob(this);
     }
 
     MenuFichas menuFichasFragment = new MenuFichas();
