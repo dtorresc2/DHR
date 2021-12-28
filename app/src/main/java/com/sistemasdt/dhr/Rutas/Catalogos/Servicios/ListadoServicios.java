@@ -270,7 +270,7 @@ public class ListadoServicios extends Fragment {
                 Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
                 Alerter.create(getActivity())
                         .setTitle("Servicios")
-                        .setText("Servicio eliminado correctamente")
+                        .setText("Servicios eliminado correctamente")
                         .setIcon(R.drawable.logonuevo)
                         .setTextTypeface(face)
                         .enableSwipeToDismiss()

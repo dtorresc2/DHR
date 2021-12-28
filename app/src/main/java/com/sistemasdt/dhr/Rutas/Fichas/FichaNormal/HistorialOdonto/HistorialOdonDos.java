@@ -448,7 +448,7 @@ public class HistorialOdonDos extends Fragment {
                     ID_SERVICIO = 0;
                     desc_servicio.setText(null);
                     monto.setText(null);
-                    servicio.setText("Seleccione Servicio");
+                    servicio.setText("Seleccione Servicios");
 
                     layoutMonto.setError(null);
                     layoutServicio.setError(null);

@@ -1,4 +1,4 @@
-package com.sistemasdt.dhr.Rutas.Citas.Servicio;
+package com.sistemasdt.dhr.Rutas.Citas.Servicios;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -43,7 +43,7 @@ public class NotificacionService extends JobService {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.logonuevo)
                 .setContentTitle("Citas")
-                .setContentText("Notificacion desde el Servicio")
+                .setContentText("Notificacion desde el Servicios")
                 .setPriority(NotificationCompat.PRIORITY_MAX);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);

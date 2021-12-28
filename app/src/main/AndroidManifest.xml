@@ -35,14 +35,19 @@
 
         </activity>
 
-        <receiver android:name=".Rutas.Citas.Servicio.RecibidorServicio">
+        <receiver android:name=".Rutas.Citas.Servicios.RecibidorServicio">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
+        <!--  Servicios en Segundo Plano     -->
         <service
-            android:name=".Rutas.Citas.Servicio.NotificacionService"
+            android:name=".Rutas.Citas.Servicios.NotificacionService"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
+
+        <service
+            android:name=".Rutas.Citas.Servicios.CitasDiaService"
             android:permission="android.permission.BIND_JOB_SERVICE"/>
     </application>
 
