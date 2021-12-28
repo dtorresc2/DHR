@@ -12,8 +12,11 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import java.util.Calendar;
+
 public class RecibidorServicio extends BroadcastReceiver {
     private static final int PERIOD_MS = 60000;
+    private static final int PERIOD_MS2 = 120000;
     private static final int ID_SERVICIO_NOTIFICACIONES_CITAS_CERCANAS = 335;
     private static final int ID_SERVICIO_NOTIFICACIONES_CITAS_DIA = 336;
 
@@ -48,10 +51,17 @@ public class RecibidorServicio extends BroadcastReceiver {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public static void servicioNumeroCitas(Context context) {
+        Calendar objCalendar = Calendar.getInstance();
+        objCalendar.set(Calendar.HOUR_OF_DAY, 9);
+        objCalendar.set(Calendar.MINUTE, 0);
+        objCalendar.set(Calendar.SECOND, 0);
+        objCalendar.set(Calendar.MILLISECOND, 0);
+        objCalendar.set(Calendar.AM_PM, Calendar.PM);
+
         ComponentName serviceComponent = new ComponentName(context, CitasDiaService.class);
         JobInfo.Builder builder = new JobInfo.Builder(ID_SERVICIO_NOTIFICACIONES_CITAS_DIA, serviceComponent);
-        builder.setMinimumLatency(PERIOD_MS);
-        builder.setOverrideDeadline(PERIOD_MS);
+        builder.setMinimumLatency(PERIOD_MS2);
+        builder.setOverrideDeadline(PERIOD_MS2);
         builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY);
 
         JobScheduler jobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
