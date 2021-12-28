@@ -13,7 +13,7 @@ import android.os.Build;
 import androidx.annotation.RequiresApi;
 
 public class RecibidorServicio extends BroadcastReceiver {
-    private static final int PERIOD_MS = 10000;
+    private static final int PERIOD_MS = 60000;
     private static final int ID_SERVICIO_NOTIFICACIONES_CITAS_CERCANAS = 335;
     private static final int ID_SERVICIO_NOTIFICACIONES_CITAS_DIA = 336;
 
@@ -50,8 +50,8 @@ public class RecibidorServicio extends BroadcastReceiver {
     public static void servicioNumeroCitas(Context context) {
         ComponentName serviceComponent = new ComponentName(context, CitasDiaService.class);
         JobInfo.Builder builder = new JobInfo.Builder(ID_SERVICIO_NOTIFICACIONES_CITAS_DIA, serviceComponent);
-        builder.setMinimumLatency(15000);
-        builder.setOverrideDeadline(15000);
+        builder.setMinimumLatency(PERIOD_MS);
+        builder.setOverrideDeadline(PERIOD_MS);
         builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY);
 
         JobScheduler jobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);

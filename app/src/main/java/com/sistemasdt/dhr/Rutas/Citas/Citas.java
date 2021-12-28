@@ -455,7 +455,6 @@ public class Citas extends Fragment {
                             }
 
                         } catch (JSONException | ParseException e) {
-//                        e.printStackTrace();
                             Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
                         }
                     }
