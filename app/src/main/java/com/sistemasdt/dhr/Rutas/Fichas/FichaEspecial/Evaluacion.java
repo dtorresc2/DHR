@@ -54,27 +54,24 @@ public class Evaluacion extends Fragment {
     RequestQueue requestQueue;
 
     public Evaluacion() {
-        // Required empty public constructor
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View view = inflater.inflate(R.layout.fragment_evaluacion, container, false);
         Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
         requestQueue = Volley.newRequestQueue(getContext());
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_cerrar);
         toolbar.setTitle("Evaluacion");
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MenuFichas menuFichas = new MenuFichas();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                transaction.replace(R.id.contenedor, menuFichas);
-                transaction.commit();
-            }
+        toolbar.setNavigationOnClickListener(v -> {
+            MenuFichas menuFichas = new MenuFichas();
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_in, R.anim.right_out);
+            transaction.replace(R.id.contenedor, menuFichas);
+            transaction.commit();
         });
 
         //Alineacion Dental

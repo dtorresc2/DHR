@@ -28,6 +28,7 @@ import android.widget.TextView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.sistemasdt.dhr.Componentes.MenusInferiores.MenuInferiorFicha;
 import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaEspecial.Adaptadores.AdaptadorEvaluacion;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaEspecial.Adaptadores.ItemEvaluacion;
@@ -86,31 +87,32 @@ public class ListadoEvaluaciones extends Fragment {
         toolbar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.opcion_nuevo:
-//                        Ficha ficha = new Ficha();
-//                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-//                        transaction.replace(R.id.contenedor, ficha);
-//                        transaction.commit();
+                    FichaEvaluacion fichaEvaluacion = new FichaEvaluacion();
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                    transaction.replace(R.id.contenedor, fichaEvaluacion);
+                    transaction.commit();
                     return true;
 
                 case R.id.opcion_filtrar:
-//                        MenuItem searchItem = item;
-//                        SearchView searchView = (SearchView) searchItem.getActionView();
-//
-//                        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//                            @Override
-//                            public boolean onQueryTextSubmit(String query) {
-//                                return false;
-//                            }
-//
-//                            @Override
-//                            public boolean onQueryTextChange(String newText) {
-//                                adapter.getFilter().filter(newText);
-//                                return false;
-//                            }
-//                        });
+                    MenuItem searchItem = item;
+                    SearchView searchView = (SearchView) searchItem.getActionView();
+
+                    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                        @Override
+                        public boolean onQueryTextSubmit(String query) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onQueryTextChange(String newText) {
+                            adapter.getFilter().filter(newText);
+                            return false;
+                        }
+                    });
                     return true;
 
                 case R.id.opcion_actualizar:
+                    obtenerEvaluaciones();
                     return true;
 
                 default:
@@ -120,6 +122,9 @@ public class ListadoEvaluaciones extends Fragment {
         });
 
         botonConsultaAvanzada = view.findViewById(R.id.botonConsultaAvanzada);
+        botonConsultaAvanzada.setOnClickListener(v -> {
+
+        });
 
         lista = new ArrayList<>();
         listafichas = view.findViewById(R.id.lista_fichas);
@@ -141,29 +146,21 @@ public class ListadoEvaluaciones extends Fragment {
         QuerysEvaluaciones querysEvaluaciones = new QuerysEvaluaciones(getContext());
         querysEvaluaciones.obtenerEvaluaciones(new QuerysEvaluaciones.ManejadorQuery() {
             @Override
-            public void onSuccess(Object object) {
-                try {
-                    JSONArray jsonArray = new JSONArray(object.toString());
+            public void onSuccess(ArrayList arrayList) {
+                lista = arrayList;
+                adapter = new AdaptadorEvaluacion(lista);
+                listafichas.setLayoutManager(layoutManager);
+                listafichas.setAdapter(adapter);
 
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        lista.add(new ItemEvaluacion(
-                                jsonArray.getJSONObject(i).getInt("ID_EVALUACION"),
-                                jsonArray.getJSONObject(i).getString("NOMBRE_PACIENTE"),
-                                jsonArray.getJSONObject(i).getString("DESCRIPCION"),
-                                jsonArray.getJSONObject(i).getString("FECHA"),
-                                Double.parseDouble(jsonArray.getJSONObject(i).getString("DEBE")),
-                                Double.parseDouble(jsonArray.getJSONObject(i).getString("HABER")),
-                                Double.parseDouble(jsonArray.getJSONObject(i).getString("SALDO")),
-                                (jsonArray.getJSONObject(i).getInt("ESTADO") > 0) ? true : false
-                        ));
-                    }
+                adapter.setOnItemClickListener(position -> {
+                    MenuInferiorFicha menuInferiorFicha = new MenuInferiorFicha();
+                    menuInferiorFicha.recibirTitulo(lista.get(position).getMotivo());
+                    estadoFicha = lista.get(position).getEstado();
+                    menuInferiorFicha.recibirEstado(estadoFicha);
+                    menuInferiorFicha.show(getActivity().getSupportFragmentManager(), "MenuInferiorEvaluacion");
+//                    menuInferiorFicha.eventoClick(opcion -> realizarAccion(opcion, lista.get(position).getId()));
+                });
 
-                    adapter = new AdaptadorEvaluacion(lista);
-                    listafichas.setLayoutManager(layoutManager);
-                    listafichas.setAdapter(adapter);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
                 progressDialog.dismiss();
             }
 
