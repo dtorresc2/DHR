@@ -44,7 +44,8 @@
                 android:gravity="center_horizontal|center_vertical"
                 android:text="Compromiso de Tratamiento"
                 android:textColor="@color/Blanco"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/parrafo1"
@@ -110,7 +111,8 @@
                 android:background="@color/AzulOscuro"
                 android:gravity="center_vertical|center_horizontal"
                 android:text="Firma"
-                android:textColor="@color/Blanco" />
+                android:textColor="@color/Blanco"
+                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/firma"

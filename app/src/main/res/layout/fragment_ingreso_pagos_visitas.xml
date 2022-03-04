@@ -78,9 +78,9 @@
                     android:src="@drawable/icono_citas"
                     tools:ignore="SpeakableTextPresentCheck" />
 
-                <Space
-                    android:layout_width="15dp"
-                    android:layout_height="match_parent" />
+<!--                <Space-->
+<!--                    android:layout_width="15dp"-->
+<!--                    android:layout_height="match_parent" />-->
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
