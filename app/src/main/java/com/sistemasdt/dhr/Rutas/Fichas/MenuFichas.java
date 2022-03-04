@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sistemasdt.dhr.R;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaEspecial.ListadoEvaluaciones;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.Ficha;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.ListadoFichasNormales.ListadoFichas;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysEvaluaciones;
@@ -56,18 +57,22 @@ public class MenuFichas extends Fragment {
 
         //Opcion de Crear Nueva Ficha Especial
         botonNuevoEspecial.setOnClickListener(v -> {
-            QuerysEvaluaciones querysEvaluaciones = new QuerysEvaluaciones(getContext());
-            querysEvaluaciones.obtenerEvaluaciones(new QuerysEvaluaciones.ManejadorQuery() {
-                @Override
-                public void onSuccess(Object object) {
-                    Toast.makeText(getContext(), object.toString(), Toast.LENGTH_LONG).show();
-                }
-
-                @Override
-                public void onFailure(Exception e) {
-
-                }
-            });
+//            QuerysEvaluaciones querysEvaluaciones = new QuerysEvaluaciones(getContext());
+//            querysEvaluaciones.obtenerEvaluaciones(new QuerysEvaluaciones.ManejadorQuery() {
+//                @Override
+//                public void onSuccess(Object object) {
+//                    Toast.makeText(getContext(), object.toString(), Toast.LENGTH_LONG).show();
+//                }
+//
+//                @Override
+//                public void onFailure(Exception e) {
+//
+//                }
+//            });
+            ListadoEvaluaciones listadoEvaluaciones = new ListadoEvaluaciones();
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
+            transaction.replace(R.id.contenedor, listadoEvaluaciones);
+            transaction.commit();
 
 
         });

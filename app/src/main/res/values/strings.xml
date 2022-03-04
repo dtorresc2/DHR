@@ -38,7 +38,7 @@
     <string name="API">https://api-dhr.herokuapp.com/</string>
     <string name="Desarrollo">http://localhost:3000/</string>
     <string name="S3">https://dhr-app.s3.amazonaws.com/</string>
-<!--    <string name="S3">https://s3.amazonaws.com/dhr-sanjose/</string>-->
-<!--    https://dhr-app.s3.amazonaws.com/1/FN-11/HF-1.jpg-->
+    <!--    <string name="S3">https://s3.amazonaws.com/dhr-sanjose/</string>-->
+    <!--    https://dhr-app.s3.amazonaws.com/1/FN-11/HF-1.jpg-->
 
 </resources>

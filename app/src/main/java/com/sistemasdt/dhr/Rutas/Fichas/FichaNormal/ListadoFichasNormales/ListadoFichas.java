@@ -71,8 +71,6 @@ public class ListadoFichas extends Fragment {
     private TextInputLayout layoutSaldo;
     TextInputEditText saldo;
 
-    private int mOpcion = 0;
-
     @SuppressLint("ValidFragment")
     public ListadoFichas() {
     }
