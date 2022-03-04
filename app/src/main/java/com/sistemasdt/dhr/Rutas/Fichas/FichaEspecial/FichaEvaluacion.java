@@ -41,7 +41,6 @@ public class FichaEvaluacion extends Fragment {
     private EditText enganche, costo, terapia;
     private FloatingActionButton agregar;
     private Toolbar toolbar;
-    private RequestQueue requestQueue;
     private SharedPreferences preferencias;
 
     public FichaEvaluacion() {
@@ -53,7 +52,7 @@ public class FichaEvaluacion extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ficha_evaluacion, container, false);
         final Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-        requestQueue = Volley.newRequestQueue(getContext());
+
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle("Costos");
         toolbar.setNavigationIcon(R.drawable.ic_atras);
