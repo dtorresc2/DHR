@@ -28,7 +28,6 @@ public class QuerysEvaluaciones {
         preferenciasUsuario = mContext.getSharedPreferences("sesion", Context.MODE_PRIVATE);
     }
 
-
     public void obtenerEvaluaciones(QuerysEvaluaciones.ManejadorQuery callback) {
         mCallback = callback;
 
