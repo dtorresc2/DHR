@@ -12,7 +12,7 @@
         android:background="@color/AzulOscuro"
         android:gravity="center_vertical|center_horizontal"
         android:padding="4dp"
-        android:text="Firma del Paciente"
+        android:text="Cuadro de Firma"
         android:textColor="@color/Blanco"
         android:textSize="24sp" />
 
@@ -34,7 +34,7 @@
 
     <com.sistemasdt.dhr.Componentes.Pizarron.Lienzo
         android:id="@+id/lienzo"
-        android:layout_width="match_parent"
+        android:layout_width="250dp"
         android:layout_height="135dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="20dp"

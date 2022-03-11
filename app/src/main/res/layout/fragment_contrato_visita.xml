@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="75dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="70dp">
 
@@ -128,7 +128,28 @@
 
             <ImageView
                 android:id="@+id/firma"
-                android:layout_width="300dp"
+                android:layout_width="250dp"
+                android:layout_height="135dp"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:layout_marginTop="15dp"
+                android:src="@color/Blanco" />
+
+            <TextView
+                android:id="@+id/parrafo9"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="15dp"
+                android:background="@color/AzulOscuro"
+                android:gravity="center_vertical|center_horizontal"
+                android:padding="4dp"
+                android:text="Firma del Paciente"
+                android:textColor="@color/Blanco"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/firmaPaciente"
+                android:layout_width="250dp"
                 android:layout_height="135dp"
                 android:layout_gravity="center_horizontal|center_vertical"
                 android:layout_marginTop="15dp"

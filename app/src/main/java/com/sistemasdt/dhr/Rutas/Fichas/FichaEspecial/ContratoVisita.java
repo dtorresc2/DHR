@@ -2,26 +2,20 @@ package com.sistemasdt.dhr.Rutas.Fichas.FichaEspecial;
 
 import static android.graphics.text.LineBreaker.JUSTIFICATION_MODE_INTER_WORD;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import androidx.annotation.NonNull;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,36 +23,19 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.Ficha;
-import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.MenuFichaNormal;
-import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.PagosFicha.Pagos;
-import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
 import com.sistemasdt.dhr.Componentes.Pizarron.Lienzo;
 import com.sistemasdt.dhr.R;
-import com.tapadoo.alerter.Alerter;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.HashMap;
-import java.util.Map;
-
 
 public class ContratoVisita extends Fragment {
     private Toolbar toolbar;
     private TextView titulo, parrafo1, parrafo2, parrafo3, parrafo4, parrafo5, parrafo6, parrafo7;
     private FloatingActionButton siguiente;
-    private ImageView firma;
+    private ImageView firma, firmaPaciente;
     private Lienzo lienzo;
+    private Lienzo lienzoPaciente;
 
     private boolean MODO_EDICION = false;
     private int ID_FICHA = 0;
@@ -72,7 +49,6 @@ public class ContratoVisita extends Fragment {
                              Bundle savedInstanceState) {
 
         final View view = inflater.inflate(R.layout.fragment_contrato_visita, container, false);
-        final Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
 
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle("Contrato de Compromiso");
@@ -124,11 +100,10 @@ public class ContratoVisita extends Fragment {
         firma = view.findViewById(R.id.firma);
         firma.setOnClickListener(v -> {
             final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+
             View viewCuadro = getLayoutInflater().inflate(R.layout.dialogo_firma, null);
             ImageButton limpiar = viewCuadro.findViewById(R.id.limpiar);
 
-            TextView titulo = viewCuadro.findViewById(R.id.TituloFirmaDialogo);
             Button cancelar = viewCuadro.findViewById(R.id.cancelar);
             final Button aceptar = viewCuadro.findViewById(R.id.aceptar);
 
@@ -156,6 +131,40 @@ public class ContratoVisita extends Fragment {
             dialog.show();
         });
 
+        firmaPaciente = view.findViewById(R.id.firmaPaciente);
+        firmaPaciente.setOnClickListener(v -> {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+            View viewCuadro = getLayoutInflater().inflate(R.layout.dialogo_firma, null);
+            ImageButton limpiar = viewCuadro.findViewById(R.id.limpiar);
+
+            Button cancelar = viewCuadro.findViewById(R.id.cancelar);
+            final Button aceptar = viewCuadro.findViewById(R.id.aceptar);
+
+            lienzoPaciente = viewCuadro.findViewById(R.id.lienzo);
+
+            builder.setView(viewCuadro);
+            final AlertDialog dialog = builder.create();
+            dialog.setCancelable(false);
+
+            limpiar.setOnClickListener(v1 -> lienzoPaciente.limpiarCanvas());
+
+            cancelar.setOnClickListener(v13 -> dialog.dismiss());
+
+            aceptar.setOnClickListener(v14 -> {
+                try {
+                    lienzoPaciente.setDrawingCacheEnabled(true);
+                    Bitmap bitmap = Bitmap.createBitmap(lienzoPaciente.getDrawingCache());
+                    firmaPaciente.setImageBitmap(bitmap);
+                    dialog.dismiss();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+
+            dialog.show();
+        });
+
         siguiente.setOnClickListener(v -> {
             final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
             progressDialog.setMessage("Cargando...");
@@ -163,16 +172,23 @@ public class ContratoVisita extends Fragment {
             progressDialog.setCancelable(false);
             progressDialog.show();
 
-            Handler handler = new Handler();
-            handler.postDelayed(() -> progressDialog.dismiss(), 1000);
-
+            // OBTENER FIRMA DEL ODONTOLOGO
             lienzo.setDrawingCacheEnabled(true);
             Bitmap bitmap_aux = Bitmap.createBitmap(lienzo.getDrawingCache());
             ByteArrayOutputStream salida = new ByteArrayOutputStream();
             bitmap_aux.compress(Bitmap.CompressFormat.PNG, 100, salida);
             byte[] b = salida.toByteArray();
+            String FIRMA_ODONTOLOGO = Base64.encodeToString(b, Base64.DEFAULT);
 
-            String codigoFoto = Base64.encodeToString(b, Base64.DEFAULT);
+            // OBTENER FIRMA DEL PACIENTE
+            lienzoPaciente.setDrawingCacheEnabled(true);
+            bitmap_aux = Bitmap.createBitmap(lienzoPaciente.getDrawingCache());
+            salida = new ByteArrayOutputStream();
+            bitmap_aux.compress(Bitmap.CompressFormat.PNG, 100, salida);
+            b = salida.toByteArray();
+            String FIRMA_PACIENTE = Base64.encodeToString(b, Base64.DEFAULT);
+
+            progressDialog.dismiss();
         });
 
         return view;
