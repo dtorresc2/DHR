@@ -4,7 +4,10 @@ import static android.graphics.text.LineBreaker.JUSTIFICATION_MODE_INTER_WORD;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,21 +29,24 @@ import android.widget.TextView;
 
 import com.sistemasdt.dhr.Componentes.Pizarron.Lienzo;
 import com.sistemasdt.dhr.R;
+import com.tapadoo.alerter.Alerter;
 
 import java.io.ByteArrayOutputStream;
 
-public class ContratoVisita extends Fragment {
+public class Contrato extends Fragment {
     private Toolbar toolbar;
     private TextView titulo, parrafo1, parrafo2, parrafo3, parrafo4, parrafo5, parrafo6, parrafo7;
     private FloatingActionButton siguiente;
     private ImageView firma, firmaPaciente;
     private Lienzo lienzo;
     private Lienzo lienzoPaciente;
+    private boolean LIENZO_PACIENTE_UTILIZADO = false;
+    private boolean LIENZO_DOCTOR_UTILIZADO = false;
 
     private boolean MODO_EDICION = false;
     private int ID_FICHA = 0;
 
-    public ContratoVisita() {
+    public Contrato() {
 
     }
 
@@ -113,9 +119,15 @@ public class ContratoVisita extends Fragment {
             final AlertDialog dialog = builder.create();
             dialog.setCancelable(false);
 
-            limpiar.setOnClickListener(v1 -> lienzo.limpiarCanvas());
+            limpiar.setOnClickListener(v1 -> {
+                lienzo.limpiarCanvas();
+                LIENZO_DOCTOR_UTILIZADO = false;
+            });
 
-            cancelar.setOnClickListener(v13 -> dialog.dismiss());
+            cancelar.setOnClickListener(v13 -> {
+                dialog.dismiss();
+                LIENZO_DOCTOR_UTILIZADO = false;
+            });
 
             aceptar.setOnClickListener(v14 -> {
                 try {
@@ -123,8 +135,10 @@ public class ContratoVisita extends Fragment {
                     Bitmap bitmap = Bitmap.createBitmap(lienzo.getDrawingCache());
                     firma.setImageBitmap(bitmap);
                     dialog.dismiss();
+                    LIENZO_DOCTOR_UTILIZADO = true;
                 } catch (Exception e) {
                     e.printStackTrace();
+                    LIENZO_DOCTOR_UTILIZADO = false;
                 }
             });
 
@@ -147,9 +161,15 @@ public class ContratoVisita extends Fragment {
             final AlertDialog dialog = builder.create();
             dialog.setCancelable(false);
 
-            limpiar.setOnClickListener(v1 -> lienzoPaciente.limpiarCanvas());
+            limpiar.setOnClickListener(v1 -> {
+                lienzoPaciente.limpiarCanvas();
+                LIENZO_PACIENTE_UTILIZADO = false;
+            });
 
-            cancelar.setOnClickListener(v13 -> dialog.dismiss());
+            cancelar.setOnClickListener(v13 -> {
+                dialog.dismiss();
+                LIENZO_PACIENTE_UTILIZADO = false;
+            });
 
             aceptar.setOnClickListener(v14 -> {
                 try {
@@ -157,8 +177,10 @@ public class ContratoVisita extends Fragment {
                     Bitmap bitmap = Bitmap.createBitmap(lienzoPaciente.getDrawingCache());
                     firmaPaciente.setImageBitmap(bitmap);
                     dialog.dismiss();
+                    LIENZO_PACIENTE_UTILIZADO = true;
                 } catch (Exception e) {
                     e.printStackTrace();
+                    LIENZO_PACIENTE_UTILIZADO = false;
                 }
             });
 
@@ -166,6 +188,17 @@ public class ContratoVisita extends Fragment {
         });
 
         siguiente.setOnClickListener(v -> {
+            if (!LIENZO_PACIENTE_UTILIZADO || !LIENZO_DOCTOR_UTILIZADO) {
+                Alerter.create(getActivity())
+                        .setTitle("Error")
+                        .setText("No se ha firmado el contrato")
+                        .setIcon(R.drawable.logonuevo)
+                        .enableSwipeToDismiss()
+                        .setBackgroundColorRes(R.color.AzulOscuro)
+                        .show();
+                return;
+            }
+
             final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
             progressDialog.setMessage("Cargando...");
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -188,9 +221,44 @@ public class ContratoVisita extends Fragment {
             b = salida.toByteArray();
             String FIRMA_PACIENTE = Base64.encodeToString(b, Base64.DEFAULT);
 
+            if (!MODO_EDICION) {
+                final SharedPreferences preferenciasFicha = getActivity().getSharedPreferences("CONTRATO", Context.MODE_PRIVATE);
+                final SharedPreferences.Editor escritor = preferenciasFicha.edit();
+                escritor.putString("URL_FIRMA_DOC", FIRMA_ODONTOLOGO);
+                escritor.putString("URL_FIRMA_PAC", FIRMA_PACIENTE);
+                escritor.commit();
+
+                Evaluacion evaluacion = new Evaluacion();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                transaction.replace(R.id.contenedor, evaluacion);
+                transaction.commit();
+            }
+
             progressDialog.dismiss();
         });
 
+        cargarDatos();
+
         return view;
+    }
+
+    public void cargarDatos() {
+        if (!MODO_EDICION) {
+            final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("CONTRATO", Context.MODE_PRIVATE);
+            byte[] decodedString = Base64.decode(sharedPreferences.getString("URL_FIRMA_DOC", ""), Base64.DEFAULT);
+            if (decodedString.length > 0) {
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                firma.setImageBitmap(decodedByte);
+                LIENZO_DOCTOR_UTILIZADO = true;
+            }
+
+            decodedString = Base64.decode(sharedPreferences.getString("URL_FIRMA_PAC", ""), Base64.DEFAULT);
+            if (decodedString.length > 0) {
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                firmaPaciente.setImageBitmap(decodedByte);
+                LIENZO_PACIENTE_UTILIZADO = true;
+            }
+        }
     }
 }

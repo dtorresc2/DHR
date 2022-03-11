@@ -330,9 +330,9 @@ public class PagosVisitas extends Fragment {
 
                         switch (mOpcion) {
                             case 1:
-                                ContratoVisita contratoVisita = new ContratoVisita();
+                                Contrato contrato = new Contrato();
                                 FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                                transaction.replace(R.id.contenedor, contratoVisita);
+                                transaction.replace(R.id.contenedor, contrato);
                                 transaction.commit();
                                 break;
                             case 2:

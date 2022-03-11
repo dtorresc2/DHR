@@ -8,10 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Handler;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -21,7 +18,6 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,22 +25,11 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.ItemPaciente;
-import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialMedico.HistorialMed;
-import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
 import com.sistemasdt.dhr.R;
-import com.sistemasdt.dhr.ServiciosAPI.QuerysFichas;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysPacientes;
 import com.tapadoo.alerter.Alerter;
 
@@ -53,10 +38,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 public class FichaEvaluacion extends Fragment {
@@ -272,10 +253,10 @@ public class FichaEvaluacion extends Fragment {
                 escritor2.putString("PACIENTE", paciente.getText().toString());
                 escritor2.commit();
 
-                ContratoVisita contratoVisita = new ContratoVisita();
+                Contrato contrato = new Contrato();
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                transaction.replace(R.id.contenedor, contratoVisita);
+                transaction.replace(R.id.contenedor, contrato);
                 transaction.commit();
             }
         });
@@ -430,7 +411,6 @@ public class FichaEvaluacion extends Fragment {
             return false;
         }
     }
-
 
     public void cargarDatos() {
         if (!MODO_EDICION) {
