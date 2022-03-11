@@ -213,12 +213,6 @@ public class Contrato extends Fragment {
                 return;
             }
 
-            final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-            progressDialog.setMessage("Cargando...");
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-
             if (!MODO_EDICION) {
                 final SharedPreferences preferenciasFicha = getActivity().getSharedPreferences("CONTRATO", Context.MODE_PRIVATE);
                 final SharedPreferences.Editor escritor = preferenciasFicha.edit();
@@ -233,7 +227,13 @@ public class Contrato extends Fragment {
                 transaction.commit();
             }
 
+            final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+            progressDialog.setMessage("Cargando...");
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
             progressDialog.dismiss();
+
         });
 
         cargarDatos();

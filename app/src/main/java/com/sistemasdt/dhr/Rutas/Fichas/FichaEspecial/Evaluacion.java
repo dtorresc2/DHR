@@ -1,6 +1,8 @@
 package com.sistemasdt.dhr.Rutas.Fichas.FichaEspecial;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -159,6 +161,113 @@ public class Evaluacion extends Fragment {
 
         siguiente = view.findViewById(R.id.siguiente);
         siguiente.setOnClickListener(v -> {
+            if (!MODO_EDICION) {
+                // REGISTRAR ALINEACION DENTAL
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("ALINEACION_DENTAL", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("BUENA_ALIMENTACION", (ad1.isChecked() == true) ? 1 : 0);
+                editor.putInt("APILLAMIENTO_MAXILLAR", (ad2.isChecked() == true) ? 1 : 0);
+                editor.putInt("APILLAMIENTO_MANDIBULA", (ad3.isChecked() == true) ? 1 : 0);
+                editor.putInt("LINEA_MEDIA", (ad4.isChecked() == true) ? 1 : 0);
+                editor.putInt("DISCREPANCIA", (ad5.isChecked() == true) ? 1 : 0);
+                editor.commit();
+
+                // REGISTRAR DEGLUCION
+                sharedPreferences = getActivity().getSharedPreferences("DEGLUCION", Context.MODE_PRIVATE);
+                editor = sharedPreferences.edit();
+                editor.putInt("PATRON_CORRECTO", (de1.isChecked() == true) ? 1 : 0);
+                editor.putInt("PATRON_INCORRECTO", (de2.isChecked() == true) ? 1 : 0);
+                editor.commit();
+
+                // REGISTRAR DESARROLLO
+                sharedPreferences = getActivity().getSharedPreferences("DESARROLLO", Context.MODE_PRIVATE);
+                editor = sharedPreferences.edit();
+                editor.putInt("DES_FACBUENO", (df1.isChecked() == true) ? 1 : 0);
+                editor.putInt("DEF_TERCIOMED", (df2.isChecked() == true) ? 1 : 0);
+                editor.putInt("DEF_TERINF", (df3.isChecked() == true) ? 1 : 0);
+                editor.putInt("CRECIMIENTO", (df4.isChecked() == true) ? 1 : 0);
+                editor.commit();
+
+                // REGISTRAR DISFUCION_TMJ
+                sharedPreferences = getActivity().getSharedPreferences("DISFUCION_TMJ", Context.MODE_PRIVATE);
+                editor = sharedPreferences.edit();
+                editor.putInt("TEMPORAL", (tmj1.isChecked() == true) ? 1 : 0);
+                editor.putInt("PTERIGOIDEO", (tmj2.isChecked() == true) ? 1 : 0);
+                editor.putInt("MASATEROS", (tmj3.isChecked() == true) ? 1 : 0);
+                editor.putInt("CERVICAL", (tmj4.isChecked() == true) ? 1 : 0);
+                editor.putInt("TRAPECIO", (tmj5.isChecked() == true) ? 1 : 0);
+                editor.putInt("TMJCLICK", (tmj6.isChecked() == true) ? 1 : 0);
+                editor.putInt("TMJDOLOR", (tmj7.isChecked() == true) ? 1 : 0);
+                editor.commit();
+
+                // REGISTRAR FA_SUPERIOR
+                sharedPreferences = getActivity().getSharedPreferences("FA_SUPERIOR", Context.MODE_PRIVATE);
+                editor = sharedPreferences.edit();
+                editor.putInt("NORMAL", (fas1.isChecked() == true) ? 1 : 0);
+                editor.putInt("ESTRECHA", (fas2.isChecked() == true) ? 1 : 0);
+                editor.putInt("APLANADO", (fas3.isChecked() == true) ? 1 : 0);
+                editor.commit();
+
+                // REGISTRAR FA_INFERIOR
+                sharedPreferences = getActivity().getSharedPreferences("FA_INFERIOR", Context.MODE_PRIVATE);
+                editor = sharedPreferences.edit();
+                editor.putInt("NORMAL", (fai1.isChecked() == true) ? 1 : 0);
+                editor.putInt("ESTRECHA", (fai2.isChecked() == true) ? 1 : 0);
+                editor.putInt("APLANADO", (fai3.isChecked() == true) ? 1 : 0);
+                editor.commit();
+
+                // REGISTRAR HABITOS
+                sharedPreferences = getActivity().getSharedPreferences("HABITOS", Context.MODE_PRIVATE);
+                editor = sharedPreferences.edit();
+                editor.putInt("BRUXISMO", (h1.isChecked() == true) ? 1 : 0);
+                editor.putInt("SUCCION", (h2.isChecked() == true) ? 1 : 0);
+                editor.putInt("CHUPETE", (h3.isChecked() == true) ? 1 : 0);
+                editor.putInt("BIBERON", (h4.isChecked() == true) ? 1 : 0);
+                editor.putInt("RONCA", (h5.isChecked() == true) ? 1 : 0);
+                editor.commit();
+
+                // REGISTRAR LABIOS
+                sharedPreferences = getActivity().getSharedPreferences("LABIOS", Context.MODE_PRIVATE);
+                editor = sharedPreferences.edit();
+                editor.putInt("CORRECTA_POST", (lm1.isChecked() == true) ? 1 : 0);
+                editor.putInt("INCORRECTA_POST", (lm2.isChecked() == true) ? 1 : 0);
+                editor.commit();
+
+                // REGISTRAR LENGUA
+                sharedPreferences = getActivity().getSharedPreferences("LENGUA", Context.MODE_PRIVATE);
+                editor = sharedPreferences.edit();
+                editor.putInt("CORRECTA_POSICION", (len1.isChecked() == true) ? 1 : 0);
+                editor.putInt("INCORRECTA_POSICION", (len2.isChecked() == true) ? 1 : 0);
+                editor.putInt("INSERCION", (len3.isChecked() == true) ? 1 : 0);
+                editor.commit();
+
+                // REGISTRAR OCLUSION
+                sharedPreferences = getActivity().getSharedPreferences("OCLUSION", Context.MODE_PRIVATE);
+                editor = sharedPreferences.edit();
+                editor.putInt("RELACION_CORRECTA", (oc1.isChecked() == true) ? 1 : 0);
+                editor.putInt("SOBRE_MORDIDA", (oc2.isChecked() == true) ? 1 : 0);
+                editor.putInt("RESALTE_DENTAL", (oc3.isChecked() == true) ? 1 : 0);
+                editor.putInt("MORDIDA_ABIERTA", (oc4.isChecked() == true) ? 1 : 0);
+                editor.putInt("MORDIDA_CERRADA", (oc5.isChecked() == true) ? 1 : 0);
+                editor.commit();
+
+                // REGISTRAR RESPIRACION
+                sharedPreferences = getActivity().getSharedPreferences("RESPIRACION", Context.MODE_PRIVATE);
+                editor = sharedPreferences.edit();
+                editor.putInt("RES_NASALLEV", (rp1.isChecked() == true) ? 1 : 0);
+                editor.putInt("RES_NSAFUERTE", (rp2.isChecked() == true) ? 1 : 0);
+                editor.putInt("RES_BUCAL", (rp3.isChecked() == true) ? 1 : 0);
+                editor.putInt("BUENA_POSTURA", (rp4.isChecked() == true) ? 1 : 0);
+                editor.putInt("INCORPOSTURA", (rp5.isChecked() == true) ? 1 : 0);
+                editor.commit();
+
+                Evaluacion evaluacion = new Evaluacion();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                transaction.replace(R.id.contenedor, evaluacion);
+                transaction.commit();
+            }
+
             final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
             progressDialog.setMessage("Cargando...");
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
