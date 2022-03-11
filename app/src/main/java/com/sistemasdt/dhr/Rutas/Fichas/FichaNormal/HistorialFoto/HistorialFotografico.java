@@ -83,17 +83,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class HistorialFotografico extends Fragment {
-    private static final int COD_SELECCIONA = 10;
-    private static final int COD_FOTO = 20;
-    private static final int COD_SELECCIONA_MULTIPLE = 30;
-
-    private static final int CODIGO_SOLICITUD_PERMISO = 123;
-    private static final String CARPETA_PRINCIPAL = "misImagenesApp/"; //Directorio Principal
-    private static final String CARPETA_IMAGEN = "DHR"; //Carpeta donde se guardan las fotos en la galeria
-    private static final String DIRECTORIO_IMAGEN = CARPETA_PRINCIPAL + CARPETA_IMAGEN; //Ruta del directorio
-    private String path;
-    File fileImagen;
-    Bitmap bitmap;
+    private Bitmap bitmap;
 
     private Toolbar toolbar;
 
@@ -105,7 +95,6 @@ public class HistorialFotografico extends Fragment {
 
     private RecyclerView rv;
     private FotoAdapter fotoAdapter;
-    private FotoAdapter fotoAdapterAuxiliar;
     private StaggeredGridLayoutManager staggeredGridLayoutManager;
     ActivityResultLauncher<Intent> lanzadorCamara;
     ActivityResultLauncher<String> lanzadorPermisos;
@@ -295,7 +284,6 @@ public class HistorialFotografico extends Fragment {
                     });
 
                     builder.setNegativeButton("CANCELAR", (dialog, id) -> {
-                        // User cancelled the dialog
                     });
 
                     AlertDialog alertDialog = builder.create();
@@ -548,16 +536,13 @@ public class HistorialFotografico extends Fragment {
                 rv.setLayoutManager(staggeredGridLayoutManager);
                 fotoAdapter = new FotoAdapter(getActivity(), lista_fotos);
                 rv.setAdapter(fotoAdapter);
-                fotoAdapter.setOnItemClickListener(new FotoAdapter.OnClickListener() {
-                    @Override
-                    public void onItemClick(int position) {
-                        if (position > 0) {
-                            menuOpciones.setVisibility(View.GONE);
-                            toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(true);
-                        } else {
-                            menuOpciones.setVisibility(View.VISIBLE);
-                            toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(false);
-                        }
+                fotoAdapter.setOnItemClickListener(position -> {
+                    if (position > 0) {
+                        menuOpciones.setVisibility(View.GONE);
+                        toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(true);
+                    } else {
+                        menuOpciones.setVisibility(View.VISIBLE);
+                        toolbar.getMenu().findItem(R.id.action_eliminar).setVisible(false);
                     }
                 });
             }

@@ -28,12 +28,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
+        android:layout_marginTop="70dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="70dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="70dp"
             android:orientation="vertical">
 
             <TextView
@@ -42,18 +43,21 @@
                 android:layout_height="match_parent"
                 android:background="@color/AzulOscuro"
                 android:gravity="center_horizontal|center_vertical"
+                android:padding="4dp"
                 android:text="Compromiso de Tratamiento"
                 android:textColor="@color/Blanco"
-                android:textSize="18sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/parrafo1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="20dp"
                 android:text="@string/parrafo1"
-                android:textColor="@color/Blanco" />
+                android:textColor="@color/Blanco"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/parrafo2"
@@ -61,7 +65,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="15dp"
                 android:text="@string/parrafo2"
-                android:textColor="@color/Blanco" />
+                android:textColor="@color/Blanco"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/parrafo3"
@@ -69,7 +74,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="15dp"
                 android:text="@string/parrafo3"
-                android:textColor="@color/Blanco" />
+                android:textColor="@color/Blanco"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/parrafo4"
@@ -77,7 +83,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="15dp"
                 android:text="@string/parrafo4"
-                android:textColor="@color/Blanco" />
+                android:textColor="@color/Blanco"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/parrafo5"
@@ -85,7 +92,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="15dp"
                 android:text="@string/parrafo5"
-                android:textColor="@color/Blanco" />
+                android:textColor="@color/Blanco"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/parrafo6"
@@ -93,7 +101,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="15dp"
                 android:text="@string/parrafo6"
-                android:textColor="@color/Blanco" />
+                android:textColor="@color/Blanco"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/parrafo7"
@@ -101,7 +110,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="15dp"
                 android:text="@string/parrafo7"
-                android:textColor="@color/Blanco" />
+                android:textColor="@color/Blanco"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/parrafo8"
@@ -110,8 +120,10 @@
                 android:layout_marginTop="15dp"
                 android:background="@color/AzulOscuro"
                 android:gravity="center_vertical|center_horizontal"
-                android:text="Firma"
+                android:padding="4dp"
+                android:text="Firma del Odontólogo"
                 android:textColor="@color/Blanco"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
             <ImageView

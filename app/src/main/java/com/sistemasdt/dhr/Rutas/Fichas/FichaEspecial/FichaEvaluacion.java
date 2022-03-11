@@ -29,6 +29,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -43,6 +44,7 @@ import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.ItemPaciente;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialMedico.HistorialMed;
 import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
 import com.sistemasdt.dhr.R;
+import com.sistemasdt.dhr.ServiciosAPI.QuerysFichas;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysPacientes;
 import com.tapadoo.alerter.Alerter;
 
@@ -258,6 +260,7 @@ public class FichaEvaluacion extends Fragment {
                 final SharedPreferences preferenciasFicha = getActivity().getSharedPreferences("EVALUACION", Context.MODE_PRIVATE);
                 final SharedPreferences.Editor escritor = preferenciasFicha.edit();
                 escritor.putString("ID_PACIENTE", String.valueOf(ID_PACIENTE));
+                escritor.putString("PACIENTE", paciente.getText().toString());
                 escritor.putString("DESCRIPCION", descripcion.getText().toString());
                 escritor.putString("ENGANCHE", enganche.getText().toString());
                 escritor.putString("COSTO_VISITA", costo.getText().toString());
@@ -332,7 +335,7 @@ public class FichaEvaluacion extends Fragment {
                         }
                     }
 
-//                    cargarDatos();
+                    cargarDatos();
 
                 } catch (JSONException e) {
                     e.fillInStackTrace();
@@ -429,4 +432,48 @@ public class FichaEvaluacion extends Fragment {
     }
 
 
+    public void cargarDatos() {
+        if (!MODO_EDICION) {
+            final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("EVALUACION", Context.MODE_PRIVATE);
+            ID_PACIENTE = Integer.parseInt(sharedPreferences.getString("ID_PACIENTE", "0"));
+            paciente.setText(sharedPreferences.getString("PACIENTE", "Seleccione paciente"));
+//            if (sharedPreferences.contains("FECHA")) {
+//                fecha.setText(sharedPreferences.getString("FECHA", "-"));
+//            }
+            descripcion.setText(sharedPreferences.getString("DESCRIPCION", ""));
+            enganche.setText(sharedPreferences.getString("ENGANCHE", ""));
+            costo.setText(sharedPreferences.getString("COSTO_VISITA", ""));
+            terapia.setText(sharedPreferences.getString("TERAPIA", ""));
+        } else {
+//            QuerysFichas querysFichas = new QuerysFichas(getContext());
+//            querysFichas.obtenerFichaEspecifica(ID_FICHA, new QuerysFichas.VolleyOnEventListener() {
+//                @Override
+//                public void onSuccess(Object object) {
+//                    try {
+//                        JSONObject jsonObject = new JSONObject(object.toString());
+//                        fecha.setText(jsonObject.getString("FECHA"));
+//                        medico.setText(jsonObject.getString("MEDICO"));
+//                        motivo.setText(jsonObject.getString("MOTIVO"));
+//                        referente.setText(jsonObject.getString("REFERENTE"));
+//                        ID_PACIENTE = jsonObject.getInt("ID_PACIENTE");
+//
+//                        for (ItemPaciente item : listaPacientesGeneral) {
+//                            if (item.getCodigo() == ID_PACIENTE) {
+//                                paciente.setText(listaPacientesGeneral.get(listaPacientesGeneral.indexOf(item)).getNombre());
+//                            }
+//                        }
+//
+//                    } catch (JSONException e) {
+//                        Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
+//                        e.printStackTrace();
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(Exception e) {
+//                    cargarDatos();
+//                }
+//            });
+        }
+    }
 }
