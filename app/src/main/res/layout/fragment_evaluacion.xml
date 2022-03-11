@@ -26,14 +26,15 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="75dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="70dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="70dp"
-            android:layout_marginRight="10dp"
             android:orientation="vertical">
 
             <TextView
@@ -42,9 +43,11 @@
                 android:layout_height="wrap_content"
                 android:background="@color/AzulOscuro"
                 android:gravity="center_horizontal|center_vertical"
+                android:padding="4dp"
                 android:text="Alineacion Dental"
                 android:textColor="@color/Blanco"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <CheckBox
                 android:id="@+id/ad1"
@@ -89,32 +92,38 @@
                 android:layout_marginTop="10dp"
                 android:background="@color/AzulOscuro"
                 android:gravity="center_horizontal|center_vertical"
+                android:padding="4dp"
                 android:text="Forma del Arco Superior"
                 android:textColor="@color/Blanco"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-
-            <CheckBox
-                android:id="@+id/fas1"
+            <RadioGroup
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Normal"
-                tools:ignore="TouchTargetSizeCheck" />
+                android:layout_marginTop="10dp">
 
-            <CheckBox
-                android:id="@+id/fas2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Estrecha"
-                tools:ignore="TouchTargetSizeCheck" />
+                <RadioButton
+                    android:id="@+id/fas1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="Normal" />
 
-            <CheckBox
-                android:id="@+id/fas3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Aplanado"
-                tools:ignore="TouchTargetSizeCheck" />
+                <RadioButton
+                    android:id="@+id/fas2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:text="Estrecha" />
+
+                <RadioButton
+                    android:id="@+id/fas3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:text="Aplanado" />
+            </RadioGroup>
 
             <TextView
                 android:id="@+id/titulo3"
@@ -123,31 +132,38 @@
                 android:layout_marginTop="10dp"
                 android:background="@color/AzulOscuro"
                 android:gravity="center_horizontal|center_vertical"
+                android:padding="4dp"
                 android:text="Forma del Arco Inferior"
                 android:textColor="@color/Blanco"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-            <CheckBox
-                android:id="@+id/fai1"
+            <RadioGroup
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Normal"
-                tools:ignore="TouchTargetSizeCheck" />
+                android:layout_marginTop="10dp">
 
-            <CheckBox
-                android:id="@+id/fai2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Estrecha"
-                tools:ignore="TouchTargetSizeCheck" />
+                <RadioButton
+                    android:id="@+id/fai1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="Normal" />
 
-            <CheckBox
-                android:id="@+id/fai3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Aplanado"
-                tools:ignore="TouchTargetSizeCheck" />
+                <RadioButton
+                    android:id="@+id/fai2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:text="Estrecha" />
+
+                <RadioButton
+                    android:id="@+id/fai3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:text="Aplanado" />
+            </RadioGroup>
 
             <TextView
                 android:id="@+id/titulo4"
@@ -156,9 +172,11 @@
                 android:layout_marginTop="10dp"
                 android:background="@color/AzulOscuro"
                 android:gravity="center_horizontal|center_vertical"
+                android:padding="4dp"
                 android:text="Oclucion"
                 android:textColor="@color/Blanco"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <CheckBox
                 android:id="@+id/oc1"
@@ -204,9 +222,11 @@
                 android:layout_marginTop="10dp"
                 android:background="@color/AzulOscuro"
                 android:gravity="center_horizontal|center_vertical"
+                android:padding="4dp"
                 android:text="Desarrollo Facial"
                 android:textColor="@color/Blanco"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <CheckBox
                 android:id="@+id/df1"
@@ -244,24 +264,44 @@
                 android:layout_marginTop="10dp"
                 android:background="@color/AzulOscuro"
                 android:gravity="center_horizontal|center_vertical"
+                android:padding="4dp"
                 android:text="Respiracion y Postura"
                 android:textColor="@color/Blanco"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-            <CheckBox
-                android:id="@+id/rp1"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Respiracion Nasal Leve"
-                tools:ignore="TouchTargetSizeCheck" />
+                android:paddingLeft="4dp"
+                android:text="Respiracion Nasal:"
+                android:textColor="@color/Blanco" />
 
-            <CheckBox
-                android:id="@+id/rp2"
+            <RadioGroup
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Respiracion Nasal Fuerte"
-                tools:ignore="TouchTargetSizeCheck" />
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rp1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="4dp"
+                    android:checked="true"
+                    android:text="Leve" />
+
+                <RadioButton
+                    android:id="@+id/rp2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:checked="false"
+                    android:text="Fuerte" />
+            </RadioGroup>
 
             <CheckBox
                 android:id="@+id/rp3"
@@ -270,19 +310,37 @@
                 android:text="Respiracion Bucal"
                 tools:ignore="TouchTargetSizeCheck" />
 
-            <CheckBox
-                android:id="@+id/rp4"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Buena Postura"
-                tools:ignore="TouchTargetSizeCheck" />
+                android:layout_marginTop="10dp"
+                android:paddingLeft="4dp"
+                android:text="Estado de Postura:"
+                android:textColor="@color/Blanco" />
 
-            <CheckBox
-                android:id="@+id/rp5"
+            <RadioGroup
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Postura Incorrecta"
-                tools:ignore="TouchTargetSizeCheck" />
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rp4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="4dp"
+                    android:checked="true"
+                    android:text="Correcta" />
+
+                <RadioButton
+                    android:id="@+id/rp5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:checked="false"
+                    android:text="Incorrecta" />
+            </RadioGroup>
 
             <TextView
                 android:id="@+id/titulo7"
@@ -291,24 +349,44 @@
                 android:layout_marginTop="10dp"
                 android:background="@color/AzulOscuro"
                 android:gravity="center_horizontal|center_vertical"
+                android:padding="4dp"
                 android:text="Lengua"
                 android:textColor="@color/Blanco"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-            <CheckBox
-                android:id="@+id/len1"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Correcta Posicion de la Lengua en Reposo"
-                tools:ignore="TouchTargetSizeCheck" />
+                android:paddingLeft="4dp"
+                android:text="Posición de Lengua:"
+                android:textColor="@color/Blanco" />
 
-            <CheckBox
-                android:id="@+id/len2"
+            <RadioGroup
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Incorrecta Posicion de la Lengua en Reposo"
-                tools:ignore="TouchTargetSizeCheck" />
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/len1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="4dp"
+                    android:checked="true"
+                    android:text="Correcta" />
+
+                <RadioButton
+                    android:id="@+id/len2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:checked="false"
+                    android:text="Incorrecta" />
+            </RadioGroup>
 
             <CheckBox
                 android:id="@+id/len3"
@@ -324,24 +402,38 @@
                 android:layout_marginTop="10dp"
                 android:background="@color/AzulOscuro"
                 android:gravity="center_horizontal|center_vertical"
+                android:padding="4dp"
                 android:text="Deglucion"
                 android:textColor="@color/Blanco"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-            <CheckBox
-                android:id="@+id/de1"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Buena Postura"
-                tools:ignore="TouchTargetSizeCheck" />
+                android:paddingLeft="4dp"
+                android:text="Posición de Lengua:"
+                android:textColor="@color/Blanco" />
 
-            <CheckBox
-                android:id="@+id/de2"
+            <RadioGroup
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Postura Incorrecta"
-                tools:ignore="TouchTargetSizeCheck" />
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/de1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="Correcta" />
+
+                <RadioButton
+                    android:id="@+id/de2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:text="Incorrecta" />
+            </RadioGroup>
 
             <TextView
                 android:id="@+id/titulo9"
@@ -350,24 +442,38 @@
                 android:layout_marginTop="10dp"
                 android:background="@color/AzulOscuro"
                 android:gravity="center_horizontal|center_vertical"
+                android:padding="4dp"
                 android:text="Labios y Mejillas"
                 android:textColor="@color/Blanco"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-            <CheckBox
-                android:id="@+id/lm1"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Correcta Postura de los Labios en Reposo"
-                tools:ignore="TouchTargetSizeCheck" />
+                android:paddingLeft="4dp"
+                android:text="Postura de Labios en Reposo:"
+                android:textColor="@color/Blanco" />
 
-            <CheckBox
-                android:id="@+id/lm2"
+            <RadioGroup
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Incorrecta Postura de los Labios en Reposo"
-                tools:ignore="TouchTargetSizeCheck" />
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/lm1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="Correcta" />
+
+                <RadioButton
+                    android:id="@+id/lm2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:text="Incorrecta" />
+            </RadioGroup>
 
             <TextView
                 android:id="@+id/titulo10"
@@ -376,9 +482,11 @@
                 android:layout_marginTop="10dp"
                 android:background="@color/AzulOscuro"
                 android:gravity="center_horizontal|center_vertical"
+                android:padding="4dp"
                 android:text="Habitos"
                 android:textColor="@color/Blanco"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <CheckBox
                 android:id="@+id/h1"
@@ -423,9 +531,11 @@
                 android:layout_marginTop="10dp"
                 android:background="@color/AzulOscuro"
                 android:gravity="center_horizontal|center_vertical"
+                android:padding="4dp"
                 android:text="TMJ"
                 android:textColor="@color/Blanco"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <CheckBox
                 android:id="@+id/tmj1"
@@ -477,7 +587,6 @@
                 android:text="TMJ Dolor"
                 tools:ignore="TouchTargetSizeCheck" />
 
-
             <TextView
                 android:id="@+id/titulo12"
                 android:layout_width="match_parent"
@@ -485,21 +594,11 @@
                 android:layout_marginTop="10dp"
                 android:background="@color/AzulOscuro"
                 android:gravity="center_horizontal|center_vertical"
+                android:padding="4dp"
                 android:text="Otros"
                 android:textColor="@color/Blanco"
-                android:textSize="18sp" />
-
-            <!--            <com.google.android.material.textfield.TextInputLayout-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="match_parent"-->
-            <!--                android:layout_marginTop="10dp">-->
-
-            <!--                <com.google.android.material.textfield.TextInputEditText-->
-            <!--                    android:id="@+id/otrosEvaluacion"-->
-            <!--                    android:layout_width="match_parent"-->
-            <!--                    android:layout_height="wrap_content"-->
-            <!--                    android:hint="Descripcion" />-->
-            <!--            </com.google.android.material.textfield.TextInputLayout>-->
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/otrosEvaluacionLayout"
