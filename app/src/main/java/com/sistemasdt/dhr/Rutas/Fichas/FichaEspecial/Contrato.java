@@ -42,6 +42,8 @@ public class Contrato extends Fragment {
     private Lienzo lienzoPaciente;
     private boolean LIENZO_PACIENTE_UTILIZADO = false;
     private boolean LIENZO_DOCTOR_UTILIZADO = false;
+    private String FIRMA_ODONTOLOGO = "";
+    private String FIRMA_PACIENTE = "";
 
     private boolean MODO_EDICION = false;
     private int ID_FICHA = 0;
@@ -114,6 +116,7 @@ public class Contrato extends Fragment {
             final Button aceptar = viewCuadro.findViewById(R.id.aceptar);
 
             lienzo = viewCuadro.findViewById(R.id.lienzo);
+            LIENZO_DOCTOR_UTILIZADO = true;
 
             builder.setView(viewCuadro);
             final AlertDialog dialog = builder.create();
@@ -133,9 +136,14 @@ public class Contrato extends Fragment {
                 try {
                     lienzo.setDrawingCacheEnabled(true);
                     Bitmap bitmap = Bitmap.createBitmap(lienzo.getDrawingCache());
+                    ByteArrayOutputStream salida = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, salida);
+
+                    byte[] b = salida.toByteArray();
+                    FIRMA_ODONTOLOGO = Base64.encodeToString(b, Base64.DEFAULT);
                     firma.setImageBitmap(bitmap);
+
                     dialog.dismiss();
-                    LIENZO_DOCTOR_UTILIZADO = true;
                 } catch (Exception e) {
                     e.printStackTrace();
                     LIENZO_DOCTOR_UTILIZADO = false;
@@ -156,6 +164,7 @@ public class Contrato extends Fragment {
             final Button aceptar = viewCuadro.findViewById(R.id.aceptar);
 
             lienzoPaciente = viewCuadro.findViewById(R.id.lienzo);
+            LIENZO_PACIENTE_UTILIZADO = true;
 
             builder.setView(viewCuadro);
             final AlertDialog dialog = builder.create();
@@ -176,8 +185,13 @@ public class Contrato extends Fragment {
                     lienzoPaciente.setDrawingCacheEnabled(true);
                     Bitmap bitmap = Bitmap.createBitmap(lienzoPaciente.getDrawingCache());
                     firmaPaciente.setImageBitmap(bitmap);
+
+                    ByteArrayOutputStream salida = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, salida);
+                    byte[] b = salida.toByteArray();
+                    FIRMA_PACIENTE = Base64.encodeToString(b, Base64.DEFAULT);
+
                     dialog.dismiss();
-                    LIENZO_PACIENTE_UTILIZADO = true;
                 } catch (Exception e) {
                     e.printStackTrace();
                     LIENZO_PACIENTE_UTILIZADO = false;
@@ -204,22 +218,6 @@ public class Contrato extends Fragment {
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progressDialog.setCancelable(false);
             progressDialog.show();
-
-            // OBTENER FIRMA DEL ODONTOLOGO
-            lienzo.setDrawingCacheEnabled(true);
-            Bitmap bitmap_aux = Bitmap.createBitmap(lienzo.getDrawingCache());
-            ByteArrayOutputStream salida = new ByteArrayOutputStream();
-            bitmap_aux.compress(Bitmap.CompressFormat.PNG, 100, salida);
-            byte[] b = salida.toByteArray();
-            String FIRMA_ODONTOLOGO = Base64.encodeToString(b, Base64.DEFAULT);
-
-            // OBTENER FIRMA DEL PACIENTE
-            lienzoPaciente.setDrawingCacheEnabled(true);
-            bitmap_aux = Bitmap.createBitmap(lienzoPaciente.getDrawingCache());
-            salida = new ByteArrayOutputStream();
-            bitmap_aux.compress(Bitmap.CompressFormat.PNG, 100, salida);
-            b = salida.toByteArray();
-            String FIRMA_PACIENTE = Base64.encodeToString(b, Base64.DEFAULT);
 
             if (!MODO_EDICION) {
                 final SharedPreferences preferenciasFicha = getActivity().getSharedPreferences("CONTRATO", Context.MODE_PRIVATE);
@@ -248,6 +246,7 @@ public class Contrato extends Fragment {
             final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("CONTRATO", Context.MODE_PRIVATE);
             byte[] decodedString = Base64.decode(sharedPreferences.getString("URL_FIRMA_DOC", ""), Base64.DEFAULT);
             if (decodedString.length > 0) {
+                FIRMA_ODONTOLOGO = sharedPreferences.getString("URL_FIRMA_DOC", "");
                 Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
                 firma.setImageBitmap(decodedByte);
                 LIENZO_DOCTOR_UTILIZADO = true;
@@ -255,6 +254,7 @@ public class Contrato extends Fragment {
 
             decodedString = Base64.decode(sharedPreferences.getString("URL_FIRMA_PAC", ""), Base64.DEFAULT);
             if (decodedString.length > 0) {
+                FIRMA_PACIENTE = sharedPreferences.getString("URL_FIRMA_PAC", "");
                 Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
                 firmaPaciente.setImageBitmap(decodedByte);
                 LIENZO_PACIENTE_UTILIZADO = true;
