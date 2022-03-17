@@ -38,7 +38,6 @@ public class Evaluacion extends Fragment {
     private RadioButton lm1, lm2;
     private CheckBox h1, h2, h3, h4, h5;
     private CheckBox tmj1, tmj2, tmj3, tmj4, tmj5, tmj6, tmj7;
-    private TextInputEditText descripcion;
     private FloatingActionButton siguiente;
 
     private boolean MODO_EDICION = false;
@@ -155,10 +154,6 @@ public class Evaluacion extends Fragment {
         tmj6 = view.findViewById(R.id.tmj6);
         tmj7 = view.findViewById(R.id.tmj7);
 
-        //Otros
-        titulo12 = view.findViewById(R.id.titulo12);
-        descripcion = view.findViewById(R.id.otrosEvaluacion);
-
         siguiente = view.findViewById(R.id.siguiente);
         siguiente.setOnClickListener(v -> {
             if (!MODO_EDICION) {
@@ -261,10 +256,10 @@ public class Evaluacion extends Fragment {
                 editor.putInt("INCORPOSTURA", (rp5.isChecked() == true) ? 1 : 0);
                 editor.commit();
 
-                Evaluacion evaluacion = new Evaluacion();
+                Visitas visitas = new Visitas();
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                transaction.replace(R.id.contenedor, evaluacion);
+                transaction.replace(R.id.contenedor, visitas);
                 transaction.commit();
             }
 

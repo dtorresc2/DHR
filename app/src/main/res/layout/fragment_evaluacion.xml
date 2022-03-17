@@ -587,37 +587,6 @@
                 android:text="TMJ Dolor"
                 tools:ignore="TouchTargetSizeCheck" />
 
-            <TextView
-                android:id="@+id/titulo12"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@color/AzulOscuro"
-                android:gravity="center_horizontal|center_vertical"
-                android:padding="4dp"
-                android:text="Otros"
-                android:textColor="@color/Blanco"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/otrosEvaluacionLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                app:counterEnabled="true"
-                app:counterMaxLength="60"
-                app:errorEnabled="true">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/otrosEvaluacion"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Otros"
-                    android:inputType="text"
-                    android:maxLength="60"
-                    tools:ignore="TouchTargetSizeCheck" />
-            </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
     </ScrollView>
 </FrameLayout>

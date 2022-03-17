@@ -73,7 +73,6 @@ public class SeguimientoEspecial extends Fragment {
                     switch (dato) {
                         case 1:
                             Visitas visitas = new Visitas();
-                            visitas.ObtenerOpcion(2);
                             FragmentTransaction transaction3 = getFragmentManager().beginTransaction()
                                     .setCustomAnimations(R.anim.left_in, R.anim.left_out);
                             transaction3.replace(R.id.contenedor, visitas);
