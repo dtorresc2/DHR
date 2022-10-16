@@ -87,16 +87,10 @@ public class ListadoEvaluaciones extends Fragment {
         toolbar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.opcion_nuevo:
-//                    FichaEvaluacion fichaEvaluacion = new FichaEvaluacion();
-//                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-//                    transaction.replace(R.id.contenedor, fichaEvaluacion);
-//                    transaction.commit();
-                    Visitas visitas = new Visitas();
-                    FragmentTransaction fragmentTransaction = getActivity()
-                            .getSupportFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.anim.fade_in,R.anim.fade_out);
-                    fragmentTransaction.replace(R.id.contenedor, visitas);
-                    fragmentTransaction.commit();
+                    FichaEvaluacion fichaEvaluacion = new FichaEvaluacion();
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                    transaction.replace(R.id.contenedor, fichaEvaluacion);
+                    transaction.commit();
                     return true;
 
                 case R.id.opcion_filtrar:

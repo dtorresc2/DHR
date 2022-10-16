@@ -234,65 +234,65 @@ public class PagosVisitas extends Fragment {
             }
         });
 
-        quitar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (tablaDinamica.getCount() > 0) {
-                    contador = tablaDinamica.getCount();
-                    final AlertDialog.Builder d = new AlertDialog.Builder(getContext());
-                    LayoutInflater inflater = getActivity().getLayoutInflater();
-                    View dialogView = inflater.inflate(R.layout.number_picker_dialog, null);
-                    d.setCancelable(false);
-                    d.setView(dialogView);
-                    final AlertDialog alertDialog = d.create();
-                    final Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-                    TextView textView = dialogView.findViewById(R.id.titulo_dialogo);
-                    textView.setTypeface(face2);
-
-                    Button aceptar = dialogView.findViewById(R.id.aceptar);
-                    aceptar.setTypeface(face2);
-
-                    Button cancelar = dialogView.findViewById(R.id.cancelar);
-                    cancelar.setTypeface(face2);
-
-                    final NumberPicker numberPicker = dialogView.findViewById(R.id.dialog_number_picker);
-                    numberPicker.setMinValue(1);
-                    numberPicker.setMaxValue(contador);
-
-                    aceptar.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            tablaDinamica.removeRow(numberPicker.getValue());
-                            alertDialog.dismiss();
-                            Alerter.create(getActivity())
-                                    .setTitle("Se Elimino Una Fila")
-                                    .setIcon(R.drawable.logonuevo)
-                                    .setTextTypeface(face2)
-                                    .enableSwipeToDismiss()
-                                    .setBackgroundColorRes(R.color.AzulOscuro)
-                                    .show();
-                        }
-                    });
-
-                    cancelar.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            alertDialog.dismiss();
-                        }
-                    });
-
-                    alertDialog.show();
-                } else {
-                    Alerter.create(getActivity())
-                            .setTitle("No Hay Filas En La Tabla")
-                            .setIcon(R.drawable.logonuevo)
-                            .setTextTypeface(face)
-                            .enableSwipeToDismiss()
-                            .setBackgroundColorRes(R.color.AzulOscuro)
-                            .show();
-                }
-            }
-        });
+//        quitar.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (tablaDinamica.getCount() > 0) {
+//                    contador = tablaDinamica.getCount();
+//                    final AlertDialog.Builder d = new AlertDialog.Builder(getContext());
+//                    LayoutInflater inflater = getActivity().getLayoutInflater();
+//                    View dialogView = inflater.inflate(R.layout.number_picker_dialog, null);
+//                    d.setCancelable(false);
+//                    d.setView(dialogView);
+//                    final AlertDialog alertDialog = d.create();
+//                    final Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
+//                    TextView textView = dialogView.findViewById(R.id.titulo_dialogo);
+//                    textView.setTypeface(face2);
+//
+//                    Button aceptar = dialogView.findViewById(R.id.aceptar);
+//                    aceptar.setTypeface(face2);
+//
+//                    Button cancelar = dialogView.findViewById(R.id.cancelar);
+//                    cancelar.setTypeface(face2);
+//
+//                    final NumberPicker numberPicker = dialogView.findViewById(R.id.dialog_number_picker);
+//                    numberPicker.setMinValue(1);
+//                    numberPicker.setMaxValue(contador);
+//
+//                    aceptar.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            tablaDinamica.removeRow(numberPicker.getValue());
+//                            alertDialog.dismiss();
+//                            Alerter.create(getActivity())
+//                                    .setTitle("Se Elimino Una Fila")
+//                                    .setIcon(R.drawable.logonuevo)
+//                                    .setTextTypeface(face2)
+//                                    .enableSwipeToDismiss()
+//                                    .setBackgroundColorRes(R.color.AzulOscuro)
+//                                    .show();
+//                        }
+//                    });
+//
+//                    cancelar.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            alertDialog.dismiss();
+//                        }
+//                    });
+//
+//                    alertDialog.show();
+//                } else {
+//                    Alerter.create(getActivity())
+//                            .setTitle("No Hay Filas En La Tabla")
+//                            .setIcon(R.drawable.logonuevo)
+//                            .setTextTypeface(face)
+//                            .enableSwipeToDismiss()
+//                            .setBackgroundColorRes(R.color.AzulOscuro)
+//                            .show();
+//                }
+//            }
+//        });
 
         siguiente.setOnClickListener(new View.OnClickListener() {
             @Override
