@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,12 +30,16 @@ import com.sistemasdt.dhr.Componentes.Tabla.TablaDinamica;
 import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.PacienteAdapter;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaEspecial.Items.ItemPagoEvaluacion;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaEspecial.Items.ItemVisita;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialFoto.HistorialFotografico;
+import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
 import com.tapadoo.alerter.Alerter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public class PagosVisitas extends Fragment {
@@ -234,7 +239,9 @@ public class PagosVisitas extends Fragment {
 
             if (tablaDinamica.getCount() > 0) {
                 for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
-                    total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
+                    Log.d("Hola", String.valueOf(POSICION));
+                    if ((POSICION + 1) != i)
+                        total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
                 }
             }
 
@@ -280,6 +287,8 @@ public class PagosVisitas extends Fragment {
                 pago.setText(null);
                 layoutPagos.setError(null);
 
+                total = 0;
+
                 if (tablaDinamica.getCount() > 0) {
                     for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
                         total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
@@ -299,8 +308,49 @@ public class PagosVisitas extends Fragment {
         });
 
         siguiente.setOnClickListener(v -> {
+            if (tablaDinamica.getCount() > 0) {
+                if (!MODO_EDICION) {
+                    SharedPreferences preferences = getActivity().getSharedPreferences("PAGOS_EVALUACION", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+
+                    Set<String> set = new HashSet<>();
+
+                    for (ItemPagoEvaluacion itemPagoEvaluacion : listaPagosEvaluacion) {
+                        String cadena = itemPagoEvaluacion.getFecha() + ";" + itemPagoEvaluacion.getPago() + ";" + itemPagoEvaluacion.getDescripcion() + ";";
+                        set.add(cadena);
+                    }
+
+                    editor.putStringSet("LISTA_PAGOS", set);
+                    editor.putString("TOTAL_PAGOS", totalAbono.getText().toString());
+                    editor.apply();
+
+//                    HistorialFotografico historialFotografico = new HistorialFotografico();
+//                    historialFotografico.activarModoEdicion(0);
+//                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+//                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+//                    transaction.replace(R.id.contenedor, historialFotografico);
+//                    transaction.commit();
+
+                    MenuFichas menuFichas = new MenuFichas();
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                    transaction.replace(R.id.contenedor, menuFichas);
+                    transaction.commit();
+                }
+            }
+            else {
+                Alerter.create(getActivity())
+                        .setTitle("Error")
+                        .setText("No ha agregado pagos")
+                        .setIcon(R.drawable.logonuevo)
+                        .setTextTypeface(face)
+                        .enableSwipeToDismiss()
+                        .setBackgroundColorRes(R.color.AzulOscuro)
+                        .show();
+            }
         });
 
+        cargarPagos();
         return view;
     }
 
@@ -309,6 +359,49 @@ public class PagosVisitas extends Fragment {
     }
 
     public void ObtenerOpcion(int opcion) {
+    }
+
+    public void cargarPagos() {
+        // Reinciar Tabla
+        listaPagosEvaluacion.clear();
+        tablaDinamica.removeAll();
+        tablaDinamica.fondoHeader(R.color.AzulOscuro);
+
+        if (!MODO_EDICION) {
+            SharedPreferences preferences = getActivity().getSharedPreferences("PAGOS_EVALUACION", Context.MODE_PRIVATE);
+            Set<String> set = preferences.getStringSet("LISTA_PAGOS", null);
+
+            if (set != null) {
+                ArrayList<String> listaAuxiliar = new ArrayList<>(set);
+
+                for (String item : listaAuxiliar) {
+                    String cadenaAuxiliar[] = item.split(";");
+
+                    listaPagosEvaluacion.add(new ItemPagoEvaluacion(
+                            cadenaAuxiliar[0],
+                            cadenaAuxiliar[2],
+                            Double.parseDouble(cadenaAuxiliar[1])
+                    ));
+
+                    tablaDinamica.addItem(new String[]{
+                            cadenaAuxiliar[0],
+                            cadenaAuxiliar[2],
+                            String.format("%.2f", Double.parseDouble(cadenaAuxiliar[1]))
+                    });
+                }
+
+                total = 0;
+
+                if (tablaDinamica.getCount() > 0) {
+                    for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
+                        total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
+                    }
+                    totalAbono.setText(String.format("%.2f", total));
+                } else {
+                    totalAbono.setText("0.00");
+                }
+            }
+        }
     }
 
     //    VALIDACIONES
