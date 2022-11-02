@@ -1,13 +1,11 @@
 package com.sistemasdt.dhr.Rutas.Fichas.FichaEspecial;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 
 import android.os.Bundle;
-import android.os.Handler;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -24,19 +22,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import android.widget.ImageButton;
 import android.widget.TableLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.sistemasdt.dhr.Componentes.MenusInferiores.MenuInferiorDos;
 import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.Componentes.Tabla.TablaDinamica;
-import com.sistemasdt.dhr.Rutas.Catalogos.Piezas.ItemPieza;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaEspecial.Items.ItemVisita;
-import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialOdonto.ItemTratamiento;
 import com.tapadoo.alerter.Alerter;
 
 import java.text.ParseException;
@@ -48,11 +42,10 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 public class Visitas extends Fragment {
-    private TextInputEditText descripcion, fecha, costo_visita;
+    private TextInputEditText descripcion, costo_visita;
     private TextInputLayout layoutDescripcion, layoutCostoVisita;
 
     private Toolbar toolbar;
-    private ImageButton selectorFecha;
     private Button agregar;
     private FloatingActionButton siguiente;
     private TextView titulo, tituloGasto, totalGasto;
@@ -62,7 +55,7 @@ public class Visitas extends Fragment {
     int POSICION = 0;
 
     private TableLayout tableLayout;
-    private String[] header = {"Fecha", "Descripcion", "Costo"};
+    private String[] header = {"Fecha", "Descripción", "Costo"};
     private TablaDinamica tablaDinamica;
     private ArrayList<String[]> rows = new ArrayList<>();
     private ArrayList<ItemVisita> listaVisitas = new ArrayList<>();
@@ -74,7 +67,6 @@ public class Visitas extends Fragment {
 
     public Visitas() {
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -128,7 +120,6 @@ public class Visitas extends Fragment {
         layoutDescripcion = view.findViewById(R.id.layoutDescEspecial);
 
         titulo = view.findViewById(R.id.tituloVisitas);
-        selectorFecha = view.findViewById(R.id.obtenerFecha);
         agregar = view.findViewById(R.id.agregarVisita);
         siguiente = view.findViewById(R.id.siguiente);
 
@@ -279,7 +270,7 @@ public class Visitas extends Fragment {
 
                 modoEdicionTratamiento = false;
                 POSICION = 0;
-                agregar.setText("AGREGAR TRATAMIENTO");
+                agregar.setText("AGREGAR VISITA");
             }
 
             descripcion.setText(null);
@@ -288,10 +279,10 @@ public class Visitas extends Fragment {
             if (tablaDinamica.getCount() > 0) {
                 for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
                     total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
-                    Log.e("Prueba", String.valueOf(total));
                 }
-                totalGasto.setText(String.format("%.2f", total));
             }
+
+            totalGasto.setText(String.format("%.2f", total));
         });
 
         siguiente.setOnClickListener(v -> {
@@ -308,6 +299,7 @@ public class Visitas extends Fragment {
                     }
 
                     editor.putStringSet("LISTA_VISITAS", set);
+                    editor.putString("TOTAL_VISITAS", totalGasto.getText().toString());
                     editor.apply();
 
                     PagosVisitas pagosVisitas = new PagosVisitas();
