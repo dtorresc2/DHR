@@ -156,7 +156,7 @@ public class PagosVisitas extends Fragment {
                 int index = position - 1;
                 switch (opcion) {
                     case 1:
-                        // Editar Tratamiento
+                        // Editar Pago
                         modoEdicionTratamiento = true;
                         agregar.setText("ACTUALIZAR PAGO");
                         ItemPagoEvaluacion aux = listaPagosEvaluacion.get(index);
@@ -168,7 +168,7 @@ public class PagosVisitas extends Fragment {
                         break;
 
                     case 2:
-                        // Eliminar Tratamiento
+                        // Eliminar Pago
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
                         builder.setIcon(R.drawable.logonuevo);
                         builder.setTitle("Pagos de Evaluación");
@@ -182,9 +182,9 @@ public class PagosVisitas extends Fragment {
                                 for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
                                     total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
                                 }
-                                totalGasto.setText(String.format("%.2f", total));
+                                totalAbono.setText(String.format("%.2f", total));
                             } else {
-                                totalGasto.setText("0.00");
+                                totalAbono.setText("0.00");
                             }
                         });
 
@@ -202,7 +202,9 @@ public class PagosVisitas extends Fragment {
 
         tituloAbono = view.findViewById(R.id.tituloAbono);
         totalAbono = view.findViewById(R.id.totalAbono);
-//        totalGasto.setText(String.format("%.2f", Double.parseDouble(preferencias.getString("TOTAL_VISITAS", "0.00"))));
+
+        totalGasto = view.findViewById(R.id.totalVisita);
+        totalGasto.setText(String.format("%.2f", Double.parseDouble(preferencias.getString("TOTAL_VISITAS", "0.00"))));
 
         agregar.setOnClickListener(v -> {
             if (!descripcionRequerida() || !montoRequerido() || !validarMonto())
@@ -235,8 +237,6 @@ public class PagosVisitas extends Fragment {
                     total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
                 }
             }
-//            totalAbono.setText(String.valueOf(total));
-
 
             total += Double.parseDouble(pago.getText().toString());
 
@@ -285,7 +285,7 @@ public class PagosVisitas extends Fragment {
                         total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
                     }
                 }
-                totalAbono.setText(String.valueOf(total));
+                totalAbono.setText(String.format("%.2f", total));
             } else {
                 Alerter.create(getActivity())
                         .setTitle("Error")
