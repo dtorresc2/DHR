@@ -11,10 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sistemasdt.dhr.R;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaEspecial.ListadoEvaluaciones;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.Ficha;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.ListadoFichasNormales.ListadoFichas;
+import com.sistemasdt.dhr.ServiciosAPI.QuerysEvaluaciones;
+
+import org.json.JSONArray;
 
 
 public class MenuFichas extends Fragment {
@@ -43,26 +48,33 @@ public class MenuFichas extends Fragment {
         texto_boton_especial.setTypeface(typeface);
 
         //Opcion de Crear Nueva Ficha
-        botonNuevo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ListadoFichas listadoFichas = new ListadoFichas();
-                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                transaction.replace(R.id.contenedor, listadoFichas);
-                transaction.commit();
-            }
+        botonNuevo.setOnClickListener(v -> {
+            ListadoFichas listadoFichas = new ListadoFichas();
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
+            transaction.replace(R.id.contenedor, listadoFichas);
+            transaction.commit();
         });
 
         //Opcion de Crear Nueva Ficha Especial
-        botonNuevoEspecial.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                ListadoPacientes listadoPacientes = new ListadoPacientes();
-//                listadoPacientes.ObtenerOpcion(3);
-//                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
-//                transaction.replace(R.id.contenedor, listadoPacientes);
-//                transaction.commit();
-            }
+        botonNuevoEspecial.setOnClickListener(v -> {
+//            QuerysEvaluaciones querysEvaluaciones = new QuerysEvaluaciones(getContext());
+//            querysEvaluaciones.obtenerEvaluaciones(new QuerysEvaluaciones.ManejadorQuery() {
+//                @Override
+//                public void onSuccess(Object object) {
+//                    Toast.makeText(getContext(), object.toString(), Toast.LENGTH_LONG).show();
+//                }
+//
+//                @Override
+//                public void onFailure(Exception e) {
+//
+//                }
+//            });
+            ListadoEvaluaciones listadoEvaluaciones = new ListadoEvaluaciones();
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
+            transaction.replace(R.id.contenedor, listadoEvaluaciones);
+            transaction.commit();
+
+
         });
         return view;
     }

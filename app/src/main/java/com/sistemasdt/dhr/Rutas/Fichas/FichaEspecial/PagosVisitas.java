@@ -1,135 +1,147 @@
 package com.sistemasdt.dhr.Rutas.Fichas.FichaEspecial;
 
-import android.app.DatePickerDialog;
-import android.app.ProgressDialog;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Handler;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentTransaction;
+
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.NumberPicker;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
-import com.sistemasdt.dhr.OpcionSeguimiento.SeguimientoEspecial;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+import com.sistemasdt.dhr.Componentes.MenusInferiores.MenuInferiorDos;
 import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.Componentes.Tabla.TablaDinamica;
+import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.PacienteAdapter;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaEspecial.Items.ItemPagoEvaluacion;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaEspecial.Items.ItemVisita;
+import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialFoto.HistorialFotografico;
+import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
 import com.tapadoo.alerter.Alerter;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 public class PagosVisitas extends Fragment {
-    EditText descripcion, fecha, pagos;
-    Toolbar toolbar;
-    ImageButton selectorFecha;
-    Button agregar, quitar;
-    FloatingActionButton siguiente;
-    TextView titulo, tituloGasto, totalGasto, tituloAbono, totalAbono;
+    private TextInputEditText descripcion, fecha, pago;
+    private TextInputLayout layoutDescripcion, layoutPagos;
 
-    TableLayout tableLayout;
-    private String[] header = {"Fecha", "Descripsion", "Pago"};
+    private Toolbar toolbar;
+    private Button agregar;
+    private FloatingActionButton siguiente;
+    private TextView titulo, totalGasto, tituloAbono, totalAbono;
+
+    private TableLayout tableLayout;
+    private String[] header = {"Fecha", "Descripción", "Pago"};
     private TablaDinamica tablaDinamica;
     private ArrayList<String[]> rows = new ArrayList<>();
-    private RequestQueue requestQueue;
-    private int contador = 0;
+    private ArrayList<ItemPagoEvaluacion> listaPagosEvaluacion = new ArrayList<>();
 
-    private int mOpcion = 0;
+    boolean modoEdicionTratamiento = false;
+
+    int POSICION = 0;
+    private double TOTAL_VISITA = 0.00;
     private SharedPreferences preferencias;
     private double total;
-    private static final String TAG = "MyActivity";
+    private boolean MODO_EDICION = false;
 
     public PagosVisitas() {
-        // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_ingreso_pagos_visitas, container, false);
         final Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-        requestQueue = Volley.newRequestQueue(getContext());
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_cerrar);
-        toolbar.setTitle("Visitas");
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        toolbar.setTitle("PAGO DE VISITAS");
+        toolbar.setNavigationOnClickListener(v -> {
+            if (!MODO_EDICION) {
+                Visitas visitas = new Visitas();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                transaction.replace(R.id.contenedor, visitas);
+                transaction.commit();
+            } else {
+                ListadoEvaluaciones listadoEvaluaciones = new ListadoEvaluaciones();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.right_in, R.anim.right_out);
+                transaction.replace(R.id.contenedor, listadoEvaluaciones);
+                transaction.commit();
+            }
+        });
+
+        if (!MODO_EDICION) {
+            toolbar.setNavigationIcon(R.drawable.ic_atras);
+        } else {
+            toolbar.setNavigationIcon(R.drawable.ic_cerrar);
+        }
+
+        preferencias = getActivity().getSharedPreferences("VISITAS", Context.MODE_PRIVATE);
+
+        layoutDescripcion = view.findViewById(R.id.layoutDescripcion);
+        descripcion = view.findViewById(R.id.descripcion);
+        descripcion.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(View v) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                switch (mOpcion) {
-                    case 1:
-                        MenuFichas menuFichas = new MenuFichas();
-                        FragmentTransaction transaction = getFragmentManager()
-                                .beginTransaction()
-                                .setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                        transaction.replace(R.id.contenedor, menuFichas);
-                        transaction.commit();
-                        break;
+            }
 
-                    case 2:
-                        SeguimientoEspecial seguimientoEspecial = new SeguimientoEspecial();
-                        FragmentTransaction transaction2 = getFragmentManager()
-                                .beginTransaction()
-                                .setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                        transaction2.replace(R.id.contenedor, seguimientoEspecial);
-                        transaction2.commit();
-                        break;
-                }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                descripcionRequerida();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
 
             }
         });
 
-        preferencias = getActivity().getSharedPreferences("ListadoPacientes", Context.MODE_PRIVATE);
+        layoutPagos = view.findViewById(R.id.layoutAbono);
+        pago = view.findViewById(R.id.abono);
+        pago.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        final Calendar calendar = Calendar.getInstance();
-        int yy = calendar.get(Calendar.YEAR);
-        int mm = calendar.get(Calendar.MONTH);
-        int dd = calendar.get(Calendar.DAY_OF_MONTH);
+            }
 
-        descripcion = view.findViewById(R.id.descPagos);
-        descripcion.setTypeface(face);
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (montoRequerido())
+                    validarMonto();
+            }
 
-        fecha = view.findViewById(R.id.fecha);
-        fecha.setText(dd + "/" + mm + "/" + yy);
-        fecha.setTypeface(face);
+            @Override
+            public void afterTextChanged(Editable s) {
 
-        pagos = view.findViewById(R.id.costoPagos);
-        pagos.setTypeface(face);
+            }
+        });
 
-        titulo = view.findViewById(R.id.tituloPagos);
-        titulo.setTypeface(face);
+        titulo = view.findViewById(R.id.tituloAbono);
 
-        selectorFecha = view.findViewById(R.id.obtenerFecha);
-        agregar = view.findViewById(R.id.agregarPago);
-        agregar.setTypeface(face);
-//        quitar = view.findViewById(R.id.quitarPago);
-//        quitar.setTypeface(face);
+        agregar = view.findViewById(R.id.agregarAbono);
         siguiente = view.findViewById(R.id.siguiente);
 
         tableLayout = view.findViewById(R.id.tablaPagos);
@@ -137,325 +149,294 @@ public class PagosVisitas extends Fragment {
         tablaDinamica.addHeader(header);
         tablaDinamica.addData(getClients());
         tablaDinamica.fondoHeader(R.color.AzulOscuro);
+        tablaDinamica.setOnItemClickListener(position -> {
+            MenuInferiorDos menuInferiorDos = new MenuInferiorDos();
+            menuInferiorDos.show(getActivity().getSupportFragmentManager(), "MenuInferior");
+            if (tablaDinamica.getCount() > 1)
+                menuInferiorDos.recibirTitulo(tablaDinamica.getCellData(position, 1));
+            else
+                menuInferiorDos.recibirTitulo(tablaDinamica.getCellData(1, 1));
 
-        tituloGasto = view.findViewById(R.id.tituloGasto);
-        tituloGasto.setTypeface(face);
+            menuInferiorDos.eventoClick(opcion -> {
+                int index = position - 1;
+                switch (opcion) {
+                    case 1:
+                        // Editar Pago
+                        modoEdicionTratamiento = true;
+                        agregar.setText("ACTUALIZAR PAGO");
+                        ItemPagoEvaluacion aux = listaPagosEvaluacion.get(index);
 
-        totalGasto = view.findViewById(R.id.totalGasto);
-        totalGasto.setTypeface(face);
+                        descripcion.setText(aux.getDescripcion());
+                        pago.setText(String.format("%.2f", aux.getPago()));
+
+                        POSICION = index;
+                        break;
+
+                    case 2:
+                        // Eliminar Pago
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
+                        builder.setIcon(R.drawable.logonuevo);
+                        builder.setTitle("Pagos de Evaluación");
+                        builder.setMessage("¿Desea eliminar el pago?");
+                        builder.setPositiveButton("Aceptar", (dialog, which) -> {
+                            tablaDinamica.removeRow(position);
+                            total = 0;
+                            listaPagosEvaluacion.remove(position - 1);
+
+                            if (tablaDinamica.getCount() > 0) {
+                                for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
+                                    total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
+                                }
+                                totalAbono.setText(String.format("%.2f", total));
+                            } else {
+                                totalAbono.setText("0.00");
+                            }
+                        });
+
+                        builder.setNegativeButton("Cancelar", (dialog, which) -> {
+
+                        });
+
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                        break;
+                }
+            });
+
+        });
 
         tituloAbono = view.findViewById(R.id.tituloAbono);
-        tituloAbono.setTypeface(face);
-
         totalAbono = view.findViewById(R.id.totalAbono);
-        totalAbono.setTypeface(face);
 
-        switch (mOpcion) {
-            case 1:
-                totalGasto.setText(String.format("%.2f", Double.parseDouble(preferencias.getString("totalVisitas", "0.00"))));
-                break;
-            case 2:
-                consultarTratamiento("https://diegosistemas.xyz/DHR/Especial/consultaE.php?estado=18", preferencias.getString("idficha", ""));
-                break;
-        }
+        totalGasto = view.findViewById(R.id.totalVisita);
+        totalGasto.setText(String.format("%.2f", Double.parseDouble(preferencias.getString("TOTAL_VISITAS", "0.00"))));
 
-        selectorFecha.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Calendar calendario = Calendar.getInstance();
-                int yy = calendario.get(Calendar.YEAR);
-                int mm = calendario.get(Calendar.MONTH);
-                int dd = calendario.get(Calendar.DAY_OF_MONTH);
+        agregar.setOnClickListener(v -> {
+            if (!descripcionRequerida() || !montoRequerido() || !validarMonto())
+                return;
 
-                DatePickerDialog datePicker = new DatePickerDialog(getActivity(),
-                        android.R.style.Theme_Holo_Dialog_MinWidth, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        String dat = dayOfMonth + "/" + monthOfYear + "/" + year;
-                        fecha.setText(dat);
-                    }
-                }, yy, mm, dd);
+            total = 0;
 
-                datePicker.show();
+            String fechaOriginal = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+            Date initDate;
+            String fechaFormateada = null;
+            try {
+                initDate = new SimpleDateFormat("yyyy-MM-dd").parse(fechaOriginal);
+                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                fechaFormateada = formatter.format(initDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
-        });
 
-        agregar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!descripcion.getText().toString().isEmpty() && !fecha.getText().toString().isEmpty() && !pagos.getText().toString().isEmpty()) {
-                    total = 0;
-                    String[] item = new String[]{
-                            fecha.getText().toString(),
+            String[] item = new String[]{
+                    fechaFormateada,
+                    descripcion.getText().toString(),
+                    pago.getText().toString()
+            };
+
+
+            TOTAL_VISITA = Double.parseDouble(preferencias.getString("TOTAL_VISITAS", "0.00"));
+
+            if (tablaDinamica.getCount() > 0) {
+                for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
+                    Log.d("Hola", String.valueOf(POSICION));
+                    if ((POSICION + 1) != i)
+                        total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
+                }
+            }
+
+            total += Double.parseDouble(pago.getText().toString());
+
+            if (total <= TOTAL_VISITA) {
+                if (!modoEdicionTratamiento) {
+                    tablaDinamica.addItem(item);
+                    listaPagosEvaluacion.add(new ItemPagoEvaluacion(
+                            fechaFormateada,
                             descripcion.getText().toString(),
-                            pagos.getText().toString()
-                    };
-
-                    double aux = Double.parseDouble(totalGasto.getText().toString());
-
-                    if (tablaDinamica.getCount() > 0) {
-                        for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
-                            total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
-                        }
-                    }
-
-                    total += Double.parseDouble(pagos.getText().toString());
-
-                    if (total <= aux) {
-                        tablaDinamica.addItem(item);
-                        descripcion.setText(null);
-                        pagos.setText(null);
-                        total = 0;
-                        if (tablaDinamica.getCount() > 0) {
-                            for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
-                                total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
-                            }
-                            totalAbono.setText(String.format("%.2f", total));
-                        }
-                    } else {
-                        Alerter.create(getActivity())
-                                .setTitle("Error")
-                                .setText("El pago es mayor a la deuda")
-                                .setIcon(R.drawable.logonuevo)
-                                .setTextTypeface(face)
-                                .enableSwipeToDismiss()
-                                .setBackgroundColorRes(R.color.AzulOscuro)
-                                .show();
-                    }
+                            Double.parseDouble(pago.getText().toString())
+                    ));
                 } else {
-                    Alerter.create(getActivity())
-                            .setTitle("Hay Campos Vacios")
-                            .setIcon(R.drawable.logonuevo)
-                            .setTextTypeface(face)
-                            .enableSwipeToDismiss()
-                            .setBackgroundColorRes(R.color.AzulOscuro)
-                            .show();
-                }
-            }
-        });
+                    if (listaPagosEvaluacion.size() > 0) {
+                        listaPagosEvaluacion.set(POSICION, new ItemPagoEvaluacion(
+                                fechaFormateada,
+                                descripcion.getText().toString(),
+                                Double.parseDouble(pago.getText().toString())
+                        ));
 
-        quitar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (tablaDinamica.getCount() > 0) {
-                    contador = tablaDinamica.getCount();
-                    final AlertDialog.Builder d = new AlertDialog.Builder(getContext());
-                    LayoutInflater inflater = getActivity().getLayoutInflater();
-                    View dialogView = inflater.inflate(R.layout.number_picker_dialog, null);
-                    d.setCancelable(false);
-                    d.setView(dialogView);
-                    final AlertDialog alertDialog = d.create();
-                    final Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-                    TextView textView = dialogView.findViewById(R.id.titulo_dialogo);
-                    textView.setTypeface(face2);
+                        // Reinciar Tabla
+                        tablaDinamica.removeAll();
+                        tablaDinamica.addHeader(header);
+                        tablaDinamica.fondoHeader(R.color.AzulOscuro);
 
-                    Button aceptar = dialogView.findViewById(R.id.aceptar);
-                    aceptar.setTypeface(face2);
-
-                    Button cancelar = dialogView.findViewById(R.id.cancelar);
-                    cancelar.setTypeface(face2);
-
-                    final NumberPicker numberPicker = dialogView.findViewById(R.id.dialog_number_picker);
-                    numberPicker.setMinValue(1);
-                    numberPicker.setMaxValue(contador);
-
-                    aceptar.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            tablaDinamica.removeRow(numberPicker.getValue());
-                            alertDialog.dismiss();
-                            Alerter.create(getActivity())
-                                    .setTitle("Se Elimino Una Fila")
-                                    .setIcon(R.drawable.logonuevo)
-                                    .setTextTypeface(face2)
-                                    .enableSwipeToDismiss()
-                                    .setBackgroundColorRes(R.color.AzulOscuro)
-                                    .show();
+                        for (ItemPagoEvaluacion itemPagoEvaluacion : listaPagosEvaluacion) {
+                            tablaDinamica.addItem(new String[]{
+                                    fechaFormateada,
+                                    itemPagoEvaluacion.getDescripcion(),
+                                    String.format("%.2f", itemPagoEvaluacion.getPago())
+                            });
                         }
-                    });
-
-                    cancelar.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            alertDialog.dismiss();
-                        }
-                    });
-
-                    alertDialog.show();
-                } else {
-                    Alerter.create(getActivity())
-                            .setTitle("No Hay Filas En La Tabla")
-                            .setIcon(R.drawable.logonuevo)
-                            .setTextTypeface(face)
-                            .enableSwipeToDismiss()
-                            .setBackgroundColorRes(R.color.AzulOscuro)
-                            .show();
-                }
-            }
-        });
-
-        siguiente.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-                progressDialog.setMessage("Cargando...");
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                progressDialog.setCancelable(false);
-                progressDialog.show();
-
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        progressDialog.dismiss();
                     }
-                }, 1000);
+
+                    modoEdicionTratamiento = false;
+                    POSICION = 0;
+                    agregar.setText("AGREGAR PAGO");
+                }
+
+                descripcion.setText(null);
+                layoutDescripcion.setError(null);
+                pago.setText(null);
+                layoutPagos.setError(null);
+
+                total = 0;
 
                 if (tablaDinamica.getCount() > 0) {
-
-                    ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-                    if (networkInfo != null && networkInfo.isConnected()) {
-                        for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
-                            switch (mOpcion) {
-                                case 1:
-                                    agregarPagos("http://dhr.sistemasdt.xyz/Especial/ingresoE.php?estado=18", tablaDinamica.getCellData(i, 0), tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2));
-                                    break;
-
-                                case 2:
-                                    segPagos("http://dhr.sistemasdt.xyz/Especial/seguimientoE.php?estado=2", tablaDinamica.getCellData(i, 0), tablaDinamica.getCellData(i, 1), tablaDinamica.getCellData(i, 2));
-                                    break;
-                            }
-                        }
-
-                        switch (mOpcion) {
-                            case 1:
-                                ContratoVisita contratoVisita = new ContratoVisita();
-                                FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_in, R.anim.left_out);
-                                transaction.replace(R.id.contenedor, contratoVisita);
-                                transaction.commit();
-                                break;
-                            case 2:
-                                SeguimientoEspecial seguimientoEspecial = new SeguimientoEspecial();
-                                FragmentTransaction transaction2 = getFragmentManager()
-                                        .beginTransaction()
-                                        .setCustomAnimations(R.anim.right_in, R.anim.right_out);
-                                transaction2.replace(R.id.contenedor, seguimientoEspecial);
-                                transaction2.commit();
-                                break;
-                        }
-
-                    } else {
-                        Typeface face2 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bahnschrift.ttf");
-                        Alerter.create(getActivity())
-                                .setTitle("Error")
-                                .setText("Fallo en Conexion a Internet")
-                                .setIcon(R.drawable.logonuevo)
-                                .setTextTypeface(face2)
-                                .enableSwipeToDismiss()
-                                .setBackgroundColorRes(R.color.AzulOscuro)
-                                .show();
+                    for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
+                        total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
                     }
-                } else {
-                    Alerter.create(getActivity())
-                            .setTitle("No Ingreso Pagos")
-                            .setIcon(R.drawable.logonuevo)
-                            .setTextTypeface(face)
-                            .enableSwipeToDismiss()
-                            .setBackgroundColorRes(R.color.AzulOscuro)
-                            .show();
                 }
+                totalAbono.setText(String.format("%.2f", total));
+            } else {
+                Alerter.create(getActivity())
+                        .setTitle("Error")
+                        .setText("El pago es mayor a la deuda")
+                        .setIcon(R.drawable.logonuevo)
+                        .setTextTypeface(face)
+                        .enableSwipeToDismiss()
+                        .setBackgroundColorRes(R.color.AzulOscuro)
+                        .show();
             }
         });
 
+        siguiente.setOnClickListener(v -> {
+            if (tablaDinamica.getCount() > 0) {
+                if (!MODO_EDICION) {
+                    SharedPreferences preferences = getActivity().getSharedPreferences("PAGOS_EVALUACION", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+
+                    Set<String> set = new HashSet<>();
+
+                    for (ItemPagoEvaluacion itemPagoEvaluacion : listaPagosEvaluacion) {
+                        String cadena = itemPagoEvaluacion.getFecha() + ";" + itemPagoEvaluacion.getPago() + ";" + itemPagoEvaluacion.getDescripcion() + ";";
+                        set.add(cadena);
+                    }
+
+                    editor.putStringSet("LISTA_PAGOS", set);
+                    editor.putString("TOTAL_PAGOS", totalAbono.getText().toString());
+                    editor.apply();
+
+//                    HistorialFotografico historialFotografico = new HistorialFotografico();
+//                    historialFotografico.activarModoEdicion(0);
+//                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+//                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+//                    transaction.replace(R.id.contenedor, historialFotografico);
+//                    transaction.commit();
+
+                    MenuFichas menuFichas = new MenuFichas();
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.left_in, R.anim.left_out);
+                    transaction.replace(R.id.contenedor, menuFichas);
+                    transaction.commit();
+                }
+            }
+            else {
+                Alerter.create(getActivity())
+                        .setTitle("Error")
+                        .setText("No ha agregado pagos")
+                        .setIcon(R.drawable.logonuevo)
+                        .setTextTypeface(face)
+                        .enableSwipeToDismiss()
+                        .setBackgroundColorRes(R.color.AzulOscuro)
+                        .show();
+            }
+        });
+
+        cargarPagos();
         return view;
     }
-
 
     private ArrayList<String[]> getClients() {
         return rows;
     }
 
-    //Insertar Datos Personales y Obtener ID Pacientes ----------------------------------------------
-    public void agregarPagos(String URL, final String fecha, final String desc, final String costo) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("Volley Error:", "" + error.toString());
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros = new HashMap<String, String>();
-                parametros.put("fecha", fecha);
-                parametros.put("desc", desc);
-                parametros.put("costo", costo);
-                return parametros;
-            }
-
-        };
-        requestQueue.add(stringRequest);
+    public void ObtenerOpcion(int opcion) {
     }
 
-    public void segPagos(String URL, final String fecha, final String desc, final String costo) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
+    public void cargarPagos() {
+        // Reinciar Tabla
+        listaPagosEvaluacion.clear();
+        tablaDinamica.removeAll();
+        tablaDinamica.fondoHeader(R.color.AzulOscuro);
 
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("Volley Error:", "" + error.toString());
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros = new HashMap<String, String>();
-                parametros.put("fecha", fecha);
-                parametros.put("desc", desc);
-                parametros.put("costo", costo);
-                parametros.put("id", preferencias.getString("idficha", ""));
-                return parametros;
-            }
+        if (!MODO_EDICION) {
+            SharedPreferences preferences = getActivity().getSharedPreferences("PAGOS_EVALUACION", Context.MODE_PRIVATE);
+            Set<String> set = preferences.getStringSet("LISTA_PAGOS", null);
 
-        };
-        requestQueue.add(stringRequest);
+            if (set != null) {
+                ArrayList<String> listaAuxiliar = new ArrayList<>(set);
+
+                for (String item : listaAuxiliar) {
+                    String cadenaAuxiliar[] = item.split(";");
+
+                    listaPagosEvaluacion.add(new ItemPagoEvaluacion(
+                            cadenaAuxiliar[0],
+                            cadenaAuxiliar[2],
+                            Double.parseDouble(cadenaAuxiliar[1])
+                    ));
+
+                    tablaDinamica.addItem(new String[]{
+                            cadenaAuxiliar[0],
+                            cadenaAuxiliar[2],
+                            String.format("%.2f", Double.parseDouble(cadenaAuxiliar[1]))
+                    });
+                }
+
+                total = 0;
+
+                if (tablaDinamica.getCount() > 0) {
+                    for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
+                        total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
+                    }
+                    totalAbono.setText(String.format("%.2f", total));
+                } else {
+                    totalAbono.setText("0.00");
+                }
+            }
+        }
     }
 
-    public void ObtenerOpcion(int opcion){
-        mOpcion = opcion;
+    //    VALIDACIONES
+    private boolean descripcionRequerida() {
+        String texto = descripcion.getText().toString().trim();
+        if (texto.isEmpty()) {
+            layoutDescripcion.setError("Campo Requerido");
+            return false;
+        } else {
+            layoutDescripcion.setError(null);
+            return true;
+        }
     }
 
-    //ListadoPacientes Historial Odontodologico - Tratamiento
-    public void consultarTratamiento(String URL, final String id) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                totalGasto.setText(String.format("%.2f", Double.parseDouble(response)));
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i(TAG, "" + error.toString());
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros = new HashMap<String, String>();
-                SharedPreferences preferencias2 = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
-                parametros.put("user", preferencias2.getString("idUsuario", "1"));
-                parametros.put("id", preferencias2.getString("idficha", "1"));
-                return parametros;
-            }
+    private boolean montoRequerido() {
+        String texto = pago.getText().toString().trim();
+        if (texto.isEmpty()) {
+            layoutPagos.setError("Campo Requerido");
+            return false;
+        } else {
+            layoutPagos.setError(null);
+            return true;
+        }
+    }
 
-        };
-        requestQueue.add(stringRequest);
+    private boolean validarMonto() {
+        String texto = pago.getText().toString().trim();
+        Pattern patron = Pattern.compile("^[0-9]+(\\.[0-9]{2})$");
+        if (patron.matcher(texto).matches()) {
+            layoutPagos.setError(null);
+            return true;
+        } else {
+            layoutPagos.setError("Monto invalido, debe usar ####.##");
+            return false;
+        }
     }
 
 }

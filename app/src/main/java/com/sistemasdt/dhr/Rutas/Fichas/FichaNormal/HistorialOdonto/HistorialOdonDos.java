@@ -24,7 +24,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,17 +31,14 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sistemasdt.dhr.Componentes.Dialogos.Bitacora.FuncionesBitacora;
 import com.sistemasdt.dhr.Componentes.MenusInferiores.MenuInferiorDos;
 import com.sistemasdt.dhr.Rutas.Catalogos.Piezas.ItemPieza;
 import com.sistemasdt.dhr.Rutas.Catalogos.Servicios.ItemServicio;
-import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.HistorialFoto.HistorialFotografico;
 import com.sistemasdt.dhr.R;
 import com.sistemasdt.dhr.Componentes.Tabla.TablaDinamica;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.MenuFichaNormal;
-import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.PagosFicha.ItemPago;
 import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.PagosFicha.Pagos;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysFichas;
 import com.sistemasdt.dhr.ServiciosAPI.QuerysPiezas;
@@ -350,6 +346,7 @@ public class HistorialOdonDos extends Fragment {
 
                         POSICION = index;
                         break;
+
                     case 2:
                         // Eliminar Tratamiento
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
@@ -448,7 +445,7 @@ public class HistorialOdonDos extends Fragment {
                     ID_SERVICIO = 0;
                     desc_servicio.setText(null);
                     monto.setText(null);
-                    servicio.setText("Seleccione Servicio");
+                    servicio.setText("Seleccione Servicios");
 
                     layoutMonto.setError(null);
                     layoutServicio.setError(null);

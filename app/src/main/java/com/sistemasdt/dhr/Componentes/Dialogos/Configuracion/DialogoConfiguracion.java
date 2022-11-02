@@ -2,6 +2,8 @@ package com.sistemasdt.dhr.Componentes.Dialogos.Configuracion;
 
 import android.app.Dialog;
 
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -18,19 +20,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
 
 import com.sistemasdt.dhr.R;
+import com.sistemasdt.dhr.Rutas.Citas.Servicios.RecibidorServicio;
 
 
 public class DialogoConfiguracion extends DialogFragment {
     private Toolbar toolbar;
-    private TextView titulo1, titulo3, subtitulo4, subtitulo5;
+    private TextView titulo1, titulo2, titulo3, subtitulo4, subtitulo5;
     private TextView etiquetaVersion;
-    private Switch recordarCuenta;
+    private Switch recordarCuenta, citasCercanas, citasDiarias;
     private TextView compartir, abrirManual;
+    private JobScheduler jobScheduler;
+    private final int ID_SERVICIO_NOTIFICACIONES_CITAS_CERCANAS = 335;
+    private final int ID_SERVICIO_NOTIFICACIONES_CITAS_DIA = 336;
+    private boolean SERVICIO_NOTIFICACIONES_CITAS_CERCANAS = false;
+    private boolean SERVICIO_NOTIFICACIONES_CITAS_DIA = false;
 
     public DialogoConfiguracion() {
 
@@ -81,6 +90,22 @@ public class DialogoConfiguracion extends DialogFragment {
             }
         });
 
+        jobScheduler = (JobScheduler) getContext().getSystemService(Context.JOB_SCHEDULER_SERVICE);
+        SERVICIO_NOTIFICACIONES_CITAS_CERCANAS = false;
+        SERVICIO_NOTIFICACIONES_CITAS_DIA = false;
+
+        for (JobInfo jobInfo : jobScheduler.getAllPendingJobs()) {
+            switch (jobInfo.getId()) {
+                case ID_SERVICIO_NOTIFICACIONES_CITAS_CERCANAS:
+                    SERVICIO_NOTIFICACIONES_CITAS_CERCANAS = true;
+                    break;
+
+                case ID_SERVICIO_NOTIFICACIONES_CITAS_DIA:
+                    SERVICIO_NOTIFICACIONES_CITAS_DIA = true;
+                    break;
+            }
+        }
+
         titulo1 = view.findViewById(R.id.tituloGeneral);
         titulo1.setTypeface(face);
 
@@ -89,6 +114,15 @@ public class DialogoConfiguracion extends DialogFragment {
 
         recordarCuenta = view.findViewById(R.id.recordarCuenta);
         recordarCuenta.setTypeface(face);
+
+        // NOTIFICACIONES
+        titulo2 = view.findViewById(R.id.tituloNotificaciones);
+
+        citasCercanas = view.findViewById(R.id.servicioCitasCerca);
+        citasCercanas.setChecked(SERVICIO_NOTIFICACIONES_CITAS_CERCANAS);
+
+        citasDiarias = view.findViewById(R.id.servicioCitasDia);
+        citasDiarias.setChecked(SERVICIO_NOTIFICACIONES_CITAS_DIA);
 
         subtitulo4 = view.findViewById(R.id.tituloAcerca1);
         subtitulo4.setTypeface(face);
@@ -104,18 +138,41 @@ public class DialogoConfiguracion extends DialogFragment {
 
         final SharedPreferences preferencias = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
         recordarCuenta.setChecked(preferencias.getBoolean("recordar", false));
+        SharedPreferences.Editor editor = preferencias.edit();
 
         recordarCuenta.setOnClickListener(v -> {
             if (recordarCuenta.isChecked()) {
-                SharedPreferences.Editor editor = preferencias.edit();
                 editor.putBoolean("recordar", true);
-                editor.commit();
             } else {
-                SharedPreferences.Editor editor = preferencias.edit();
                 editor.putBoolean("recordar", false);
-                editor.commit();
+                editor.putBoolean("SERVICIO_CITAS_DIARIAS", false);
+                editor.putBoolean("SERVICIO_CITAS_CERCANAS", false);
             }
+            editor.commit();
         });
+
+        // ENCENDER/APAGAR SERVICIO DE NOTIFICACIONES - CITAS DIARIAS
+        citasDiarias.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                RecibidorServicio.servicioNumeroCitas(getContext());
+            } else {
+                jobScheduler.cancel(ID_SERVICIO_NOTIFICACIONES_CITAS_DIA);
+            }
+            editor.putBoolean("SERVICIO_CITAS_DIARIAS", isChecked);
+            editor.commit();
+        });
+
+        citasCercanas.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                RecibidorServicio.scheduleJob(getContext());
+            } else {
+                jobScheduler.cancel(ID_SERVICIO_NOTIFICACIONES_CITAS_CERCANAS);
+            }
+            editor.putBoolean("SERVICIO_CITAS_CERCANAS", isChecked);
+            editor.commit();
+        });
+
+
 
         return view;
     }

@@ -168,7 +168,7 @@ public class InicioSesion extends AppCompatActivity {
                 public void onFailure(Exception e) {
                     Alerter.create(InicioSesion.this)
                             .setTitle("Error")
-                            .setText(e.toString())
+                            .setText("Fallo al Iniciar Sesion, Intente de nuevo")
                             .setIcon(R.drawable.logonuevo)
                             .setTextTypeface(typeface)
                             .enableSwipeToDismiss()

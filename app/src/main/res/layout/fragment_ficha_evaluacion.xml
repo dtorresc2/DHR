@@ -63,7 +63,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
                 app:counterEnabled="true"
-                app:counterMaxLength="85"
+                app:counterMaxLength="75"
                 app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -73,7 +73,7 @@
                     android:hint="Descripcion"
                     android:inputType="text"
                     android:maxEms="50"
-                    android:maxLength="85"
+                    android:maxLength="75"
                     android:singleLine="false"
                     tools:ignore="TouchTargetSizeCheck" />
             </com.google.android.material.textfield.TextInputLayout>

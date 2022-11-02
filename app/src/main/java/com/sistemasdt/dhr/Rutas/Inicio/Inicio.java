@@ -4,6 +4,7 @@ package com.sistemasdt.dhr.Rutas.Inicio;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.app.job.JobScheduler;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -70,6 +71,10 @@ public class Inicio extends Fragment {
     ActivityResultLauncher<Intent> lanzadorCamara;
     ActivityResultLauncher<Intent> lanzadorGaleria;
 
+    private JobScheduler jobScheduler;
+    private final int ID_SERVICIO_NOTIFICACIONES_CITAS_CERCANAS = 335;
+    private final int ID_SERVICIO_NOTIFICACIONES_CITAS_DIA = 336;
+
     public Inicio() {
         // INICIALIZADOR DE ACTIVIDAD PARA CAMARA
         lanzadorCamara = registerForActivityResult(
@@ -135,6 +140,9 @@ public class Inicio extends Fragment {
 
         editar_perfil.setOnClickListener(view12 -> EditarPerfil());
 
+        //MANEJADOR DE SERVICIOS
+        jobScheduler = (JobScheduler) getContext().getSystemService(Context.JOB_SCHEDULER_SERVICE);
+
         cerrarSesion.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.progressDialog);
             builder.setIcon(R.drawable.logonuevo);
@@ -142,6 +150,10 @@ public class Inicio extends Fragment {
             builder.setMessage("¿Desea cerrar la sesion?");
             builder.setPositiveButton("ACEPTAR", (dialog, id) -> {
                 SharedPreferences preferencias = getActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE);
+
+                //FINALIZANDO SERVICIOS
+                jobScheduler.cancel(ID_SERVICIO_NOTIFICACIONES_CITAS_DIA);
+                jobScheduler.cancel(ID_SERVICIO_NOTIFICACIONES_CITAS_CERCANAS);
 
                 final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.progressDialog);
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);

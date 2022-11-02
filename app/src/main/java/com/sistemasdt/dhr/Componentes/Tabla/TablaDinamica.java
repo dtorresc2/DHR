@@ -2,15 +2,13 @@ package com.sistemasdt.dhr.Componentes.Tabla;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.util.Log;
+
 import android.view.Gravity;
-import android.view.View;
+
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.sistemasdt.dhr.Rutas.Catalogos.Servicios.ServiciosAdapter;
 
 import java.util.ArrayList;
 
@@ -83,12 +81,9 @@ public class TablaDinamica {
                 txtCell.setText(info);
                 txtCell.setTag(getCount());
                 txtCell.setClickable(true);
-                txtCell.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int index = (int) v.getTag();
-                        mListener.onItemClick(index);
-                    }
+                txtCell.setOnClickListener(v -> {
+                    int index = (int) v.getTag();
+                    mListener.onItemClick(index);
                 });
 
                 tableRow.addView(txtCell, newTableRowParams());
@@ -109,12 +104,9 @@ public class TablaDinamica {
 
             txtCell.setTag(getCount());
             txtCell.setClickable(true);
-            txtCell.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int index = (int) v.getTag();
-                    mListener.onItemClick(index);
-                }
+            txtCell.setOnClickListener(v -> {
+                int index = (int) v.getTag();
+                mListener.onItemClick(index);
             });
 
             tableRow.addView(txtCell, newTableRowParams());
@@ -180,7 +172,6 @@ public class TablaDinamica {
     public void removeRow(int rowIndex) {
         tableLayout.removeViewAt(rowIndex);
         data.remove(rowIndex - 1);
-        //repintarTabla();
     }
 
     public void removeAll() {

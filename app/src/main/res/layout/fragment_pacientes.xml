@@ -12,42 +12,6 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
 
-    <!--    <com.getbase.floatingactionbutton.FloatingActionsMenu-->
-    <!--        android:id="@+id/menuDP"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_gravity="bottom|end"-->
-    <!--        android:layout_marginEnd="10dp"-->
-    <!--        android:layout_marginRight="10dp"-->
-    <!--        android:layout_marginBottom="65dp"-->
-    <!--        android:clickable="true"-->
-    <!--        android:elevation="10dp"-->
-    <!--        app:fab_addButtonColorNormal="@color/AzulOscuro"-->
-    <!--        app:fab_addButtonColorPressed="@color/FondoSecundario"-->
-    <!--        app:fab_labelStyle="@style/fondoetiqueta">-->
-
-    <!--        <com.getbase.floatingactionbutton.FloatingActionButton-->
-    <!--            android:id="@+id/agregar_dp"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            app:fabSize="normal"-->
-    <!--            app:fab_colorNormal="@color/FondoSecundario"-->
-    <!--            app:fab_colorPressed="@color/AzulOscuro"-->
-    <!--            app:fab_icon="@drawable/icono_agregar"-->
-    <!--            app:fab_title="MenuFichas" />-->
-
-    <!--        <com.getbase.floatingactionbutton.FloatingActionButton-->
-    <!--            android:id="@+id/buscar_dp"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            app:fabSize="normal"-->
-    <!--            app:fab_colorNormal="@color/FondoSecundario"-->
-    <!--            app:fab_colorPressed="@color/AzulOscuro"-->
-    <!--            app:fab_icon="@drawable/icono_buscar"-->
-    <!--            app:fab_title="Buscar" />-->
-
-    <!--    </com.getbase.floatingactionbutton.FloatingActionsMenu>-->
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/grabarPaciente"
         android:layout_width="match_parent"

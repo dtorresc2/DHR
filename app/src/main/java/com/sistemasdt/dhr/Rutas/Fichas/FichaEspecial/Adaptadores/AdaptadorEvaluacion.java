@@ -1,4 +1,4 @@
-package com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.Adaptadores;
+package com.sistemasdt.dhr.Rutas.Fichas.FichaEspecial.Adaptadores;
 
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
@@ -14,20 +14,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sistemasdt.dhr.R;
-import com.sistemasdt.dhr.Rutas.Catalogos.Pacientes.ItemPaciente;
-import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.Items.ItemsFichas;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdaptadorConsultaFicha extends RecyclerView.Adapter<AdaptadorConsultaFicha.ViewHolderConsultaFicha> implements Filterable {
-    private ArrayList<ItemsFichas> mLista;
-    private ArrayList<ItemsFichas> mListaFull;
+public class AdaptadorEvaluacion extends RecyclerView.Adapter<AdaptadorEvaluacion.ViewHolderEvaluaciones> implements Filterable {
+    private ArrayList<ItemEvaluacion> mLista;
+    private ArrayList<ItemEvaluacion> mListaFull;
     private int lastPosition = -1;
     private OnItemClickListener mlistener;
     private ViewGroup mViewGroup;
 
-    public AdaptadorConsultaFicha(ArrayList<ItemsFichas> lista) {
+    public AdaptadorEvaluacion(ArrayList<ItemEvaluacion> lista) {
         mLista = lista;
         mListaFull = new ArrayList<>(lista);
     }
@@ -40,7 +38,7 @@ public class AdaptadorConsultaFicha extends RecyclerView.Adapter<AdaptadorConsul
         mlistener = listener;
     }
 
-    public static class ViewHolderConsultaFicha extends RecyclerView.ViewHolder {
+    public static class ViewHolderEvaluaciones extends RecyclerView.ViewHolder {
         public TextView nombrePaciente;
         public TextView motivo;
         public TextView fechaFicha;
@@ -50,7 +48,7 @@ public class AdaptadorConsultaFicha extends RecyclerView.Adapter<AdaptadorConsul
         public TextView estadoFicha;
         public View separadorFicha;
 
-        public ViewHolderConsultaFicha(@NonNull View itemView, final OnItemClickListener listener) {
+        public ViewHolderEvaluaciones(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
             nombrePaciente = itemView.findViewById(R.id.nombrePaciente);
             motivo = itemView.findViewById(R.id.motivo);
@@ -74,48 +72,46 @@ public class AdaptadorConsultaFicha extends RecyclerView.Adapter<AdaptadorConsul
 
     @NonNull
     @Override
-    public ViewHolderConsultaFicha onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public ViewHolderEvaluaciones onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         mViewGroup = viewGroup;
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_ficha, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_evaluacion, viewGroup, false);
         Typeface face = Typeface.createFromAsset(view.getContext().getAssets(), "fonts/bahnschrift.ttf");
-        ViewHolderConsultaFicha viewHolderConsultaFicha = new ViewHolderConsultaFicha(view, mlistener);
-        viewHolderConsultaFicha.nombrePaciente.setTypeface(face);
-        viewHolderConsultaFicha.motivo.setTypeface(face);
-        viewHolderConsultaFicha.fechaFicha.setTypeface(face);
-        viewHolderConsultaFicha.debeFicha.setTypeface(face);
-        viewHolderConsultaFicha.haberFicha.setTypeface(face);
-        viewHolderConsultaFicha.saldoFicha.setTypeface(face);
-        viewHolderConsultaFicha.estadoFicha.setTypeface(face);
-        return viewHolderConsultaFicha;
+        ViewHolderEvaluaciones viewHolderEvaluaciones = new ViewHolderEvaluaciones(view, mlistener);
+        viewHolderEvaluaciones.nombrePaciente.setTypeface(face);
+        viewHolderEvaluaciones.motivo.setTypeface(face);
+        viewHolderEvaluaciones.fechaFicha.setTypeface(face);
+        viewHolderEvaluaciones.debeFicha.setTypeface(face);
+        viewHolderEvaluaciones.haberFicha.setTypeface(face);
+        viewHolderEvaluaciones.saldoFicha.setTypeface(face);
+        viewHolderEvaluaciones.estadoFicha.setTypeface(face);
+        return viewHolderEvaluaciones;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolderConsultaFicha viewHolderConsultaFicha, int i) {
-        ItemsFichas itemsFichas = mLista.get(i);
-        viewHolderConsultaFicha.nombrePaciente.setText(itemsFichas.getNombre());
-        viewHolderConsultaFicha.motivo.setText(itemsFichas.getMotivo());
-        viewHolderConsultaFicha.fechaFicha.setText(itemsFichas.getFecha());
-        viewHolderConsultaFicha.debeFicha.setText(String.format("%.2f", itemsFichas.getCargo()));
-        viewHolderConsultaFicha.haberFicha.setText(String.format("%.2f", itemsFichas.getAbono()));
-        viewHolderConsultaFicha.saldoFicha.setText(String.format("%.2f", itemsFichas.getSaldo()));
-//        viewHolderConsultaFicha.haberFicha.setText(String.valueOf(itemsFichas.getAbono()));
-//        viewHolderConsultaFicha.saldoFicha.setText(String.valueOf(itemsFichas.getSaldo()));
+    public void onBindViewHolder(@NonNull ViewHolderEvaluaciones holder, int position) {
+        ItemEvaluacion itemEvaluacion = mLista.get(position);
+        holder.nombrePaciente.setText(itemEvaluacion.getNombre());
+        holder.motivo.setText(itemEvaluacion.getMotivo());
+        holder.fechaFicha.setText(itemEvaluacion.getFecha());
+        holder.debeFicha.setText(String.format("%.2f", itemEvaluacion.getCargo()));
+        holder.haberFicha.setText(String.format("%.2f", itemEvaluacion.getAbono()));
+        holder.saldoFicha.setText(String.format("%.2f", itemEvaluacion.getSaldo()));
 
-        if (itemsFichas.getEstado()) {
-            viewHolderConsultaFicha.estadoFicha.setText("Habilitado");
-            viewHolderConsultaFicha.estadoFicha.setBackgroundColor(mViewGroup.getContext().getResources().getColor(R.color.VerdeOscuro));
+        if (itemEvaluacion.getEstado()) {
+            holder.estadoFicha.setText("Habilitado");
+            holder.estadoFicha.setBackgroundColor(mViewGroup.getContext().getResources().getColor(R.color.VerdeOscuro));
         } else {
-            viewHolderConsultaFicha.estadoFicha.setText("Deshabilitado");
-            viewHolderConsultaFicha.estadoFicha.setBackgroundColor(mViewGroup.getContext().getResources().getColor(R.color.RojoOscuro));
+            holder.estadoFicha.setText("Deshabilitado");
+            holder.estadoFicha.setBackgroundColor(mViewGroup.getContext().getResources().getColor(R.color.RojoOscuro));
         }
 
-        if (i < mLista.size()) {
-            viewHolderConsultaFicha.separadorFicha.setVisibility(View.VISIBLE);
+        if (position < mLista.size()) {
+            holder.separadorFicha.setVisibility(View.VISIBLE);
         } else {
-            viewHolderConsultaFicha.separadorFicha.setVisibility(View.INVISIBLE);
+            holder.separadorFicha.setVisibility(View.INVISIBLE);
         }
 
-        setAnimation(viewHolderConsultaFicha.itemView, i);
+        setAnimation(holder.itemView, position);
     }
 
     @Override
@@ -133,19 +129,19 @@ public class AdaptadorConsultaFicha extends RecyclerView.Adapter<AdaptadorConsul
 
     @Override
     public Filter getFilter() {
-        return filtroFicha;
+        return filtro;
     }
 
-    private Filter filtroFicha = new Filter() {
+    private Filter filtro = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            ArrayList<ItemsFichas> listaFiltrada = new ArrayList<>();
+            ArrayList<ItemEvaluacion> listaFiltrada = new ArrayList<>();
 
             if (constraint == null || constraint.length() == 0) {
                 listaFiltrada.addAll(mListaFull);
             } else {
                 String filter = constraint.toString().toLowerCase().trim();
-                for (ItemsFichas item : mListaFull) {
+                for (ItemEvaluacion item : mListaFull) {
                     if (item.getNombre().toLowerCase().contains(filter)) {
                         listaFiltrada.add(item);
                     }

@@ -66,9 +66,9 @@ public class Servicios extends Fragment {
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_cerrar);
         if (!modoEdicion)
-            toolbar.setTitle("Servicio Nuevo");
+            toolbar.setTitle("Servicios Nuevo");
         else
-            toolbar.setTitle("Edicion de Servicio");
+            toolbar.setTitle("Edicion de Servicios");
 
         toolbar.setNavigationOnClickListener(view1 -> {
             ListadoServicios listadoServicios = new ListadoServicios();
@@ -176,7 +176,7 @@ public class Servicios extends Fragment {
             @Override
             public void onSuccess(Object object) {
                 Alerter.create(getActivity())
-                        .setTitle("Servicio Registrado")
+                        .setTitle("Servicios Registrado")
                         .setIcon(R.drawable.logonuevo)
                         .setTextTypeface(typeface)
                         .enableSwipeToDismiss()
@@ -223,7 +223,7 @@ public class Servicios extends Fragment {
             @Override
             public void onSuccess(Object object) {
                 Alerter.create(getActivity())
-                        .setTitle("Servicio Actualizado")
+                        .setTitle("Servicios Actualizado")
                         .setIcon(R.drawable.logonuevo)
                         .setTextTypeface(typeface)
                         .enableSwipeToDismiss()

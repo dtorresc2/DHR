@@ -1,5 +1,7 @@
 package com.sistemasdt.dhr;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 
 import androidx.annotation.NonNull;
@@ -12,8 +14,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.sistemasdt.dhr.Rutas.Citas.ListadoCitas;
-import com.sistemasdt.dhr.Rutas.Citas.Servicio.RecibidorServicio;
-import com.sistemasdt.dhr.Rutas.Fichas.FichaNormal.Ficha;
+import com.sistemasdt.dhr.Rutas.Citas.Servicios.RecibidorServicio;
 import com.sistemasdt.dhr.Rutas.Fichas.MenuFichas;
 import com.sistemasdt.dhr.Rutas.Inicio.Inicio;
 import com.sistemasdt.dhr.Rutas.Catalogos.Catalogos;
@@ -31,8 +32,21 @@ public class Principal extends AppCompatActivity implements BottomNavigationView
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setSelectedItemId(R.id.navigation_fichas);
 
-        //Inicializador del Servicio
-        RecibidorServicio.scheduleJob(this);
+        //Inicializador del Servicios
+        final SharedPreferences preferencias = this.getSharedPreferences("sesion", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferencias.edit();
+
+        if (!preferencias.contains("SERVICIO_CITAS_CERCANAS")) {
+            RecibidorServicio.scheduleJob(this);
+            editor.putBoolean("SERVICIO_CITAS_CERCANAS", true);
+            editor.commit();
+        }
+
+        if (!preferencias.contains("SERVICIO_CITAS_DIARIAS")) {
+            RecibidorServicio.servicioNumeroCitas(this);
+            editor.putBoolean("SERVICIO_CITAS_DIARIAS", true);
+            editor.commit();
+        }
     }
 
     MenuFichas menuFichasFragment = new MenuFichas();
