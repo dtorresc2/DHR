@@ -37,7 +37,7 @@
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layoutDescEspecial"
+                android:id="@+id/layoutDescripcion"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:counterEnabled="true"
@@ -45,51 +45,52 @@
                 app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/descEspecial"
+                    android:id="@+id/descripcion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Descripcion"
+                    android:hint="Descripción"
                     android:inputType="text"
                     android:maxLength="80"
                     tools:ignore="TouchTargetSizeCheck" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layoutPagoIndividual"
+                android:id="@+id/layoutAbono"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
                 app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/pagoIndividual"
+                    android:id="@+id/abono"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Costo Visita Individual"
-                    android:enabled="false"
+                    android:hint="Pago"
                     android:inputType="numberDecimal"
                     tools:ignore="TouchTargetSizeCheck" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
-                android:id="@+id/agregarPago"
+                android:id="@+id/agregarAbono"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@color/AzulOscuro"
                 android:drawableLeft="@drawable/ic_add"
                 android:paddingLeft="10dp"
-                android:text="Agregar Visita"
+                android:text="Agregar Pago"
                 android:textColor="@color/Blanco" />
 
             <TextView
-                android:id="@+id/tituloPagos"
+                android:id="@+id/tituloAbono"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@color/AzulOscuro"
                 android:gravity="center_horizontal|center_vertical"
-                android:text="Visitas:"
+                android:text="Pagos:"
+                android:paddingTop="1dp"
+                android:paddingBottom="1dp"
                 android:textColor="@color/Blanco"
                 android:textSize="24sp" />
 
@@ -100,7 +101,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tituloGasto"
+                    android:id="@+id/tituloTotalAbonos"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.7"
@@ -110,7 +111,7 @@
                     android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/totalGasto"
+                    android:id="@+id/totalAbono"
                     android:layout_width="wrap_content"
                     android:layout_height="24dp"
                     android:layout_weight="1.3"
@@ -132,7 +133,7 @@
                     android:fillViewport="true">
 
                     <TableLayout
-                        android:id="@+id/tablaVisitas"
+                        android:id="@+id/tablaPagos"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"></TableLayout>

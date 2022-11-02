@@ -18,6 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -167,7 +168,11 @@ public class Visitas extends Fragment {
         tablaDinamica.setOnItemClickListener(position -> {
             MenuInferiorDos menuInferiorDos = new MenuInferiorDos();
             menuInferiorDos.show(getActivity().getSupportFragmentManager(), "MenuInferior");
-            menuInferiorDos.recibirTitulo(tablaDinamica.getCellData(position, 1));
+            if (tablaDinamica.getCount() > 1)
+                menuInferiorDos.recibirTitulo(tablaDinamica.getCellData(position, 1));
+            else
+                menuInferiorDos.recibirTitulo(tablaDinamica.getCellData(1, 1));
+
             menuInferiorDos.eventoClick(opcion -> {
                 int index = position - 1;
                 switch (opcion) {
@@ -280,24 +285,16 @@ public class Visitas extends Fragment {
             descripcion.setText(null);
             layoutDescripcion.setError(null);
 
-            if (tablaDinamica.getCount() > 1) {
+            if (tablaDinamica.getCount() > 0) {
                 for (int i = 1; i < tablaDinamica.getCount() + 1; i++) {
                     total += Double.parseDouble(tablaDinamica.getCellData(i, 2));
+                    Log.e("Prueba", String.valueOf(total));
                 }
                 totalGasto.setText(String.format("%.2f", total));
             }
         });
 
         siguiente.setOnClickListener(v -> {
-//            final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-//            progressDialog.setMessage("Cargando...");
-//            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-//            progressDialog.setCancelable(false);
-//            progressDialog.show();
-//
-//            Handler handler = new Handler();
-//            handler.postDelayed(() -> progressDialog.dismiss(), 1000);
-
             if (tablaDinamica.getCount() > 0) {
                 if (!MODO_EDICION) {
                     SharedPreferences preferences = getActivity().getSharedPreferences("VISITAS", Context.MODE_PRIVATE);
@@ -319,6 +316,16 @@ public class Visitas extends Fragment {
                     transaction.replace(R.id.contenedor, pagosVisitas);
                     transaction.commit();
                 }
+            }
+            else {
+                Alerter.create(getActivity())
+                        .setTitle("Error")
+                        .setText("No ha agregado visitas")
+                        .setIcon(R.drawable.logonuevo)
+                        .setTextTypeface(face)
+                        .enableSwipeToDismiss()
+                        .setBackgroundColorRes(R.color.AzulOscuro)
+                        .show();
             }
         });
 
